@@ -1,0 +1,52 @@
+image: openjdk:15-jdk-slim
+
+stages:
+  - build
+  - test
+  - jar
+  - publish
+
+before_script:
+  - echo "---------- Start CI ----------"
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - export repoUser="$repoUser"
+  - export repoPassword="$repoPassword"
+  - chmod +x gradlew
+
+build:
+  stage: build
+  script:
+    - echo "---------- build stage ----------"
+    - ./gradlew --build-cache assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
+
+test:
+  stage: test
+  services:
+    - docker:dind
+  dependencies:
+    - build
+  script:
+    - ./gradlew test
+
+jar:
+  stage: jar
+  script:
+    - echo "---------- jar ----------"
+    - ./gradlew jar
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 2 months
+
+publish:
+  stage: publish
+  script:
+    - echo "---------- publish ----------"
+    - ./gradlew -PrepoUser="$repoUser" -PrepoPassword="$repoPassword" publish
+
+after_script:
+  - echo "---------- End CI ----------"

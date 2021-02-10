@@ -1,0 +1,154 @@
+buildscript {
+    ext.kotlin_version = '1.4.21'
+    repositories { jcenter() }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
+apply plugin: 'maven-publish'
+
+group = 'io.provs'
+version = '0.8.5-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+test {
+    useJUnitPlatform {
+        excludeTags('containertest')
+    }
+}
+
+compileJava.options.debugOptions.debugLevel = "source,lines,vars"
+compileTestJava.options.debugOptions.debugLevel = "source,lines,vars"
+
+// https://stackoverflow.com/questions/21904269/configure-gradle-to-publish-sources-and-javadoc
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0" // JVM dependency
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    implementation group: 'com.hierynomus', name: 'sshj', version: '0.30.0'
+
+    api "org.slf4j:slf4j-api:1.7.30"
+    api "ch.qos.logback:logback-classic:1.2.3"
+    api "ch.qos.logback:logback-core:1.2.3"
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    testImplementation "io.mockk:mockk:1.9.3"
+}
+
+
+//create a single Jar with all dependencies excl. Kotlin libs
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': project.version,
+                'Main-Class': 'io.provs.entry.EntryKt'
+    }
+    archivesBaseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task fatJarLatest(type: Jar) {
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': project.version,
+                'Main-Class': 'io.provs.entry.EntryKt'
+    }
+    with jar
+    archiveFileName = 'provs-fat-latest.jar'
+}
+
+//create a single Jar with all dependencies incl. Kotlin libs
+task uberJar(type: Jar) {
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    } {
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
+
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': project.version,
+                'Main-Class': 'io.provs.entry.EntryKt'
+    }
+    archiveClassifier = 'uber'
+}
+
+
+//create a single Jar with all dependencies incl. Kotlin libs - as ...-latest
+task uberJarLatest(type: Jar) {
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    } {
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
+
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': project.version,
+                'Main-Class': 'io.provs.entry.EntryKt'
+    }
+    archiveFileName = 'provs-latest.jar'
+}
+
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    archiveClassifier.set("sources")
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        if (System.getenv("CI_JOB_TOKEN") != null) {
+            // see https://docs.gitlab.com/ee/user/packages/maven_repository/index.html
+            maven {
+                url "https://gitlab.com/api/v4/projects/23127098/packages/maven"
+                name "GitLab"
+                credentials(HttpHeaderCredentials) {
+                    name = 'Job-Token'
+                    value = System.getenv("CI_JOB_TOKEN")
+                }
+                // project id: 23966425
+                authentication {
+                    header(HttpHeaderAuthentication)
+                }
+            }
+        }
+    }
+}
