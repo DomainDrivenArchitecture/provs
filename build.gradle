@@ -130,7 +130,7 @@ task sourceJar(type: Jar, dependsOn: classes) {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        library(MavenPublication) {
             from components.java
         }
     }
@@ -138,7 +138,7 @@ publishing {
         if (System.getenv("CI_JOB_TOKEN") != null) {
             // see https://docs.gitlab.com/ee/user/packages/maven_repository/index.html
             maven {
-                url "https://gitlab.com/api/v4/projects/23127098/packages/maven"
+                url "https://gitlab.com/api/v4/projects/23966425/packages/maven"
                 name "GitLab"
                 credentials(HttpHeaderCredentials) {
                     name = 'Job-Token'
