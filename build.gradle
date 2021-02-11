@@ -14,7 +14,7 @@ apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
 apply plugin: 'maven-publish'
 
 group = 'io.provs'
-version = '0.8.5-SNAPSHOT'
+version = '0.8.5'
 
 repositories {
     mavenCentral()
@@ -144,7 +144,6 @@ publishing {
                     name = 'Job-Token'
                     value = System.getenv("CI_JOB_TOKEN")
                 }
-                // project id: 23966425
                 authentication {
                     header(HttpHeaderAuthentication)
                 }
