@@ -14,7 +14,7 @@ apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
 apply plugin: 'maven-publish'
 
 group = 'io.provs'
-version = '0.8.5'
+version = '0.8.6-SNAPSHOT'
 
 repositories {
     mavenCentral()
