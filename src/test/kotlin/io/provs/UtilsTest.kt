@@ -20,7 +20,7 @@ internal class UtilsTest {
     @Tag(CONTAINERTEST)
     fun test_docker() {
         // when
-        val res = docker().cmd("echo")
+        val res = defaultTestContainer().cmd("echo something")
 
         // then
         Assertions.assertEquals(true, res.success)

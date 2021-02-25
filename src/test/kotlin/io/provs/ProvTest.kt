@@ -2,6 +2,7 @@ package io.provs
 
 import io.provs.docker.provideContainer
 import io.provs.testconfig.tags.CONTAINERTEST
+import io.provs.testconfig.tags.CONTAINER_NON_CI
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
@@ -408,10 +409,10 @@ internal class ProvTest {
 
     @Test
     @EnabledOnOs(OS.LINUX)
-    @Tag(CONTAINERTEST)
+    @Tag(CONTAINER_NON_CI)
     fun inContainer_locally() {
         // given
-        val containerName = "provs_testing"
+        val containerName = "provs_test"
         local().provideContainer(containerName, "ubuntu")
 
         fun Prov.inner() = def {

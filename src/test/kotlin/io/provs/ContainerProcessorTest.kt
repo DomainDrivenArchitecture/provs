@@ -1,7 +1,5 @@
 package io.provs
 
-import io.provs.processors.ContainerStartMode
-import io.provs.processors.ContainerUbuntuHostProcessor
 import io.provs.testconfig.tags.CONTAINERTEST
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag
@@ -15,8 +13,9 @@ internal class ContainerProcessorTest {
     @Test
     @Tag(CONTAINERTEST)
     fun cmd_works_with_echo() {
+
         // given
-        val prov = Prov.newInstance(ContainerUbuntuHostProcessor("provs_test", startMode = ContainerStartMode.CREATE_NEW_KILL_EXISTING))
+        val prov = defaultTestContainer()
         val text = "abc123!§$%&/#äöü"
 
         // when
@@ -32,7 +31,7 @@ internal class ContainerProcessorTest {
     @Tag(CONTAINERTEST)
     fun cmdNoLog_works_with_echo() {
         // given
-        val prov = Prov.newInstance(ContainerUbuntuHostProcessor("provs_test", startMode = ContainerStartMode.CREATE_NEW_KILL_EXISTING))
+        val prov = defaultTestContainer()
         val text = "abc123!§$%&/#äöü"
 
         // when
@@ -41,5 +40,7 @@ internal class ContainerProcessorTest {
         // then
         assert(res.success)
         assertEquals(text + newline(), res.out)
+
+        // todo add check that cmd was not logged
     }
 }

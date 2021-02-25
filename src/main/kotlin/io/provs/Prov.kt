@@ -71,6 +71,7 @@ open class Prov protected constructor(private val processor: Processor, val name
         return handle(ResultMode.FAILEXIT) { a() }
     }
 
+    // todo: add sudo and update test
     fun inContainer(containerName: String, a: Prov.() -> ProvResult): ProvResult {
         runInContainerWithName = containerName
         val res = handle(ResultMode.ALL) { a() }

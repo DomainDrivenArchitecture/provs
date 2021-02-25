@@ -1,8 +1,6 @@
 package io.provs.platformTest
 
 import io.provs.Prov
-import io.provs.testconfig.tags.CONTAINERTEST
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
@@ -16,12 +14,11 @@ internal class UbuntuProvTests {
     }
 
     private fun outerPing() = prov.def {
-        ping("nu.nl")
+        ping("gitlab.com")
     }
 
     @Test
     @EnabledOnOs(OS.LINUX)
-    @Tag(CONTAINERTEST)
     fun that_ping_works() {
         // when
         val res = outerPing()
@@ -66,14 +63,13 @@ internal class UbuntuProvTests {
 
     @Test
     @EnabledOnOs(OS.LINUX)
-    @Tag(CONTAINERTEST)
     fun that_xec_works() {
         // given
         val a = Prov.defaultInstance()
 
         // when
         val res1 = a.xec("/usr/bin/printf", "hi")
-        val res2 = a.xec("/bin/ping", "-c", "2", "github.com")
+        val res2 = a.xec("/bin/ping", "-c", "2", "gitlab.com")
         val res3 = a.xec("/bin/bash", "-c", "echo echoed")
 
         // then

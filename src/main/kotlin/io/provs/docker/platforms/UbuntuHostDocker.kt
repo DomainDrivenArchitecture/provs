@@ -12,54 +12,54 @@ import io.provs.processors.ContainerStartMode
 fun UbuntuProv.provideContainerPlatform(
     containerName: String,
     imageName: String = "ubuntu",
-    startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE
+    startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE,
+    sudo: Boolean = true
 ): ProvResult = requireLast {
+    val dockerCmd = if (sudo) "sudo docker " else "docker "
+
     if (startMode == ContainerStartMode.CREATE_NEW_KILL_EXISTING) {
         exitAndRmContainer(containerName)
     }
     if ((startMode == ContainerStartMode.CREATE_NEW_KILL_EXISTING) || (startMode == ContainerStartMode.CREATE_NEW_FAIL_IF_EXISTING)) {
-        if (!cmd(
-                "sudo docker run -dit --name=$containerName $imageName"
-            ).success
-        ) {
+        if (!cmd(dockerCmd + "run -dit --name=$containerName $imageName").success) {
             throw RuntimeException("could not start docker")
         }
     } else if (startMode == ContainerStartMode.USE_RUNNING_ELSE_CREATE) {
         val r =
-            cmd("sudo docker inspect -f '{{.State.Running}}' $containerName")
+            cmd(dockerCmd + "inspect -f '{{.State.Running}}' $containerName")
         if (!r.success || "false\n" == r.out) {
-            cmd("sudo docker rm -f $containerName")
-            cmd("sudo docker run -dit --name=$containerName $imageName")
+            cmd(dockerCmd + "rm -f $containerName")
+            cmd(dockerCmd + "run -dit --name=$containerName $imageName")
         }
     }
-    ProvResult(containerRuns(containerName))
+    ProvResult(containerRuns(containerName, sudo))
 }
 
 
-fun UbuntuProv.containerRunsPlatform(containerName: String): Boolean {
-    return cmdNoEval("sudo docker inspect -f '{{.State.Running}}' $containerName").out?.equals("true\n") ?: false
+fun UbuntuProv.containerRunsPlatform(containerName: String, sudo: Boolean = true): Boolean {
+    val dockerCmd = if (sudo) "sudo docker " else "docker "
+    return cmdNoEval(dockerCmd + "inspect -f '{{.State.Running}}' $containerName").out?.equals("true\n") ?: false
 }
 
 
 fun UbuntuProv.runContainerPlatform(
     containerName: String = "defaultProvContainer",
-    imageName: String = "ubuntu"
+    imageName: String = "ubuntu",
+    sudo: Boolean = true
 ) = def {
-    cmd("sudo docker run -dit --name=$containerName $imageName")
+    val dockerCmd = if (sudo) "sudo docker " else "docker "
+    cmd(dockerCmd + "run -dit --name=$containerName $imageName")
 }
 
 
-fun UbuntuProv.containerExecPlatform(containerName: String, cmd: String) = def {
-    cmd("sudo docker exec $containerName $cmd")
+fun UbuntuProv.containerExecPlatform(containerName: String, cmd: String, sudo: Boolean = true) = def {
+    val dockerCmd = if (sudo) "sudo docker " else "docker "
+    cmd(dockerCmd + "exec $containerName $cmd")
 }
 
 
-fun UbuntuProv.containerShPlatform(containerName: String, cmd: String) = def {
-    containerExecPlatform(containerName, "sh -c \"${cmd.escapeDoubleQuote()}\"")
-}
-
-
-fun UbuntuProv.dockerBuildImagePlatform(image: DockerImage, skipIfExisting: Boolean): ProvResult {
+fun UbuntuProv.dockerBuildImagePlatform(image: DockerImage, skipIfExisting: Boolean, sudo: Boolean): ProvResult {
+    val dockerCmd = if (sudo) "sudo docker " else "docker "
 
     if (skipIfExisting && dockerImageExists(image.imageName())) {
         return ProvResult(true)
@@ -73,20 +73,25 @@ fun UbuntuProv.dockerBuildImagePlatform(image: DockerImage, skipIfExisting: Bool
 
     cmd("cd $path && printf '${image.imageText().escapeSingleQuote()}' > Dockerfile")
 
-    return cmd("cd $path && sudo docker build --tag ${image.imageName()} .")
+    return cmd("cd $path && "+dockerCmd+"build --tag ${image.imageName()} .")
 }
 
 
-fun UbuntuProv.dockerImageExistsPlatform(imageName: String): Boolean {
-    return (cmd("sudo docker images $imageName -q").out != "")
+fun UbuntuProv.dockerImageExistsPlatform(imageName: String, sudo: Boolean): Boolean {
+    val dockerCmd = if (sudo) "sudo docker " else "docker "
+
+    return (cmd(dockerCmd + "images $imageName -q").out != "")
 }
 
 
 fun UbuntuProv.exitAndRmContainerPlatform(
-    containerName: String
+    containerName: String,
+    sudo: Boolean
 ) = requireAll {
+    val dockerCmd = if (sudo) "sudo docker " else "docker "
+
     if (containerRuns(containerName)) {
-        cmd("sudo docker stop $containerName")
+        cmd(dockerCmd + "stop $containerName")
     }
-    cmd("sudo docker rm $containerName")
+    cmd(dockerCmd + "rm $containerName")
 }

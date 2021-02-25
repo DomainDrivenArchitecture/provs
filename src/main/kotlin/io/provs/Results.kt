@@ -17,7 +17,10 @@ data class ProvResult(val success: Boolean,
     }
 
     fun toShortString() : String {
-        return "ProvResult:: ${if (success) "Succeeded" else "FAILED"} -- ${if (!success && (out != null)) "Details: $out" else ""}"
+        return "ProvResult:: ${if (success) "Succeeded" else "FAILED"} -- " +
+                if (!success)
+                        (if (out != null) "Details: $out " else "" +
+                                if (err != null) " Error: " + err else "") else ""
     }
 }
 

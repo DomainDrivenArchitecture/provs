@@ -22,8 +22,19 @@ repositories {
 }
 
 test {
+    // set properties for the tests
+    def propertiesForTests = ["testdockerwithoutsudo"]
+    for (def prop : propertiesForTests) {
+        def value = System.getProperty(prop)
+        if (value != null) {
+            systemProperty prop, value
+        }
+    }
+
     useJUnitPlatform {
-        excludeTags('containertest')
+        if (System.getenv("CI_JOB_TOKEN") != null) {
+            excludeTags('containernonci')
+        }
     }
 }
 

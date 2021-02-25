@@ -1,7 +1,6 @@
 package io.provs.processors
 
 import io.provs.Prov
-import io.provs.docker.containerSh
 import io.provs.docker.provideContainer
 import io.provs.escapeAndEncloseByDoubleQuoteForShell
 import io.provs.platforms.SHELL
@@ -23,44 +22,31 @@ open class ContainerUbuntuHostProcessor(
     private val dockerImage: String = "ubuntu",
     @Suppress("unused") // suppress false positive warning
     private val startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE,
-    private val endMode: ContainerEndMode = ContainerEndMode.KEEP_RUNNING
+    private val endMode: ContainerEndMode = ContainerEndMode.KEEP_RUNNING,
+    @Suppress("unused") // suppress false positive warning
+    private val sudo: Boolean = true
 ) : Processor {
+    private val dockerCmd = if (sudo) "sudo docker " else "docker "
     private var localExecution = LocalProcessor()
-    private var a = Prov.newInstance(name = "ContainerUbuntuHostProcessor")
+    private var a = Prov.newInstance(name = "LocalProcessor for Docker operations")
 
     init {
-        val r = a.provideContainer(containerName, dockerImage, startMode)
+        val r = a.provideContainer(containerName, dockerImage, startMode, sudo)
         if (!r.success)
-            throw RuntimeException("Could not start docker image: " + r.toShortString(), r.exception)
+            throw RuntimeException("Could not start docker image: " + r.toString(), r.exception)
     }
 
     override fun x(vararg args: String): ProcessResult {
-        return localExecution.x("sh", "-c", "sudo docker exec $containerName " + buildCommand(*args))
+        return localExecution.x("sh", "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
     }
 
     override fun xNoLog(vararg args: String): ProcessResult {
-        return localExecution.xNoLog("sh", "-c", "sudo docker exec $containerName " + buildCommand(*args))
-    }
-
-    fun installSudo(): ContainerUbuntuHostProcessor {
-        a.containerSh(containerName, "apt-get update")
-        a.containerSh(containerName, "apt-get -y install sudo")
-        return this
-    }
-
-    fun addAndSwitchToUser(user: String = "testuser"): ContainerUbuntuHostProcessor {
-
-        a.containerSh(containerName,"sudo useradd -m $user && echo '$user:$user' | chpasswd && adduser $user sudo")
-        a.containerSh(containerName,"echo '$user ALL=(ALL:ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/$user")
-        a.containerSh(containerName,"sudo su $user")
-        a.containerSh(containerName,"cd /home/$user")
-        a.containerSh(containerName,"mkdir $user && cd $user")
-        return this
+        return localExecution.xNoLog("sh", "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
     }
 
     fun exitAndRm() {
-        localExecution.x(SHELL, "-c", "sudo docker stop $containerName")
-        localExecution.x(SHELL, "-c", "sudo docker rm $containerName")
+        localExecution.x(SHELL, "-c", dockerCmd + "stop $containerName")
+        localExecution.x(SHELL, "-c", dockerCmd + "rm $containerName")
     }
 
     private fun quoteString(s: String): String {

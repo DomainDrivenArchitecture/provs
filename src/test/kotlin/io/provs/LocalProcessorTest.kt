@@ -72,6 +72,8 @@ internal class LocalProcessorTest {
         // then
         assert(res.success)
         assertEquals( text + System.lineSeparator(), res.out)
+
+        // todo add check that cmd was not logged
     }
 
 

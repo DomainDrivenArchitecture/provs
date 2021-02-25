@@ -9,8 +9,6 @@ stages:
 before_script:
   - echo "---------- Start CI ----------"
   - export GRADLE_USER_HOME=`pwd`/.gradle
-  - export repoUser="$repoUser"
-  - export repoPassword="$repoPassword"
   - chmod +x gradlew
 
 build:
@@ -25,12 +23,28 @@ build:
 
 test:
   stage: test
+  image: docker:latest
   services:
     - docker:dind
   dependencies:
     - build
+  before_script:
+    - echo "---------- BEFORE -------------"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - ./gradlew test
+    - echo "---------- TEST -------------"
+    - apk update && apk add bash openjdk11
+    - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker run --privileged -dit --name provs_test -v /var/run/docker.sock:/var/run/docker.sock $CI_REGISTRY_IMAGE
+    - docker inspect -f '{{.State.Running}}' provs_test
+    - ./gradlew test -Dtestdockerwithoutsudo=true
+  artifacts:
+    when: on_failure
+    paths:
+      - build/reports/tests/test
+    reports:
+      junit: build/test-results/test/TEST-*.xml
 
 jar:
   stage: jar
@@ -46,7 +60,7 @@ publish:
   stage: publish
   script:
     - echo "---------- publish ----------"
-    - ./gradlew -PrepoUser="$repoUser" -PrepoPassword="$repoPassword" publish
+    - ./gradlew publish
 
 after_script:
   - echo "---------- End CI ----------"
