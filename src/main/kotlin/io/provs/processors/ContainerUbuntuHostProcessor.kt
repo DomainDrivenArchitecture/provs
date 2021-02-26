@@ -44,7 +44,7 @@ open class ContainerUbuntuHostProcessor(
         return localExecution.xNoLog("sh", "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
     }
 
-    fun exitAndRm() {
+    private fun exitAndRm() {
         localExecution.x(SHELL, "-c", dockerCmd + "stop $containerName")
         localExecution.x(SHELL, "-c", dockerCmd + "rm $containerName")
     }

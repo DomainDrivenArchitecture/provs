@@ -103,7 +103,7 @@ open class Prov protected constructor(private val processor: Processor, val name
         )
     }
 
-    fun cmdInContainer(containerName: String, vararg args: String): Array<String> {
+    private fun cmdInContainer(containerName: String, vararg args: String): Array<String> {
         return arrayOf(SHELL, "-c", "sudo docker exec $containerName " + buildCommand(*args))
     }
     private fun buildCommand(vararg args: String) : String {
@@ -247,11 +247,11 @@ open class Prov protected constructor(private val processor: Processor, val name
             } else if (mode == ResultMode.NONE) {
                 ProvResult(true)
             } else if (mode == ResultMode.FAILEXIT) {
-                if (res.success) {
-                    return ProvResult(true)
+                return if (res.success) {
+                    ProvResult(true)
                 } else {
                     exit = true
-                    return ProvResult(false)
+                    ProvResult(false)
                 }
             } else {
                 ProvResult(false, err = "mode unknown")
@@ -295,12 +295,12 @@ open class Prov protected constructor(private val processor: Processor, val name
     private data class InternalResult(val level: Int, val method: String?, var provResult: ProvResult?) {
         override fun toString() : String {
             val provResult = provResult
-            if (provResult != null) {
-                return prefix(level) + (if (provResult.success) "Success -- " else "FAILED -- ") +
-                    method + " " + (provResult.cmd ?: "") +
-                    (if (!provResult.success && provResult.err != null) " -- Error: " + provResult.err.escapeNewline() else "") }
-            else
-                return prefix(level) + " " + method + " " + "... in progress ... "
+            return if (provResult != null) {
+                prefix(level) + (if (provResult.success) "Success -- " else "FAILED -- ") +
+                        method + " " + (provResult.cmd ?: "") +
+                        (if (!provResult.success && provResult.err != null) " -- Error: " + provResult.err.escapeNewline() else "")
+            } else
+                prefix(level) + " " + method + " " + "... in progress ... "
 
         }
 
@@ -309,9 +309,9 @@ open class Prov protected constructor(private val processor: Processor, val name
         }
     }
 
-    val ANSI_RESET = "\u001B[0m"
-    val ANSI_BRIGHT_RED = "\u001B[91m"
-    val ANSI_BRIGHT_GREEN = "\u001B[92m"
+    private val ANSI_RESET = "\u001B[0m"
+    private val ANSI_BRIGHT_RED = "\u001B[91m"
+    private val ANSI_BRIGHT_GREEN = "\u001B[92m"
     // uncomment if needed
     //    val ANSI_BLACK = "\u001B[30m"
     //    val ANSI_RED = "\u001B[31m"
@@ -336,7 +336,7 @@ open class Prov protected constructor(private val processor: Processor, val name
         if (internalResults.size > 1) {
             println("----------------------------------------------------------------------------------------------------- ")
             println(
-                "Overall " + internalResults.get(0).toString().take(10)
+                "Overall " + internalResults[0].toString().take(10)
                     .replace("Success", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET)
                     .replace("FAILED", ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET)
             )

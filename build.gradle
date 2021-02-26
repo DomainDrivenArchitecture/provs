@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.4.21'
+    ext.kotlin_version = '1.4.31'
     repositories { jcenter() }
 
     dependencies {
@@ -12,9 +12,11 @@ apply plugin: 'idea'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
 apply plugin: 'maven-publish'
+apply plugin: 'java-test-fixtures'
+
 
 group = 'io.provs'
-version = '0.8.6-SNAPSHOT'
+version = '0.8.6'
 
 repositories {
     mavenCentral()

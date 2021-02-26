@@ -1,8 +1,8 @@
 package io.provs
 
 import io.provs.docker.provideContainer
-import io.provs.testconfig.tags.CONTAINERTEST
-import io.provs.testconfig.tags.CONTAINER_NON_CI
+import io.provs.test.tags.CONTAINERTEST
+import io.provs.test.tags.CONTAINER_NON_CI
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
