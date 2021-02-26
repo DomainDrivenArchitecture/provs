@@ -16,7 +16,7 @@ apply plugin: 'java-test-fixtures'
 
 
 group = 'io.provs'
-version = '0.8.6'
+version = '0.8.7-SNAPSHOT'
 
 repositories {
     mavenCentral()
