@@ -9,6 +9,30 @@ import io.provs.processors.ContainerStartMode
 
 
 /**
+ * Builds a docker image if not yet existing.
+ */
+fun Prov.dockerProvideImage(image: DockerImage, skipIfExisting: Boolean = true, sudo: Boolean = true) : ProvResult {
+    if (this is UbuntuProv) {
+        return this.dockerProvideImagePlatform(image, skipIfExisting, sudo)
+    } else {
+        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
+    }
+}
+
+
+/**
+ * Returns true if the specified docker image exists.
+ */
+fun Prov.dockerImageExists(imageName: String, sudo: Boolean = true) : Boolean {
+    if (this is UbuntuProv) {
+        return this.dockerImageExistsPlatform(imageName, sudo)
+    } else {
+        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
+    }
+}
+
+
+/**
  * Creates and runs a new container with name _containerName_ for image _imageName_ if not yet existing.
  * In case the container already exists, the parameter _startMode_ determines
  * if the running container is just kept (default behavior)
@@ -51,22 +75,6 @@ fun Prov.runContainer(
 }
 
 
-fun Prov.dockerBuildImage(image: DockerImage, skipIfExisting: Boolean = true, sudo: Boolean = true) : ProvResult {
-    if (this is UbuntuProv) {
-        return this.dockerBuildImagePlatform(image, skipIfExisting, sudo)
-    } else {
-        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
-    }
-}
-
-
-fun Prov.dockerImageExists(imageName: String, sudo: Boolean = true) : Boolean {
-    if (this is UbuntuProv) {
-        return this.dockerImageExistsPlatform(imageName, sudo)
-    } else {
-        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
-    }
-}
 
 
 fun Prov.exitAndRmContainer(

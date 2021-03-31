@@ -1,9 +1,8 @@
 package io.provs
 
 import io.provs.test.defaultTestContainer
-import io.provs.test.tags.CONTAINERTEST
+import io.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 internal class UtilsTest {
@@ -18,7 +17,7 @@ internal class UtilsTest {
     }
 
     @Test
-    @Tag(CONTAINERTEST)
+    @ContainerTest
     fun test_docker() {
         // when
         val res = defaultTestContainer().cmd("echo something")

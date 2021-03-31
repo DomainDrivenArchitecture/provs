@@ -1,10 +1,13 @@
 package io.provs.docker.platforms
 
-import io.provs.*
+import io.provs.ProvResult
 import io.provs.docker.containerRuns
 import io.provs.docker.dockerImageExists
 import io.provs.docker.exitAndRmContainer
 import io.provs.docker.images.DockerImage
+import io.provs.escapeSingleQuote
+import io.provs.fileSeparator
+import io.provs.hostUserHome
 import io.provs.platforms.UbuntuProv
 import io.provs.processors.ContainerStartMode
 
@@ -58,7 +61,7 @@ fun UbuntuProv.containerExecPlatform(containerName: String, cmd: String, sudo: B
 }
 
 
-fun UbuntuProv.dockerBuildImagePlatform(image: DockerImage, skipIfExisting: Boolean, sudo: Boolean): ProvResult {
+fun UbuntuProv.dockerProvideImagePlatform(image: DockerImage, skipIfExisting: Boolean, sudo: Boolean): ProvResult {
     val dockerCmd = if (sudo) "sudo docker " else "docker "
 
     if (skipIfExisting && dockerImageExists(image.imageName())) {

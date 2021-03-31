@@ -1,5 +1,7 @@
 buildscript {
     ext.kotlin_version = '1.4.31'
+    ext.CI_PROJECT_ID = System.env.CI_PROJECT_ID
+
     repositories { jcenter() }
 
     dependencies {
@@ -60,9 +62,8 @@ dependencies {
     api "ch.qos.logback:logback-classic:1.2.3"
     api "ch.qos.logback:logback-core:1.2.3"
 
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
+    testFixturesApi group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
-    testImplementation "io.mockk:mockk:1.9.3"
 }
 
 
@@ -151,7 +152,7 @@ publishing {
         if (System.getenv("CI_JOB_TOKEN") != null) {
             // see https://docs.gitlab.com/ee/user/packages/maven_repository/index.html
             maven {
-                url "https://gitlab.com/api/v4/projects/23966425/packages/maven"
+                url "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/maven"
                 name "GitLab"
                 credentials(HttpHeaderCredentials) {
                     name = 'Job-Token'

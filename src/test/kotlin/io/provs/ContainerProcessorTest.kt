@@ -1,9 +1,8 @@
 package io.provs
 
 import io.provs.test.defaultTestContainer
-import io.provs.test.tags.CONTAINERTEST
+import io.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.condition.OS
 internal class ContainerProcessorTest {
 
     @Test
-    @Tag(CONTAINERTEST)
+    @ContainerTest
     fun cmd_works_with_echo() {
 
         // given
@@ -29,7 +28,7 @@ internal class ContainerProcessorTest {
 
 
     @Test
-    @Tag(CONTAINERTEST)
+    @ContainerTest
     fun cmdNoLog_works_with_echo() {
         // given
         val prov = defaultTestContainer()

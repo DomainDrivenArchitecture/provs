@@ -5,9 +5,8 @@ import io.provs.docker.containerRuns
 import io.provs.docker.exitAndRmContainer
 import io.provs.docker.runContainer
 import io.provs.local
-import io.provs.test.tags.CONTAINER_NON_CI
+import io.provs.test.tags.ContainerTestNonCi
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
@@ -16,7 +15,7 @@ internal class UbuntuHostDockerKtTest {
 
     @Test
     @EnabledOnOs(OS.LINUX)
-    @Tag(CONTAINER_NON_CI)
+    @ContainerTestNonCi
     fun runAndCheckAndExitContainer() {
         // when
         val containerName = "testContainer"
