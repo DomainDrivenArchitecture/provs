@@ -1,5 +1,6 @@
 package io.provs
 
+import io.provs.test.defaultTestContainer
 import io.provs.test.tags.CONTAINERTEST
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag

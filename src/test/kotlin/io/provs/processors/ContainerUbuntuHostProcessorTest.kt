@@ -1,8 +1,8 @@
 package io.provs.processors
 
-import io.provs.DEFAULT_START_MODE_TEST_CONTAINER
+import io.provs.test.DEFAULT_START_MODE_TEST_CONTAINER
 import io.provs.platforms.SHELL
-import io.provs.testDockerWithSudo
+import io.provs.test.testDockerWithSudo
 import io.provs.test.tags.CONTAINERTEST
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
