@@ -5,6 +5,7 @@ import io.provs.processors.ContainerStartMode
 import io.provs.processors.ContainerUbuntuHostProcessor
 import io.provs.processors.RemoteProcessor
 import java.io.File
+import java.net.InetAddress
 
 /**
  * Returns the name of the calling function but excluding some functions of the prov framework
@@ -71,7 +72,10 @@ fun local(): Prov {
  */
 @Suppress("unused")  // used by other libraries resp. KotlinScript
 fun remote(host: String, remoteUser: String, password: Secret? = null, platform: String? = null): Prov {
-    return Prov.newInstance(RemoteProcessor(host, remoteUser, password), platform)
+    require(host.isNotEmpty(), { "Host must not be empty." })
+    require(remoteUser.isNotEmpty(), { "Remote user must not be empty." })
+
+    return Prov.newInstance(RemoteProcessor(InetAddress.getByName(host), remoteUser, password), platform)
 }
 
 

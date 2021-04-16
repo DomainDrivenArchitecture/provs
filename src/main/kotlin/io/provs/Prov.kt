@@ -148,9 +148,9 @@ open class Prov protected constructor(private val processor: Processor, val name
 
     /**
      * Executes command cmd and returns true in case of success else false.
-     * The success resp. failure does not count into the overall success.
+     * The success resp. failure is not evaluated, i.e. it is not taken into account for the overall success.
      */
-    fun check(cmd: String, dir: String? = null): Boolean {
+    fun chk(cmd: String, dir: String? = null): Boolean {
         return cmdNoEval(cmd, dir).success
     }
 

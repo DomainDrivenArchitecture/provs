@@ -13,10 +13,11 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
+import java.net.InetAddress
 import java.util.concurrent.TimeUnit
 
 
-class RemoteProcessor(ip: String, user: String, password: Secret? = null) : Processor {
+class RemoteProcessor(ip: InetAddress, user: String, password: Secret? = null) : Processor {
 
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")

@@ -344,7 +344,7 @@ internal class ProvTest {
     @Test
     fun check_returnsTrue() {
         // when
-        val res = local().check("echo 123")
+        val res = local().chk("echo 123")
 
         // then
         assertTrue(res)
@@ -353,7 +353,7 @@ internal class ProvTest {
     @Test
     fun check_returnsFalse() {
         // when
-        val res = local().check("cmddoesnotexist")
+        val res = local().chk("cmddoesnotexist")
 
         // then
         assertFalse(res)

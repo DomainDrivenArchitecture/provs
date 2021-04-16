@@ -6,23 +6,18 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
     }
 }
 
-apply plugin: 'idea'
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
-apply plugin: 'maven-publish'
 apply plugin: 'java-test-fixtures'
-
+apply plugin: 'maven-publish'
 
 group = 'io.provs'
-version = '0.8.8-SNAPSHOT'
+version = '0.8.8'
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 test {
@@ -53,10 +48,9 @@ java {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0" // JVM dependency
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    implementation group: 'com.hierynomus', name: 'sshj', version: '0.30.0'
+    implementation group: 'com.hierynomus', name: 'sshj', version: '0.31.0'
 
     api "org.slf4j:slf4j-api:1.7.30"
     api "ch.qos.logback:logback-classic:1.2.3"
@@ -79,6 +73,7 @@ task fatJar(type: Jar) {
     with jar
 }
 
+//create a single Jar with all dependencies excl. Kotlin libs without version-number but with suffix "latest"
 task fatJarLatest(type: Jar) {
     doFirst {
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
@@ -113,7 +108,6 @@ task uberJar(type: Jar) {
     }
     archiveClassifier = 'uber'
 }
-
 
 //create a single Jar with all dependencies incl. Kotlin libs - as ...-latest
 task uberJarLatest(type: Jar) {
@@ -162,6 +156,8 @@ publishing {
                     header(HttpHeaderAuthentication)
                 }
             }
+        } else {
+            mavenLocal()
         }
     }
 }
