@@ -14,7 +14,7 @@ apply plugin: 'java-test-fixtures'
 apply plugin: 'maven-publish'
 
 group = 'io.provs'
-version = '0.8.8'
+version = '0.8.9-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -40,11 +40,15 @@ test {
 compileJava.options.debugOptions.debugLevel = "source,lines,vars"
 compileTestJava.options.debugOptions.debugLevel = "source,lines,vars"
 
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
+
 // https://stackoverflow.com/questions/21904269/configure-gradle-to-publish-sources-and-javadoc
 java {
     withSourcesJar()
     withJavadocJar()
 }
+
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

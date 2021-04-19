@@ -161,7 +161,6 @@ open class Prov protected constructor(private val processor: Processor, val name
      */
     fun getSecret(command: String): Secret? {
         val result = cmdNoLog(command)
-        addResultToEval(ProvResult(result.success, err = result.err, exception = result.exception, exit = result.exit))
         return if (result.success && result.out != null) {
             addResultToEval(ProvResult(true, getCallingMethodName()))
             Secret(result.out)
