@@ -118,12 +118,12 @@ open class Prov protected constructor(private val processor: Processor, val name
 
 
     /**
-     * Execute commands using the shell
+     * Executes a command by using the shell.
      * Be aware: Executing shell commands that incorporate unsanitized input from an untrusted source
      * makes a program vulnerable to shell injection, a serious security flaw which can result in arbitrary command execution.
      * Thus, the use of this method is strongly discouraged in cases where the command string is constructed from external input.
      */
-    open fun cmd(cmd: String, dir: String? = null): ProvResult {
+    open fun cmd(cmd: String, dir: String? = null, sudo: Boolean = false): ProvResult {
         throw Exception("Not implemented")
     }
 
@@ -132,7 +132,7 @@ open class Prov protected constructor(private val processor: Processor, val name
      * Same as method cmd but without logging of the result/output, should be used e.g. if secrets are involved.
      * Attention: only result is NOT logged the executed command still is.
      */
-    open fun cmdNoLog(cmd: String, dir: String? = null): ProvResult {
+    open fun cmdNoLog(cmd: String, dir: String? = null, sudo: Boolean = false): ProvResult {
         throw Exception("Not implemented")
     }
 
@@ -141,7 +141,7 @@ open class Prov protected constructor(private val processor: Processor, val name
      * Same as method cmd but without evaluating the result for the overall success.
      * Can be used e.g. for checks which might succeed or fail but where failure should not influence overall success
      */
-    open fun cmdNoEval(cmd: String, dir: String? = null): ProvResult {
+    open fun cmdNoEval(cmd: String, dir: String? = null, sudo: Boolean = false): ProvResult {
         throw Exception("Not implemented")
     }
 
@@ -184,7 +184,7 @@ open class Prov protected constructor(private val processor: Processor, val name
      * Multi-line commands within the script are not supported.
      * Empty lines and comments (all text behind # in a line) are supported, i.e. they are ignored.
      */
-    fun sh(script: String) = def {
+    fun sh(script: String, dir: String? = null, sudo: Boolean = false) = def {
         val lines = script.trimIndent().replace("\r\n", "\n").split("\n")
         val linesWithoutComments = lines.stream().map { it.split("#")[0] }
         val linesNonEmpty = linesWithoutComments.filter { it.trim().isNotEmpty() }
@@ -193,7 +193,7 @@ open class Prov protected constructor(private val processor: Processor, val name
 
         for (cmd in linesNonEmpty) {
             if (success) {
-                success = success && cmd(cmd).success
+                success = success && cmd(cmd, dir, sudo).success
             }
         }
         ProvResult(success)

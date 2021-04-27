@@ -46,6 +46,20 @@ internal class UbuntuProvTests {
 
     @Test
     @EnabledOnOs(OS.LINUX)
+    fun that_cmd_works_with_sudo() {
+        // given
+        val a = Prov.defaultInstance()
+
+        // when
+        val res1 = a.cmd("echo abc", "/root", sudo = true)
+
+        // then
+        assert(res1.success)
+        assert(res1.out?.trim() == "abc")
+    }
+
+    @Test
+    @EnabledOnOs(OS.LINUX)
     fun that_nested_shells_work() {
         // given
         val a = Prov.defaultInstance()

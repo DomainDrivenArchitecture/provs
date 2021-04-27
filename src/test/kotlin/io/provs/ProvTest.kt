@@ -53,6 +53,27 @@ internal class ProvTest {
         assert(res)
     }
 
+    @Test
+    @EnabledOnOs(OS.LINUX)
+    @ContainerTest
+    fun sh_onLinux_with_dir_and_sudo() {
+        // given
+        val script = """
+            # test some script commands
+        
+            ping -c1 google.com
+            echo something
+            ping -c1 github.com
+            echo 1 # comment behind command
+        """
+
+        // when
+        val res = Prov.newInstance(name = "provs_test").sh(script, "/root", true).success
+
+        // then
+        assert(res)
+    }
+
 
     @Test
     @EnabledOnOs(OS.WINDOWS)
