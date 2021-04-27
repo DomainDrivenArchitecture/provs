@@ -3,7 +3,6 @@ image: openjdk:11-jdk-slim
 stages:
   - build
   - test
-  - jar
   - publish
 
 before_script:
@@ -46,21 +45,15 @@ test:
     reports:
       junit: build/test-results/test/TEST-*.xml
 
-jar:
-  stage: jar
+publish:
+  stage: publish
   script:
-    - echo "---------- jar ----------"
     - ./gradlew jar
+    - ./gradlew publish
   artifacts:
     paths:
       - build/libs/*.jar
     expire_in: 2 months
-
-publish:
-  stage: publish
-  script:
-    - echo "---------- publish ----------"
-    - ./gradlew publish
 
 after_script:
   - echo "---------- End CI ----------"

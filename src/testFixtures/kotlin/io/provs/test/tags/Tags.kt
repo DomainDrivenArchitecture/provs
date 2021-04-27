@@ -18,4 +18,4 @@ annotation class ContainerTest
 @kotlin.annotation.Retention
 @Tag(CONTAINER_TEST_NON_CI)
 @Test
-annotation class ContainerTestNonCi
+annotation class NonCi

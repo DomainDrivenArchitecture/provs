@@ -2,7 +2,7 @@ package io.provs
 
 import io.provs.docker.provideContainer
 import io.provs.test.tags.ContainerTest
-import io.provs.test.tags.ContainerTestNonCi
+import io.provs.test.tags.NonCi
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -56,6 +56,7 @@ internal class ProvTest {
     @Test
     @EnabledOnOs(OS.LINUX)
     @ContainerTest
+    @NonCi
     fun sh_onLinux_with_dir_and_sudo() {
         // given
         val script = """
@@ -429,7 +430,7 @@ internal class ProvTest {
 
     @Test
     @EnabledOnOs(OS.LINUX)
-    @ContainerTestNonCi
+    @NonCi
     fun inContainer_locally() {
         // given
         val containerName = "provs_test"

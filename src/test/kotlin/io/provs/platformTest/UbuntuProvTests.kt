@@ -1,6 +1,7 @@
 package io.provs.platformTest
 
 import io.provs.Prov
+import io.provs.test.tags.NonCi
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
@@ -46,6 +47,7 @@ internal class UbuntuProvTests {
 
     @Test
     @EnabledOnOs(OS.LINUX)
+    @NonCi
     fun that_cmd_works_with_sudo() {
         // given
         val a = Prov.defaultInstance()
