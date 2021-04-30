@@ -97,9 +97,9 @@ open class Prov protected constructor(private val processor: Processor, val name
         val result = processor.xNoLog(*cmd)
         return ProvResult(
             success = (result.exitCode == 0),
-            cmd = result.argsToString(),
-            out = result.out,
-            err = result.err
+            cmd = "***",
+            out = "***",
+            err = "***"
         )
     }
 
