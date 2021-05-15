@@ -5,68 +5,103 @@ import io.provs.platforms.UbuntuProv
 import io.provs.platforms.WinProv
 import io.provs.processors.LocalProcessor
 import io.provs.processors.Processor
+import org.slf4j.LoggerFactory
 
 
+
+enum class ProgressType { NONE, DOTS, BASIC, FULL_LOG }
 enum class ResultMode { NONE, LAST, ALL, FAILEXIT }
 enum class OS { WINDOWS, LINUX }
 
 
 /**
- * This main class offers methods to execute shell commands either locally or remotely (via ssh) or in a docker
+ * This main class offers methods to execute shell commands.
+ * The commands are executed locally, remotely (via ssh) or in a docker container
  * depending on the processor which is passed to the constructor.
  */
-open class Prov protected constructor(private val processor: Processor, val name: String? = null) {
+open class Prov protected constructor(
+    private val processor: Processor,
+    val name: String? = null,
+    private val progressType: ProgressType = ProgressType.BASIC
+) {
+    init {
+        if (progressType == ProgressType.FULL_LOG) {
+            val log = LoggerFactory.getILoggerFactory()
+                .getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME) as (ch.qos.logback.classic.Logger)
+            log.level = ch.qos.logback.classic.Level.INFO
+        }
+    }
 
     companion object Factory {
 
-        lateinit var prov: Prov
+        private lateinit var defaultProvInstance: Prov
 
         fun defaultInstance(platform: String? = null): Prov {
-            return if (::prov.isInitialized) {
-                prov
+            return if (::defaultProvInstance.isInitialized) {
+                defaultProvInstance
             } else {
-                prov = newInstance(platform = platform, name = "default instance")
-                prov
+                defaultProvInstance = newInstance(platform = platform, name = "default instance")
+                defaultProvInstance
             }
         }
 
-        fun newInstance(processor: Processor = LocalProcessor(), platform: String? = null, name: String? = null): Prov {
+        fun newInstance(
+            processor: Processor = LocalProcessor(),
+            platform: String? = null,
+            name: String? = null,
+            progressType: ProgressType = ProgressType.BASIC
+        ): Prov {
 
             val os = platform ?: System.getProperty("os.name")
 
             return when {
-                os.toUpperCase().contains(OS.LINUX.name) -> UbuntuProv(processor, name)
-                os.toUpperCase().contains(OS.WINDOWS.name) -> WinProv(processor, name)
+                os.toUpperCase().contains(OS.LINUX.name) -> UbuntuProv(processor, name, progressType)
+                os.toUpperCase().contains(OS.WINDOWS.name) -> WinProv(processor, name, progressType)
                 else -> throw Exception("OS not supported")
             }
         }
     }
 
-    private val internalResults = arrayListOf<InternalResult>()
+
+    private val internalResults = arrayListOf<ResultLine>()
     private var level = 0
     private var previousLevel = 0
     private var exit = false
     private var runInContainerWithName: String? = null
 
 
-
-    // task defining functions
+    /**
+     * defines a task with default success behavior, i.e. returns success if all subtasks finished with success.
+     * Same as requireAll.
+     */
     fun def(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.ALL) { a() }
     }
 
+    /**
+     * defines a task, which returns success if the the last subtasks or last value returns success
+     */
     fun requireLast(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.LAST) { a() }
     }
 
+    /**
+     * defines a task, which always returns success
+     */
     fun optional(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.NONE) { a() }
     }
 
+    /**
+     * defines a task, which returns success if all subtasks finished with success
+     */
     fun requireAll(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.ALL) { a() }
     }
 
+    /**
+     * defines a task, which exits the overall execution on failure
+     */
     fun exitOnFailure(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.FAILEXIT) { a() }
     }
@@ -80,7 +115,9 @@ open class Prov protected constructor(private val processor: Processor, val name
     }
 
 
-    // execute programs
+    /**
+     *  execute program with parameters
+     */
     fun xec(vararg s: String): ProvResult {
         val cmd = runInContainerWithName?.let { cmdInContainer(it, *s) } ?: s
         val result = processor.x(*cmd)
@@ -92,6 +129,9 @@ open class Prov protected constructor(private val processor: Processor, val name
         )
     }
 
+    /**
+     *  execute program with parameters without logging (to be used if secrets are involved)
+     */
     fun xecNoLog(vararg s: String): ProvResult {
         val cmd = runInContainerWithName?.let { cmdInContainer(it, *s) } ?: s
         val result = processor.xNoLog(*cmd)
@@ -101,19 +141,6 @@ open class Prov protected constructor(private val processor: Processor, val name
             out = result.out,
             err = "***"
         )
-    }
-
-    private fun cmdInContainer(containerName: String, vararg args: String): Array<String> {
-        return arrayOf(SHELL, "-c", "sudo docker exec $containerName " + buildCommand(*args))
-    }
-    private fun buildCommand(vararg args: String) : String {
-        return if (args.size == 1)
-            args[0].escapeAndEncloseByDoubleQuoteForShell()
-        else
-            if (args.size == 3 && SHELL.equals(args[0]) && "-c".equals(args[1]))
-                SHELL + " -c " + args[2].escapeAndEncloseByDoubleQuoteForShell()
-            else
-                args.joinToString(separator = " ")
     }
 
 
@@ -172,7 +199,7 @@ open class Prov protected constructor(private val processor: Processor, val name
 
 
     /**
-     * Adds an ProvResult to the overall success evaluation.
+     * Adds a ProvResult to the overall success evaluation.
      * Intended for use in methods which do not automatically add results.
      */
     fun addResultToEval(result: ProvResult) = requireAll {
@@ -200,6 +227,22 @@ open class Prov protected constructor(private val processor: Processor, val name
     }
 
 
+    // todo: put logic in subclasses, such as UbuntuProv
+    private fun cmdInContainer(containerName: String, vararg args: String): Array<String> {
+        return arrayOf(SHELL, "-c", "sudo docker exec $containerName " + buildCommand(*args))
+    }
+
+    private fun buildCommand(vararg args: String): String {
+        return if (args.size == 1)
+            args[0].escapeAndEncloseByDoubleQuoteForShell()
+        else
+            if (args.size == 3 && SHELL.equals(args[0]) && "-c".equals(args[1]))
+                SHELL + " -c " + args[2].escapeAndEncloseByDoubleQuoteForShell()
+            else
+                args.joinToString(separator = " ")
+    }
+
+
     /**
      * Provides result handling, e.g. gather results for result summary
      */
@@ -210,13 +253,14 @@ open class Prov protected constructor(private val processor: Processor, val name
             internalResults.clear()
             previousLevel = -1
             exit = false
-            ProgressBar.init()
+            initProgress()
         }
 
         // pre-handling
         val resultIndex = internalResults.size
         val method = getCallingMethodName()
-        internalResults.add(InternalResult(level, method, null))
+        val internalResult = ResultLine(level, method, null)
+        internalResults.add(internalResult)
 
         previousLevel = level
 
@@ -224,7 +268,7 @@ open class Prov protected constructor(private val processor: Processor, val name
 
         // call the actual function
         val res = if (!exit) {
-            ProgressBar.progress()
+            progress(internalResult)
             @Suppress("UNUSED_EXPRESSION") // false positive
             a()
         } else {
@@ -261,7 +305,7 @@ open class Prov protected constructor(private val processor: Processor, val name
         internalResults[resultIndex].provResult = returnValue
 
         if (level == 0) {
-            ProgressBar.end()
+            endProgress()
             processor.close()
             printResults()
         }
@@ -270,16 +314,16 @@ open class Prov protected constructor(private val processor: Processor, val name
     }
 
 
-    private fun internalResultIsLeaf(resultIndex: Int) : Boolean {
+    private fun internalResultIsLeaf(resultIndex: Int): Boolean {
         return !(resultIndex < internalResults.size - 1 && internalResults[resultIndex + 1].level > internalResults[resultIndex].level)
     }
 
 
-    private fun cumulativeSuccessSublevel(resultIndex: Int) : Boolean? {
+    private fun cumulativeSuccessSublevel(resultIndex: Int): Boolean? {
         val currentLevel = internalResults[resultIndex].level
-        var res : Boolean? = null
+        var res: Boolean? = null
         var i = resultIndex + 1
-        while ( i < internalResults.size && internalResults[i].level > currentLevel) {
+        while (i < internalResults.size && internalResults[i].level > currentLevel) {
             if (internalResults[i].level == currentLevel + 1) {
                 res =
                     if (res == null) internalResults[i].provResult?.success else res && (internalResults[i].provResult?.success
@@ -290,23 +334,6 @@ open class Prov protected constructor(private val processor: Processor, val name
         return res
     }
 
-
-    private data class InternalResult(val level: Int, val method: String?, var provResult: ProvResult?) {
-        override fun toString() : String {
-            val provResult = provResult
-            return if (provResult != null) {
-                prefix(level) + (if (provResult.success) "Success -- " else "FAILED -- ") +
-                        method + " " + (provResult.cmd ?: "") +
-                        (if (!provResult.success && provResult.err != null) " -- Error: " + provResult.err.escapeNewline() else "")
-            } else
-                prefix(level) + " " + method + " " + "... in progress ... "
-
-        }
-
-        private fun prefix(level: Int): String {
-            return "---".repeat(level) + ">  "
-        }
-    }
 
     private val ANSI_RESET = "\u001B[0m"
     private val ANSI_BRIGHT_RED = "\u001B[91m"
@@ -320,15 +347,17 @@ open class Prov protected constructor(private val processor: Processor, val name
     //    val ANSI_PURPLE = "\u001B[35m"
     //    val ANSI_CYAN = "\u001B[36m"
     //    val ANSI_WHITE = "\u001B[37m"
-    //    val ANSI_GRAY = "\u001B[90m"
+    val ANSI_GRAY = "\u001B[90m"
 
     private fun printResults() {
-        println("============================================== SUMMARY " + (if (name != null) "(" + name + ") " else "") +
-                "============================================== ")
+        println(
+            "============================================== SUMMARY " + (if (name != null) "(" + name + ") " else "") +
+                    "============================================== "
+        )
         for (result in internalResults) {
             println(
-                result.toString().escapeNewline().
-                replace("Success --", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET + " --")
+                result.toString().escapeNewline()
+                    .replace("Success --", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET + " --")
                     .replace("FAILED --", ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET + " --")
             )
         }
@@ -342,20 +371,70 @@ open class Prov protected constructor(private val processor: Processor, val name
         }
         println("============================================ SUMMARY END ============================================ " + newline())
     }
+
+    private fun String.formattedAsResultLine(): String = this
+        .replace("Success", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET)
+        .replace("FAILED", ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET)
+        .replace("executing...", ANSI_GRAY + "executing..." + ANSI_RESET)
+
+
+    private fun initProgress() {
+        if ((progressType == ProgressType.DOTS) || (progressType == ProgressType.BASIC)) {
+            println("---------- Processing started ----------")
+            System.out.flush()
+        }
+    }
+
+    private fun progress(line: ResultLine) {
+        if (progressType == ProgressType.DOTS) {
+            print(".")
+            System.out.flush()
+        } else if (progressType == ProgressType.BASIC) {
+            val shortLine = line.inProgress()
+            if (!shortLine.endsWith("cmd") && !shortLine.endsWith("sh")) {
+                println(shortLine.formattedAsResultLine())
+                System.out.flush()
+            }
+        }
+    }
+
+    private fun endProgress() {
+        if ((progressType == ProgressType.DOTS) || (progressType == ProgressType.BASIC)) {
+            println("---------- Processing completed ----------")
+        }
+    }
+
 }
 
 
-private object ProgressBar {
-    fun init() {
-        print("Processing started ...\n")
+internal data class ResultLine(val level: Int, val method: String?, var provResult: ProvResult?) {
+    override fun toString(): String {
+        val provResult = provResult
+        return if (provResult != null) {
+            prefix(level) + (if (provResult.success) "Success -- " else "FAILED -- ") +
+                    method + " " + (provResult.cmd ?: "") +
+                    (if (!provResult.success && provResult.err != null) " -- Error: " + provResult.err.escapeNewline() else "")
+        } else
+            prefix(level) + method + " " + "... in progress ... "
+
     }
 
-    fun progress() {
-        print(".")
-        System.out.flush()
+    fun inProgress(): String {
+        return prefix(level) + "executing... -- " + method
     }
 
-    fun end() {
-        println("processing completed.")
+    private fun prefix(level: Int): String {
+        return "---".repeat(level) + ">  "
+    }
+}
+
+fun Prov.myfu() = def {
+    cmd("echo asdf222")
+}
+fun main() {
+
+    local().def {
+        cmd("echo asdfasdf")
+        myfu()
     }
 }

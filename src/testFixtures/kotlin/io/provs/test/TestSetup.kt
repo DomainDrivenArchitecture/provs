@@ -1,10 +1,10 @@
 package io.provs.test
 
+import io.provs.ProgressType
 import io.provs.Prov
 import io.provs.docker.dockerImageExists
 import io.provs.docker.dockerProvideImage
 import io.provs.docker.images.UbuntuPlusUser
-import io.provs.local
 import io.provs.processors.ContainerStartMode
 import io.provs.processors.ContainerUbuntuHostProcessor
 
@@ -16,7 +16,7 @@ const val defaultTestContainerName = "provs_test"
 
 fun defaultTestContainer(): Prov {
     val image = UbuntuPlusUser()
-    val prov = local()
+    val prov = testLocal()
     if (!prov.dockerImageExists(image.imageName(), testDockerWithSudo)) {
         prov.dockerProvideImage(image, sudo = testDockerWithSudo)
     }
@@ -27,6 +27,11 @@ fun defaultTestContainer(): Prov {
             startMode = DEFAULT_START_MODE_TEST_CONTAINER,
             sudo = testDockerWithSudo,
             dockerImage = image.imageName()
-        )
+        ),
+        progressType = ProgressType.NONE
     )
+}
+
+fun testLocal(): Prov {
+    return Prov.newInstance(name = "testing", progressType = ProgressType.NONE)
 }

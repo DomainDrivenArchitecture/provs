@@ -2,19 +2,18 @@ package io.provs.platformTest
 
 import io.provs.Prov
 import io.provs.test.tags.NonCi
+import io.provs.test.testLocal
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
 
 internal class UbuntuProvTests {
 
-    private val prov = Prov.defaultInstance()
-
-    private fun ping(url: String) = prov.def {
+    private fun Prov.ping(url: String) = def {
         xec("ping", "-c", "4", url)
     }
 
-    private fun outerPing() = prov.def {
+    private fun Prov.outerPing() = def {
         ping("gitlab.com")
     }
 
@@ -22,7 +21,7 @@ internal class UbuntuProvTests {
     @EnabledOnOs(OS.LINUX)
     fun that_ping_works() {
         // when
-        val res = outerPing()
+        val res = testLocal().outerPing()
 
         // then
         assert(res.success)
@@ -32,7 +31,7 @@ internal class UbuntuProvTests {
     @EnabledOnOs(OS.LINUX)
     fun that_cmd_works() {
         // given
-        val a = Prov.defaultInstance()
+        val a = testLocal()
 
         // when
         val res1 = a.cmd("pwd")
@@ -50,7 +49,7 @@ internal class UbuntuProvTests {
     @NonCi
     fun that_cmd_works_with_sudo() {
         // given
-        val a = Prov.defaultInstance()
+        val a = testLocal()
 
         // when
         val res1 = a.cmd("echo abc", "/root", sudo = true)
@@ -64,7 +63,7 @@ internal class UbuntuProvTests {
     @EnabledOnOs(OS.LINUX)
     fun that_nested_shells_work() {
         // given
-        val a = Prov.defaultInstance()
+        val a = testLocal()
 
         // when
         val res1 = a.cmd("pwd")
@@ -81,7 +80,7 @@ internal class UbuntuProvTests {
     @EnabledOnOs(OS.LINUX)
     fun that_xec_works() {
         // given
-        val a = Prov.defaultInstance()
+        val a = testLocal()
 
         // when
         val res1 = a.xec("/usr/bin/printf", "hi")

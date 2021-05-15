@@ -28,10 +28,11 @@ fun UbuntuProv.provideContainerPlatform(
             throw RuntimeException("could not start docker")
         }
     } else if (startMode == ContainerStartMode.USE_RUNNING_ELSE_CREATE) {
-        val r =
-            cmd(dockerCmd + "inspect -f '{{.State.Running}}' $containerName")
-        if (!r.success || "false\n" == r.out) {
-            cmd(dockerCmd + "rm -f $containerName")
+        val runCheckResult = cmdNoEval(dockerCmd + "inspect -f '{{.State.Running}}' $containerName")
+
+        // if either container not found or container found but not running
+        if (!runCheckResult.success || "false\n" == runCheckResult.out) {
+            cmdNoEval(dockerCmd + "rm -f $containerName")
             cmd(dockerCmd + "run -dit --name=$containerName $imageName")
         }
     }
@@ -83,7 +84,7 @@ fun UbuntuProv.dockerProvideImagePlatform(image: DockerImage, skipIfExisting: Bo
 fun UbuntuProv.dockerImageExistsPlatform(imageName: String, sudo: Boolean): Boolean {
     val dockerCmd = if (sudo) "sudo docker " else "docker "
 
-    return (cmd(dockerCmd + "images $imageName -q").out != "")
+    return (cmdNoEval(dockerCmd + "images $imageName -q").out != "")
 }
 
 

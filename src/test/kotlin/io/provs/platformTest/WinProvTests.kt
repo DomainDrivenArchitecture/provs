@@ -1,6 +1,7 @@
 package io.provs.platformTest
 
 import io.provs.Prov
+import io.provs.test.testLocal
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
@@ -8,19 +9,17 @@ import org.junit.jupiter.api.condition.OS
 
 internal class WinProvTests {
 
-    private val prov = Prov.defaultInstance()
-
-    private fun ping(url: String) = prov.def {
+    private fun Prov.ping(url: String) = def {
         cmd("ping $url")
     }
 
-    private fun outerPing() = prov.def { ping("nu.nl") }
+    private fun Prov.outerPing() = def { ping("nu.nl") }
 
     @Test
     @EnabledOnOs(OS.WINDOWS)
     fun def_definesPing_function() {
         // when
-        val res = outerPing()
+        val res = testLocal().outerPing()
 
         // then
         assert(res.success)
@@ -30,7 +29,7 @@ internal class WinProvTests {
     @EnabledOnOs(OS.WINDOWS)
     fun cmd_executesCommand() {
         // given
-        val a = Prov.defaultInstance()
+        val a = testLocal()
 
         // when
         val res1 = a.cmd("echo %cd%")

@@ -1,5 +1,6 @@
 package io.provs.processors
 
+import io.provs.ProgressType
 import io.provs.Prov
 import io.provs.docker.provideContainer
 import io.provs.escapeAndEncloseByDoubleQuoteForShell
@@ -28,7 +29,7 @@ open class ContainerUbuntuHostProcessor(
 ) : Processor {
     private val dockerCmd = if (sudo) "sudo docker " else "docker "
     private var localExecution = LocalProcessor()
-    private var a = Prov.newInstance(name = "LocalProcessor for Docker operations")
+    private var a = Prov.newInstance(name = "LocalProcessor for Docker operations", progressType = ProgressType.NONE)
 
     init {
         val r = a.provideContainer(containerName, dockerImage, startMode, sudo)

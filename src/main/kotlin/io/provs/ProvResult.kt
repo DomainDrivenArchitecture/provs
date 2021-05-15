@@ -23,11 +23,3 @@ data class ProvResult(val success: Boolean,
                                 if (err != null) " Error: " + err else "") else ""
     }
 }
-
-
-@Suppress("unused")  // might be used by custom methods
-data class TypedResult<T>(val success: Boolean, val resultObject: T? = null) {
-    override fun toString(): String {
-        return "TypedResult:: ${if (success) "Succeeded" else "FAILED"} -- Result object: " + resultObject?.run { toString().escapeNewline() }
-    }
-}

@@ -1,15 +1,17 @@
 package io.provs.platforms
 
+import io.provs.ProgressType
 import io.provs.Prov
 import io.provs.ProvResult
 import io.provs.escapeAndEncloseByDoubleQuoteForShell
 import io.provs.processors.LocalProcessor
 import io.provs.processors.Processor
 
-const val SHELL = "/bin/bash"  // could be changed to another shell like "sh", "/bin/csh" if required
+const val SHELL = "/bin/bash"
 
 
-class UbuntuProv internal constructor(processor : Processor = LocalProcessor(), name: String? = null) : Prov (processor, name) {
+class UbuntuProv internal constructor(processor : Processor = LocalProcessor(), name: String? = null, progressType: ProgressType)
+    : Prov (processor, name, progressType) {
 
     override fun cmd(cmd: String, dir: String?, sudo: Boolean) : ProvResult = def {
         xec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))

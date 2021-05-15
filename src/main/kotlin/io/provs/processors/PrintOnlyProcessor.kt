@@ -1,6 +1,7 @@
 package io.provs.processors
 
 
+@Suppress("unused")  // used externally
 class PrintOnlyProcessor : Processor {
 
     override fun x(vararg args: String): ProcessResult

@@ -3,6 +3,7 @@ package io.provs
 import io.provs.docker.provideContainer
 import io.provs.test.tags.ContainerTest
 import io.provs.test.tags.NonCi
+import io.provs.test.testLocal
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -115,7 +116,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = Prov.defaultInstance().tst_def().success
+        val res = testLocal().tst_def().success
 
         // then
         assert(res)
@@ -130,7 +131,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = Prov.defaultInstance().tst_def().success
+        val res = testLocal().tst_def().success
 
         // then
         assert(res)
@@ -145,7 +146,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = Prov.defaultInstance().tst_def().success
+        val res = testLocal().tst_def().success
 
         // then
         assert(!res)
@@ -160,7 +161,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = Prov.defaultInstance().tst_def_all_true_mode_ALL().success
+        val res = testLocal().tst_def_all_true_mode_ALL().success
 
         // then
         assert(res)
@@ -176,7 +177,7 @@ internal class ProvTest {
     @Test
     fun def_modeALL_resultFalse() {
         // when
-        val res = Prov.defaultInstance().tst_def_one_false_mode_ALL().success
+        val res = testLocal().tst_def_one_false_mode_ALL().success
 
         // then
         assert(!res)
@@ -198,7 +199,7 @@ internal class ProvTest {
     @Test
     fun def_modeALLnested_resultFalse() {
         // when
-        val res = Prov.defaultInstance().tst_def_one_false_mode_ALL_nested().success
+        val res = testLocal().tst_def_one_false_mode_ALL_nested().success
 
         // then
         assert(!res)
@@ -218,7 +219,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = Prov.defaultInstance().tst_def_one_false_mode_ALL().success
+        val res = testLocal().tst_def_one_false_mode_ALL().success
 
         // then
         assert(!res)
@@ -238,7 +239,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = Prov.defaultInstance().tst_def_failexit_outer().success
+        val res = testLocal().tst_def_failexit_outer().success
 
         // then
         assert(!res)
@@ -258,7 +259,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = Prov.defaultInstance().tst_def_failexit_outer().success
+        val res = testLocal().tst_def_failexit_outer().success
 
         // then
         assert(res)
@@ -283,7 +284,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = Prov.defaultInstance().tst_nested().success
+        val res = testLocal().tst_nested().success
 
         // then
         assert(!res)
@@ -322,7 +323,7 @@ internal class ProvTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        local().methodThatProvidesSomeOutput()
+        Prov.newInstance(name = "test instance", progressType = ProgressType.NONE).methodThatProvidesSomeOutput()
 
         // then
         System.setOut(originalOut)
@@ -330,9 +331,8 @@ internal class ProvTest {
 
         println(outContent.toString())
 
-        // todo : simplify next lines
         val expectedOutput = if (OS.WINDOWS.isCurrentOs) "\n" +
-                "============================================== SUMMARY (default Instance) ============================================== \n" +
+                "============================================== SUMMARY (test Instance) ============================================== \n" +
                 ">  Success -- methodThatProvidesSomeOutput (requireLast) \n" +
                 "--->  FAILED -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                 "--->  Success -- sh \n" +
@@ -342,9 +342,7 @@ internal class ProvTest {
                 "------>  Success -- cmd [cmd.exe, /c, echo -End test-]\n" +
                 "============================================ SUMMARY END ============================================ \n"
         else if (OS.LINUX.isCurrentOs()) {
-            "Processing started ...\n" +
-                    ".......processing completed.\n" +
-                    "============================================== SUMMARY (default instance) ============================================== \n" +
+                    "============================================== SUMMARY (test instance) ============================================== \n" +
                     ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
                     "--->  \u001B[91mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
@@ -366,7 +364,7 @@ internal class ProvTest {
     @Test
     fun check_returnsTrue() {
         // when
-        val res = local().chk("echo 123")
+        val res = testLocal().chk("echo 123")
 
         // then
         assertTrue(res)
@@ -375,7 +373,7 @@ internal class ProvTest {
     @Test
     fun check_returnsFalse() {
         // when
-        val res = local().chk("cmddoesnotexist")
+        val res = testLocal().chk("cmddoesnotexist")
 
         // then
         assertFalse(res)
@@ -384,7 +382,7 @@ internal class ProvTest {
     @Test
     fun getSecret_returnsSecret() {
         // when
-        val res = local().getSecret("echo 123")
+        val res = testLocal().getSecret("echo 123")
 
         // then
         assertEquals("123", res?.plain()?.trim())
@@ -403,7 +401,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = local().outer()
+        val res = testLocal().outer()
 
         //then
         assertEquals(ProvResult(true), res)
@@ -422,7 +420,7 @@ internal class ProvTest {
         }
 
         // when
-        val res = local().outer()
+        val res = testLocal().outer()
 
         //then
         assertEquals(ProvResult(false), res)
@@ -434,7 +432,7 @@ internal class ProvTest {
     fun inContainer_locally() {
         // given
         val containerName = "provs_test"
-        local().provideContainer(containerName, "ubuntu")
+        testLocal().provideContainer(containerName, "ubuntu")
 
         fun Prov.inner() = def {
             cmd("echo in container")
@@ -448,7 +446,7 @@ internal class ProvTest {
             }
         }
 
-        val res = local().def { outer() }
+        val res = testLocal().def { outer() }
 
         // then
         assertEquals(true, res.success)

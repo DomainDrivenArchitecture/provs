@@ -10,11 +10,12 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'java-library'
 apply plugin: 'java-test-fixtures'
 apply plugin: 'maven-publish'
 
 group = 'io.provs'
-version = '0.8.10-SNAPSHOT'
+version = '0.8.11-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -38,6 +39,7 @@ test {
 }
 
 compileJava.options.debugOptions.debugLevel = "source,lines,vars"
+compileTestFixturesJava.options.debugOptions.debugLevel = "source,lines,vars"
 compileTestJava.options.debugOptions.debugLevel = "source,lines,vars"
 
 sourceCompatibility = 1.11

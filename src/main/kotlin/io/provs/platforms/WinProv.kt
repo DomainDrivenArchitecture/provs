@@ -1,12 +1,14 @@
 package io.provs.platforms
 
+import io.provs.ProgressType
 import io.provs.Prov
 import io.provs.ProvResult
 import io.provs.processors.LocalProcessor
 import io.provs.processors.Processor
 
 
-class WinProv internal constructor(processor : Processor = LocalProcessor(), name: String? = null) : Prov (processor, name) {
+class WinProv internal constructor(processor : Processor = LocalProcessor(), name: String? = null, progressType: ProgressType)
+    : Prov (processor, name, progressType) {
 
     private val SHELL = "cmd.exe"
 
