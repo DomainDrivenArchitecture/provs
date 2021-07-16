@@ -15,7 +15,7 @@ apply plugin: 'java-test-fixtures'
 apply plugin: 'maven-publish'
 
 group = 'io.provs'
-version = '0.8.11-SNAPSHOT'
+version = '0.8.11'
 
 repositories {
     mavenCentral()
