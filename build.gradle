@@ -75,6 +75,8 @@ task fatJar(type: Jar) {
                 'Main-Class': 'io.provs.entry.EntryKt'
     }
     archivesBaseName = project.name + '-all'
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
@@ -84,6 +86,7 @@ task fatJarLatest(type: Jar) {
     doFirst {
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 
     manifest {
@@ -104,6 +107,7 @@ task uberJar(type: Jar) {
     from {
         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
     } {
+        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
         exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     }
 
@@ -124,6 +128,7 @@ task uberJarLatest(type: Jar) {
     from {
         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
     } {
+        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
         exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     }
 
