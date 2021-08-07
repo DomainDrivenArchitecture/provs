@@ -14,12 +14,11 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-library'
 apply plugin: 'java-test-fixtures'
 apply plugin: 'maven-publish'
-//apply plugin: 'kotlin'
 apply plugin: 'kotlinx-serialization'
 
 
 group = 'io.provs'
-version = '0.8.13'
+version = '0.8.14-SNAPSHOT'
 
 repositories {
     mavenCentral()
