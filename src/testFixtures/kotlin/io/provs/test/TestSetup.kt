@@ -8,13 +8,11 @@ import io.provs.core.docker.dockerimages.UbuntuPlusUser
 import io.provs.core.processors.ContainerStartMode
 import io.provs.core.processors.ContainerUbuntuHostProcessor
 
-val DEFAULT_START_MODE_TEST_CONTAINER = ContainerStartMode.USE_RUNNING_ELSE_CREATE
-
 val testDockerWithSudo = !"true".equals(System.getProperty("testdockerwithoutsudo")?.toLowerCase())
 
 const val defaultTestContainerName = "provs_test"
 
-fun defaultTestContainer(): Prov {
+fun defaultTestContainer(startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE): Prov {
     val image = UbuntuPlusUser()
     val prov = testLocal()
     if (!prov.dockerImageExists(image.imageName(), testDockerWithSudo)) {
@@ -24,7 +22,7 @@ fun defaultTestContainer(): Prov {
     return Prov.newInstance(
         ContainerUbuntuHostProcessor(
             defaultTestContainerName,
-            startMode = DEFAULT_START_MODE_TEST_CONTAINER,
+            startMode = startMode,
             sudo = testDockerWithSudo,
             dockerImage = image.imageName()
         ),

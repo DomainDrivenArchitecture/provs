@@ -5,6 +5,7 @@ import io.provs.core.ProvResult
 import io.provs.core.Secret
 import io.provs.core.docker.exitAndRmContainer
 import io.provs.core.local
+import io.provs.core.processors.ContainerStartMode
 import io.provs.test.defaultTestContainer
 import io.provs.test.tags.ContainerTest
 import io.provs.test.tags.NonCi
@@ -73,8 +74,7 @@ internal class GopassBridgeKtTest {
     @NonCi
     fun test_install_GopassBridgeJsonApi_with_incompatible_gopass_jsonapi_version_installed() {
         // given
-        local().exitAndRmContainer("provs_test")
-        val a = defaultTestContainer()
+        val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
         val preparationResult = a.def {
             aptInstallCurl()
 
@@ -108,8 +108,7 @@ internal class GopassBridgeKtTest {
     @NonCi
     fun test_install_GopassBridgeJsonApi_with_incompatible_gopass_version_installed() {
         // given
-        local().exitAndRmContainer("provs_test")
-        val a = defaultTestContainer()
+        val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
         val preparationResult = a.def {
             aptInstallCurl()
             configureGpgKeys(

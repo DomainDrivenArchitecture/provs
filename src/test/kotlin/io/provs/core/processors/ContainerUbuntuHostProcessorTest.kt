@@ -1,7 +1,6 @@
 package io.provs.core.processors
 
 import io.provs.core.platforms.SHELL
-import io.provs.test.DEFAULT_START_MODE_TEST_CONTAINER
 import io.provs.test.tags.ContainerTest
 import io.provs.test.testDockerWithSudo
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS.LINUX
 
+val DEFAULT_START_MODE_TEST_CONTAINER = ContainerStartMode.USE_RUNNING_ELSE_CREATE
 
 class ContainerUbuntuHostProcessorTest {
 
