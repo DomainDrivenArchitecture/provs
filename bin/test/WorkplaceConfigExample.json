@@ -1,0 +1,7 @@
+{
+  "type": "MINIMAL",
+  "ssh": null,
+  "gpg": null,
+  "gitUserName": "mygitusername",
+  "gitEmail": "my@git.email"
+}
