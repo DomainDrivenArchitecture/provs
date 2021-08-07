@@ -1,7 +1,7 @@
 package io.provs.ubuntu.extensions.workplace.base
 
-import io.provs.Prov
-import io.provs.ProvResult
+import io.provs.core.Prov
+import io.provs.core.ProvResult
 import io.provs.ubuntu.filesystem.base.createDir
 import io.provs.ubuntu.filesystem.base.createDirs
 import io.provs.ubuntu.filesystem.base.createFile
@@ -30,11 +30,12 @@ fun Prov.installGopass(version: String = "1.12.7", enforceVersion: Boolean = fal
 
 
 fun Prov.configureGopass(gopassRootFolder: String? = null) = def {
-    val gopassRootFolderNonNull = (gopassRootFolder ?: userHome()) + ".password-store"
+    val defaultRootFolder = userHome() + ".password-store"
+    val rootFolder = gopassRootFolder ?: defaultRootFolder
     // use default
-    createDir(gopassRootFolderNonNull)
-    createDirs(".config/gopass", "~/")
-    createFile("~/.config/gopass/config.yml", gopassConfig(gopassRootFolderNonNull))
+    createDir(rootFolder)
+    createDirs(".config/gopass")
+    createFile("~/.config/gopass/config.yml", gopassConfig(rootFolder))
 }
 
 

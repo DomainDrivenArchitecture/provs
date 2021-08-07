@@ -1,8 +1,7 @@
 package io.provs.ubuntu.extensions.server_software.prometheus.base
 
-import io.provs.Prov
-import io.provs.docker.containerRuns
-import io.provs.local
+import io.provs.core.Prov
+import io.provs.core.docker.containerRuns
 import io.provs.ubuntu.filesystem.base.createDirs
 import io.provs.ubuntu.filesystem.base.createFile
 import io.provs.ubuntu.install.base.aptInstall

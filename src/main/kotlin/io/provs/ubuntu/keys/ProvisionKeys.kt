@@ -1,8 +1,8 @@
 package io.provs.ubuntu.keys
 
-import io.provs.Prov
-import io.provs.ProvResult
-import io.provs.Secret
+import io.provs.core.Prov
+import io.provs.core.ProvResult
+import io.provs.core.Secret
 import io.provs.ubuntu.keys.base.configureGpgKeys
 import io.provs.ubuntu.keys.base.configureSshKeys
 import io.provs.ubuntu.secret.SecretSourceType

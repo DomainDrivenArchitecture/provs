@@ -1,7 +1,7 @@
 package io.provs.ubuntu.web.base
 
-import io.provs.Prov
-import io.provs.ProvResult
+import io.provs.core.Prov
+import io.provs.core.ProvResult
 import io.provs.ubuntu.install.base.aptInstall
 import io.provs.ubuntu.install.base.isPackageInstalled
 

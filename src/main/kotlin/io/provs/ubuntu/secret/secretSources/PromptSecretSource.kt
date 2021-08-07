@@ -1,6 +1,6 @@
 package io.provs.ubuntu.secret.secretSources
 
-import io.provs.Secret
+import io.provs.core.Secret
 import io.provs.ubuntu.secret.SecretSource
 import java.awt.FlowLayout
 import javax.swing.*

@@ -8,10 +8,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import io.provs.test.defaultTestContainer
+import io.provs.test.tags.NonCi
 
 internal class LocationsKtTest {
 
     @Test
+    @NonCi
     fun nginxIncludeLocationFolders() {
         // given
         val a = defaultTestContainer()

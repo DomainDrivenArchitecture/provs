@@ -1,12 +1,8 @@
 package io.provs.ubuntu.extensions.workplace.base
 
-import io.provs.Prov
-import io.provs.ProvResult
-import io.provs.remote
+import io.provs.core.Prov
+import io.provs.core.ProvResult
 import io.provs.ubuntu.install.base.aptInstall
-import io.provs.ubuntu.secret.secretSources.GopassSecretSource
-import io.provs.ubuntu.secret.secretSources.PlainSecretSource
-import io.provs.ubuntu.secret.secretSources.PromptSecretSource
 import io.provs.ubuntu.user.base.whoami
 
 fun Prov.installVirtualBoxGuestAdditions() = def {

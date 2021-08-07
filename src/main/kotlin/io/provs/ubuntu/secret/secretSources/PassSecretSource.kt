@@ -1,7 +1,7 @@
 package io.provs.ubuntu.secret.secretSources
 
-import io.provs.Prov
-import io.provs.Secret
+import io.provs.core.Prov
+import io.provs.core.Secret
 import io.provs.ubuntu.secret.SecretSource
 
 

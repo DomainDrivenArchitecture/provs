@@ -1,6 +1,6 @@
 package io.provs.ubuntu.extensions.server_software.nginx.base
 
-import io.provs.Prov
+import io.provs.core.Prov
 import io.provs.ubuntu.filesystem.base.createDirs
 import io.provs.ubuntu.extensions.server_software.nginx.provisionNginxStandAlone
 

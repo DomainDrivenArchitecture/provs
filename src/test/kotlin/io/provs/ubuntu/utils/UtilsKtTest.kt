@@ -1,6 +1,6 @@
 package io.provs.ubuntu.utils
 
-import io.provs.Prov
+import io.provs.core.Prov
 import io.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

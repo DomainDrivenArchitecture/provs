@@ -1,6 +1,6 @@
 package io.provs.ubuntu.extensions.workplace.base
 
-import io.provs.Prov
+import io.provs.core.Prov
 import io.provs.ubuntu.install.base.aptInstall
 
 fun Prov.installDocker() = def {

@@ -1,6 +1,7 @@
 package io.provs.ubuntu.extensions.server_software.nginx
 
 import io.provs.test.defaultTestContainer
+import io.provs.test.tags.NonCi
 import io.provs.ubuntu.filesystem.base.replaceTextInFile
 import io.provs.ubuntu.install.base.aptInstall
 import io.provs.ubuntu.extensions.server_software.nginx.base.*
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test
 internal class ProvisionNginxKtTest {
 
     @Test
+    @NonCi
     fun provisionNginxStandAlone_customConfig() {
         // given
         val a = defaultTestContainer()
@@ -40,6 +42,7 @@ internal class ProvisionNginxKtTest {
     }
 
     @Test
+    @NonCi
     fun provisionNginxStandAlone_defaultConfig() {
         // given
         val a = defaultTestContainer()
@@ -54,6 +57,7 @@ internal class ProvisionNginxKtTest {
     }
 
     @Test
+    @NonCi
     fun provisionNginxStandAlone_sslConfig() {
         // given
         val a = defaultTestContainer()

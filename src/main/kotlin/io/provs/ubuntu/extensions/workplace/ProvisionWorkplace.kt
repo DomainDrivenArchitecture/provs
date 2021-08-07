@@ -1,7 +1,7 @@
 package io.provs.ubuntu.extensions.workplace
 
-import io.provs.*
-import io.provs.processors.RemoteProcessor
+import io.provs.core.*
+import io.provs.core.processors.RemoteProcessor
 import io.provs.ubuntu.extensions.workplace.base.*
 import io.provs.ubuntu.git.provisionGit
 import io.provs.ubuntu.install.base.aptInstall

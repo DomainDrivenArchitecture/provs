@@ -1,7 +1,7 @@
 package io.provs.ubuntu.extensions.server_software.nginx.base
 
-import io.provs.Prov
-import io.provs.Secret
+import io.provs.core.Prov
+import io.provs.core.Secret
 import io.provs.ubuntu.install.base.aptInstall
 
 fun Prov.nginxAddBasicAuth(user: String, password: Secret) = requireAll {

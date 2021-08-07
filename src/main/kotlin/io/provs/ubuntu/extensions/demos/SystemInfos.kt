@@ -1,6 +1,6 @@
 package io.provs.ubuntu.extensions.demos
 
-import io.provs.*
+import io.provs.core.*
 
 
 /**

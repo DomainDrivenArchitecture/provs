@@ -1,7 +1,7 @@
 package io.provs.ubuntu.extensions.demos
 
-import io.provs.Prov
-import io.provs.local
+import io.provs.core.Prov
+import io.provs.core.local
 
 
 fun Prov.helloWorld() = def {

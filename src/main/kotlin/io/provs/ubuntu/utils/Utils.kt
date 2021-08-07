@@ -1,7 +1,7 @@
 package io.provs.ubuntu.utils
 
-import io.provs.escapeBackslash
-import io.provs.escapeDoubleQuote
+import io.provs.core.escapeBackslash
+import io.provs.core.escapeDoubleQuote
 
 
 // todo: investigate to use .escapeAndEncloseByDoubleQuoteForShell() or similar instead (?)

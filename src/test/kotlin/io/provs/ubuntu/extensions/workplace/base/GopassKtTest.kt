@@ -1,7 +1,7 @@
 package io.provs.ubuntu.extensions.workplace.base
 
-import io.provs.Secret
-import io.provs.remote
+import io.provs.core.Secret
+import io.provs.core.remote
 import io.provs.test.defaultTestContainer
 import io.provs.test.tags.ContainerTest
 import io.provs.ubuntu.filesystem.base.*
@@ -39,7 +39,7 @@ internal class GopassKtTest {
 
         // when
         val res = a.installGopass()
-        val res2 = a.configureGopass(a.userHome() + ".password-store")
+        val res2 = a.configureGopass(a.userHome() + gopassRootDir)
         val res3 = a.gopassMountStore("exampleStore", "~/exampleStoreFolder")
 
         // then

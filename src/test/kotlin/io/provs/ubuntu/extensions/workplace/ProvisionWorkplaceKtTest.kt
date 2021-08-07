@@ -1,6 +1,6 @@
 package io.provs.ubuntu.extensions.workplace
 
-import io.provs.Password
+import io.provs.core.Password
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import io.provs.test.defaultTestContainer

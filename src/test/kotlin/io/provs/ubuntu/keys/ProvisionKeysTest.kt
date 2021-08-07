@@ -1,6 +1,6 @@
 package io.provs.ubuntu.keys
 
-import io.provs.Secret
+import io.provs.core.Secret
 import io.provs.test.defaultTestContainer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs

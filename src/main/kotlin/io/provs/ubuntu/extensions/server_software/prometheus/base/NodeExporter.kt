@@ -1,7 +1,6 @@
 package io.provs.ubuntu.extensions.server_software.prometheus.base
 
-import io.provs.Prov
-import io.provs.local
+import io.provs.core.Prov
 import io.provs.ubuntu.filesystem.base.createDir
 import io.provs.ubuntu.filesystem.base.createFile
 import io.provs.ubuntu.filesystem.base.fileContainsText

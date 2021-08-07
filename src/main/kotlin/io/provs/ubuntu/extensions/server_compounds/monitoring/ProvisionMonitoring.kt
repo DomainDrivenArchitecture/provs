@@ -1,6 +1,6 @@
 package io.provs.ubuntu.extensions.server_compounds.monitoring
 
-import io.provs.Prov
+import io.provs.core.Prov
 import io.provs.ubuntu.extensions.server_software.nginx.base.NginxConf
 import io.provs.ubuntu.extensions.server_software.nginx.base.nginxHttpConf
 import io.provs.ubuntu.extensions.server_software.nginx.provisionNginxStandAlone

@@ -1,35 +1,23 @@
 package io.provs.ubuntu.extensions.server_software.firewall
 
-import io.provs.Prov
-
-import io.provs.docker.dockerProvideImage
-import io.provs.docker.exitAndRmContainer
-import io.provs.docker.images.UbuntuPlusUser
-import io.provs.local
-import io.provs.processors.ContainerEndMode
-import io.provs.processors.ContainerStartMode
-import io.provs.processors.ContainerUbuntuHostProcessor
+import io.provs.core.Prov
+import io.provs.core.docker.dockerProvideImage
+import io.provs.core.docker.dockerimages.UbuntuPlusUser
+import io.provs.core.docker.exitAndRmContainer
+import io.provs.core.local
+import io.provs.core.processors.ContainerEndMode
+import io.provs.core.processors.ContainerStartMode
+import io.provs.core.processors.ContainerUbuntuHostProcessor
+import io.provs.test.tags.NonCi
 import io.provs.ubuntu.install.base.aptInstall
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 
 internal class ProvisionFirewallKtTest {
 
     @Test
-    @Disabled
-    fun provisionFirewall() {
-        // todo
-    }
-
-    @Test
-    @Disabled
-    fun resetFirewall() {
-        // todo
-    }
-
-    @Test
+    @NonCi
     fun configureFirewall() {
         // given
         val dockerImage = UbuntuPlusUser()

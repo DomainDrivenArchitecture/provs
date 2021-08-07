@@ -1,7 +1,7 @@
 package io.provs.ubuntu.extensions.server_software.firewall.base
 
-import io.provs.Prov
-import io.provs.ProvResult
+import io.provs.core.Prov
+import io.provs.core.ProvResult
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

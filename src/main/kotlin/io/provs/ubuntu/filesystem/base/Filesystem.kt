@@ -1,7 +1,7 @@
 package io.provs.ubuntu.filesystem.base
 
-import io.provs.*
-import io.provs.platforms.SHELL
+import io.provs.core.*
+import io.provs.core.platforms.SHELL
 import java.io.File
 
 

@@ -1,10 +1,10 @@
 package io.provs.ubuntu.extensions.workplace.base
 
-import io.provs.Prov
-import io.provs.ProvResult
-import io.provs.Secret
-import io.provs.docker.exitAndRmContainer
-import io.provs.local
+import io.provs.core.Prov
+import io.provs.core.ProvResult
+import io.provs.core.Secret
+import io.provs.core.docker.exitAndRmContainer
+import io.provs.core.local
 import io.provs.test.defaultTestContainer
 import io.provs.test.tags.ContainerTest
 import io.provs.test.tags.NonCi

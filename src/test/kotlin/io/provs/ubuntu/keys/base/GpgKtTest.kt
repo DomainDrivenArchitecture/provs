@@ -1,7 +1,7 @@
 package io.provs.ubuntu.keys.base
 
-import io.provs.Prov
-import io.provs.Secret
+import io.provs.core.Prov
+import io.provs.core.Secret
 import io.provs.test.defaultTestContainer
 import io.provs.test.tags.ContainerTest
 import io.provs.ubuntu.keys.KeyPair

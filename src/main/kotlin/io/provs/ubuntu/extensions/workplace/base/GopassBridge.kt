@@ -1,7 +1,7 @@
 package io.provs.ubuntu.extensions.workplace.base
 
-import io.provs.Prov
-import io.provs.ProvResult
+import io.provs.core.Prov
+import io.provs.core.ProvResult
 import io.provs.ubuntu.filesystem.base.createDir
 import io.provs.ubuntu.filesystem.base.createDirs
 import io.provs.ubuntu.filesystem.base.userHome

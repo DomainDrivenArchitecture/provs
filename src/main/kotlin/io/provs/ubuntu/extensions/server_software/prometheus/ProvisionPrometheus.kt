@@ -1,6 +1,6 @@
 package io.provs.ubuntu.extensions.server_software.prometheus
 
-import io.provs.Prov
+import io.provs.core.Prov
 import io.provs.ubuntu.extensions.server_software.prometheus.base.*
 
 /**

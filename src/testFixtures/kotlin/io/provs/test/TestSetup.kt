@@ -1,12 +1,12 @@
 package io.provs.test
 
-import io.provs.ProgressType
-import io.provs.Prov
-import io.provs.docker.dockerImageExists
-import io.provs.docker.dockerProvideImage
-import io.provs.docker.images.UbuntuPlusUser
-import io.provs.processors.ContainerStartMode
-import io.provs.processors.ContainerUbuntuHostProcessor
+import io.provs.core.ProgressType
+import io.provs.core.Prov
+import io.provs.core.docker.dockerImageExists
+import io.provs.core.docker.dockerProvideImage
+import io.provs.core.docker.dockerimages.UbuntuPlusUser
+import io.provs.core.processors.ContainerStartMode
+import io.provs.core.processors.ContainerUbuntuHostProcessor
 
 val DEFAULT_START_MODE_TEST_CONTAINER = ContainerStartMode.USE_RUNNING_ELSE_CREATE
 

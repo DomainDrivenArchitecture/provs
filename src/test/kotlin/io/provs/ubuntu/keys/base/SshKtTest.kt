@@ -1,6 +1,6 @@
 package io.provs.ubuntu.keys.base
 
-import io.provs.Secret
+import io.provs.core.Secret
 import io.provs.test.defaultTestContainer
 import io.provs.ubuntu.keys.*
 import org.junit.jupiter.api.Test

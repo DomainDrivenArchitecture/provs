@@ -1,9 +1,9 @@
 package io.provs.ubuntu.extensions.server_software.nexus
 
-import io.provs.Prov
-import io.provs.ProvResult
-import io.provs.docker.containerRuns
-import io.provs.remote
+import io.provs.core.Prov
+import io.provs.core.ProvResult
+import io.provs.core.docker.containerRuns
+import io.provs.core.remote
 import io.provs.ubuntu.filesystem.base.fileExists
 import io.provs.ubuntu.install.base.aptInstall
 import io.provs.ubuntu.user.base.createUser
