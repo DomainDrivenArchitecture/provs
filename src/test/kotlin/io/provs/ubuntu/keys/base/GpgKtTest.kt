@@ -19,7 +19,7 @@ internal class GpgKtTest {
     @ContainerTest
     fun gpgFingerprint_returnsCorrectFingerprint() {
         // given
-        val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
+        val a = defaultTestContainer()
         a.aptInstall("gpg")
         a.cmd("gpg --version")   // just for info reasons
 
