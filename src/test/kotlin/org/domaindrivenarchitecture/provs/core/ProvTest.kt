@@ -311,6 +311,7 @@ internal class ProvTest {
     }
 
     @Test
+    @NonCi
     fun runProv_printsCorrectOutput() {
 
         // given
