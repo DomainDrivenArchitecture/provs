@@ -1,8 +1,18 @@
 package org.domaindrivenarchitecture.provs.core.platformTest
 
+import org.domaindrivenarchitecture.provs.core.ProgressType
 import org.domaindrivenarchitecture.provs.core.Prov
+import org.domaindrivenarchitecture.provs.core.docker.dockerImageExists
+import org.domaindrivenarchitecture.provs.core.docker.dockerProvideImage
+import org.domaindrivenarchitecture.provs.core.docker.dockerimages.DockerImage
+import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
+import org.domaindrivenarchitecture.provs.test.defaultTestContainerName
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
+import org.domaindrivenarchitecture.provs.test.testDockerWithSudo
 import org.domaindrivenarchitecture.provs.test.testLocal
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
@@ -95,5 +105,57 @@ internal class UbuntuProvTests {
         assert(res3.out?.trim() == "echoed")
     }
 
+    @Test
+    @EnabledOnOs(OS.LINUX)
+    fun test_user_cannot_sudo_without_password() {
+        // given
+        val image = UbuntuUserNeedsPasswordForSudo()
+        val prov = testLocal()
+        if (!prov.dockerImageExists(image.imageName(), true)) {
+            prov.dockerProvideImage(image, sudo = true)
+        }
+
+        val a = Prov.newInstance(
+            ContainerUbuntuHostProcessor(
+                "provs_test_without_password_for_sudo",
+                startMode = ContainerStartMode.CREATE_NEW_KILL_EXISTING,
+                sudo = testDockerWithSudo,
+                dockerImage = image.imageName()
+            ),
+            progressType = ProgressType.NONE
+        )
+
+        // when
+        val result = a.cmd("sudo echo bla")
+
+        // then
+        assertFalse(result.success)
+        assertEquals("sudo: no tty present and no askpass program specified\n", result.err)
+    }
+
 }
 
+/**
+ * Provides a docker image based on ubuntu additionally with a non-root default user and sudo installed but user needs password to sudo
+ */
+class UbuntuUserNeedsPasswordForSudo(private val userName: String = "testuser") : DockerImage {
+
+    override fun imageName(): String {
+        return "ubuntu_user_needs_password_for_sudo"
+    }
+
+    override fun imageText(): String {
+        return """
+FROM ubuntu:18.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get -y install sudo
+RUN useradd -m $userName && echo "$userName:$userName" | chpasswd && adduser $userName sudo
+
+USER $userName
+CMD /bin/bash
+WORKDIR /home/$userName
+"""
+    }
+}

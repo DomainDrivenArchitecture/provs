@@ -67,7 +67,6 @@ fun Prov.configureUser(config: UserConfig) = requireAll {
 
 
 @Suppress("unused")
-// todo create test
 fun Prov.deleteUser(userName: String, deleteHomeDir: Boolean = false): ProvResult = requireAll {
     val flagToDeleteHomeDir = if (deleteHomeDir) " -r " else ""
     if (userExists(userName)) {
@@ -130,7 +129,7 @@ fun Prov.userIsInGroupSudo(userName: String): Boolean {
  */
 @Suppress("unused")
 fun Prov.currentUserCanSudo(): Boolean {
-    return cmd("timeout 1 sudo id").success
+    return chk("timeout 1 sudo id")
 }
 
 

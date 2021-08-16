@@ -10,24 +10,34 @@ import org.domaindrivenarchitecture.provs.core.processors.Processor
 const val SHELL = "/bin/bash"
 
 
-class UbuntuProv internal constructor(processor : Processor = LocalProcessor(), name: String? = null, progressType: ProgressType)
-    : Prov(processor, name, progressType) {
+class UbuntuProv internal constructor(
+    processor: Processor = LocalProcessor(),
+    name: String? = null,
+    progressType: ProgressType
+) : Prov(processor, name, progressType) {
 
-    override fun cmd(cmd: String, dir: String?, sudo: Boolean) : ProvResult = def {
+    init {
+        val user = cmdNoLog("whoami").out?.trim()
+        if (!cmdNoLog("timeout 1 sudo id").success) {
+            println("!!!!!!!!!! WARNING !!!!!!!!!!\nUser $user cannot sudo without entering a password, i.e. most functions may fail!\nPlease ensure $user can sudo without password.")
+        }
+    }
+
+    override fun cmd(cmd: String, dir: String?, sudo: Boolean): ProvResult = def {
         xec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
     }
 
-    override fun cmdNoLog(cmd: String, dir: String?, sudo: Boolean) : ProvResult {
+    override fun cmdNoLog(cmd: String, dir: String?, sudo: Boolean): ProvResult {
         return xecNoLog(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
     }
 
-    override fun cmdNoEval(cmd: String, dir: String?, sudo: Boolean) : ProvResult {
+    override fun cmdNoEval(cmd: String, dir: String?, sudo: Boolean): ProvResult {
         return xec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
     }
 }
 
 private fun commandWithDirAndSudo(cmd: String, dir: String?, sudo: Boolean): String {
-    val cmdWithDir= if (dir == null) cmd else "cd $dir && $cmd"
+    val cmdWithDir = if (dir == null) cmd else "cd $dir && $cmd"
     return if (sudo) cmdWithDir.sudoize() else cmdWithDir
 }
 

@@ -7,7 +7,7 @@ interface DockerImage {
 }
 
 /**
- * Provides a docker image based on ubuntu additionally with a non-root default user and sudo isntalled
+ * Provides a docker image based on ubuntu additionally with a non-root default user and sudo installed
  */
 class UbuntuPlusUser(private val userName: String = "testuser") : DockerImage {
 

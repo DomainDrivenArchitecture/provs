@@ -46,7 +46,7 @@ fun Prov.provisionWorkplace(
     userPassword?.also { makeUserSudoerWithNoSudoPasswordRequired(it) }
 
     if (!currentUserCanSudo()) {
-        throw Exception("Current user ${whoami()} cannot execute sudo without a password, but he must be able to in order to provisionWorkplace")
+        throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionWorkplace")
     }
 
     aptInstall("ssh gnupg curl git")
