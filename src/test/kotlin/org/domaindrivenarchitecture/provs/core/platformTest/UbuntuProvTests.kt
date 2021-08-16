@@ -106,7 +106,7 @@ internal class UbuntuProvTests {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
+    @NonCi
     fun test_user_cannot_sudo_without_password() {
         // given
         val image = UbuntuUserNeedsPasswordForSudo()
