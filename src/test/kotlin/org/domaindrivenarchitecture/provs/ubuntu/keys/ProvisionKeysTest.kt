@@ -9,7 +9,6 @@ import org.junit.jupiter.api.condition.OS
 internal class ProvisionKeysTest {
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     fun provisionKeysCurrentUser() {
         // given
         val a = defaultTestContainer()

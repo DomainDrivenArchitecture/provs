@@ -129,7 +129,7 @@ fun provisionRemote(args: Array<String>) {
     val pwFromSecret = Password(pwSecret.plain())
 
     val config = readWorkplaceConfigFromFile() ?: WorkplaceConfig()
-    Prov.newInstance(RemoteProcessor(host, userName, pwFromSecret), OS.LINUX.name).provisionWorkplace(
+    Prov.newInstance(RemoteProcessor(host, userName, pwFromSecret)).provisionWorkplace(
         config.type,
         config.ssh?.keyPair(),
         config.gpg?.keyPair(),

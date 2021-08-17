@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.core
 
 import org.domaindrivenarchitecture.provs.core.platforms.SHELL
 import org.domaindrivenarchitecture.provs.core.platforms.UbuntuProv
-import org.domaindrivenarchitecture.provs.core.platforms.WinProv
 import org.domaindrivenarchitecture.provs.core.processors.LocalProcessor
 import org.domaindrivenarchitecture.provs.core.processors.Processor
 import org.slf4j.LoggerFactory
@@ -10,7 +9,7 @@ import org.slf4j.LoggerFactory
 
 enum class ProgressType { NONE, DOTS, BASIC, FULL_LOG }
 enum class ResultMode { NONE, LAST, ALL, FAILEXIT }
-enum class OS { WINDOWS, LINUX }
+enum class OS { LINUX }
 
 
 /**
@@ -35,27 +34,24 @@ open class Prov protected constructor(
 
         private lateinit var defaultProvInstance: Prov
 
-        fun defaultInstance(platform: String? = null): Prov {
+        fun defaultInstance(): Prov {
             return if (Factory::defaultProvInstance.isInitialized) {
                 defaultProvInstance
             } else {
-                defaultProvInstance = newInstance(platform = platform, name = "default instance")
+                defaultProvInstance = newInstance(name = "default instance", platform = OS.LINUX)
                 defaultProvInstance
             }
         }
 
         fun newInstance(
             processor: Processor = LocalProcessor(),
-            platform: String? = null,
             name: String? = null,
-            progressType: ProgressType = ProgressType.BASIC
+            progressType: ProgressType = ProgressType.BASIC,
+            platform: OS = OS.LINUX
         ): Prov {
 
-            val os = platform ?: System.getProperty("os.name")
-
             return when {
-                os.toUpperCase().contains(OS.LINUX.name) -> UbuntuProv(processor, name, progressType)
-                os.toUpperCase().contains(OS.WINDOWS.name) -> WinProv(processor, name, progressType)
+                (platform == OS.LINUX) -> UbuntuProv(processor, name, progressType)
                 else -> throw Exception("OS not supported")
             }
         }
@@ -143,6 +139,8 @@ open class Prov protected constructor(
     }
 
 
+    private val NOT_IMPLEMENTED = "Not implemented"
+
     /**
      * Executes a command by using the shell.
      * Be aware: Executing shell commands that incorporate unsanitized input from an untrusted source
@@ -150,7 +148,7 @@ open class Prov protected constructor(
      * Thus, the use of this method is strongly discouraged in cases where the command string is constructed from external input.
      */
     open fun cmd(cmd: String, dir: String? = null, sudo: Boolean = false): ProvResult {
-        throw Exception("Not implemented")
+        throw Exception(NOT_IMPLEMENTED)
     }
 
 
@@ -159,7 +157,7 @@ open class Prov protected constructor(
      * Attention: only result is NOT logged the executed command still is.
      */
     open fun cmdNoLog(cmd: String, dir: String? = null, sudo: Boolean = false): ProvResult {
-        throw Exception("Not implemented")
+        throw Exception(NOT_IMPLEMENTED)
     }
 
 
@@ -168,7 +166,7 @@ open class Prov protected constructor(
      * Can be used e.g. for checks which might succeed or fail but where failure should not influence overall success
      */
     open fun cmdNoEval(cmd: String, dir: String? = null, sudo: Boolean = false): ProvResult {
-        throw Exception("Not implemented")
+        throw Exception(NOT_IMPLEMENTED)
     }
 
 

@@ -31,7 +31,8 @@ internal class ProvisionFirewallKtTest {
                 dockerImage.imageName(),
                 ContainerStartMode.USE_RUNNING_ELSE_CREATE,  // already started in previous statement
                 ContainerEndMode.EXIT_AND_REMOVE
-            ))
+            )
+        )
 
         // when
         val res = a.requireAll {

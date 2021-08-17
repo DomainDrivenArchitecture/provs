@@ -14,7 +14,6 @@ import org.junit.jupiter.api.condition.OS
 internal class UbuntuHostDockerKtTest {
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     @NonCi
     fun runAndCheckAndExitContainer() {
         // when

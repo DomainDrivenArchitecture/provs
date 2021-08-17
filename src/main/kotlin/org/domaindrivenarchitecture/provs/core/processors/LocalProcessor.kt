@@ -17,7 +17,7 @@ open class LocalProcessor : Processor {
         @Suppress("JAVA_CLASS_ON_COMPANION")
         private val log = LoggerFactory.getLogger(javaClass.enclosingClass)
 
-        var charset: Charset = if (getOsName().contains("Windows")) Charset.forName("Windows-1252") else Charset.defaultCharset()
+        var charset: Charset = Charset.defaultCharset()
         init {
             log.info("os.name: " + getOsName())
             log.info("user.home: " + System.getProperty("user.home"))

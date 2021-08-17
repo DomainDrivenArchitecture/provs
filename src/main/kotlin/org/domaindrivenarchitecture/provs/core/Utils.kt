@@ -69,14 +69,14 @@ fun local(): Prov {
 /**
  * Returns Prov instance for remote host with remote user with provided password.
  * If password is null, connection is done by ssh-key.
- * Platform (Linux, Windows) must be provided if different from local platform.
+ * Platform (Linux, etc) must be provided if different from local platform.
  */
 @Api  // used by other libraries resp. KotlinScript
-fun remote(host: String, remoteUser: String, password: Secret? = null, platform: String? = null): Prov {
+fun remote(host: String, remoteUser: String, password: Secret? = null, platform: OS = OS.LINUX): Prov {
     require(host.isNotEmpty(), { "Host must not be empty." })
     require(remoteUser.isNotEmpty(), { "Remote user must not be empty." })
 
-    return Prov.newInstance(RemoteProcessor(InetAddress.getByName(host), remoteUser, password), platform)
+    return Prov.newInstance(RemoteProcessor(InetAddress.getByName(host), remoteUser, password), platform = platform)
 }
 
 

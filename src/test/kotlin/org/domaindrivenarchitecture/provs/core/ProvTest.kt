@@ -7,8 +7,6 @@ import org.domaindrivenarchitecture.provs.test.testLocal
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.EnabledOnOs
-import org.junit.jupiter.api.condition.OS
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
@@ -25,8 +23,7 @@ internal class ProvTest {
 
 
     @Test
-    @EnabledOnOs(OS.LINUX)
-    fun cmd_onLinux() {
+    fun cmd() {
         // when
         val res = Prov.newInstance(name = "testing").cmd("echo --testing--").success
 
@@ -35,9 +32,8 @@ internal class ProvTest {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     @ContainerTest
-    fun sh_onLinux() {
+    fun sh() {
         // given
         val script = """
             # test some script commands
@@ -55,10 +51,9 @@ internal class ProvTest {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     @ContainerTest
     @NonCi
-    fun sh_onLinux_with_dir_and_sudo() {
+    fun sh_with_dir_and_sudo() {
         // given
         val script = """
             # test some script commands
@@ -71,36 +66,6 @@ internal class ProvTest {
 
         // when
         val res = Prov.newInstance(name = "provs_test").sh(script, "/root", true).success
-
-        // then
-        assert(res)
-    }
-
-
-    @Test
-    @EnabledOnOs(OS.WINDOWS)
-    fun cmd_onWindows() {
-        // when
-        val res = Prov.newInstance(name = "testing").cmd("echo --testing--").success
-
-        // then
-        assert(res)
-    }
-
-    @Test
-    @EnabledOnOs(OS.WINDOWS)
-    fun sh_onWindows() {
-        // given
-        val script = """
-            # test some script commands
-        
-            ping -n 1 nu.nl
-            echo something
-            ping -n 1 github.com
-        """
-
-        // when
-        val res = Prov.newInstance(name = "testing").sh(script).success
 
         // then
         assert(res)
@@ -332,32 +297,19 @@ internal class ProvTest {
 
         println(outContent.toString())
 
-        val expectedOutput = if (OS.WINDOWS.isCurrentOs) "\n" +
-                "============================================== SUMMARY (test Instance) ============================================== \n" +
-                ">  Success -- methodThatProvidesSomeOutput (requireLast) \n" +
-                "--->  FAILED -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
-                "--->  Success -- sh \n" +
-                "------>  Success -- cmd [cmd.exe, /c, echo -Start test-]\n" +
-                "------>  Success -- cmd [cmd.exe, /c, echo Some output]\n" +
-                "--->  Success -- sh \n" +
-                "------>  Success -- cmd [cmd.exe, /c, echo -End test-]\n" +
-                "============================================ SUMMARY END ============================================ \n"
-        else if (OS.LINUX.isCurrentOs()) {
-                    "============================================== SUMMARY (test instance) ============================================== \n" +
-                    ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
-                    "--->  \u001B[91mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
-                    "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
-                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
-                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
-                    "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
-                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
-                    "----------------------------------------------------------------------------------------------------- \n" +
-                    "Overall >  \u001B[92mSuccess\u001B[0m\n" +
-                    "============================================ SUMMARY END ============================================ \n" +
-                    "\n"
-        } else {
-            "OS " + System.getProperty("os.name") + " not yet supported"
-        }
+        val expectedOutput =
+            "============================================== SUMMARY (test instance) ============================================== \n" +
+            ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
+            "--->  \u001B[91mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+            "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
+            "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
+            "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
+            "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
+            "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
+            "----------------------------------------------------------------------------------------------------- \n" +
+            "Overall >  \u001B[92mSuccess\u001B[0m\n" +
+            "============================================ SUMMARY END ============================================ \n" +
+            "\n"
 
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
     }
@@ -428,7 +380,6 @@ internal class ProvTest {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     @NonCi
     fun inContainer_locally() {
         // given
@@ -454,7 +405,6 @@ internal class ProvTest {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     @Disabled // run manually after updating host and remoteUser
     fun inContainer_remotely() {
         // given

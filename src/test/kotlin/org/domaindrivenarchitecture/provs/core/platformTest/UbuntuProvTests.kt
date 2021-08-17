@@ -7,15 +7,12 @@ import org.domaindrivenarchitecture.provs.core.docker.dockerProvideImage
 import org.domaindrivenarchitecture.provs.core.docker.dockerimages.DockerImage
 import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
-import org.domaindrivenarchitecture.provs.test.defaultTestContainerName
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.test.testDockerWithSudo
 import org.domaindrivenarchitecture.provs.test.testLocal
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.EnabledOnOs
-import org.junit.jupiter.api.condition.OS
 
 internal class UbuntuProvTests {
 
@@ -28,7 +25,6 @@ internal class UbuntuProvTests {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     fun that_ping_works() {
         // when
         val res = testLocal().outerPing()
@@ -38,7 +34,6 @@ internal class UbuntuProvTests {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     fun that_cmd_works() {
         // given
         val a = testLocal()
@@ -55,7 +50,6 @@ internal class UbuntuProvTests {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     @NonCi
     fun that_cmd_works_with_sudo() {
         // given
@@ -70,7 +64,6 @@ internal class UbuntuProvTests {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     fun that_nested_shells_work() {
         // given
         val a = testLocal()
@@ -87,7 +80,6 @@ internal class UbuntuProvTests {
     }
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     fun that_xec_works() {
         // given
         val a = testLocal()

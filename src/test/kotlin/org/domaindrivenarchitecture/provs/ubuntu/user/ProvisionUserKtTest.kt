@@ -12,7 +12,6 @@ import org.junit.jupiter.api.condition.OS
 internal class ProvisionUserKtTest {
 
     @Test
-    @EnabledOnOs(OS.LINUX)
     fun configureUser() {
         // given
         val a = defaultTestContainer()
