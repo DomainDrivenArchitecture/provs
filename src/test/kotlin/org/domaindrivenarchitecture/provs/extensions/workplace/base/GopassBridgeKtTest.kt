@@ -83,7 +83,7 @@ internal class GopassBridgeKtTest {
                 trust = true,
                 skipIfExistin = false
             )
-            installGopass("1.11.0", enforceVersion = true)
+            installGopass("1.11.0", enforceVersion = true, "1ec9e0dfcfd9bcc241943e1a7d92f31bf3e66bb16f61ae5d079981325c31baa6")
             if (!chk("gopass ls")) {
                 // configure gopass in default location with gpg-key-fingerprint of snakeoil keys
                 cmd("printf \"\\ntest\\ntest@test.org\\n\" | gopass init 0x0674104CA81A4905")
@@ -116,7 +116,7 @@ internal class GopassBridgeKtTest {
                 trust = true,
                 skipIfExistin = false
             )
-            installGopass("1.9.0", enforceVersion = true)
+            installGopass("1.9.0", enforceVersion = true, "fe13ef810d7fe200495107161e99eac081368aa0ce5e53971b1bd47a64eba4db")
             if (!chk("gopass ls")) {
                 // configure gopass in default location with gpg-key-fingerprint of snakeoil keys
                 cmd("printf \"\\ntest\\ntest@test.org\\n\" | gopass init 0x0674104CA81A4905")

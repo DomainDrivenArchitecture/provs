@@ -35,7 +35,9 @@ fun Prov.downloadFromURL(
     cmd("curl $followRedirectOption $url -o $finalFilename", path, sudo)
 
     if (sha256sum != null) {
+        cmd("sha256sum --version")  // log version (e.g. 8.30 for ubuntu 20.04)
         if (!cmd("echo \"$sha256sum $finalFilename\" | sha256sum --check", path).success) {
+            cmd("sha256sum $finalFilename", path)  // log the actual checksum
             deleteFile(finalFilename, path, sudo)
         } else {
             ProvResult(true, out = "Sha256sum is correct.")

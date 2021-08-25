@@ -8,9 +8,11 @@ import org.domaindrivenarchitecture.provs.ubuntu.install.base.isPackageInstalled
 import org.domaindrivenarchitecture.provs.ubuntu.web.base.downloadFromURL
 
 
-fun Prov.installGopass(version: String = "1.12.7", enforceVersion: Boolean = false) = def {
-
-    val sha256sum = "0824d5110ff1e68bff1ba10c1be63acb67cb1ad8e3bccddd6b6fc989608beca8"   // checksum for sha256sum version 8.30 (e.g. ubuntu 20.04)
+fun Prov.installGopass(
+    version: String = "1.12.7",
+    enforceVersion: Boolean = false,
+    sha256sum: String = "0824d5110ff1e68bff1ba10c1be63acb67cb1ad8e3bccddd6b6fc989608beca8" // checksum for sha256sum version 8.30 (e.g. ubuntu 20.04)
+) = def {
 
     if (isPackageInstalled("gopass") && !enforceVersion) {
         return@def ProvResult(true)
