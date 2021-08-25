@@ -424,14 +424,3 @@ internal data class ResultLine(val level: Int, val method: String?, var provResu
         return "---".repeat(level) + ">  "
     }
 }
-
-fun Prov.myfu() = def {
-    cmd("echo asdf222")
-}
-fun main() {
-
-    local().def {
-        cmd("echo asdfasdf")
-        myfu()
-    }
-}
