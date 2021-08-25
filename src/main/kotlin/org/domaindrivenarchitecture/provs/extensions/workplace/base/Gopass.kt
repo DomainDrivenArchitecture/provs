@@ -2,29 +2,39 @@ package org.domaindrivenarchitecture.provs.extensions.workplace.base
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.userHome
+import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.isPackageInstalled
+import org.domaindrivenarchitecture.provs.ubuntu.web.base.downloadFromURL
 
 
 fun Prov.installGopass(version: String = "1.12.7", enforceVersion: Boolean = false) = def {
-    if (isPackageInstalled("gopass") && !enforceVersion) {
-        ProvResult(true)
-    } else {
-        // install required dependencies
-        aptInstall("rng-tools gnupg2 git")
-        aptInstall("curl")
 
-        sh(
-            """
-            curl -L https://github.com/gopasspw/gopass/releases/download/v${version}/gopass_${version}_linux_amd64.deb -o gopass_${version}_linux_amd64.deb
-            sudo dpkg -i gopass_${version}_linux_amd64.deb
-        """
-        )
-        gopassEnsureVersion(version)
+    val sha256sum = "0824d5110ff1e68bff1ba10c1be63acb67cb1ad8e3bccddd6b6fc989608beca8"   // checksum for sha256sum version 8.30 (e.g. ubuntu 20.04)
+
+    if (isPackageInstalled("gopass") && !enforceVersion) {
+        return@def ProvResult(true)
+    }
+    if (checkGopassVersion(version)) {
+        return@def ProvResult(true, out = "Version $version of gopass is already installed.")
+    }
+
+    val path = "tmp"
+    // install required dependencies
+    aptInstall("rng-tools gnupg2 git")
+    val filename = "gopass_${version}_linux_amd64.deb"
+    val result = downloadFromURL(
+        "https://github.com/gopasspw/gopass/releases/download/v$version/$filename",
+        filename,
+        path,
+        sha256sum = sha256sum
+    )
+    if (result.success) {
+        cmd("sudo dpkg -i $path/gopass_${version}_linux_amd64.deb")
+        // Cross-check if installation was successful
+        addResultToEval(ProvResult(checkGopassVersion(version)))
+    } else {
+        addResultToEval(ProvResult(false, err = "Gopass could not be installed. " + result.err))
     }
 }
 
@@ -76,13 +86,9 @@ mounts: {}
  *
  * @param version that is checked; specifies left part of text of installed version, e.g. both "1" and "1.12" will return true if installed version is "1.12.6+8d7a311b9273846bbb618e4bd9ddbae51b1db7b8"
  */
-internal fun Prov.gopassEnsureVersion(version: String) = def {
+internal fun Prov.checkGopassVersion(version: String): Boolean {
     val installedGopassVersion = gopassVersion()
-    if (installedGopassVersion != null && installedGopassVersion.startsWith("gopass " + version)) {
-        ProvResult(true, out = "Required gopass version ($version) matches installed version ($installedGopassVersion)")
-    } else {
-        ProvResult(false, err = "Wrong gopass version. Expected $version but found $installedGopassVersion")
-    }
+    return installedGopassVersion != null && installedGopassVersion.startsWith("gopass " + version)
 }
 
 internal fun Prov.gopassVersion(): String? {

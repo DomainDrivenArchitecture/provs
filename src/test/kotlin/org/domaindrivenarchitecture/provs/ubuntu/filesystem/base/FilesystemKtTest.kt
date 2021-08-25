@@ -49,7 +49,7 @@ internal class FilesystemKtTest {
         val res4b = prov.fileContainsText(file, "some non-existing content")
         val res5 = prov.deleteFile(file)
         val res6 = prov.fileExists(file)
-        val res7 = prov.deleteFile(file, true)
+        val res7 = prov.deleteFile(file, sudo = true)
         val res8 = prov.fileExists(file)
 
         // then

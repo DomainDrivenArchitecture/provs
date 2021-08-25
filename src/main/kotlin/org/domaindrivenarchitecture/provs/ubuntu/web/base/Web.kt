@@ -2,25 +2,45 @@ package org.domaindrivenarchitecture.provs.ubuntu.web.base
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.core.tags.Api
+import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
+import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.isPackageInstalled
 
 
 /**
- * Downloads a file from the given URL using curl
+ * Downloads a file from the given URL using curl.
  *
- * @param path where to download to
- * @param url file to download
- * @param filename filename after download
+ * ATTENTION: sha256sum uses the version available, which can differ in different versions of ubuntu; e.g. gopass download only works with sha256sum version 8.30 from ubuntu 20.04 !
  */
-@Suppress("unused") // used externally
-fun Prov.downloadFromURL(url: String, filename: String? = null, path: String? = null, sudo: Boolean = false) : ProvResult = def {
+@Api
+fun Prov.downloadFromURL(
+    url: String,
+    filename: String? = null,
+    path: String? = null,
+    sudo: Boolean = false,
+    followRedirect: Boolean = true,
+    sha256sum: String? = null
+): ProvResult = def {
 
-    if (!isPackageInstalled("curl")) aptInstall("curl")
+    aptInstall("curl")
 
-    if (filename == null) {
-        cmd("curl $url", path, sudo)
+    val followRedirectOption = if (followRedirect) "-L" else ""
+    val filenameFromUrl = url.substringAfterLast("/")
+
+    val finalFilename: String = filename ?: filenameFromUrl
+
+    path?.let { createDirs(path) }
+    cmd("curl $followRedirectOption $url -o $finalFilename", path, sudo)
+
+    if (sha256sum != null) {
+        if (!cmd("echo \"$sha256sum $finalFilename\" | sha256sum --check", path).success) {
+            deleteFile(finalFilename, path, sudo)
+        } else {
+            ProvResult(true, out = "Sha256sum is correct.")
+        }
     } else {
-        cmd("curl $url -o $filename", path, sudo)
+        ProvResult(true, out = "No sha256sum check requested.")
     }
 }

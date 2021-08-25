@@ -34,7 +34,7 @@ fun Prov.installGopassBridgeJsonApi() = def {
 
     if (installedJsonApiVersion == null) {
         if (chk("gopass ls")) {
-            if (gopassEnsureVersion(requiredGopassVersion).success) {
+            if (checkGopassVersion(requiredGopassVersion)) {
                 aptInstall("git gnupg2")   // required dependencies
                 createDir(downloadDir)
                 downloadFromURL(downloadUrl, filename, downloadDir)

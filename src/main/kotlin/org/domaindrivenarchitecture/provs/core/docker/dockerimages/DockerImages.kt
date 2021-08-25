@@ -17,7 +17,7 @@ class UbuntuPlusUser(private val userName: String = "testuser") : DockerImage {
 
     override fun imageText(): String {
         return """
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 

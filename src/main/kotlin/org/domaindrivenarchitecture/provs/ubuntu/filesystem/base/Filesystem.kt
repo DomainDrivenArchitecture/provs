@@ -54,8 +54,8 @@ fun Prov.createSecretFile(
     }
 
 
-fun Prov.deleteFile(file: String, sudo: Boolean = false): ProvResult = def {
-    cmd((if (sudo) "sudo " else "") + "rm $file")
+fun Prov.deleteFile(file: String, path: String? = null, sudo: Boolean = false): ProvResult = def {
+    cmd((path?.let { "cd $path && " } ?: "") + (if (sudo) "sudo " else "") + "rm $file")
 }
 
 

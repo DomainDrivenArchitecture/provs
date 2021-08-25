@@ -40,7 +40,8 @@ fun getCallingMethodName(): String? {
 }
 
 
-fun String.escapeNewline(): String = this.replace("\r\n", "\\n").replace("\n", "\\n")
+fun String.escapeNewline(): String = this.replace("\r", "\\r").replace("\n", "\\n")
+fun String.escapeControlChars(): String = this.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t").replace("[\\p{Cntrl}]".toRegex(), "\\?")
 fun String.escapeBackslash(): String = this.replace("\\", "\\\\")
 fun String.escapeDoubleQuote(): String = this.replace("\"", "\\\"")
 fun String.escapeSingleQuote(): String = this.replace("'", "\'")

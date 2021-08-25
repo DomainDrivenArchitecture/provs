@@ -352,11 +352,10 @@ open class Prov protected constructor(
                     "============================================== "
         )
         for (result in internalResults) {
-            println(
-                result.toString().escapeNewline()
-                    .replace("Success --", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET + " --")
-                    .replace("FAILED --", ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET + " --")
-            )
+            val outputLine = result.toString().escapeControlChars()
+                .replaceFirst("Success --", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET + " --")
+                .replaceFirst("FAILED --", ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET + " --")
+            println(outputLine)
         }
         if (internalResults.size > 1) {
             println("----------------------------------------------------------------------------------------------------- ")
@@ -410,7 +409,7 @@ internal data class ResultLine(val level: Int, val method: String?, var provResu
         return if (provResult != null) {
             prefix(level) + (if (provResult.success) "Success -- " else "FAILED -- ") +
                     method + " " + (provResult.cmd ?: "") +
-                    (if (!provResult.success && provResult.err != null) " -- Error: " + provResult.err.escapeNewline() else "")
+                    (if (!provResult.success && provResult.err != null) " -- Error: " + provResult.err.escapeControlChars() else "")
         } else
             prefix(level) + method + " " + "... in progress ... "
 
