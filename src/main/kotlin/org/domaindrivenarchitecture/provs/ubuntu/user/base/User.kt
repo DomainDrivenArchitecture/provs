@@ -6,6 +6,7 @@ import org.domaindrivenarchitecture.provs.core.Secret
 import org.domaindrivenarchitecture.provs.core.processors.RemoteProcessor
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.userHome
 import org.domaindrivenarchitecture.provs.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.gpgFingerprint
 import org.domaindrivenarchitecture.provs.ubuntu.keys.provisionKeysCurrentUser
@@ -25,7 +26,7 @@ fun Prov.createUser(
     userName: String,
     password: Secret? = null,
     sudo: Boolean = false,
-    copyAuthorizedKeysFromCurrentUser: Boolean = false
+    copyAuthorizedSshKeysFromCurrentUser: Boolean = false
 ): ProvResult = requireAll {
     if (!userExists(userName)) {
         cmd("sudo adduser --gecos \"First Last,RoomNumber,WorkPhone,HomePhone\" --disabled-password --home /home/$userName $userName")
@@ -34,13 +35,15 @@ fun Prov.createUser(
     if (sudo) {
         makeUserSudoerWithNoSudoPasswordRequired(userName)
     }
-    val authorizedKeysFile = "~/.ssh/authorized_keys"
-    if (copyAuthorizedKeysFromCurrentUser && fileExists(authorizedKeysFile)) {
-        createDirs("/home/$userName/.ssh")
-        val newAuthorizedKeysFile = "/home/$userName/.ssh/authorized_keys"
-        cmd("sudo cp $authorizedKeysFile $newAuthorizedKeysFile")
-        cmd("chown $userName $newAuthorizedKeysFile")
+    val authorizedKeysFile = userHome() + ".ssh/authorized_keys"
+    if (copyAuthorizedSshKeysFromCurrentUser && fileExists(authorizedKeysFile)) {
+        val sshPathForNewUser = "/home/$userName/.ssh"
+        createDirs(sshPathForNewUser, sudo = true)
+        cmd("chown $userName $sshPathForNewUser", sudo = true)
 
+        val newAuthorizedKeysFile = "$sshPathForNewUser/authorized_keys"
+        cmd("cp $authorizedKeysFile $newAuthorizedKeysFile", sudo = true)
+        cmd("chown $userName $newAuthorizedKeysFile", sudo = true)
     }
     ProvResult(true) // dummy
 }

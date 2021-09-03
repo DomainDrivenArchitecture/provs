@@ -67,7 +67,7 @@ private fun Prov.getDefaultNetworkingInterface(): String? {
 fun provisionNexusServer(serverName: String, certbotEmail: String) {
     val userName = "nexus" + 7
     remote(serverName, "root").def {
-        createUser(userName, copyAuthorizedKeysFromCurrentUser = true, sudo = true)
+        createUser(userName, copyAuthorizedSshKeysFromCurrentUser = true, sudo = true)
     }
     remote(serverName, userName).requireAll {
         provisionNexusWithDocker()
