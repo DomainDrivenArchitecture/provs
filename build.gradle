@@ -68,6 +68,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.2"
 
+
+    implementation "org.jetbrains.kotlinx:kotlinx-cli:0.3.2"
+    implementation 'com.charleskorn.kaml:kaml:0.35.2'
+
     implementation group: 'com.hierynomus', name: 'sshj', version: '0.31.0'
 
     api "org.slf4j:slf4j-api:1.7.32"
@@ -84,7 +88,7 @@ task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.core.entry.EntryKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.application.CliKt'
     }
     archivesBaseName = project.name + '-all'
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
@@ -104,7 +108,7 @@ task fatJarLatest(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.core.entry.EntryKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.application.CliKt'
     }
     with jar
     archiveFileName = 'provs-fat-latest.jar'
@@ -126,7 +130,7 @@ task uberJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.core.entry.EntryKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.application.CliKt'
     }
     archiveClassifier = 'uber'
 }
@@ -147,7 +151,7 @@ task uberJarLatest(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.core.entry.EntryKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.application.CliKt'
     }
     archiveFileName = 'provs-latest.jar'
 }

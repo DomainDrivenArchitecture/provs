@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.extensions.workplace
 
 import org.domaindrivenarchitecture.provs.core.Password
+import org.domaindrivenarchitecture.provs.domain.WorkplaceType
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer

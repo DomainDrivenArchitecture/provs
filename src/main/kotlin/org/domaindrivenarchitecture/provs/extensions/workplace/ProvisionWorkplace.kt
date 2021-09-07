@@ -2,7 +2,10 @@ package org.domaindrivenarchitecture.provs.extensions.workplace
 
 import org.domaindrivenarchitecture.provs.core.*
 import org.domaindrivenarchitecture.provs.core.processors.RemoteProcessor
+import org.domaindrivenarchitecture.provs.domain.WorkplaceConfig
+import org.domaindrivenarchitecture.provs.domain.WorkplaceType
 import org.domaindrivenarchitecture.provs.extensions.workplace.base.*
+import org.domaindrivenarchitecture.provs.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstallFromPpa
@@ -16,11 +19,6 @@ import org.domaindrivenarchitecture.provs.ubuntu.user.base.makeUserSudoerWithNoS
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.whoami
 import java.net.InetAddress
 import kotlin.system.exitProcess
-
-
-enum class WorkplaceType {
-    MINIMAL, OFFICE, IDE
-}
 
 
 /**
@@ -128,7 +126,7 @@ fun provisionRemote(args: Array<String>) {
     val pwSecret = PromptSecretSource("Password for user $userName on $host").secret()
     val pwFromSecret = Password(pwSecret.plain())
 
-    val config = readWorkplaceConfigFromFile() ?: WorkplaceConfig()
+    val config = getConfig() ?: WorkplaceConfig()
     Prov.newInstance(RemoteProcessor(host, userName, pwFromSecret)).provisionWorkplace(
         config.type,
         config.ssh?.keyPair(),
