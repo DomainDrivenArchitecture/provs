@@ -1,7 +1,7 @@
-package org.domaindrivenarchitecture.provs.application
+package org.domaindrivenarchitecture.provs.workplace.application
 
 import org.domaindrivenarchitecture.provs.core.*
-import org.domaindrivenarchitecture.provs.infrastructure.getConfig
+import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.GopassSecretSource
 import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.PromptSecretSource
 
@@ -27,7 +27,7 @@ fun main(args: Array<String>) {
 private fun provision(cliCommand: CliCommand) {
     val filename = cliCommand.configFileName
 
-    // TODO: mv try-catch down to repository, throw runtime exc.
+    // TODO: improve exceptions
     try {
         val conf = getConfig(filename)
         val password: Secret? = retrievePassword(cliCommand)

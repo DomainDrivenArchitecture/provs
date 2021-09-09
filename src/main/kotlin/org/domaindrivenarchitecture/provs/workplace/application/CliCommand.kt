@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.application
+package org.domaindrivenarchitecture.provs.workplace.application
 
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType

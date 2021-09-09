@@ -88,7 +88,7 @@ task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.application.CliKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
     }
     archivesBaseName = project.name + '-all'
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
@@ -108,14 +108,13 @@ task fatJarLatest(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.application.CliKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
     }
     with jar
     archiveFileName = 'provs-fat-latest.jar'
 }
 
-//create a single Jar with all dependencies incl. Kotlin libs
-task uberJar(type: Jar) {
+task uberjarWorkplace(type: Jar) {
 
     from sourceSets.main.output
 
@@ -130,30 +129,9 @@ task uberJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.application.CliKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
     }
-    archiveClassifier = 'uber'
-}
-
-//create a single Jar with all dependencies incl. Kotlin libs - as ...-latest
-task uberJarLatest(type: Jar) {
-
-    from sourceSets.main.output
-
-    dependsOn configurations.runtimeClasspath
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-    } {
-        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-    }
-
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
-                'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.application.CliKt'
-    }
-    archiveFileName = 'provs-latest.jar'
+    archiveFileName = 'provs-workplace.jar'
 }
 
 

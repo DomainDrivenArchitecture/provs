@@ -1,9 +1,9 @@
-package org.domaindrivenarchitecture.provs.infrastructure
+package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.json.Json
 import org.domaindrivenarchitecture.provs.core.tags.Api
-import org.domaindrivenarchitecture.provs.domain.WorkplaceConfig
+import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
 import java.io.*
 
 

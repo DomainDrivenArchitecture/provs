@@ -1,10 +1,11 @@
 package org.domaindrivenarchitecture.provs.extensions.workplace
 
 import org.domaindrivenarchitecture.provs.core.Password
-import org.domaindrivenarchitecture.provs.domain.WorkplaceType
+import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
 
 internal class ProvisionWorkplaceKtTest {
 
@@ -34,7 +35,7 @@ internal class ProvisionWorkplaceKtTest {
 
         // when
         // in order to test WorkplaceType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
-        val config = readWorkplaceConfigFromFile("src/test/resources/WorkplaceConfigExample.json")
+        val config = getConfig("src/test/resources/WorkplaceConfigExample.json")
             ?: throw Exception("Could not read WorkplaceConfig")
         val res = a.provisionWorkplace(
             config.type,

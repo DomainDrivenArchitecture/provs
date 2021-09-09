@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.infrastructure
+package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult

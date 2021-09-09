@@ -1,11 +1,7 @@
-package org.domaindrivenarchitecture.provs.domain
+package org.domaindrivenarchitecture.provs.workplace.domain
 
-import com.charleskorn.kaml.Yaml
 import org.domaindrivenarchitecture.provs.ubuntu.keys.KeyPairSource
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import org.domaindrivenarchitecture.provs.core.tags.Api
-import java.io.*
 
 
 @Serializable

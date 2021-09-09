@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="cli-MyIdeConfig.yaml" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="Kotlin SDK" />
-    <option name="MAIN_CLASS_NAME" value="org.domaindrivenarchitecture.provs.application.CliKt" />
+    <option name="MAIN_CLASS_NAME" value="org.domaindrivenarchitecture.provs.workplace.application.CliKt" />
     <module name="provs.main" />
     <option name="PROGRAM_PARAMETERS" value="MyIdeConfig.yaml" />
     <method v="2">

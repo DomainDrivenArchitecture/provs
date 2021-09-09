@@ -2,10 +2,10 @@ package org.domaindrivenarchitecture.provs.extensions.workplace
 
 import org.domaindrivenarchitecture.provs.core.*
 import org.domaindrivenarchitecture.provs.core.processors.RemoteProcessor
-import org.domaindrivenarchitecture.provs.domain.WorkplaceConfig
-import org.domaindrivenarchitecture.provs.domain.WorkplaceType
+import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
+import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
 import org.domaindrivenarchitecture.provs.extensions.workplace.base.*
-import org.domaindrivenarchitecture.provs.infrastructure.getConfig
+import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstallFromPpa

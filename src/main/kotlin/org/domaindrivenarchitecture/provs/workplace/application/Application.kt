@@ -1,11 +1,11 @@
-package org.domaindrivenarchitecture.provs.application
+package org.domaindrivenarchitecture.provs.workplace.application
 
 import org.domaindrivenarchitecture.provs.core.Password
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.domain.WorkplaceConfig
-import org.domaindrivenarchitecture.provs.domain.WorkplaceType
-import org.domaindrivenarchitecture.provs.infrastructure.installDevOps
+import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
+import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
+import org.domaindrivenarchitecture.provs.workplace.infrastructure.installDevOps
 
 /**
  * Use case for provisioning repos
