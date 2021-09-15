@@ -3,8 +3,8 @@ package org.domaindrivenarchitecture.provs.workplace.infrastructure
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.dirExists
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createFile
+import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.dirExists
 
 
 fun Prov.installDevOps() = def {
@@ -33,6 +33,8 @@ fun Prov.installAwsCredentials(id:String, key:String): ProvResult = def {
         createDirs(dir)
         createFile("~/.aws/config", awsConfig())
         createFile("~/.aws/credentials", awsCredentials(id, key))
+    } else {
+        ProvResult(true, "aws credential file already installed")
     }
 }
 
