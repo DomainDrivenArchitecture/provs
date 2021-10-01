@@ -17,6 +17,7 @@ fun Prov.installDevOps() = def {
     installYq()
 }
 
+
 fun Prov.installYq(
     version: String = "4.13.2",
     sha256sum: String = "d7c89543d1437bf80fee6237eadc608d1b121c21a7cbbe79057d5086d74f8d79"
@@ -67,6 +68,28 @@ fun Prov.installKubectl(): ProvResult = def {
         alias ssht='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -L 8002:localhost:8002 -L 6443:192.168.5.1:6443'    
         """.trimIndent()
         createFile("~/.bashrc.d/ssh_alias.sh", tunnelAlias, "640")
+
+        // TODO: externalize to file - trippeld excaping is realy ugly
+        var k8sContext = """
+        function main() {
+            local cluster_name="\$\{'$'}1"; shift
+
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@\$\{cluster_name}.meissa-gmbh.de \
+            "cat /etc/kubernetes/admin.conf" | \
+            yq e ".clusters[0].name=\"\$\{cluster_name}\" \
+                | .clusters[0].cluster.server=\"https://kubernetes:6443\" \
+                | .contexts[0].context.cluster=\"\$\{cluster_name}\" \
+                | .contexts[0].context.user=\"\$\{cluster_name}\" \
+                | .contexts[0].name=\"\$\{cluster_name}\" \
+                | del(.current-context) \
+                | del(.preferences) \
+                | .users[0].name=\"\$\{cluster_name}\"" - \
+            > ~/.kube/custom-contexts/\$\{cluster_name}.yml
+        }
+
+        main ${'$'}1
+        """.trimIndent()
+        createFile("/usr/local/bin/k8s-create-context.sh", k8sContext, "555")
 
         aptInstall("kubectl")
         cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
