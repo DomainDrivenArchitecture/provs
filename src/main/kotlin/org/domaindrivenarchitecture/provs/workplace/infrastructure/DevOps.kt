@@ -41,6 +41,8 @@ fun Prov.installYq(
 fun Prov.installKubectl(): ProvResult = def {
     var kubeConfigFile = "~/.bashrc.d/kubectl.sh"
     if(!fileExists(kubeConfigFile)) {
+        aptInstall("kubectl")
+        cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
         var kubeConfig = """
         # Set the default kube context if present
         DEFAULT_KUBE_CONTEXTS="\$\{HOME}/.kube/config"
@@ -62,17 +64,23 @@ fun Prov.installKubectl(): ProvResult = def {
         IFS="\$\{OIFS}"
         """.trimIndent()
         createFile(kubeConfigFile, kubeConfig, "640")
+    }
 
+    val tunnelAliasFile = "~/.bashrc.d/ssh_alias.sh"
+    if(!fileExists(tunnelAliasFile)) {
         var tunnelAlias = """
         alias sshu='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
         alias ssht='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -L 8002:localhost:8002 -L 6443:192.168.5.1:6443'    
         """.trimIndent()
-        createFile("~/.bashrc.d/ssh_alias.sh", tunnelAlias, "640")
+        createFile(tunnelAliasFile, tunnelAlias, "640")
+    }
 
-        // TODO: externalize to file - trippeld excaping is realy ugly
+    val k8sContextFile = "/usr/local/bin/k8s-create-context.sh"
+    if(!fileExists(k8sContextFile)) {
+        // TODO: externalize to file - trippeld escaping is realy ugly
         var k8sContext = """
         function main() {
-            local cluster_name="\$\{'$'}1"; shift
+            local cluster_name="${1}"; shift
 
             ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@\$\{cluster_name}.meissa-gmbh.de \
             "cat /etc/kubernetes/admin.conf" | \
@@ -87,12 +95,10 @@ fun Prov.installKubectl(): ProvResult = def {
             > ~/.kube/custom-contexts/\$\{cluster_name}.yml
         }
 
-        main ${'$'}1
+        main $1
+        
         """.trimIndent()
-        createFile("/usr/local/bin/k8s-create-context.sh", k8sContext, "555")
-
-        aptInstall("kubectl")
-        cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
+        createFile(k8sContextFile, k8sContext, "555", sudo = true)
     } else {
         ProvResult(true)
     }
