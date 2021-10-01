@@ -43,6 +43,7 @@ fun Prov.installKubectl(): ProvResult = def {
     if(!fileExists(kubeConfigFile)) {
         aptInstall("kubectl")
         cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
+        // TODO: externalize to file - trippeld escaping is realy ugly & does not work
         var kubeConfig = """
         # Set the default kube context if present
         DEFAULT_KUBE_CONTEXTS="$HOME/.kube/config"
@@ -78,7 +79,7 @@ fun Prov.installKubectl(): ProvResult = def {
 
     val k8sContextFile = "/usr/local/bin/k8s-create-context.sh"
     if(!fileExists(k8sContextFile)) {
-        // TODO: externalize to file - trippeld escaping is realy ugly
+        // TODO: externalize to file - trippeld escaping is realy ugly & does not work
         var k8sContext = """
         function main() {
             local cluster_name="${1}"; shift
