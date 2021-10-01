@@ -45,23 +45,24 @@ fun Prov.installKubectl(): ProvResult = def {
         cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
         var kubeConfig = """
         # Set the default kube context if present
-        DEFAULT_KUBE_CONTEXTS="\$\{HOME}/.kube/config"
-        if test -f "\$\{DEFAULT_KUBE_CONTEXTS}"
+        DEFAULT_KUBE_CONTEXTS="$HOME/.kube/config"
+        if test -f "${DEFAULT_KUBE_CONTEXTS}"
         then
-        export KUBECONFIG="\$\{DEFAULT_KUBE_CONTEXTS}"
+          export KUBECONFIG="$DEFAULT_KUBE_CONTEXTS"
         fi
-    
-        # Additional contexts should be in ~/.kube/custom-contexts/
-        CUSTOM_KUBE_CONTEXTS="\$\{HOME}/.kube/custom-contexts"
-        mkdir -p "\$\{CUSTOM_KUBE_CONTEXTS}"
-    
-        OIFS="\$\{IFS}"
-        IFS=$'\n'
-        for contextFile in `find "\$\{CUSTOM_KUBE_CONTEXTS}" -type f -name "*.yml"`
+        
+        # Additional contexts should be in ~/.kube/custom-contexts/ 
+        CUSTOM_KUBE_CONTEXTS="$HOME/.kube/custom-contexts"
+        mkdir -p "${CUSTOM_KUBE_CONTEXTS}"
+        
+        OIFS="$IFS"
+        IFS=${'$'}'\n'
+        for contextFile in `find "${CUSTOM_KUBE_CONTEXTS}" -type f -name "*.yml"`  
         do
-            export KUBECONFIG="\$\{contextFile}:\$\{KUBECONFIG}"
+            export KUBECONFIG="$contextFile:$KUBECONFIG"
         done
-        IFS="\$\{OIFS}"
+        IFS="$OIFS"
+
         """.trimIndent()
         createFile(kubeConfigFile, kubeConfig, "640")
     }
