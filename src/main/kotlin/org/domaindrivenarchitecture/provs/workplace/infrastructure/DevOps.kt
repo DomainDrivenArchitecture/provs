@@ -44,7 +44,7 @@ fun Prov.installKubectl(): ProvResult = def {
         aptInstall("kubectl")
         cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
         // TODO: externalize to file - trippeld escaping is realy ugly & does not work
-        var kubeConfig = """
+        /*var kubeConfig = """
         # Set the default kube context if present
         DEFAULT_KUBE_CONTEXTS="$HOME/.kube/config"
         if test -f "${DEFAULT_KUBE_CONTEXTS}"
@@ -66,6 +66,7 @@ fun Prov.installKubectl(): ProvResult = def {
 
         """.trimIndent()
         createFile(kubeConfigFile, kubeConfig, "640")
+         */
     }
 
     val tunnelAliasFile = "~/.bashrc.d/ssh_alias.sh"
