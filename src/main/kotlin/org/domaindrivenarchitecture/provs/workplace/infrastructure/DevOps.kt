@@ -51,21 +51,20 @@ fun Prov.installKubectl(): ProvResult = def {
         then
           export KUBECONFIG="$DEFAULT_KUBE_CONTEXTS"
         fi
-        
-        # Additional contexts should be in ~/.kube/custom-contexts/ 
+
+        # Additional contexts should be in ~/.kube/custom-contexts/
         CUSTOM_KUBE_CONTEXTS="$HOME/.kube/custom-contexts"
         mkdir -p "${CUSTOM_KUBE_CONTEXTS}"
-        
+
         OIFS="$IFS"
-        IFS=${'$'}'\n'
-        for contextFile in `find "${CUSTOM_KUBE_CONTEXTS}" -type f -name "*.yml"`  
+        IFS=$'\n'
+        for contextFile in `find "${CUSTOM_KUBE_CONTEXTS}" -type f -name "*.yml"`
         do
             export KUBECONFIG="$contextFile:$KUBECONFIG"
         done
         IFS="$OIFS"
 
         """.trimIndent()
-        createFile(kubeConfigFile, kubeConfig, "640")
          */
     }
 
