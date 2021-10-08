@@ -341,6 +341,44 @@ internal class ProvTest {
         assertEquals("123", res?.plain()?.trim())
     }
 
+
+    @Test
+    fun custom_task_name_appears_in_results() {
+        // given
+        fun Prov.taskA() = task("TaskB") {
+            task("taskC") {
+                ProvResult(true)
+            }
+        }
+
+        val outContent = ByteArrayOutputStream()
+        val errContent = ByteArrayOutputStream()
+        val originalOut = System.out
+        val originalErr = System.err
+        System.setOut(PrintStream(outContent))
+        System.setErr(PrintStream(errContent))
+
+        // when
+        Prov.newInstance(name = "test instance", progressType = ProgressType.NONE).taskA()
+
+        // then
+        System.setOut(originalOut)
+        System.setErr(originalErr)
+
+        println(outContent.toString())
+
+        val expectedOutput =
+            "============================================== SUMMARY (test instance) ============================================== \n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- TaskB \n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- taskC \n" +
+                    "----------------------------------------------------------------------------------------------------- \n" +
+                    "Overall >  \u001B[92mSuccess\u001B[0m\n" +
+                    "============================================ SUMMARY END ============================================ \n" +
+                    "\n"
+
+        assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
+    }
+
     @Test
     fun addResultToEval_success() {
         // given

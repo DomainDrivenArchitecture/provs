@@ -66,6 +66,14 @@ open class Prov protected constructor(
 
 
     /**
+     * Defines a task with a custom name instead of the name of the calling function.
+     * Returns success if all subtasks finished with success (same as requireAll).
+     */
+    fun task(name: String? = null, a: Prov.() -> ProvResult): ProvResult {
+        return handle(ResultMode.ALL, name) { a() }
+    }
+
+    /**
      * defines a task with default success behavior, i.e. returns success if all subtasks finished with success.
      * Same as requireAll.
      */
@@ -243,7 +251,7 @@ open class Prov protected constructor(
     /**
      * Provides result handling, e.g. gather results for result summary
      */
-    private fun handle(mode: ResultMode, a: Prov.() -> ProvResult): ProvResult {
+    private fun handle(mode: ResultMode, name: String? = null, a: Prov.() -> ProvResult): ProvResult {
 
         // init
         if (level == 0) {
@@ -255,8 +263,8 @@ open class Prov protected constructor(
 
         // pre-handling
         val resultIndex = internalResults.size
-        val method = getCallingMethodName()
-        val internalResult = ResultLine(level, method, null)
+        val taskName = name ?: getCallingMethodName()
+        val internalResult = ResultLine(level, taskName, null)
         internalResults.add(internalResult)
 
         previousLevel = level
@@ -277,7 +285,7 @@ open class Prov protected constructor(
         // post-handling
         val returnValue =
             if (mode == ResultMode.LAST) {
-                if (internalResultIsLeaf(resultIndex) || method == "cmd")
+                if (internalResultIsLeaf(resultIndex) || taskName == "cmd")
                     res.copy() else ProvResult(res.success)
             } else if (mode == ResultMode.ALL) {
                 // leaf
