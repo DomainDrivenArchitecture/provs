@@ -5,6 +5,7 @@ import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.net.UnknownHostException
 
 internal class UtilsKtTest {
@@ -39,6 +40,18 @@ internal class UtilsKtTest {
         assertThrows(
             UnknownHostException::class.java,
             { remote("invalid_host", "user") })
+    }
+
+    @Test
+    fun getResourceAsText_successful() {
+        assertEquals("resource text\n", getResourceAsText("resource-test"))
+    }
+
+    @Test
+    fun getResourceAsText_throws_exception_for_missing_file() {
+        assertThrows<IllegalArgumentException> {
+            getResourceAsText("not existing resource")
+        }
     }
 
     @Test

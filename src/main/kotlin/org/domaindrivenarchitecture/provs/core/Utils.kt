@@ -16,7 +16,7 @@ import java.net.InetAddress
  */
 fun getCallingMethodName(): String? {
     val offsetVal = 1
-    val exclude = arrayOf("def", "record", "invoke", "invoke0", "handle", "def\$default", "addResultToEval")
+    val exclude = arrayOf("def", "record", "invoke", "invoke0", "handle", "def\$default", "addResultToEval", "handle\$default")
     // suffixes are also ignored as method names but will be added as suffix in the evaluation results
     val suffixes = arrayOf("optional", "requireAll", "requireLast", "inContainer")
 
@@ -56,6 +56,12 @@ fun String.escapeAndEncloseByDoubleQuoteForShell(): String {
 fun hostUserHome(): String = System.getProperty("user.home") + fileSeparator()
 fun newline(): String = System.getProperty("line.separator")
 fun fileSeparator(): String = File.separator
+
+fun getResourceAsText(path: String): String {
+    val resource = Thread.currentThread().contextClassLoader.getResource(path)
+    requireNotNull(resource) { "Resource $path not found" }
+    return resource.readText()
+}
 
 
 /**
