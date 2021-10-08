@@ -343,6 +343,7 @@ internal class ProvTest {
 
 
     @Test
+    @NonCi
     fun custom_task_name_appears_in_results() {
         // given
         fun Prov.taskA() = task("TaskB") {
