@@ -10,7 +10,7 @@ import org.domaindrivenarchitecture.provs.workplace.infrastructure.installDevOps
 /**
  * Use case for provisioning repos
  */
-fun Prov.provision(conf: WorkplaceConfig, let: Password?) = def {
+fun Prov.provision(conf: WorkplaceConfig) = def {
     if (conf.type == WorkplaceType.IDE) {
         installDevOps()
     }

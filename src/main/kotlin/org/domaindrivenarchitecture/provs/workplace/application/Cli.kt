@@ -33,7 +33,7 @@ private fun provision(cliCommand: CliCommand) {
         val password: Secret? = retrievePassword(cliCommand)
         val prov: Prov = createProvInstance(cliCommand, password)
 
-        prov.provision(conf, password?.let { Password(password.plain()) })
+        prov.provision(conf)
     } catch (e: IllegalArgumentException) {
         println(
             "Error: File\u001b[31m $filename \u001b[0m was not found.\n" +

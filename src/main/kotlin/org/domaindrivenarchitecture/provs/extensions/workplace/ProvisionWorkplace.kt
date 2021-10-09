@@ -126,7 +126,7 @@ fun provisionRemote(args: Array<String>) {
     val pwSecret = PromptSecretSource("Password for user $userName on $host").secret()
     val pwFromSecret = Password(pwSecret.plain())
 
-    val config = getConfig() ?: WorkplaceConfig()
+    val config = getConfig()
     Prov.newInstance(RemoteProcessor(host, userName, pwFromSecret)).provisionWorkplace(
         config.type,
         config.ssh?.keyPair(),

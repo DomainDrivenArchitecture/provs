@@ -36,7 +36,6 @@ internal class ProvisionWorkplaceKtTest {
         // when
         // in order to test WorkplaceType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
         val config = getConfig("src/test/resources/WorkplaceConfigExample.json")
-            ?: throw Exception("Could not read WorkplaceConfig")
         val res = a.provisionWorkplace(
             config.type,
             config.ssh?.keyPair(),
