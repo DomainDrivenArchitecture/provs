@@ -12,7 +12,7 @@ import org.domaindrivenarchitecture.provs.ubuntu.install.base.isPackageInstalled
 /**
  * Downloads a file from the given URL using curl.
  *
- * ATTENTION: sha256sum uses the version available, which can differ in different versions of ubuntu; e.g. gopass download only works with sha256sum version 8.30 from ubuntu 20.04 !
+ * ATTENTION: to check the checksum the locally installed version of sha256sum is used, which can differ in different versions of ubuntu; e.g. gopass download only works with sha256sum version 8.30 from ubuntu 20.04 !
  */
 @Api
 fun Prov.downloadFromURL(
