@@ -10,6 +10,22 @@ fun Prov.fileExists(file: String, sudo: Boolean = false): Boolean {
 }
 
 
+fun Prov.createFileFromResource(
+    fullyQualifiedFilename: String,
+    resourceFilename: String,
+    resourcePath: String = "",
+    posixFilePermission: String? = null,
+    sudo: Boolean = false
+): ProvResult {
+    return createFile(
+        fullyQualifiedFilename,
+        getResourceAsText(resourcePath.endingWithFileSeparator() + resourceFilename),
+        posixFilePermission,
+        sudo
+    )
+}
+
+
 fun Prov.createFile(
     fullyQualifiedFilename: String,
     text: String?,
@@ -67,6 +83,14 @@ fun Prov.fileContainsText(file: String, content: String, sudo: Boolean = false):
 fun Prov.fileContent(file: String, sudo: Boolean = false): String? {
     return cmd((if (sudo) "sudo " else "") + "cat $file").out
 }
+
+
+fun Prov.addTextToFile(
+    text: String,
+    file: String,
+    doNotAddIfExisting: Boolean = true,
+    sudo: Boolean = false
+): ProvResult = addTextToFile(text, File(file), doNotAddIfExisting, sudo)
 
 
 fun Prov.addTextToFile(

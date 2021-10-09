@@ -40,22 +40,25 @@ fun getCallingMethodName(): String? {
 }
 
 
-fun String.escapeNewline(): String = this.replace("\r", "\\r").replace("\n", "\\n")
-fun String.escapeControlChars(): String = this.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t").replace("[\\p{Cntrl}]".toRegex(), "\\?")
-fun String.escapeBackslash(): String = this.replace("\\", "\\\\")
-fun String.escapeDoubleQuote(): String = this.replace("\"", "\\\"")
-fun String.escapeSingleQuote(): String = this.replace("'", "\'")
-fun String.escapeSingleQuoteForShell(): String = this.replace("'", "'\"'\"'")
-fun String.escapeProcentForPrintf(): String = this.replace("%", "%%")
+fun String.escapeNewline(): String = replace("\r", "\\r").replace("\n", "\\n")
+fun String.escapeControlChars(): String = replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t").replace("[\\p{Cntrl}]".toRegex(), "\\?")
+fun String.escapeBackslash(): String = replace("\\", "\\\\")
+fun String.escapeDoubleQuote(): String = replace("\"", "\\\"")
+fun String.escapeSingleQuote(): String = replace("'", "\'")
+fun String.escapeSingleQuoteForShell(): String = replace("'", "'\"'\"'")
+fun String.escapeProcentForPrintf(): String = replace("%", "%%")
+fun String.endingWithFileSeparator(): String = if (length > 0 && (last() != fileSeparatorChar())) this + fileSeparator() else this
+
 
 // see https://www.shellscript.sh/escape.html
 fun String.escapeAndEncloseByDoubleQuoteForShell(): String {
     return "\"" + this.escapeBackslash().replace("`", "\\`").escapeDoubleQuote().replace("$", "\\$") + "\""
 }
-
-fun hostUserHome(): String = System.getProperty("user.home") + fileSeparator()
-fun newline(): String = System.getProperty("line.separator")
 fun fileSeparator(): String = File.separator
+fun fileSeparatorChar(): Char = File.separatorChar
+fun newline(): String = System.getProperty("line.separator")
+fun hostUserHome(): String = System.getProperty("user.home") + fileSeparator()
+
 
 fun getResourceAsText(path: String): String {
     val resource = Thread.currentThread().contextClassLoader.getResource(path)
