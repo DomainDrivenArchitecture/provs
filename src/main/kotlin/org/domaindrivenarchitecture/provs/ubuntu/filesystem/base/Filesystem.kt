@@ -16,8 +16,8 @@ fun Prov.createFileFromResource(
     resourcePath: String = "",
     posixFilePermission: String? = null,
     sudo: Boolean = false
-): ProvResult {
-    return createFile(
+): ProvResult = def {
+    createFile(
         fullyQualifiedFilename,
         getResourceAsText(resourcePath.endingWithFileSeparator() + resourceFilename),
         posixFilePermission,

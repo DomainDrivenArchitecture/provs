@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.core.local
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.web.base.downloadFromURL
@@ -51,6 +52,7 @@ fun Prov.installKubectlAndTools(): ProvResult = def {
             cmd("sudo apt-get update")
             aptInstall("kubectl")
             addTextToFile("\nkubectl completion bash\n", "/etc/bash_completion.d/kubernetes", sudo = true)
+            createDir(".bashrc.d")
             createFileFromResource(kubeConfigFile, "kubectl.sh", resourcePath)
         } else {
             ProvResult(true, out = "Kubectl already installed")
@@ -128,4 +130,8 @@ fun awsCredentials(id: String, key: String): String {
     aws_access_key_id = $id
     aws_secret_access_key = $key
     """.trimIndent()
+}
+
+fun main() {
+    local().installDevOps()
 }

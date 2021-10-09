@@ -134,6 +134,26 @@ task uberjarWorkplace(type: Jar) {
     archiveFileName = 'provs-workplace.jar'
 }
 
+task uberjarEntry(type: Jar) {
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    } {
+        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
+
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': project.version,
+                'Main-Class': 'org.domaindrivenarchitecture.provs.core.entry.EntryKt'
+    }
+    archiveFileName = 'provs-entry.jar'
+}
+
 
 task sourceJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
