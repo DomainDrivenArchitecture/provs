@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.ubuntu.git.base
 
+import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.isHostKnown
@@ -12,7 +13,7 @@ internal class GitKtTest {
     @Test
     fun trustGitServers(){
         // given
-        val a = defaultTestContainer()
+        val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
         a.aptInstall("openssh-client")
 
         // when

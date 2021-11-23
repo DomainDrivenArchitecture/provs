@@ -2,38 +2,47 @@ package org.domaindrivenarchitecture.provs.ubuntu.git.base
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.addTextToFile
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.dirExists
+import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.isHostKnown
 import org.domaindrivenarchitecture.provs.ubuntu.utils.printToShell
 import java.io.File
 
+val knownHostsFile = "~/.ssh/known_hosts"
 
 /**
- * @param host name or ip
- * @param rsaFingerprints
+ * Adds ssh keys for specified host (which also can be an ip-address) to ssh-file "known_hosts"
+ * Either add the specified rsaFingerprints or - if null - add automatically retrieved keys.
+ * Note: adding keys automatically is vulnerable to a man-in-the-middle attack and not considered secure.
  */
-private fun Prov.trustHost(host: String, rsaFingerprints: Set<String>) = def {
+private fun Prov.trustHost(host: String, rsaFingerprints: Set<String>?) = def {
     if (!isHostKnown(host)) {
-        // logic based on https://serverfault.com/questions/447028/non-interactive-git-clone-ssh-fingerprint-prompt
-        val key = cmd("ssh-keyscan $host").out
-        if (key == null) {
-            ProvResult(false, "No key retrieved for $host")
+        if (!fileExists(knownHostsFile)) {
+            createDir(".ssh")
+            createFile(knownHostsFile, null)
+        }
+        if (rsaFingerprints == null) {
+            // auto add keys
+            cmd("ssh-keyscan -H $host >> $knownHostsFile")
         } else {
-            val c = printToShell(key).trim()
-            val fpr = cmd(c + " | ssh-keygen -lf -").out
-            if (rsaFingerprints.contains(fpr)
-            ) {
-                createDir(".ssh", "~/")
-                cmd(printToShell(key) + " >> ~/.ssh/known_hosts")
+            // logic based on https://serverfault.com/questions/447028/non-interactive-git-clone-ssh-fingerprint-prompt
+            val key = cmd("ssh-keyscan $host").out
+            if (key == null) {
+                ProvResult(false, "No key retrieved for $host")
             } else {
-                ProvResult(false, "Fingerprint $fpr not valid for $host")
+                val c = printToShell(key).trim()
+                val fpr = cmd(c + " | ssh-keygen -lf -").out
+                if (rsaFingerprints.contains(fpr)
+                ) {
+                    cmd(printToShell(key) + " >> $knownHostsFile")
+                } else {
+                    ProvResult(false, "Fingerprint $fpr not valid for $host")
+                }
             }
         }
     } else {
-        ProvResult(true)
+        ProvResult(true, out = "Host already known")
     }
+
 }
 
 
@@ -49,7 +58,7 @@ fun Prov.gitClone(repo: String, path: String, pullIfExisting: Boolean = true): P
             } else {
                 ProvResult(true, out = "Repo $repo is already existing")
             }
-        }  else {
+        } else {
             cmd("cd $path && git clone $repo")
         }
     }
@@ -58,12 +67,16 @@ fun Prov.gitClone(repo: String, path: String, pullIfExisting: Boolean = true): P
 
 fun Prov.trustGithub() = def {
     // current see https://docs.github.com/en/github/authenticating-to-github/githubs-ssh-key-fingerprints
+
+    // todo needs (preferably automatic) conversion to encoding used by keyscan
     val fingerprints = setOf(
         "2048 SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com (RSA)\n",
-        "2048 SHA256:br9IjFspm1vxR3iA35FWE+4VTyz1hYVLIE2t1/CeyWQ github.com (RSA)\n"
+        // supported beginning September 14, 2021:
+        "2048 SHA256:p2QAMXNIC1TJYWeIOttrVc98/R1BUFWu3/LiyKgUfQM github.com (ECDSA)\n",
+        "2048 SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU github.com (Ed25519)\n"
     )
 
-    trustHost("github.com", fingerprints)
+    trustHost("github.com", null)
 }
 
 
@@ -74,7 +87,7 @@ fun Prov.trustGitlab() = def {
         gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
         gitlab.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY=
     """.trimIndent()
-    addTextToFile("\n" + gitlabFingerprints+ "\n", File("~/.ssh/known_hosts"))
+    addTextToFile("\n" + gitlabFingerprints + "\n", File(knownHostsFile))
 }
 
 
