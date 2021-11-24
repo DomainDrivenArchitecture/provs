@@ -29,7 +29,7 @@ internal fun getConfig(filename: String = "WorkplaceConfig.json"): WorkplaceConf
 }
 
 @Api
-internal fun writeConfig(config: WorkplaceConfig, fileName: String = "WorkplaceConfig.yaml") {
+internal fun writeConfig(config: WorkplaceConfig, fileName: String = "WorkplaceConfigExample.yaml") {
     if (fileName.lowercase().endsWith(".yaml")) {
         FileWriter(fileName).use {
             it.write(

@@ -1,11 +1,13 @@
 package org.domaindrivenarchitecture.provs.workplace.application
 
-import org.domaindrivenarchitecture.provs.core.*
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
+import org.domaindrivenarchitecture.provs.core.Prov
+import org.domaindrivenarchitecture.provs.core.Secret
+import org.domaindrivenarchitecture.provs.core.local
+import org.domaindrivenarchitecture.provs.core.remote
 import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.GopassSecretSource
 import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.PromptSecretSource
-
-import java.lang.RuntimeException
+import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
+import java.io.File
 
 /**
  * Provisions according to the options either a meissa workplace, reposOnly or gopassOnly.
@@ -37,9 +39,12 @@ private fun provision(cliCommand: CliCommand) {
     } catch (e: IllegalArgumentException) {
         println(
             "Error: File\u001b[31m $filename \u001b[0m was not found.\n" +
-                    "Pls copy file \u001B[31m MeissaWorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m $filename \u001B[0m " +
+                    "Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m $filename \u001B[0m " +
                     "and change the content according to your needs.\n"
         )
+
+        // provide example config
+        File("WorkplaceConfigExample.yaml").writeText("type: \"MINIMAL\"\n")
     }
 }
 

@@ -18,7 +18,7 @@ apply plugin: 'kotlinx-serialization'
 
 
 group = 'org.domaindrivenarchitecture.provs'
-version = '0.8.18'
+version = '0.8.19'
 
 repositories {
     mavenCentral()
@@ -83,30 +83,17 @@ dependencies {
 }
 
 
-//create a single Jar with all dependencies excl. Kotlin libs
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
-                'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
-    }
-    archivesBaseName = project.name + '-all'
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
-//create a single Jar with all dependencies excl. Kotlin libs without version-number but with suffix "latest"
+//create a single Jar with all dependencies excl. Kotlin libs without version-number
 task fatJarLatest(type: Jar) {
-    doFirst {
-        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
     }
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
     manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
+        attributes 'Implementation-Title': 'Fatjar of provs',
                 'Implementation-Version': project.version,
                 'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
     }
@@ -127,7 +114,7 @@ task uberjarWorkplace(type: Jar) {
     }
 
     manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
+        attributes 'Implementation-Title': 'Uberjar of provs',
                 'Implementation-Version': project.version,
                 'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
     }
