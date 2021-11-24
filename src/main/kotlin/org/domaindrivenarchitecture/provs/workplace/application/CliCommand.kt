@@ -38,7 +38,7 @@ class CliCommand(
 }
 
 fun parseCli(args: Array<String>): CliCommand {
-    val parser = ArgParser("meissa.provs.application.CliKt main")
+    val parser = ArgParser("provs")
 
     val configFileName by parser.argument(ArgType.String, description = "the config file name to apply").optional()
 
