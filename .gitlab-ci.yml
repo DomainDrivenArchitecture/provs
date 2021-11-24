@@ -88,9 +88,12 @@ fatjar:
 
 release:
   stage: release
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
   rules:
     - if: $CI_COMMIT_TAG                  # Run this job when a git tag is created manually
+  needs:
+    - job: fatjar
+      artifacts: true
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
     - echo '------------ creating a release -------------'
     - echo 'Fatjar Job ID:'
