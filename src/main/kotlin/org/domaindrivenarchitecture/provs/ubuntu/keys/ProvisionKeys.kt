@@ -25,7 +25,7 @@ class KeyPairSource(val sourceType: SecretSourceType, val publicKey: String, val
 /**
  * provisions gpg and/or ssh keys for the current user
  */
-fun Prov.provisionKeysCurrentUser(gpgKeys: KeyPair? = null, sshKeys: KeyPair? = null) = requireAll {
+fun Prov.provisionKeys(gpgKeys: KeyPair? = null, sshKeys: KeyPair? = null) = requireAll {
     gpgKeys?.let { configureGpgKeys(it, true) }
     sshKeys?.let { configureSshKeys(it) }
     ProvResult(true)  // dummy

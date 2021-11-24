@@ -9,7 +9,7 @@ import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileExists
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.userHome
 import org.domaindrivenarchitecture.provs.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.gpgFingerprint
-import org.domaindrivenarchitecture.provs.ubuntu.keys.provisionKeysCurrentUser
+import org.domaindrivenarchitecture.provs.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.ubuntu.user.UserConfig
 import java.net.InetAddress
 
@@ -55,7 +55,7 @@ fun Prov.createUser(
  * Does NOT CREATE the user.
  */
 fun Prov.configureUser(config: UserConfig) = requireAll {
-    provisionKeysCurrentUser(
+    provisionKeys(
         config.gpg?.keyPair(),
         config.ssh?.keyPair()
     )

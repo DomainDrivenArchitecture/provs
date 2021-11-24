@@ -11,7 +11,7 @@ import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstallFromPpa
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptPurge
 import org.domaindrivenarchitecture.provs.ubuntu.keys.KeyPair
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.gpgFingerprint
-import org.domaindrivenarchitecture.provs.ubuntu.keys.provisionKeysCurrentUser
+import org.domaindrivenarchitecture.provs.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.PromptSecretSource
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.currentUserCanSudo
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.makeUserSudoerWithNoSudoPasswordRequired
@@ -49,7 +49,7 @@ fun Prov.provisionWorkplace(
 
     aptInstall("ssh gnupg curl git")
 
-    provisionKeysCurrentUser(gpg, ssh)
+    provisionKeys(gpg, ssh)
     provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
 
     installVirtualBoxGuestAdditions()
