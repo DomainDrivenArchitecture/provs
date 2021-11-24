@@ -17,15 +17,14 @@ internal class GitKtTest {
 
         // when
         val res = a.trustGithub()
-        val known = a.isHostKnown("github.com")
         val res2 = a.trustGitlab()
-        val known2 = a.isHostKnown("gitlab.com")
 
         // then
         assertTrue(res.success)
-        assertTrue(known)
         assertTrue(res2.success)
-        assertTrue(known2)
+
+        assertTrue(a.isHostKnown("github.com"), "github.com does not seem to be a known host")
+        assertTrue(a.isHostKnown("gitlab.com"), "gitlab.com does not seem to be a known host")
     }
 
     @Test
