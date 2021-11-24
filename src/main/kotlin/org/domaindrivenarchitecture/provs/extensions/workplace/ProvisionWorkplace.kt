@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.extensions.workplace
 
 import org.domaindrivenarchitecture.provs.core.*
 import org.domaindrivenarchitecture.provs.core.processors.RemoteProcessor
-import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
 import org.domaindrivenarchitecture.provs.extensions.workplace.base.*
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
@@ -17,6 +16,7 @@ import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.PromptSecr
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.currentUserCanSudo
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.makeUserSudoerWithNoSudoPasswordRequired
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.whoami
+import org.domaindrivenarchitecture.provs.workplace.infrastructure.installDevOps
 import java.net.InetAddress
 import kotlin.system.exitProcess
 
@@ -97,6 +97,8 @@ fun Prov.provisionWorkplace(
         // IDEs
         cmd("sudo snap install intellij-idea-community --classic")
         installVSC("python", "clojure")
+
+        installDevOps()
     }
 
     ProvResult(true) // dummy

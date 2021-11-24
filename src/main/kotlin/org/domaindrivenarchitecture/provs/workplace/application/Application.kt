@@ -1,18 +1,15 @@
 package org.domaindrivenarchitecture.provs.workplace.application
 
-import org.domaindrivenarchitecture.provs.core.Password
 import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.core.Secret
+import org.domaindrivenarchitecture.provs.extensions.workplace.provisionWorkplace
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
-import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.installDevOps
 
 /**
- * Use case for provisioning repos
+ * Use case for provisioning a workplace
  */
-fun Prov.provision(conf: WorkplaceConfig) = def {
-    if (conf.type == WorkplaceType.IDE) {
-        installDevOps()
+fun Prov.provision(conf: WorkplaceConfig, password: Secret?) = def {
+    with (conf) {
+        provisionWorkplace(type, ssh?.keyPair(), gpg?.keyPair(), gitUserName, gitEmail, password)
     }
-    ProvResult(true)
 }
