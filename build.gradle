@@ -111,7 +111,7 @@ task fatJarLatest(type: Jar) {
                 'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
     }
     with jar
-    archiveFileName = 'provs-fat-latest.jar'
+    archiveFileName = 'provs-fatjar.jar'
 }
 
 task uberjarWorkplace(type: Jar) {
