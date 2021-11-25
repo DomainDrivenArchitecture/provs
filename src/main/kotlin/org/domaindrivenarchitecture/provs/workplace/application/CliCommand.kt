@@ -7,6 +7,7 @@ import kotlinx.cli.optional
 
 class CliCommand(
     val remoteHost: String?,
+    val localHost: Boolean?,
     val userName: String?,
     val sshWithGopassPath: String?,
     val sshWithPasswordPrompt: Boolean,
@@ -20,7 +21,7 @@ class CliCommand(
     }
 
     fun isValidLocalhost(): Boolean {
-        return remoteHost == null && userName == null && sshWithGopassPath == null &&
+        return (localHost ?: false) && remoteHost == null && userName == null && sshWithGopassPath == null &&
                 !sshWithPasswordPrompt && !sshWithKey
     }
 
@@ -44,7 +45,11 @@ fun parseCli(args: Array<String>): CliCommand {
 
     val remoteHost by parser.option(
         ArgType.String, shortName =
-        "r", description = "provision remote host"
+        "r", description = "provision to remote host - either localHost or remoteHost must be specified"
+    )
+    val localHost by parser.option(
+        ArgType.Boolean, shortName =
+        "l", description = "provision to local machine - either localHost or remoteHost must be specified"
     )
     val userName by parser.option(
         ArgType.String,
@@ -69,7 +74,7 @@ fun parseCli(args: Array<String>): CliCommand {
     parser.parse(args)
     val cliCommand =
         CliCommand(
-            remoteHost, userName, sshWithGopassPath, sshWithPasswordPrompt, sshWithKey, configFileName
+            remoteHost, localHost, userName, sshWithGopassPath, sshWithPasswordPrompt, sshWithKey, configFileName
         )
     return cliCommand
 }
