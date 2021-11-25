@@ -39,9 +39,7 @@ class CliCommand(
 }
 
 fun parseCli(args: Array<String>): CliCommand {
-    val parser = ArgParser("provs")
-
-    val configFileName by parser.argument(ArgType.String, description = "the config file name to apply").optional()
+    val parser = ArgParser("java -jar provs.jar")
 
     val remoteHost by parser.option(
         ArgType.String, shortName =
@@ -51,6 +49,11 @@ fun parseCli(args: Array<String>): CliCommand {
         ArgType.Boolean, shortName =
         "l", description = "provision to local machine - either localHost or remoteHost must be specified"
     )
+    val configFileName by parser.option(
+        ArgType.String,
+        shortName = "c",
+        description = "the config file name to apply"
+    ).default("WorkplaceConfig.yaml")
     val userName by parser.option(
         ArgType.String,
         shortName = "u",

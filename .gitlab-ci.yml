@@ -79,7 +79,7 @@ fatjar:
     - ./gradlew fatJarLatest
   artifacts:
     paths:
-      - 'build/libs/provs-fatjar.jar'
+      - 'build/libs/provs.jar'
     reports:
       # To ensure we've access to this file in the next stage
       dotenv: generate_executables.env
@@ -105,8 +105,8 @@ release:
     ref: '$CI_COMMIT_TAG'
     assets:
       links:
-        - name: provs-fatjar.jar
-          url: https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${FATJAR_JOB_ID}/artifacts/raw/build/libs/provs-fatjar.jar
+        - name: provs.jar
+          url: https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${FATJAR_JOB_ID}/artifacts/raw/build/libs/provs.jar
 
 after_script:
   - echo "---------- End CI ----------"

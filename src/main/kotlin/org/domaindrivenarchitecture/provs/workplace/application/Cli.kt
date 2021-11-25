@@ -12,9 +12,6 @@ import java.io.File
 /**
  * Provisions according to the options either a meissa workplace, reposOnly or gopassOnly.
  * Locally or on a remote machine. If remotely, the remote host and remote user are specified by args parameters.
- *
- * Get help with:
- * java -jar build/libs/provs-meissa-latest.jar meissa.provs.application.CliKt main -h
  */
 fun main(args: Array<String>) {
     val cliCommand = parseCli(args)
@@ -77,7 +74,7 @@ private fun retrievePassword(cliCommand: CliCommand): Secret? {
     if (cliCommand.isValidRemote()) {
         if (cliCommand.sshWithPasswordPrompt) {
             password =
-                PromptSecretSource("Password for user $cliCommand.userName!! on $cliCommand.remoteHost!!").secret()
+                PromptSecretSource("Password for user ${cliCommand.userName!!} on ${cliCommand.remoteHost!!}").secret()
         } else if (cliCommand.sshWithGopassPath != null) {
             password = GopassSecretSource(cliCommand.sshWithGopassPath).secret()
         }

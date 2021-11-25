@@ -18,7 +18,7 @@ apply plugin: 'kotlinx-serialization'
 
 
 group = 'org.domaindrivenarchitecture.provs'
-version = '0.8.21-SNAPSHOT'
+version = '0.8.21'
 
 repositories {
     mavenCentral()
@@ -98,7 +98,7 @@ task fatJarLatest(type: Jar) {
                 'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
     }
     with jar
-    archiveFileName = 'provs-fatjar.jar'
+    archiveFileName = 'provs.jar'
 }
 
 task uberjarWorkplace(type: Jar) {
