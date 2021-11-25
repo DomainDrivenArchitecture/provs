@@ -72,6 +72,9 @@ fatjar:
   stage: fatjar
   rules:
     - if: $CI_COMMIT_TAG
+  only:
+    refs:
+      - master
   before_script:
     - echo $CI_JOB_ID
     # Writing FATJAR_JOB_ID variable to environment file, as variable is needed in the release stage.
@@ -92,6 +95,9 @@ release:
   stage: release
   rules:
     - if: $CI_COMMIT_TAG                  # Run this job when a git tag is created manually
+  only:
+    refs:
+      - master
   needs:
     - job: fatjar
       artifacts: true
