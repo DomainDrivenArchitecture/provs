@@ -16,7 +16,7 @@ import java.net.InetAddress
  */
 fun getCallingMethodName(): String? {
     val offsetVal = 1
-    val exclude = arrayOf("def", "record", "invoke", "invoke0", "handle", "def\$default", "addResultToEval", "handle\$default")
+    val exclude = arrayOf("task", "def", "record", "invoke", "invoke0", "handle", "task\$default", "def\$default", "addResultToEval", "handle\$default")
     // suffixes are also ignored as method names but will be added as suffix in the evaluation results
     val suffixes = arrayOf("optional", "requireAll", "requireLast", "inContainer")
 
@@ -45,15 +45,25 @@ fun String.escapeControlChars(): String = replace("\r", "\\r").replace("\n", "\\
 fun String.escapeBackslash(): String = replace("\\", "\\\\")
 fun String.escapeDoubleQuote(): String = replace("\"", "\\\"")
 fun String.escapeSingleQuote(): String = replace("'", "\'")
+fun String.escapeBacktick(): String = replace("`", "\\`")
+fun String.escapeDollar(): String = replace("$", "\\$")
 fun String.escapeSingleQuoteForShell(): String = replace("'", "'\"'\"'")
 fun String.escapeProcentForPrintf(): String = replace("%", "%%")
 fun String.endingWithFileSeparator(): String = if (length > 0 && (last() != fileSeparatorChar())) this + fileSeparator() else this
 
 
-// see https://www.shellscript.sh/escape.html
 fun String.escapeAndEncloseByDoubleQuoteForShell(): String {
-    return "\"" + this.escapeBackslash().replace("`", "\\`").escapeDoubleQuote().replace("$", "\\$") + "\""
+    return "\"" + this.escapeForShell() + "\""
 }
+fun String.escapeForShell(): String {
+    // see https://www.shellscript.sh/escape.html
+    return this.escapeBackslash().escapeBacktick().escapeDoubleQuote().escapeDollar()
+}
+internal fun echoCommandForText(text: String): String {
+    return "echo -n ${text.escapeAndEncloseByDoubleQuoteForShell()}"
+}
+
+
 fun fileSeparator(): String = File.separator
 fun fileSeparatorChar(): Char = File.separatorChar
 fun newline(): String = System.getProperty("line.separator")

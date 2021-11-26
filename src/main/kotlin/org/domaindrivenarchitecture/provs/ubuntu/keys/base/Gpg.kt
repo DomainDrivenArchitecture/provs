@@ -8,7 +8,7 @@ import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createSecretFil
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.dirExists
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.keys.KeyPair
-import org.domaindrivenarchitecture.provs.ubuntu.utils.printToShell
+import org.domaindrivenarchitecture.provs.core.echoCommandForText
 
 
 /**
@@ -69,6 +69,6 @@ private fun Prov.gpgKeysInstalled(fingerprint: String): Boolean  {
 
 fun Prov.gpgFingerprint(pubKey: String): String? {
     val result =
-        cmdNoLog(" " + printToShell(pubKey) + " | gpg --with-colons --import-options show-only --import --fingerprint")
+        cmdNoLog(" " + echoCommandForText(pubKey) + " | gpg --with-colons --import-options show-only --import --fingerprint")
     return result.out?.let { """^fpr:*([A-Z0-9]*):$""".toRegex(RegexOption.MULTILINE).find(it)?.groupValues?.get(1) }
 }

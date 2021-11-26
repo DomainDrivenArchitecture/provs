@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.isHostKnown
-import org.domaindrivenarchitecture.provs.ubuntu.utils.printToShell
+import org.domaindrivenarchitecture.provs.core.echoCommandForText
 import java.io.File
 
 val knownHostsFile = "~/.ssh/known_hosts"
@@ -93,7 +93,7 @@ private fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String
                     err = "Fingerprint ($fingerprintToBeAdded) could not be found in actual fingerprints: $actualFingerprints"
                 )
             }
-            cmd(printToShell(actualKeys.get(indexOfKeyFound)) + " >> $knownHostsFile")
+            cmd(echoCommandForText(actualKeys.get(indexOfKeyFound)) + " >> $knownHostsFile")
         }
         ProvResult(true)
     }
