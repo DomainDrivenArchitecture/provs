@@ -1,8 +1,8 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.provisionNginxStandAlone
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.provisionNginxStandAlone
 
 
 internal val certificateName = "selfsigned"

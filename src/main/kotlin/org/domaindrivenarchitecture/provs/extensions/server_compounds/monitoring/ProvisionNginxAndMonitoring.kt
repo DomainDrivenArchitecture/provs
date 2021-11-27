@@ -1,11 +1,11 @@
 package org.domaindrivenarchitecture.provs.extensions.server_compounds.monitoring
 
 import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.NginxConf
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.nginxAddLocation
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.nginxCreateSelfSignedCertificate
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.nginxHttpsConfWithLocationFiles
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.provisionNginxStandAlone
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.NginxConf
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.nginxAddLocation
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.nginxCreateSelfSignedCertificate
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.nginxHttpsConfWithLocationFiles
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.provisionNginxStandAlone
 import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.prometheus.base.prometheusNginxConfig
 import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.prometheus.provisionPrometheusDocker
 

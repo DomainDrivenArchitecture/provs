@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base
 
 class NginxConf(val conf: String = NGINX_MINIMAL_CONF) {
     companion object {}

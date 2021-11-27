@@ -1,9 +1,9 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base
 
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileContainsText
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.configFile
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.provisionNginxStandAlone
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.configFile
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.provisionNginxStandAlone
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

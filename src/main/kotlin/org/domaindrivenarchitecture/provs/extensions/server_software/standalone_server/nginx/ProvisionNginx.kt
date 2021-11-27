@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.nginx
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
@@ -6,8 +6,8 @@ import org.domaindrivenarchitecture.provs.core.remote
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileExists
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.NginxConf
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.createNginxLocationFolders
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.NginxConf
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.createNginxLocationFolders
 import kotlin.system.exitProcess
 
 

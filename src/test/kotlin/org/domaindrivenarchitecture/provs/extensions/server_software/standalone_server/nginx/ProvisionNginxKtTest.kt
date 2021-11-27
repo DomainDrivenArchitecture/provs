@@ -1,10 +1,10 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.nginx
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.replaceTextInFile
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.*
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.*
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileExists
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

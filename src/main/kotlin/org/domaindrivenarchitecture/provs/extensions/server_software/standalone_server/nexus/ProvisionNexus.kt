@@ -8,9 +8,9 @@ import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileExists
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.createUser
 import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.certbot.provisionCertbot
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.NginxConf
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.nginxReverseProxyHttpConfig
-import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.provisionNginxStandAlone
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.NginxConf
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.base.nginxReverseProxyHttpConfig
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nginx.provisionNginxStandAlone
 
 
 /**
