@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.apple
+package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.infrastructure.apple
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult

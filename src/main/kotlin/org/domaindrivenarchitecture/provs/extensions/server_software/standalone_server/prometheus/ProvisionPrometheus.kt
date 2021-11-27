@@ -1,7 +1,7 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.prometheus
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.prometheus
 
 import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.extensions.server_software.prometheus.base.*
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.prometheus.base.*
 
 /**
  * Provisions prometheus monitoring.

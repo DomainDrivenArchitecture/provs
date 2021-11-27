@@ -3,11 +3,7 @@ package org.domaindrivenarchitecture.provs.extensions.server_software.k3s
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
 import org.domaindrivenarchitecture.provs.core.echoCommandForText
-import org.domaindrivenarchitecture.provs.core.remote
-import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.apple.appleConfig
-import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.apple.checkAppleService
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.PromptSecretSource
 
 
 /**
@@ -39,30 +35,8 @@ fun Prov.uninstallK3sServer() = task {
 }
 
 
-fun Prov.applyConfig(configAsYaml: String) = task {
+fun Prov.applyK3sConfig(configAsYaml: String) = task {
     cmd(echoCommandForText(configAsYaml) + " | sudo k3s kubectl apply -f -")
 }
 
 
-fun main() {
-
-    val host = "192.168.56.141"
-    val remoteUser = "usr"
-    val passwordK3sUser = PromptSecretSource("Enter Password").secret()
-
-    remote(host, remoteUser, passwordK3sUser).def {
-//    local().task {
-
-        installK3sServer()
-
-        // print pods for information purpose
-        println(cmd("sudo k3s kubectl get pods --all-namespaces").out)
-
-        applyConfig(appleConfig())
-
-        // print pods for information purpose
-        println(cmd("sudo k3s kubectl get services").out)
-
-        checkAppleService("sudo k3s kubectl")
-    }
-}

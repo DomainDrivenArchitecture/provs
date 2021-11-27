@@ -6,8 +6,8 @@ import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.
 import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.nginxCreateSelfSignedCertificate
 import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.base.nginxHttpsConfWithLocationFiles
 import org.domaindrivenarchitecture.provs.extensions.server_software.nginx.provisionNginxStandAlone
-import org.domaindrivenarchitecture.provs.extensions.server_software.prometheus.base.prometheusNginxConfig
-import org.domaindrivenarchitecture.provs.extensions.server_software.prometheus.provisionPrometheusDocker
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.prometheus.base.prometheusNginxConfig
+import org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.prometheus.provisionPrometheusDocker
 
 
 @Suppress("unused") // used externally

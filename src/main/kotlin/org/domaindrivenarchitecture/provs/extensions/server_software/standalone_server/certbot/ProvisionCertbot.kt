@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.certbot
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.certbot
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult

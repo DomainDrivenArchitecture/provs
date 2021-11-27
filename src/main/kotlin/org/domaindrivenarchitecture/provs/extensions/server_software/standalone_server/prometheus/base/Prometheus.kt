@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.prometheus.base
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.prometheus.base
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.docker.containerRuns

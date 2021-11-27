@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.extensions.server_software.nexus.base
+package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nexus.base
 
 fun reverseProxyConfigHttpPort80(serverName: String): String {
     // see https://help.sonatype.com/repomanager3/installation/run-behind-a-reverse-proxy
