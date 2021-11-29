@@ -52,6 +52,10 @@ fun String.escapeProcentForPrintf(): String = replace("%", "%%")
 fun String.endingWithFileSeparator(): String = if (length > 0 && (last() != fileSeparatorChar())) this + fileSeparator() else this
 
 
+/**
+ * Put String between double quotes and escapes chars that need to be escaped (by backslash) for use in Unix Shell String
+ * I.e. the following chars are escaped: backslash, backtick, double quote, dollar
+ */
 fun String.escapeAndEncloseByDoubleQuoteForShell(): String {
     return "\"" + this.escapeForShell() + "\""
 }
@@ -101,32 +105,29 @@ fun remote(host: String, remoteUser: String, password: Secret? = null, platform:
 
 
 /**
- * Returns Prov instance running in a local docker container with name containerName.
- * A potentially existing container with the same name is reused by default resp. if
- * parameter useExistingContainer is set to true.
- * If a new container needs to be created, on Linux systems the image _ubuntu_ is used.
+ * Returns Prov instance which eexcutes its tasks in a local docker container with name containerName.
+ * If a container with the given name is running already, it'll be reused if parameter useExistingContainer is set to true.
+ * If a container is reused, it is not checked if it has the correct, specified image.
  */
 @Api  // used by other libraries resp. KotlinScript
-fun docker(containerName: String = "provs_default", useExistingContainer: Boolean = true): Prov {
+fun docker(
+    containerName: String = "provs_default",
+    useExistingContainer: Boolean = true,
+    imageName: String = "ubuntu",
+    sudo: Boolean = true
+): Prov {
 
-    val os = System.getProperty("os.name")
+    local().provideContainer(containerName, imageName)
 
-    if ("Linux".equals(os)) {
-        val defaultDockerImage = "ubuntu"
-
-        local().provideContainer(containerName, defaultDockerImage)
-
-        return Prov.newInstance(
-            ContainerUbuntuHostProcessor(
-                containerName,
-                defaultDockerImage,
-                if (useExistingContainer)
-                    ContainerStartMode.USE_RUNNING_ELSE_CREATE
-                else
-                    ContainerStartMode.CREATE_NEW_KILL_EXISTING
-            )
+    return Prov.newInstance(
+        ContainerUbuntuHostProcessor(
+            containerName,
+            imageName,
+            if (useExistingContainer)
+                ContainerStartMode.USE_RUNNING_ELSE_CREATE
+            else
+                ContainerStartMode.CREATE_NEW_KILL_EXISTING,
+            sudo = sudo
         )
-    } else {
-        throw RuntimeException("ERROR: method docker() is currently not supported for " + os)
-    }
+    )
 }
