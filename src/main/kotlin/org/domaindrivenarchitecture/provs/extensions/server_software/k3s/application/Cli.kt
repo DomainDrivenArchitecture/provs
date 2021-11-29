@@ -12,7 +12,7 @@ fun main() {
     val passwordK3sUser = PromptSecretSource("Enter Password").secret()
 
     val prov = remote(host, remoteUser, passwordK3sUser)
-    //  val prov = local()
+    // alternatively run local: val prov = local()
 
     prov.task {
 
@@ -26,6 +26,6 @@ fun main() {
         // print pods for information purpose
         println(cmd("sudo k3s kubectl get services").out)
 
-        checkAppleService("sudo k3s kubectl")
+        checkAppleService()
     }
 }
