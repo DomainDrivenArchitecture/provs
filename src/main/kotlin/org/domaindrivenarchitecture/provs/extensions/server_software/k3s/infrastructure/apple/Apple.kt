@@ -4,23 +4,37 @@ import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
 
 
-fun Prov.checkAppleService(kubeCtlCmd: String = "kubectl") = task {
-    val ip = cmd(kubeCtlCmd + " get svc apple-service -o jsonpath=\"{.spec.clusterIP}\"\n").out
-    val port = cmd(kubeCtlCmd + " get svc apple-service -o jsonpath=\"{.spec.ports[0].port}\"\n").out
-    if (ip == null || port == null) {
-        return@task ProvResult(false)
-    }
-    val apple = cmd("curl -m 30 $ip:$port").out
-    if ("apple" == apple) {
-        ProvResult(true)
+fun Prov.checkAppleService(host: String = "127.0.0.1") = task {
+    val apple = cmd("curl -m 30 $host/apple").out
+    if ("apple" == apple?.trim()) {
+        addResultToEval(ProvResult(true))
     } else {
-        ProvResult(false, err = "Apple service did not return \"apple\" but instead: " + apple)
+        addResultToEval(ProvResult(false, err = "Apple service did not return \"apple\" but instead: " + apple))
     }
 }
 
 
 fun appleConfig() =
     """
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: apple-ingress
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /apple
+        pathType: Prefix
+        backend:
+          service: 
+            name: apple-service
+            port: 
+              number: 5678
+---
+
 kind: Pod
 apiVersion: v1
 metadata:
@@ -33,7 +47,6 @@ spec:
       image: hashicorp/http-echo
       args:
         - "-text=apple"
-
 ---
 
 kind: Service
