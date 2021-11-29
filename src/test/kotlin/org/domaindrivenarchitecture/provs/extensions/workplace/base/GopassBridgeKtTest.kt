@@ -38,6 +38,7 @@ internal class GopassBridgeKtTest {
 
     @ContainerTest
     @Test
+    @NonCi
     fun test_install_and_configure_GopassBridgeJsonApi() {
         // given
         local().exitAndRmContainer("provs_test")
