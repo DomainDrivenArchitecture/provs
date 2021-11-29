@@ -7,6 +7,8 @@ import org.domaindrivenarchitecture.provs.core.docker.platforms.*
 import org.domaindrivenarchitecture.provs.core.platforms.UbuntuProv
 import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 
+private const val DOCKER_NOT_SUPPORTED = "docker not yet supported for "
+
 /**
  * Builds a docker image if not yet existing.
  */
@@ -14,7 +16,7 @@ fun Prov.dockerProvideImage(image: DockerImage, skipIfExisting: Boolean = true, 
     if (this is UbuntuProv) {
         return this.dockerProvideImagePlatform(image, skipIfExisting, sudo)
     } else {
-        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
     }
 }
 
@@ -25,7 +27,7 @@ fun Prov.dockerImageExists(imageName: String, sudo: Boolean = true) : Boolean {
     if (this is UbuntuProv) {
         return this.dockerImageExistsPlatform(imageName, sudo)
     } else {
-        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
     }
 }
 
@@ -40,12 +42,13 @@ fun Prov.provideContainer(
     containerName: String,
     imageName: String = "ubuntu",
     startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE,
-    sudo: Boolean = true
+    sudo: Boolean = true,
+    options: String = ""
 ) : ProvResult {
     if (this is UbuntuProv) {
-        return this.provideContainerPlatform(containerName, imageName, startMode, sudo)
+        return this.provideContainerPlatform(containerName, imageName, startMode, sudo, options)
     } else {
-        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
     }
 }
 
@@ -54,7 +57,7 @@ fun Prov.containerRuns(containerName: String, sudo: Boolean = true) : Boolean {
     if (this is UbuntuProv) {
         return this.containerRunsPlatform(containerName, sudo)
     } else {
-        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
     }
 }
 
@@ -67,7 +70,7 @@ fun Prov.runContainer(
     if (this is UbuntuProv) {
         return this.runContainerPlatform(containerName, imageName, sudo)
     } else {
-        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
     }
 }
 
@@ -79,6 +82,6 @@ fun Prov.exitAndRmContainer(
     if (this is UbuntuProv) {
         return this.exitAndRmContainerPlatform(containerName, sudo)
     } else {
-        throw RuntimeException("docker not yet supported for " + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
     }
 }
