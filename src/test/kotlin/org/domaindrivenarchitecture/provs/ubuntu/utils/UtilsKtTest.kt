@@ -10,15 +10,35 @@ internal class UtilsKtTest {
 
     @ContainerTest
     @Test
-    fun printToShell_escapes_successfully() {
+    fun printToShell_escapes_String_successfully() {
         // given
         val a = Prov.defaultInstance()
 
         // when
-        val testString = "test if newline \n and apostrophe's ' \" and special chars !§$%[]\\ äöüß \$variable are handled correctly"
+        val testString = "test if newline \n and apostrophe's ' \" and special chars $ !§$%[]\\ äöüß \$variable and tabs     \t are handled correctly"
+
         val res = a.cmd(echoCommandForText(testString)).out
 
         // then
         assertEquals(testString, res)
+    }
+
+    @ContainerTest
+    @Test
+    fun printToShell_escapes_raw_String_successfully() {
+        // given
+        val a = Prov.defaultInstance()
+
+        // when
+        val testMultiLineString = """
+            test if newlines
+            \n
+            and apostrophe's ' " \" \' and special chars $ {} $\{something}!§$%[]\\ äöüß $\notakotlinvariable ${'$'}notakotlinvariable and tabs     \t are handled correctly
+            """
+
+        val resMl = a.cmd(echoCommandForText(testMultiLineString)).out
+
+        // then
+        assertEquals(testMultiLineString, resMl)
     }
 }
