@@ -9,6 +9,21 @@ import java.io.File
 import java.net.InetAddress
 
 /**
+ * Repeats task until it returns success
+ */
+fun Prov.repeatTask(times: Int, sleepInSec: Int, func: Prov.() -> ProvResult) = requireLast {
+    require(times > 0)
+    var result = ProvResult(false, err = "Internal error")  // Will only be returned if function is not executed at all, otherwise func's result is returned
+    for (i in 1..times) {
+        result = func()
+        if (result.success)
+            return@requireLast result
+        Thread.sleep(sleepInSec * 1000L)
+    }
+    return@requireLast result
+}
+
+/**
  * Returns the name of the calling function but excluding some functions of the prov framework
  * in order to return the "real" calling function.
  * Note: names of inner functions (i.e. which are defined inside other functions) are not
@@ -63,8 +78,19 @@ fun String.escapeForShell(): String {
     // see https://www.shellscript.sh/escape.html
     return this.escapeBackslash().escapeBacktick().escapeDoubleQuote().escapeDollar()
 }
+
+/**
+ * Returns an echo command for the given String, which will be escaped for the bash
+ */
 internal fun echoCommandForText(text: String): String {
     return "echo -n ${text.escapeAndEncloseByDoubleQuoteForShell()}"
+}
+
+/**
+ * Returns an echo command for the given String, which will be escaped for the shell and ADDITIONALLY with newline, tabs, etc replaced by \n, \t, etc
+ */
+internal fun echoCommandForTextWithNewlinesReplaced(text: String): String {
+    return "echo -en ${text.escapeAndEncloseByDoubleQuoteForShell()}"
 }
 
 

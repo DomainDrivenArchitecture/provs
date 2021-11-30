@@ -43,10 +43,11 @@ fun Prov.provideContainer(
     imageName: String = "ubuntu",
     startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE,
     sudo: Boolean = true,
-    options: String = ""
+    options: String = "",
+    command: String = ""
 ) : ProvResult {
     if (this is UbuntuProv) {
-        return this.provideContainerPlatform(containerName, imageName, startMode, sudo, options)
+        return this.provideContainerPlatform(containerName, imageName, startMode, sudo, options, command)
     } else {
         throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
     }
@@ -85,3 +86,14 @@ fun Prov.exitAndRmContainer(
         throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
     }
 }
+
+
+fun Prov.containerExec(containerName: String, cmd: String, sudo: Boolean = true): ProvResult {
+    if (this is UbuntuProv) {
+        return this.containerExecPlatform(containerName, cmd, sudo)
+    } else {
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
+    }
+}
+
+

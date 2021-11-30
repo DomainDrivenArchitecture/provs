@@ -38,17 +38,19 @@ open class ContainerUbuntuHostProcessor(
             throw RuntimeException("Could not start docker image: " + r.toString(), r.exception)
     }
 
+    private val hostShell = "/bin/bash"
+
     override fun x(vararg args: String): ProcessResult {
-        return localExecution.x("sh", "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
+        return localExecution.x(hostShell, "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
     }
 
     override fun xNoLog(vararg args: String): ProcessResult {
-        return localExecution.xNoLog("sh", "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
+        return localExecution.xNoLog(hostShell, "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
     }
 
     private fun exitAndRm() {
-        localExecution.x(SHELL, "-c", dockerCmd + "stop $containerName")
-        localExecution.x(SHELL, "-c", dockerCmd + "rm $containerName")
+        localExecution.x(hostShell, "-c", dockerCmd + "stop $containerName")
+        localExecution.x(hostShell, "-c", dockerCmd + "rm $containerName")
     }
 
     private fun quoteString(s: String): String {

@@ -46,8 +46,8 @@ class RemoteProcessor(ip: InetAddress, user: String, password: Secret? = null) :
             try {
                 ssh.disconnect()
             } finally {
-                log.error("Got exception when initializing ssh: " + e.message)
-                throw RuntimeException("Error when initializing ssh", e)
+                log.error("Got exception when initializing ssh (Username, password or ssh-key might be wrong): " + e.message)
+                throw RuntimeException("Error when initializing ssh (Username, password or ssh-key might be wrong) ", e)
             }
         }
     }

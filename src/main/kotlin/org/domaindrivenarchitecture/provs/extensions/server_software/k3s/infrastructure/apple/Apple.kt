@@ -2,14 +2,22 @@ package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.infras
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.core.repeatTask
 
 
-fun Prov.checkAppleService(host: String = "127.0.0.1") = task {
-    val apple = cmd("curl -m 30 $host/apple").out
-    if ("apple" == apple?.trim()) {
-        addResultToEval(ProvResult(true))
+/**
+ * Checks if URL "$host/apple" is available and return text "apple"
+ */
+fun Prov.checkAppleService(host: String = "127.0.0.1") = requireLast {
+    // repeat required as curl may return with "empty reply from server" or with "Recv failure: Connection reset by peer"
+    val res = repeatTask(12, 10) {
+        cmd("curl -m 30 $host/apple")
+    }.out?.trim()
+
+    return@requireLast if ("apple" == res) {
+        ProvResult(true, out = res)
     } else {
-        addResultToEval(ProvResult(false, err = "Apple service did not return \"apple\" but instead: " + apple))
+        ProvResult(false,err = "Url $host/apple did not return text \"apple\" but returned: $res")
     }
 }
 

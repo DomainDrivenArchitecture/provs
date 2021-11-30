@@ -3,8 +3,8 @@ package org.domaindrivenarchitecture.provs.core.docker.platforms
 import org.domaindrivenarchitecture.provs.core.ProvResult
 import org.domaindrivenarchitecture.provs.core.docker.containerRuns
 import org.domaindrivenarchitecture.provs.core.docker.dockerImageExists
-import org.domaindrivenarchitecture.provs.core.docker.exitAndRmContainer
 import org.domaindrivenarchitecture.provs.core.docker.dockerimages.DockerImage
+import org.domaindrivenarchitecture.provs.core.docker.exitAndRmContainer
 import org.domaindrivenarchitecture.provs.core.escapeSingleQuote
 import org.domaindrivenarchitecture.provs.core.fileSeparator
 import org.domaindrivenarchitecture.provs.core.hostUserHome
@@ -17,24 +17,28 @@ fun UbuntuProv.provideContainerPlatform(
     imageName: String = "ubuntu",
     startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE,
     sudo: Boolean = true,
-    options: String = ""
+    options: String = "",
+    command: String =""
 ): ProvResult = requireLast {
     val dockerCmd = dockerCommand(sudo)
 
     if (startMode == ContainerStartMode.CREATE_NEW_KILL_EXISTING) {
         exitAndRmContainer(containerName)
     }
+
+    val runCommand = dockerCmd + "run -dit $options --name=$containerName $imageName $command"
+
     if ((startMode == ContainerStartMode.CREATE_NEW_KILL_EXISTING) || (startMode == ContainerStartMode.CREATE_NEW_FAIL_IF_EXISTING)) {
-        if (!cmd(dockerCmd + "run -dit $options --name=$containerName $imageName").success) {
+        if (!cmd(runCommand).success) {
             throw RuntimeException("could not start docker")
         }
     } else if (startMode == ContainerStartMode.USE_RUNNING_ELSE_CREATE) {
         val runCheckResult = cmdNoEval(dockerCmd + "inspect -f '{{.State.Running}}' $containerName")
 
-        // if either container not found or container found but not running
+        // if either container not found or container found but not running => remove container and start again
         if (!runCheckResult.success || "false\n" == runCheckResult.out) {
             cmdNoEval(dockerCmd + "rm -f $containerName")
-            cmd(dockerCmd + "run -dit $options --name=$containerName $imageName")
+            cmd(runCommand)
         }
     }
     ProvResult(containerRuns(containerName, sudo))
