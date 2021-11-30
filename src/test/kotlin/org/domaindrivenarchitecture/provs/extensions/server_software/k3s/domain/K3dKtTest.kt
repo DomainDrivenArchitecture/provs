@@ -24,7 +24,7 @@ internal class K3dKtTest {
             provideContainer(
                 containerName,
                 "yobasystems/alpine-docker:dind-amd64",
-                ContainerStartMode.CREATE_NEW_KILL_EXISTING,  // for re-create a potentially existing container
+                // ContainerStartMode.CREATE_NEW_KILL_EXISTING,  // for re-create a potentially existing container
                 sudo = false,
                 options = "--privileged"
             )

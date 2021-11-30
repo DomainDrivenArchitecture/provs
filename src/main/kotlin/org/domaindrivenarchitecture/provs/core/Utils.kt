@@ -134,14 +134,17 @@ fun remote(host: String, remoteUser: String, password: Secret? = null, platform:
  * Returns Prov instance which eexcutes its tasks in a local docker container with name containerName.
  * If a container with the given name is running already, it'll be reused if parameter useExistingContainer is set to true.
  * If a container is reused, it is not checked if it has the correct, specified image.
+ * Determines automatically if sudo is required if sudo is null, otherwise the specified sudo is used
  */
 @Api  // used by other libraries resp. KotlinScript
 fun docker(
     containerName: String = "provs_default",
     useExistingContainer: Boolean = true,
     imageName: String = "ubuntu",
-    sudo: Boolean = true
+    sudo: Boolean? = null
 ): Prov {
+
+    val sudoRequired = sudo ?: checkSudoRequiredForDocker()
 
     local().provideContainer(containerName, imageName)
 
@@ -153,7 +156,18 @@ fun docker(
                 ContainerStartMode.USE_RUNNING_ELSE_CREATE
             else
                 ContainerStartMode.CREATE_NEW_KILL_EXISTING,
-            sudo = sudo
+            sudo = sudoRequired
         )
     )
+}
+
+
+fun checkSudoRequiredForDocker(): Boolean {
+    return if (local().chk("docker -v")) {
+        false
+    } else if (local().chk("sudo docker -v")) {
+        true
+    } else {
+        throw IllegalStateException("Docker could not be run.")
+    }
 }
