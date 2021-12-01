@@ -101,6 +101,23 @@ task fatJarLatest(type: Jar) {
     archiveFileName = 'provs.jar'
 }
 
+task fatJarK3s(type: Jar) {
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    manifest {
+        attributes 'Implementation-Title': 'Fatjar of provs k3s',
+                'Implementation-Version': project.version,
+                'Main-Class': 'org.domaindrivenarchitecture.provs.extensions.server_software.k3s.application.CliKt'
+    }
+    with jar
+    archiveFileName = 'provs-server.jar'
+}
+
 task uberjarWorkplace(type: Jar) {
 
     from sourceSets.main.output
