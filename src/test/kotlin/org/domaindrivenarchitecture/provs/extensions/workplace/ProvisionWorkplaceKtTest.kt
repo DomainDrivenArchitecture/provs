@@ -5,11 +5,13 @@ import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
 
 internal class ProvisionWorkplaceKtTest {
 
     @Test
+    @ContainerTest
     fun provisionWorkplace() {
         // given
         val a = defaultTestContainer()
@@ -29,6 +31,7 @@ internal class ProvisionWorkplaceKtTest {
 
 
     @Test
+    @ContainerTest
     fun provisionWorkplaceFromConfigFile() {
         // given
         val a = defaultTestContainer()

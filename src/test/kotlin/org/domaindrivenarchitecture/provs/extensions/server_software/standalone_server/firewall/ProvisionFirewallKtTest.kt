@@ -8,6 +8,7 @@ import org.domaindrivenarchitecture.provs.core.local
 import org.domaindrivenarchitecture.provs.core.processors.ContainerEndMode
 import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test
 internal class ProvisionFirewallKtTest {
 
     @Test
+    @ContainerTest
     @NonCi
     fun configureFirewall() {
         // given

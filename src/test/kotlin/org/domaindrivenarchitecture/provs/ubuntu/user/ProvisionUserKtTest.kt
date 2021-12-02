@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.ubuntu.user
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileContent
 import org.domaindrivenarchitecture.provs.ubuntu.keys.*
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test
 internal class ProvisionUserKtTest {
 
     @Test
+    @ContainerTest
     fun configureUser() {
         // given
         val a = defaultTestContainer()
@@ -36,6 +38,7 @@ internal class ProvisionUserKtTest {
     }
 
     @Test
+    @ContainerTest
     fun createUser() {
         // given
         val a = defaultTestContainer()
@@ -53,6 +56,7 @@ internal class ProvisionUserKtTest {
     }
 
     @Test
+    @ContainerTest
     fun createUserWithSudo() {
         // given
         val a = defaultTestContainer()

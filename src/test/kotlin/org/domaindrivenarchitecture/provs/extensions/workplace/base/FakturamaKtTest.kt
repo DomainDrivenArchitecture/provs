@@ -1,12 +1,14 @@
 package org.domaindrivenarchitecture.provs.extensions.workplace.base
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 internal class FakturamaKtTest {
 
     @Test
+    @ContainerTest
     fun installFakturama() {
         // given
         val a = defaultTestContainer()

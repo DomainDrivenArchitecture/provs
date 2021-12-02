@@ -7,6 +7,7 @@ import org.domaindrivenarchitecture.provs.core.docker.dockerProvideImage
 import org.domaindrivenarchitecture.provs.core.docker.dockerimages.DockerImage
 import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.test.testDockerWithSudo
 import org.domaindrivenarchitecture.provs.test.testLocal
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 
-internal class UbuntuProvTests {
+internal class UbuntuProvTest {
 
     private fun Prov.ping(url: String) = def {
         xec("ping", "-c", "4", url)
@@ -98,6 +99,7 @@ internal class UbuntuProvTests {
     }
 
     @Test
+    @ContainerTest
     @NonCi
     fun test_user_cannot_sudo_without_password() {
         // given

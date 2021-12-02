@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.ubuntu.git.base
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.isHostKnown
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test
 internal class GitKtTest {
 
     @Test
+    @ContainerTest
     fun trustGitServers(){
         // given
         val a = defaultTestContainer()
@@ -28,6 +30,7 @@ internal class GitKtTest {
     }
 
     @Test
+    @ContainerTest
     fun gitClone() {
         // given
         val prov = defaultTestContainer()
