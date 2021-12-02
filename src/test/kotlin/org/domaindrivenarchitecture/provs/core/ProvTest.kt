@@ -289,7 +289,7 @@ internal class ProvTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        Prov.newInstance(name = "test instance", progressType = ProgressType.NONE).methodThatProvidesSomeOutput()
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE).methodThatProvidesSomeOutput()
 
         // then
         System.setOut(originalOut)
