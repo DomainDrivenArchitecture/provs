@@ -93,30 +93,7 @@ internal fun createProvInstance(
         if (cliCommand.isValidLocalhost()) {
             return local()
         } else if (cliCommand.isValidRemote()) {
-            val host = cliCommand.remoteHost!!
-            val remoteUser = cliCommand.userName!!
-
-            val prov =
-                if (cliCommand.sshWithKey) {
-                    remote(host, remoteUser)
-                } else {
-                    require(
-                        password != null,
-                        { "No password available for provisioning without ssh keys. Either specify provisioning by ssh-keys or provide password." })
-                    remote(host, remoteUser, password)
-                }
-
-            if (!prov.currentUserCanSudo()) {
-                if (remoteHostSetSudoWithoutPasswordRequired) {
-                    require(
-                        password != null,
-                        { "User ${prov.whoami()} not able to sudo on remote machine without password and no password available for the user." })
-                    prov.makeUserSudoerWithNoSudoPasswordRequired(password)
-                } else {
-                    throw IllegalStateException("User ${prov.whoami()} not able to sudo on remote machine without password and option not set to enable user to sudo without password.")
-                }
-            }
-            return prov
+            return createProvInstanceRemote(cliCommand.remoteHost!!, cliCommand.userName!!, cliCommand.sshWithKey, password, remoteHostSetSudoWithoutPasswordRequired)
         } else {
             throw IllegalArgumentException("Error: neither a valid localHost nor a valid remoteHost was specified! Use option -h for help.")
         }
@@ -126,8 +103,38 @@ internal fun createProvInstance(
     }
 }
 
+private fun createProvInstanceRemote(
+    host: String,
+    remoteUser: String,
+    sshWithKey: Boolean,
+    password: Secret?,
+    remoteHostSetSudoWithoutPasswordRequired: Boolean
+): Prov {
+    val prov =
+        if (sshWithKey) {
+            remote(host, remoteUser)
+        } else {
+            require(
+                password != null,
+                { "No password available for provisioning without ssh keys. Either specify provisioning by ssh-keys or provide password." })
+            remote(host, remoteUser, password)
+        }
 
-private fun retrievePassword(cliCommand: CliCommand): Secret? {
+    if (!prov.currentUserCanSudo()) {
+        if (remoteHostSetSudoWithoutPasswordRequired) {
+            require(
+                password != null,
+                { "User ${prov.whoami()} not able to sudo on remote machine without password and no password available for the user." })
+            prov.makeUserSudoerWithNoSudoPasswordRequired(password)
+        } else {
+            throw IllegalStateException("User ${prov.whoami()} not able to sudo on remote machine without password and option not set to enable user to sudo without password.")
+        }
+    }
+    return prov
+}
+
+
+internal fun retrievePassword(cliCommand: CliCommand): Secret? {
     var password: Secret? = null
     if (cliCommand.isValidRemote()) {
         if (cliCommand.sshWithPasswordPrompt) {

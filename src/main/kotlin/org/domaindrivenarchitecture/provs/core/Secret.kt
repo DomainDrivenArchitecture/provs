@@ -1,5 +1,7 @@
 package org.domaindrivenarchitecture.provs.core
 
+import java.util.*
+
 
 open class Secret(private val value: String) {
     override fun toString(): String {
@@ -7,6 +9,12 @@ open class Secret(private val value: String) {
     }
     fun plain() : String {
         return  value
+    }
+    override fun equals(other: Any?): Boolean {
+        return (this === other) || ((other is Secret) && (this.value == other.value))
+    }
+    override fun hashCode(): Int {
+        return Objects.hash(value)
     }
 }
 
