@@ -10,21 +10,24 @@ import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.infrast
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class K3dKtTest {
 
     @Test
+    @Disabled // remove line and execute manually as this test may take several minutes
     @ContainerTest
     @NonCi
     fun installK3sAsContainers() {
 
+        // given
         val containerName = "alpine-docker-dind"
         local().task {
             provideContainer(
                 containerName,
                 "yobasystems/alpine-docker:dind-amd64",
-                // ContainerStartMode.CREATE_NEW_KILL_EXISTING,  // for re-create a potentially existing container
+                 ContainerStartMode.CREATE_NEW_KILL_EXISTING,  // for re-create a potentially existing container
                 sudo = false,
                 options = "--privileged"
             )
@@ -35,7 +38,6 @@ internal class K3dKtTest {
 
         val result = docker(containerName, sudo = false).task {
 
-            // given
             cmd("apk update")
             cmd("apk add sudo curl")
             task(
@@ -49,9 +51,9 @@ internal class K3dKtTest {
                 """.trimIndent())
             }
 
+
             // when
             installK3sAsContainers()
-
             applyK8sConfig(appleConfig())
 
             cmd("kubectl wait --for=condition=ready --timeout=600s pod apple-app")

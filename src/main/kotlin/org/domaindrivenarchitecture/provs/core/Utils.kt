@@ -8,20 +8,6 @@ import org.domaindrivenarchitecture.provs.core.tags.Api
 import java.io.File
 import java.net.InetAddress
 
-/**
- * Repeats task until it returns success
- */
-fun Prov.repeatTask(times: Int, sleepInSec: Int, func: Prov.() -> ProvResult) = requireLast {
-    require(times > 0)
-    var result = ProvResult(false, err = "Internal error")  // Will only be returned if function is not executed at all, otherwise func's result is returned
-    for (i in 1..times) {
-        result = func()
-        if (result.success)
-            return@requireLast result
-        Thread.sleep(sleepInSec * 1000L)
-    }
-    return@requireLast result
-}
 
 /**
  * Returns the name of the calling function but excluding some functions of the prov framework
@@ -29,7 +15,7 @@ fun Prov.repeatTask(times: Int, sleepInSec: Int, func: Prov.() -> ProvResult) = 
  * Note: names of inner functions (i.e. which are defined inside other functions) are not
  * supported in the sense that always the name of the outer function is returned instead.
  */
-fun getCallingMethodName(): String? {
+internal fun getCallingMethodName(): String? {
     val offsetVal = 1
     val exclude = arrayOf("task", "def", "record", "invoke", "invoke0", "handle", "task\$default", "def\$default", "addResultToEval", "handle\$default")
     // suffixes are also ignored as method names but will be added as suffix in the evaluation results
@@ -55,6 +41,7 @@ fun getCallingMethodName(): String? {
 }
 
 
+// ---------------------------  String extensions  ----------------------------
 fun String.escapeNewline(): String = replace("\r", "\\r").replace("\n", "\\n")
 fun String.escapeControlChars(): String = replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t").replace("[\\p{Cntrl}]".toRegex(), "\\?")
 fun String.escapeBackslash(): String = replace("\\", "\\\\")
@@ -65,7 +52,6 @@ fun String.escapeDollar(): String = replace("$", "\\$")
 fun String.escapeSingleQuoteForShell(): String = replace("'", "'\"'\"'")
 fun String.escapeProcentForPrintf(): String = replace("%", "%%")
 fun String.endingWithFileSeparator(): String = if (length > 0 && (last() != fileSeparatorChar())) this + fileSeparator() else this
-
 
 /**
  * Put String between double quotes and escapes chars that need to be escaped (by backslash) for use in Unix Shell String
@@ -78,6 +64,7 @@ fun String.escapeForShell(): String {
     // see https://www.shellscript.sh/escape.html
     return this.escapeBackslash().escapeBacktick().escapeDoubleQuote().escapeDollar()
 }
+
 
 /**
  * Returns an echo command for the given String, which will be escaped for the bash
@@ -162,6 +149,10 @@ fun docker(
 }
 
 
+/**
+ * Returns true if sudo is required to run docker locally, otherwise returns false.
+ * Throws an IllegalStateException if docker cannot be run locally at all.
+ */
 fun checkSudoRequiredForDocker(): Boolean {
     return if (local().chk("docker -v")) {
         false

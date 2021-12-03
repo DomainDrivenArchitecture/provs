@@ -289,7 +289,8 @@ internal class ProvTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE).methodThatProvidesSomeOutput()
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
+            .methodThatProvidesSomeOutput()
 
         // then
         System.setOut(originalOut)
@@ -298,18 +299,18 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance) ============================================== \n" +
-            ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
-            "--->  \u001B[91mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
-            "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
-            "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
-            "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
-            "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
-            "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
-            "----------------------------------------------------------------------------------------------------- \n" +
-            "Overall >  \u001B[92mSuccess\u001B[0m\n" +
-            "============================================ SUMMARY END ============================================ \n" +
-            "\n"
+            "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
+                    "--->  \u001B[91mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
+                    "----------------------------------------------------------------------------------------------------- \n" +
+                    "Overall >  \u001B[92mSuccess\u001B[0m\n" +
+                    "============================================ SUMMARY END ============================================ \n" +
+                    "\n"
 
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
     }
@@ -465,4 +466,6 @@ internal class ProvTest {
         // then
         assertEquals(true, res.success)
     }
+
 }
+

@@ -285,8 +285,15 @@ open class Prov protected constructor(
         // post-handling
         val returnValue =
             if (mode == ResultMode.LAST) {
-                if (internalResultIsLeaf(resultIndex) || taskName == "cmd")
-                    res.copy() else ProvResult(res.success)
+                if (internalResultIsLeaf(resultIndex) || taskName == "cmd" || taskName?.replace(" (requireLast)", "") == "repeatTaskUntilSuccess") {  // todo: improve and remove replace function
+                    // for a leaf (task with mo subtask) or tasks "cmd" resp. "repeatUntilTrue" provide also out and err of original results
+                    // because results of cmd and leafs are not included in the reporting
+                    // and the caller of repeatUntilTrue might need the complete result (incl. out and err) and not only success value
+                    res.copy()
+                } else {
+                    // just pass success value, no other data of the original result
+                    ProvResult(res.success)
+                }
             } else if (mode == ResultMode.ALL) {
                 // leaf
                 if (internalResultIsLeaf(resultIndex)) res.copy()
