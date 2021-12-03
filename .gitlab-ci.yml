@@ -68,7 +68,7 @@ publish:
     expire_in: 2 months
 
 
-fatjar:
+fatjars:
   stage: fatjar
   rules:
     # Do no allow manually triggered pipelines to prevent duplicates!
@@ -85,9 +85,11 @@ fatjar:
   script:
     - echo "---------- create fatjar ----------"
     - ./gradlew fatJarLatest
+    - ./gradlew fatJarK3s
   artifacts:
     paths:
       - 'build/libs/provs.jar'
+      - 'build/libs/provs-server.jar'
     reports:
       # To ensure we've access to this file in the next stage
       dotenv: generate_executables.env
@@ -121,6 +123,8 @@ release:
       links:
         - name: provs.jar
           url: https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${FATJAR_JOB_ID}/artifacts/raw/build/libs/provs.jar
+        - name: provs-server.jar
+          url: https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${FATJAR_JOB_ID}/artifacts/raw/build/libs/provs-server.jar
 
 after_script:
   - echo "---------- End CI ----------"
