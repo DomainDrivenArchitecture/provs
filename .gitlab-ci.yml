@@ -13,6 +13,7 @@ before_script:
   - chmod +x gradlew
   - echo "------ commit tag ---------------"
   - echo $CI_COMMIT_TAG
+  - echo $SHELL
 
 cache:
   paths:
@@ -79,9 +80,10 @@ fatjars:
       when: never
     # Only execute when a valid version tag like v1.0, 2.3 or similar is given
     # Required is always one point like 1.0
-    - if: '$CI_COMMIT_REF_NAME == "master" && $CI_COMMIT_TAG =~ /^v?[0-9]+[.][0-9]+([.][0-9]+)?$/'
+    - if: $CI_COMMIT_REF_NAME == "master" # && $CI_COMMIT_TAG =~ /^v?[0-9]+[.][0-9]+([.][0-9]+)?$/
   before_script:
     - echo $CI_JOB_ID
+    -
     # Writing FATJAR_JOB_ID variable to environment file, as variable is needed in the release stage.
     - echo FATJAR_JOB_ID=$CI_JOB_ID >> generate_executables.env
   script:
@@ -110,7 +112,7 @@ release:
       when: never
     # Only execute when a valid version tag like v1.0, 2.3 or similar is given
     # Required is always one point like 1.0
-    - if: '$CI_COMMIT_REF_NAME == "master" && $CI_COMMIT_TAG =~ /^v?[0-9]+[.][0-9]+([.][0-9]+)?$/'
+    - if: $CI_COMMIT_REF_NAME == "master" #&& $CI_COMMIT_TAG =~ /^v?[0-9]+[.][0-9]+([.][0-9]+)?$/
   needs:
     - job: fatjars
       artifacts: true
