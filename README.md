@@ -25,6 +25,7 @@ Additionally, it is possible to define a custom processor if needed.
 
 * A **Java Virtual machine** (JVM) is required.
 * Download the latest `provs.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
+* For server functionality (such as install k3s) download the latest `provs-server.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
 
 
 ### Show usage options
@@ -46,6 +47,16 @@ Run:
 ### Provision a desktop workplace remotely
 
 `java -jar provs.jar -i -r <ip> -u <remote_username>`
+
+You'll be prompted for the password of the remote user.
+
+### Install k3s
+
+```bash
+java -jar provs-server.jar -i -r <ip or hostname> -u <remote_username>
+# Example:
+java -jar provs-server.jar -i -r 192.168.56.141 -u testuser
+```
 
 You'll be prompted for the password of the remote user.
 
