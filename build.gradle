@@ -41,6 +41,10 @@ test {
     }
 
     useJUnitPlatform {
+        def excludedTags = System.getProperty("excludeTags")
+        if (System.getProperty("excludeTags") != null) {
+            excludeTags(excludedTags)
+        }
         if (System.getenv("CI_JOB_TOKEN") != null) {
             excludeTags('containernonci')
         }

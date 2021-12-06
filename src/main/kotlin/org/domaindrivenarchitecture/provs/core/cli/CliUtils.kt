@@ -1,8 +1,5 @@
 package org.domaindrivenarchitecture.provs.core.cli
 
-import kotlinx.cli.ArgParser
-import kotlinx.cli.ArgType
-import kotlinx.cli.default
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.Secret
 import org.domaindrivenarchitecture.provs.core.local
@@ -15,85 +12,31 @@ import org.domaindrivenarchitecture.provs.ubuntu.user.base.whoami
 import kotlin.system.exitProcess
 
 
-class CliCommand(
-    val localHost: Boolean?,
-    val remoteHost: String?,
-    val userName: String?,
-    val sshWithPasswordPrompt: Boolean,
-    val sshWithGopassPath: String?,
-    val sshWithKey: Boolean
-) {
-    fun isValidLocalhost(): Boolean {
-        return (localHost ?: false) && remoteHost == null && userName == null && sshWithGopassPath == null &&
-                !sshWithPasswordPrompt && !sshWithKey
-    }
-
-    fun hasValidPasswordOption(): Boolean {
-        return (sshWithGopassPath != null) xor sshWithPasswordPrompt xor sshWithKey
-    }
-
-    fun isValidRemote(): Boolean {
-        return remoteHost != null && userName != null && hasValidPasswordOption()
-    }
-
-    fun isValid(): Boolean {
-        return (isValidLocalhost() || isValidRemote())
-    }
-}
-
-fun parseCli(
-    programName: String = "java -jar provs.jar",
-    args: Array<String>
-): CliCommand {
-    val parser = ArgParser(programName)
-
-    val remoteHost by parser.option(
-        ArgType.String, shortName =
-        "r", description = "provision to remote host - either localHost or remoteHost must be specified"
-    )
-    val localHost by parser.option(
-        ArgType.Boolean, shortName =
-        "l", description = "provision to local machine - either localHost or remoteHost must be specified"
-    )
-    val userName by parser.option(
-        ArgType.String,
-        shortName = "u",
-        description = "user for remote provisioning."
-    )
-    val sshWithGopassPath by parser.option(
-        ArgType.String,
-        shortName = "p",
-        description = "password stored at gopass path"
-    )
-    val sshWithPasswordPrompt by parser.option(
-        ArgType.Boolean,
-        shortName = "i",
-        description = "prompt for password interactive"
-    ).default(false)
-    val sshWithKey by parser.option(
-        ArgType.Boolean,
-        shortName = "k",
-        description = "provision over ssh using user & ssh key"
-    ).default(false)
-    parser.parse(args)
-
-    return CliCommand(
-        localHost, remoteHost, userName, sshWithPasswordPrompt, sshWithGopassPath, sshWithKey
-    )
-}
-
-
+/**
+ * Returns a Prov instance according to the targetCommand.
+ * E.g. it returns a local Prov instance if targetCommand.isValidLocalhost() is true or
+ * returns a remote Prov instance if targetCommand.isValidRemote() is true.
+ *
+ * If the target is remote and if parameter remoteHostSetSudoWithoutPasswordRequired is set to true,
+ * it will enable sudo without password on the remote machine (in case this was not yet enabled).
+ */
 internal fun createProvInstance(
-    cliCommand: CliCommand,
+    targetCommand: TargetCliCommand,
     remoteHostSetSudoWithoutPasswordRequired: Boolean = false
 ): Prov {
-    if (cliCommand.isValid()) {
-        val password: Secret? = if (cliCommand.isValidRemote()) retrievePassword(cliCommand) else null
+    if (targetCommand.isValid()) {
+        val password: Secret? = if (targetCommand.isValidRemote()) retrievePassword(targetCommand) else null
 
-        if (cliCommand.isValidLocalhost()) {
+        if (targetCommand.isValidLocalhost()) {
             return local()
-        } else if (cliCommand.isValidRemote()) {
-            return createProvInstanceRemote(cliCommand.remoteHost!!, cliCommand.userName!!, cliCommand.sshWithKey, password, remoteHostSetSudoWithoutPasswordRequired)
+        } else if (targetCommand.isValidRemote()) {
+            return createProvInstanceRemote(
+                targetCommand.remoteHost!!,
+                targetCommand.userName!!,
+                targetCommand.sshWithKey,
+                password,
+                remoteHostSetSudoWithoutPasswordRequired
+            )
         } else {
             throw IllegalArgumentException("Error: neither a valid localHost nor a valid remoteHost was specified! Use option -h for help.")
         }
@@ -134,7 +77,7 @@ private fun createProvInstanceRemote(
 }
 
 
-internal fun retrievePassword(cliCommand: CliCommand): Secret? {
+internal fun retrievePassword(cliCommand: TargetCliCommand): Secret? {
     var password: Secret? = null
     if (cliCommand.isValidRemote()) {
         if (cliCommand.sshWithPasswordPrompt) {
