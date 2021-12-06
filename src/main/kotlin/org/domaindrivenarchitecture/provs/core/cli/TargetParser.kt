@@ -3,16 +3,6 @@ package org.domaindrivenarchitecture.provs.core.cli
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.Secret
-import org.domaindrivenarchitecture.provs.core.local
-import org.domaindrivenarchitecture.provs.core.remote
-import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.GopassSecretSource
-import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.PromptSecretSource
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.currentUserCanSudo
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.makeUserSudoerWithNoSudoPasswordRequired
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.whoami
-import kotlin.system.exitProcess
 
 open class TargetParser(name: String) : ArgParser(name) {
     val remoteHost by option(

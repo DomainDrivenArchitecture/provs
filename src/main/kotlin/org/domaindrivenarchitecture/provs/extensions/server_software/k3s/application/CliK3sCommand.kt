@@ -7,11 +7,10 @@ class ServerCliCommand(private val k3sType: String, val target: TargetCliCommand
     fun isValid(): Boolean {
         return target.isValid() && hasValidK3sType()
     }
-    fun hasValidK3sType(): Boolean {
+    private fun hasValidK3sType(): Boolean {
         return CliK3sArgumentsParser.K3sType.values().map { it.name }.contains(k3sType.uppercase())
     }
     fun type() = CliK3sArgumentsParser.K3sType.valueOf(k3sType.uppercase())
-
 }
 
 fun parseServerArguments(

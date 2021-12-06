@@ -7,6 +7,7 @@ import kotlin.system.exitProcess
 
 /**
  * Provisions a k3s server, either locally or on a remote machine depending on the given arguments.
+ * Depending on the cli parameter "type" it will install the k3s server as standalone or as a container.
  *
  * Get help with option -h
  */

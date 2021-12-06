@@ -6,7 +6,7 @@ import org.domaindrivenarchitecture.provs.core.cli.TargetParser
 
 class CliK3sArgumentsParser(name: String) : TargetParser(name) {
 
-    enum class K3sType() {
+    enum class K3sType {
         K3S, K3D
     }
 
