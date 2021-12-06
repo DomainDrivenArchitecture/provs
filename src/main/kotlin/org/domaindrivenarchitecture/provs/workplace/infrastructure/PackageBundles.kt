@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.extensions.workplace.base
+package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 val OS_ANALYSIS = "lsof strace ncdu iptraf htop iotop iftop"
 

@@ -1,12 +1,12 @@
 package org.domaindrivenarchitecture.provs.extensions.workplace
 
-import org.domaindrivenarchitecture.provs.core.Password
-import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
+import org.domaindrivenarchitecture.provs.workplace.domain.provisionWorkplace
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
 internal class ProvisionWorkplaceKtTest {
 
@@ -21,8 +21,7 @@ internal class ProvisionWorkplaceKtTest {
         val res = a.provisionWorkplace(
             WorkplaceType.MINIMAL,
             gitUserName = "testuser",
-            gitEmail = "testuser@test.org",
-            userPassword = Password("testuser")
+            gitEmail = "testuser@test.org"
         )
 
         // then

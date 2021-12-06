@@ -2,9 +2,9 @@ package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.applic
 
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import org.domaindrivenarchitecture.provs.core.cli.TargetParser
+import org.domaindrivenarchitecture.provs.core.cli.CliTargetParser
 
-class CliK3sArgumentsParser(name: String) : TargetParser(name) {
+class CliK3sArgumentsParser(name: String) : CliTargetParser(name) {
 
     enum class K3sType {
         K3S, K3D

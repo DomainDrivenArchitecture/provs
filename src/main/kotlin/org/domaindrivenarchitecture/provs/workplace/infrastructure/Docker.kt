@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.extensions.workplace.base
+package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall

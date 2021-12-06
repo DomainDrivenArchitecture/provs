@@ -4,7 +4,7 @@ import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
 
-open class TargetParser(name: String) : ArgParser(name) {
+open class CliTargetParser(name: String) : ArgParser(name) {
     val remoteHost by option(
         ArgType.String, shortName =
         "r", description = "provision to remote host - either localHost or remoteHost must be specified"

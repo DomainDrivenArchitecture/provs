@@ -1,0 +1,52 @@
+@startuml
+
+autonumber
+
+skinparam sequenceBox {
+     borderColor White
+}
+
+participant User
+
+box "application" #LightBlue
+
+participant CliWorkplace
+participant WorkplaceCliCommand
+participant Application
+
+end box
+
+box "domain" #LightGreen
+
+participant ProvisionWorkplace
+participant WorkplaceConfig
+
+end box
+
+box "infrastructure" #CornSilk
+
+participant ConfigRepository
+participant InfrastructureModules
+
+end box
+
+
+User -> CliWorkplace ++ : main(args...)
+
+CliWorkplace -> WorkplaceCliCommand : parseWorkplaceArguments
+
+CliWorkplace -> WorkplaceCliCommand : isValid
+
+CliWorkplace -> ConfigRepository : getConfig
+WorkplaceConfig <- ConfigRepository : create
+WorkplaceConfig --> ConfigRepository : config
+CliWorkplace <-- ConfigRepository : config
+
+CliWorkplace -> Application : provision
+Application -> ProvisionWorkplace : provisionWorkplace
+
+ProvisionWorkplace -> InfrastructureModules: Various calls like:
+ProvisionWorkplace -> InfrastructureModules: installVirtualBoxGuestAdditions
+ProvisionWorkplace -> InfrastructureModules: configureNoSwappiness, ...
+
+@enduml

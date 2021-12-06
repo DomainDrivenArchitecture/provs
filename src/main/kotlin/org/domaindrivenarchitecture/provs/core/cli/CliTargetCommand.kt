@@ -31,7 +31,7 @@ fun parseTarget(
     programName: String = "java -jar provs.jar",
     args: Array<String>
 ): TargetCliCommand {
-    val parser = TargetParser(programName)
+    val parser = CliTargetParser(programName)
     parser.parse(args)
 
     return TargetCliCommand(
