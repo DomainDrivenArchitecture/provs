@@ -16,9 +16,20 @@ import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.extensions.test_keys.privateGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.extensions.test_keys.publicGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.*
+import org.junit.jupiter.api.Assertions.assertFalse
 
 
 internal class GopassKtTest {
+
+    @ContainerTest
+    @Test
+    fun test_configureGopass_fails_with_path_starting_with_tilde() {
+        // when
+        val res = defaultTestContainer().configureGopass("~/somedir")
+
+        // then
+        assertFalse(res.success)
+    }
 
     @ContainerTest
     @Test

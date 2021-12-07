@@ -42,6 +42,9 @@ fun Prov.installGopass(
 
 
 fun Prov.configureGopass(gopassRootFolder: String? = null) = def {
+    if ((gopassRootFolder != null) && (gopassRootFolder.trim().length > 0) && ("~" == gopassRootFolder.trim().substring(0, 1))) {
+        return@def ProvResult(false, err = "Gopass cannot be initialized with folders starting with ~")
+    }
     val defaultRootFolder = userHome() + ".password-store"
     val rootFolder = gopassRootFolder ?: defaultRootFolder
     // use default
