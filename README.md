@@ -61,10 +61,18 @@ java -jar provs-server.jar -i -r 192.168.56.141 -u testuser
 You'll be prompted for the password of the remote user.
 
 
-## Build the jar-file yourself
+## For developers
+
+### Build the jar-file yourself
 
 * Clone this repo
 * Build the fatjar file by `./gradlew fatJarLatest`
 * In folder build/libs you'll find the file `provs.jar`
 
 The fatjar is a Java jar-file incl. all required dependencies.
+
+### Sequence diagram
+
+Find below an example of a sequence diagram when provisioning a workplace:
+
+![img.png](docs/resources/provision-workplace-sequence.diagram.png)
