@@ -8,26 +8,26 @@ import java.io.File
 
 
 fun Prov.installBash() = def {
-    installBashForUser()
+    configureBashForUser()
 }
 
-fun Prov.installBashForUser(): ProvResult = def {
-    var dirname = "~/.bashrd.d"
+fun Prov.configureBashForUser(): ProvResult = def {
+    val dirname = "~/.bashrc.d"
     if(!dirExists(dirname)) {
         createDir(dirname)
         cmd("chmod 755 " + dirname)
         aptInstall("bash-completion screen")
 
-        var enhance = """
+        val enhance = """
             # source .bashrc.d files
             if [ -d ~/.bashrc.d ]; then
               for i in ~/.bashrc.d/*.sh; do
-               if [ -r \$\{i} ]; then
+                if [ -r \$\{i} ]; then
                   . \\\$\{i}
                 fi
               done
               unset i
-            fi """.trimIndent()
+            fi""".trimIndent() + "\n"
         addTextToFile(text = enhance, file = File("~/.bashrc"))
     } else {
         ProvResult(true)

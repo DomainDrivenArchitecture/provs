@@ -50,6 +50,8 @@ fun Prov.provisionWorkplace(
 
     configureNoSwappiness()
 
+    installBash()
+
     if (workplaceType == WorkplaceType.OFFICE || workplaceType == WorkplaceType.IDE) {
         aptInstall("seahorse")
         aptInstall(BASH_UTILS)

@@ -51,6 +51,10 @@ fun Prov.configureGopass(gopassRootFolder: String? = null) = def {
     createDir(rootFolder)
     createDirs(".config/gopass")
     createFile("~/.config/gopass/config.yml", gopassConfig(rootFolder))
+
+    // auto-completion
+    configureBashForUser()
+    createFile("~/.bashrc.d/gopass.sh", "source <(gopass completion bash)\n")
 }
 
 
