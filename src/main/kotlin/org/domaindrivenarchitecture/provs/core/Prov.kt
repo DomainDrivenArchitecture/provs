@@ -217,7 +217,7 @@ open class Prov protected constructor(
      * Empty lines and comments (all text behind # in a line) are supported, i.e. they are ignored.
      */
     fun sh(script: String, dir: String? = null, sudo: Boolean = false) = def {
-        val lines = script.trimIndent().replace("\r\n", "\n").split("\n")
+        val lines = script.trimIndent().replace("\\\n", "").replace("\r\n", "\n").split("\n")
         val linesWithoutComments = lines.stream().map { it.split("#")[0] }
         val linesNonEmpty = linesWithoutComments.filter { it.trim().isNotEmpty() }
 
