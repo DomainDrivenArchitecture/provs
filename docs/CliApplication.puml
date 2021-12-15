@@ -52,8 +52,8 @@ WorkplaceConfig <- ConfigRepository : create
 WorkplaceConfig --> ConfigRepository : config
 CliWorkplace <-- ConfigRepository : config
 
-CliWorkplace -> Application : provision
-Application -> ProvInstance : provisionWorkplace
+CliWorkplace -> Application : provision ( config )
+Application -> ProvInstance : provisionWorkplace ( type, ssh, ...)
 ProvInstance -> ProvisionWorkplace : provisionWorkplace
 
 ProvisionWorkplace -> InfrastructureModules: Various calls like:

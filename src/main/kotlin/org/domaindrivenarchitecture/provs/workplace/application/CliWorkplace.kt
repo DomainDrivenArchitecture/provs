@@ -29,8 +29,8 @@ private fun provisionWorkplace(cliCommand: WorkplaceCliCommand) {
     try {
         val conf = getConfig(filename)
 
-        val prov = createProvInstance(cliCommand.target)
-        prov.provision(conf)
+        val prov = createProvInstance(cliCommand.target, remoteHostSetSudoWithoutPasswordRequired = true)
+        provision(prov, conf)
 
     } catch (e: IllegalArgumentException) {
         println(

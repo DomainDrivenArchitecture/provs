@@ -7,8 +7,8 @@ import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
 /**
  * Use case for provisioning a workplace
  */
-fun Prov.provision(conf: WorkplaceConfig) = def {
+fun provision(prov: Prov, conf: WorkplaceConfig) {
     with (conf) {
-        provisionWorkplace(type, ssh?.keyPair(), gpg?.keyPair(), gitUserName, gitEmail)
+        prov.provisionWorkplace(type, ssh?.keyPair(), gpg?.keyPair(), gitUserName, gitEmail)
     }
 }
