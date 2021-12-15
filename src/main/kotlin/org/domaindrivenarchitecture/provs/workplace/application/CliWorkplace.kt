@@ -8,8 +8,8 @@ import kotlin.system.exitProcess
 
 
 /**
- * Provisions according to the options either a meissa workplace, reposOnly or gopassOnly.
- * Locally or on a remote machine. If remotely, the remote host and remote user are specified by args parameters.
+ * Provisions a workplace locally or on a remote machine.
+ * Specify option -h for help.
  */
 fun main(args: Array<String>) {
 

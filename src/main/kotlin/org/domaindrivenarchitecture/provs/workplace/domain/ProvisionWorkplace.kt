@@ -86,10 +86,12 @@ fun Prov.provisionWorkplace(
         installDocker()
 
         // IDEs
-        cmd("sudo snap install intellij-idea-community --classic")
         installVSC("python", "clojure")
+        installIntelliJ()
 
         installDevOps()
+
+        installPython()
     }
 
     ProvResult(true) // dummy

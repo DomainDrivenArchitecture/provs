@@ -9,7 +9,7 @@ private var aptInit = false
 /**
  * Installs package(s) by using package manager "apt".
  *
- * @param packages the packages to be installed, packages separated by space if there are more than one
+ * @param packages the packages to be installed, packages must be separated by space if there are more than one
  */
 fun Prov.aptInstall(packages: String): ProvResult = def {
     if (!aptInit) {
@@ -22,6 +22,21 @@ fun Prov.aptInstall(packages: String): ProvResult = def {
     for (packg in packageList) {
         // see https://superuser.com/questions/164553/automatically-answer-yes-when-using-apt-get-install
         cmd("sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy $packg")
+    }
+    ProvResult(true) // dummy
+}
+
+
+/**
+ * Installs package(s) by using package manager "snap".
+ *
+ * @param packages the packages to be installed, packages must be separated by space if there are more than one
+ */
+// todo: add test
+fun Prov.snapInstall(packages: String, classic: Boolean = false): ProvResult = def {
+    val packageList = packages.split(" ")
+    for (packg in packageList) {
+        cmd("sudo snap install $packg" + if (classic) " --classic" else "")
     }
     ProvResult(true) // dummy
 }
