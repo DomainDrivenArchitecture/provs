@@ -69,6 +69,9 @@ private fun createProvInstanceRemote(
                 password != null,
                 { "User ${prov.whoami()} not able to sudo on remote machine without password and no password available for the user." })
             prov.makeUserSudoerWithNoSudoPasswordRequired(password)
+
+            // a new session is required after making the user a sudoer without password
+            return remote(host, remoteUser, password)
         } else {
             throw IllegalStateException("User ${prov.whoami()} not able to sudo on remote machine without password and option not set to enable user to sudo without password.")
         }
