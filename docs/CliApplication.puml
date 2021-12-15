@@ -16,6 +16,13 @@ participant Application
 
 end box
 
+box  #White
+
+participant CliUtils
+participant "ProvInstance (local, remote...)" as ProvInstance
+
+end box
+
 box "domain" #LightGreen
 
 participant ProvisionWorkplace
@@ -35,7 +42,10 @@ User -> CliWorkplace ++ : main(args...)
 
 CliWorkplace -> WorkplaceCliCommand : parseWorkplaceArguments
 
-CliWorkplace -> WorkplaceCliCommand : isValid
+CliWorkplace -> WorkplaceCliCommand : isValid ?
+
+CliWorkplace -> CliUtils : createProvInstance
+ProvInstance <- CliUtils : create
 
 CliWorkplace -> ConfigRepository : getConfig
 WorkplaceConfig <- ConfigRepository : create
@@ -43,9 +53,11 @@ WorkplaceConfig --> ConfigRepository : config
 CliWorkplace <-- ConfigRepository : config
 
 CliWorkplace -> Application : provision
-Application -> ProvisionWorkplace : provisionWorkplace
+Application -> ProvInstance : provisionWorkplace
+ProvInstance -> ProvisionWorkplace : provisionWorkplace
 
 ProvisionWorkplace -> InfrastructureModules: Various calls like:
+ProvisionWorkplace -> InfrastructureModules: install ssh, gpg, git ...
 ProvisionWorkplace -> InfrastructureModules: installVirtualBoxGuestAdditions
 ProvisionWorkplace -> InfrastructureModules: configureNoSwappiness, ...
 
