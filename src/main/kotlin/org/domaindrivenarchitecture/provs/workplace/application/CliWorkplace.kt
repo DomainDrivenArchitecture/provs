@@ -1,41 +1,35 @@
 package org.domaindrivenarchitecture.provs.workplace.application
 
 import org.domaindrivenarchitecture.provs.core.cli.createProvInstance
-import org.domaindrivenarchitecture.provs.workplace.application.WorkplaceCliCommand.Companion.parseWorkplaceArguments
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
 import java.io.File
 import kotlin.system.exitProcess
 
 
 /**
- * Provisions a workplace locally or on a remote machine.
- * Specify option -h for help.
+ * Provisions a workplace locally or on a remote machine. Use option -h for help.
  */
 fun main(args: Array<String>) {
 
-    val cmd = parseWorkplaceArguments("java -jar provs.jar", args)
+    val cmd = CliWorkplaceParser("java -jar provs.jar").parseWorkplaceArguments(args)
+
     if (!cmd.isValid()) {
-        println("Arguments are not valid, pls try -h for help.")
+        println("Arguments are not valid, pls try option -h for help.")
         exitProcess(1)
     }
 
-    provisionWorkplace(cmd)
-}
-
-
-private fun provisionWorkplace(cliCommand: WorkplaceCliCommand) {
-    val filename = cliCommand.configFile
-
     try {
-        val conf = getConfig(filename)
+        // retrieve config
+        val conf = getConfig(cmd.configFile)
 
-        val prov = createProvInstance(cliCommand.target, remoteHostSetSudoWithoutPasswordRequired = true)
+        // create
+        val prov = createProvInstance(cmd.target, remoteHostSetSudoWithoutPasswordRequired = true)
         provision(prov, conf)
 
     } catch (e: IllegalArgumentException) {
         println(
-            "Error: File\u001b[31m $filename \u001b[0m was not found.\n" +
-                    "Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m $filename \u001B[0m " +
+            "Error: File\u001b[31m ${cmd.configFile} \u001b[0m was not found.\n" +
+                    "Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m ${cmd.configFile} \u001B[0m " +
                     "and change the content according to your needs.\n"
         )
 

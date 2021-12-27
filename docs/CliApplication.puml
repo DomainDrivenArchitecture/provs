@@ -11,7 +11,8 @@ participant User
 box "application" #LightBlue
 
 participant CliWorkplace
-participant WorkplaceCliCommand
+participant CliWorkplaceParser
+participant CliWorkplaceCommand
 participant Application
 
 end box
@@ -19,46 +20,42 @@ end box
 box  #White
 
 participant CliUtils
-participant "ProvInstance (local, remote...)" as ProvInstance
+participant "Prov (local or remote...)" as ProvInstance
 
 end box
 
 box "domain" #LightGreen
 
 participant ProvisionWorkplace
-participant WorkplaceConfig
 
 end box
 
 box "infrastructure" #CornSilk
 
 participant ConfigRepository
-participant InfrastructureModules
+participant "Infrastructure functions" as Infrastructure_functions
 
 end box
 
 
 User -> CliWorkplace ++ : main(args...)
 
-CliWorkplace -> WorkplaceCliCommand : parseWorkplaceArguments
+CliWorkplace -> CliWorkplaceParser : parseWorkplaceArguments
 
-CliWorkplace -> WorkplaceCliCommand : isValid ?
+CliWorkplace -> CliWorkplaceCommand : isValid ?
+
+CliWorkplace -> ConfigRepository : getConfig
 
 CliWorkplace -> CliUtils : createProvInstance
 ProvInstance <- CliUtils : create
-
-CliWorkplace -> ConfigRepository : getConfig
-WorkplaceConfig <- ConfigRepository : create
-WorkplaceConfig --> ConfigRepository : config
-CliWorkplace <-- ConfigRepository : config
 
 CliWorkplace -> Application : provision ( config )
 Application -> ProvInstance : provisionWorkplace ( type, ssh, ...)
 ProvInstance -> ProvisionWorkplace : provisionWorkplace
 
-ProvisionWorkplace -> InfrastructureModules: Various calls like:
-ProvisionWorkplace -> InfrastructureModules: install ssh, gpg, git ...
-ProvisionWorkplace -> InfrastructureModules: installVirtualBoxGuestAdditions
-ProvisionWorkplace -> InfrastructureModules: configureNoSwappiness, ...
+ProvisionWorkplace -> Infrastructure_functions: Various calls like:
+ProvisionWorkplace -> Infrastructure_functions: install ssh, gpg, git ...
+ProvisionWorkplace -> Infrastructure_functions: installVirtualBoxGuestAdditions
+ProvisionWorkplace -> Infrastructure_functions: configureNoSwappiness, ...
 
 @enduml

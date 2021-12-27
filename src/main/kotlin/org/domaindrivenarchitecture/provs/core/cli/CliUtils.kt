@@ -20,7 +20,7 @@ import kotlin.system.exitProcess
  * If the target is remote and if parameter remoteHostSetSudoWithoutPasswordRequired is set to true,
  * it will enable sudo without password on the remote machine (in case this was not yet enabled).
  */
-internal fun createProvInstance(
+fun createProvInstance(
     targetCommand: TargetCliCommand,
     remoteHostSetSudoWithoutPasswordRequired: Boolean = false
 ): Prov {
