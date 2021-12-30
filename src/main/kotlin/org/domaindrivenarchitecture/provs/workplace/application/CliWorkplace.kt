@@ -32,8 +32,5 @@ fun main(args: Array<String>) {
                     "Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m ${cmd.configFile} \u001B[0m " +
                     "and change the content according to your needs.\n"
         )
-
-        // provide example config
-        File("WorkplaceConfigExample.yaml").writeText("type: \"MINIMAL\"\n")
     }
 }

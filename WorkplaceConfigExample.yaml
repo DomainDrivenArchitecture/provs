@@ -1,0 +1,14 @@
+# type is required
+type: MINIMAL   # MINIMAL, OFFICE or IDE
+
+# fields below are optional, either remove them or update them with your data
+ssh:
+  sourceType: FILE       # FILE or GOPASS
+  publicKey: ~/.ssh/id_rsa.pub    # file path resp. gopass path to public key
+  privateKey: ~/.ssh/id_rsa       # file path resp. gopass path to private key
+gpg:
+  sourceType: GOPASS      # FILE or GOPASS
+  publicKey: path/to/pub.key      # file path resp. gopass path to public key
+  privateKey: path/to/priv.key    # file path resp. gopass path to private key
+gitUserName: username      # global git user name
+gitEmail: for@git.email    # global git email
