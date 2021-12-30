@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.workplace.application
 
 import org.domaindrivenarchitecture.provs.core.cli.createProvInstance
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
-import java.io.File
 import kotlin.system.exitProcess
 
 
