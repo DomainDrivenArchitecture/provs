@@ -1,7 +1,9 @@
 package org.domaindrivenarchitecture.provs.workplace.application
 
+import kotlinx.serialization.SerializationException
 import org.domaindrivenarchitecture.provs.core.cli.createProvInstance
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
+import java.io.FileNotFoundException
 import kotlin.system.exitProcess
 
 
@@ -25,7 +27,11 @@ fun main(args: Array<String>) {
         val prov = createProvInstance(cmd.target, remoteHostSetSudoWithoutPasswordRequired = true)
         provision(prov, conf)
 
-    } catch (e: IllegalArgumentException) {
+    } catch (e: SerializationException) {
+        println(
+            "Error: File \"${cmd.configFile}\" has an invalid format and or invalid data.\n"
+        )
+    } catch (e: FileNotFoundException) {
         println(
             "Error: File\u001b[31m ${cmd.configFile} \u001b[0m was not found.\n" +
                     "Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m ${cmd.configFile} \u001B[0m " +

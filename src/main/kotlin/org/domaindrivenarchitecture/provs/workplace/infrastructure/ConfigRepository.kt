@@ -4,27 +4,27 @@ import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.json.Json
 import org.domaindrivenarchitecture.provs.core.tags.Api
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
-import java.io.*
+import java.io.BufferedReader
+import java.io.FileReader
+import java.io.FileWriter
 
 
-internal fun getConfig(filename: String = "WorkplaceConfig.json"): WorkplaceConfig {
-    val file = File(filename)
-    require(file.exists(), { "File not found: " + filename })
+/**
+ * Returns WorkplaceConfig; data for config is read from specified file.
+ * Throws exceptions FileNotFoundException, SerializationException if file is not found resp. cannot be parsed.
+ */
+internal fun getConfig(filename: String = "WorkplaceConfig.yaml"): WorkplaceConfig {
 
+    // read file
+    val inputAsString = BufferedReader(FileReader(filename)).use { it.readText() }
+
+    // serializing objects
     val config =
-        try {
-            // read from file
-            val inputAsString = BufferedReader(FileReader(filename)).use { it.readText() }
-
-            // serializing objects
             if (filename.lowercase().endsWith(".yaml")) {
                 Yaml.default.decodeFromString(WorkplaceConfig.serializer(), inputAsString)
             } else {
                 Json.decodeFromString(WorkplaceConfig.serializer(), inputAsString)
             }
-        } catch (e: FileNotFoundException) {
-            throw IllegalArgumentException("File not found: " + filename, e)
-        }
     return config
 }
 
