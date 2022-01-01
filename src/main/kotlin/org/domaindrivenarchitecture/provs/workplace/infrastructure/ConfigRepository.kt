@@ -18,7 +18,7 @@ internal fun getConfig(filename: String = "WorkplaceConfig.yaml"): WorkplaceConf
     // read file
     val inputAsString = BufferedReader(FileReader(filename)).use { it.readText() }
 
-    // serializing objects
+    // deserializing
     val config =
             if (filename.lowercase().endsWith(".yaml")) {
                 Yaml.default.decodeFromString(WorkplaceConfig.serializer(), inputAsString)
