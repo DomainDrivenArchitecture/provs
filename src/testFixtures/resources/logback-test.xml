@@ -2,9 +2,8 @@
 
     <timestamp key="byTime" datePattern="yyyyMMdd'T'HHmmss"/>
 
-    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
-        <target>System.err</target>
-
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{35}) - %msg %n</pattern>
         </encoder>
@@ -12,8 +11,8 @@
 
     <logger name="net.schmizz" level="ERROR"/>
 
-    <root level="ALL">
-        <appender-ref ref="STDERR" />
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
     </root>
 
 </configuration>
