@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.workplace.application
 
+import ch.qos.logback.classic.Level
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
@@ -7,6 +8,7 @@ import io.mockk.verify
 import org.domaindrivenarchitecture.provs.core.*
 import org.domaindrivenarchitecture.provs.core.cli.retrievePassword
 import org.domaindrivenarchitecture.provs.core.processors.PrintOnlyProcessor
+import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
 import org.domaindrivenarchitecture.provs.workplace.domain.provisionWorkplace
@@ -97,6 +99,8 @@ internal class CliWorkplaceKtTest {
     @Test
     fun prints_error_message_if_config_not_found() {
         // given
+        setRootLoggingLevel(Level.OFF)
+
         val outContent = ByteArrayOutputStream()
         val errContent = ByteArrayOutputStream()
         val originalOut = System.out
@@ -121,6 +125,8 @@ internal class CliWorkplaceKtTest {
     @Test
     fun prints_error_message_if_config_not_parsable() {
         // given
+        setRootLoggingLevel(Level.OFF)
+
         val outContent = ByteArrayOutputStream()
         val errContent = ByteArrayOutputStream()
         val originalOut = System.out

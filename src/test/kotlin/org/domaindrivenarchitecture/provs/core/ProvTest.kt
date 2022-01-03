@@ -1,6 +1,8 @@
 package org.domaindrivenarchitecture.provs.core
 
+import ch.qos.logback.classic.Level
 import org.domaindrivenarchitecture.provs.core.docker.provideContainer
+import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.test.testLocal
@@ -280,6 +282,8 @@ internal class ProvTest {
     fun runProv_printsCorrectOutput() {
 
         // given
+        setRootLoggingLevel(Level.OFF)
+
         val outContent = ByteArrayOutputStream()
         val errContent = ByteArrayOutputStream()
         val originalOut = System.out
@@ -352,6 +356,8 @@ internal class ProvTest {
                 ProvResult(true)
             }
         }
+
+        setRootLoggingLevel(Level.OFF)
 
         val outContent = ByteArrayOutputStream()
         val errContent = ByteArrayOutputStream()
