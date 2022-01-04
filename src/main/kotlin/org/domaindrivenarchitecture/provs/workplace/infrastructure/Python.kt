@@ -14,25 +14,25 @@ fun Prov.installPython() = def {
 }
 
 fun Prov.installPython3(): ProvResult = def {
-    aptInstall("python3.8-venv")
+    aptInstall("python3.8-venv python3-pip")
 }
 
 fun Prov.installVenv(): ProvResult = def {
     val venvHome = "~/.python/meissa"
     cmd("python3 -m venv " + venvHome)
     cmd("source " + venvHome + "/bin/activate")
-    cmd("pip install pip --upgrade")
+    cmd("pip3 install pip --upgrade")
 }
 
 fun Prov.installPybuilder(): ProvResult = def {
-    cmd("pip install pybuilder ddadevops pypandoc mockito coverage unittest-xml-reporting deprecation python_terraform " +
+    cmd("pip3 install pybuilder ddadevops pypandoc mockito coverage unittest-xml-reporting deprecation python_terraform " +
             "boto3")
 }
 
 fun Prov.installRestClient(): ProvResult = def {
-    cmd("pip install requests")
+    cmd("pip3 install requests")
 }
 
 fun Prov.installJupyterlab(): ProvResult = def {
-    cmd("pip install jupyterlab pandas matplotlib")
+    cmd("pip3 install jupyterlab pandas matplotlib")
 }
