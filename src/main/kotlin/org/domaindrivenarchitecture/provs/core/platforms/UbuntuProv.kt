@@ -19,7 +19,7 @@ class UbuntuProv internal constructor(
     init {
         val user = cmdNoLog("whoami").out?.trim()
         if ("root" != user && !cmdNoLog("timeout 1 sudo id").success) {
-            println("!!!!!!!!!! WARNING !!!!!!!!!!\nUser $user cannot sudo without entering a password, i.e. most functions may fail!\nPlease ensure $user can sudo without password.")
+            println("IMPORTANT INFO:\nUser $user cannot sudo without entering a password, i.e. some functions may fail!\nIf you need to run functions with sudo, please ensure $user can sudo without password.")
         }
     }
 
