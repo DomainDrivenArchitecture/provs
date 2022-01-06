@@ -34,7 +34,9 @@ fun Prov.provisionWorkplace(
         throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionWorkplace")
     }
 
-    aptInstall("ssh gnupg curl git")
+    aptInstall(KEY_MANAGEMENT)
+    aptInstall(VERSION_MANAGEMENT)
+    aptInstall(NETWORK_TOOLS)
 
     provisionKeys(gpg, ssh)
     provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
@@ -50,24 +52,26 @@ fun Prov.provisionWorkplace(
 
     configureNoSwappiness()
 
-    installBash()
+    configureBash()
 
     if (workplaceType == WorkplaceType.OFFICE || workplaceType == WorkplaceType.IDE) {
-        aptInstall("seahorse")
+        aptInstall(KEY_MANAGEMENT_GUI)
         aptInstall(BASH_UTILS)
         aptInstall(OS_ANALYSIS)
         aptInstall(ZIP_UTILS)
 
-        aptInstall("firefox chromium-browser")
-        aptInstall("thunderbird libreoffice")
-        aptInstall("xclip")
+        aptInstall(BROWSER)
+        aptInstall(EMAIL_CLIENT)
+        aptInstall(OFFICE_SUITE)
+        aptInstall(CLIP_TOOLS)
 
         installZimWiki()
         installGopass()
         aptInstallFromPpa("nextcloud-devs", "client", "nextcloud-client")
 
-        aptInstall("inkscape")
-        aptInstall("dia")
+        optional() {
+            aptInstall(DRAWING_TOOLS)
+        }
 
         aptInstall(SPELLCHECKING_DE)
 

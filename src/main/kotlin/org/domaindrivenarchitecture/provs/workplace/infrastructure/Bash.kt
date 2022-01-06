@@ -7,7 +7,7 @@ import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import java.io.File
 
 
-fun Prov.installBash() = def {
+fun Prov.configureBash() = def {
     configureBashForUser()
 }
 
