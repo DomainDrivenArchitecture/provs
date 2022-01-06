@@ -69,7 +69,7 @@ private fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String
     }
     if (fingerprintsOfKeysToBeAdded == null) {
         // auto add keys
-        cmd("ssh-keyscan -H $host >> $knownHostsFile")
+        cmd("ssh-keyscan $host >> $knownHostsFile")
     } else {
         // logic based on https://serverfault.com/questions/447028/non-interactive-git-clone-ssh-fingerprint-prompt
         val actualKeys = findSshKeys(host)
@@ -93,7 +93,7 @@ private fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String
                     err = "Fingerprint ($fingerprintToBeAdded) could not be found in actual fingerprints: $actualFingerprints"
                 )
             }
-            cmd(echoCommandForText(actualKeys.get(indexOfKeyFound)) + " >> $knownHostsFile")
+            cmd(echoCommandForText(actualKeys.get(indexOfKeyFound) + "\n") + " >> $knownHostsFile")
         }
         ProvResult(true)
     }
