@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.io.File
 import java.net.UnknownHostException
 
 internal class UtilsKtTest {
@@ -52,6 +53,12 @@ internal class UtilsKtTest {
         assertThrows<IllegalArgumentException> {
             getResourceAsText("not existing resource")
         }
+    }
+
+    @Test
+    fun getLocalFileContent_successful() {
+        val resourcesDirectory = File("src/test/resources").absolutePath
+        assertEquals("resource text\n", getLocalFileContent("$resourcesDirectory/resource-test"))
     }
 
     @Test

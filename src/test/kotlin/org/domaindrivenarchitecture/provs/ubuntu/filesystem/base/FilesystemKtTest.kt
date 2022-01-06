@@ -4,6 +4,7 @@ import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import java.io.File
 
 
 internal class FilesystemKtTest {
@@ -139,7 +140,7 @@ internal class FilesystemKtTest {
         // when
         val file = "replaceTest"
         val res1 = prov.createFile(file, "a\nb\nc\nd")
-        val res2 = prov.replaceTextInFile(file,"b", "hi\nho")
+        val res2 = prov.replaceTextInFile(file, "b", "hi\nho")
         val res3 = prov.fileContent(file).equals("a\nhi\nho\nc\nd")
         val res4 = prov.deleteFile(file)
 
@@ -167,7 +168,7 @@ internal class FilesystemKtTest {
         // then
         assertTrue(res1.success)
         assertTrue(res2.success)
-        assertEquals("a\nhi\nho\nc\nd",res3)
+        assertEquals("a\nhi\nho\nc\nd", res3)
         assertTrue(res4.success)
     }
 
@@ -190,5 +191,19 @@ internal class FilesystemKtTest {
         assertTrue(res2.success)
         assertEquals("a\nbananas\nhi\nc\nd", res3)
         assertTrue(res4.success)
+    }
+
+    @Test
+    @ContainerTest
+    fun copyFileFromLocal_successfully() {
+        // given
+        val resourcesDirectory = File("src/test/resources").absolutePath
+
+        // when
+        defaultTestContainer().copyFileFromLocal("copiedFileFromLocal", "$resourcesDirectory/resource-test")
+
+        // then
+        val content = defaultTestContainer().fileContent( "copiedFileFromLocal")
+        assertEquals("resource text\n", content)
     }
 }

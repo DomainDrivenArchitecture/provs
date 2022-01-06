@@ -26,6 +26,25 @@ fun Prov.createFileFromResource(
 }
 
 
+/**
+ * Copies a file from the local environment to the running Prov instance.
+ * In case the running ProvInstance is also local, it would copy from local to local.
+ */
+fun Prov.copyFileFromLocal(
+    fullyQualifiedFilename: String,
+    fullyQualifiedLocalFilename: String,
+    posixFilePermission: String? = null,
+    sudo: Boolean = false
+): ProvResult = def {
+    createFile(
+        fullyQualifiedFilename,
+        getLocalFileContent(fullyQualifiedLocalFilename),
+        posixFilePermission,
+        sudo
+    )
+}
+
+
 fun Prov.createFile(
     fullyQualifiedFilename: String,
     text: String?,
@@ -149,6 +168,8 @@ fun Prov.insertTextInFile(file: String, textBehindWhichToInsert: Regex, textToIn
     }
 }
 
+
+// =============================  folder operations  ==========================
 
 fun Prov.dirExists(dir: String, path: String? = null, sudo: Boolean = false): Boolean {
     val effectivePath = if (path != null) path else

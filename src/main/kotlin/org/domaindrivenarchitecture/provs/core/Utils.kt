@@ -5,6 +5,7 @@ import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
 import org.domaindrivenarchitecture.provs.core.processors.RemoteProcessor
 import org.domaindrivenarchitecture.provs.core.tags.Api
+import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileContent
 import java.io.File
 import java.net.InetAddress
 
@@ -91,6 +92,13 @@ fun getResourceAsText(path: String): String {
     val resource = Thread.currentThread().contextClassLoader.getResource(path)
     requireNotNull(resource) { "Resource $path not found" }
     return resource.readText()
+}
+
+
+internal fun getLocalFileContent(fullyQualifiedLocalFileName: String, sudo: Boolean = false): String {
+    val content = local().fileContent(fullyQualifiedLocalFileName, sudo)
+    check(content != null, { "Could not retrieve content from file: $fullyQualifiedLocalFileName" })
+    return content
 }
 
 
