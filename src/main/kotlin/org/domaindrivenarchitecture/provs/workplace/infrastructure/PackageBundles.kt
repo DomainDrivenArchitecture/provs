@@ -14,4 +14,4 @@ val OPENCONNECT = "openconnect network-manager-openconnect network-manager-openc
 
 val VPNC = "vpnc network-manager-vpnc network-manager-vpnc-gnome vpnc-scripts"
 
-val JAVA_JDK = "openjdk-8-jdk openjdk-11-jdk openjdk-14-jdk"
+val JAVA_JDK = "openjdk-8-jdk openjdk-11-jdk openjdk-17-jdk"
