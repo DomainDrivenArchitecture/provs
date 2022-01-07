@@ -91,7 +91,6 @@ fun Prov.provisionWorkplace(
 
         // IDEs
         installVSC("python", "clojure")
-        //installVSC("python", "clojure")
         installIntelliJ()
 
         installDevOps()
