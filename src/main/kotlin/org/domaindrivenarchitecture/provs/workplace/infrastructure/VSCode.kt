@@ -14,12 +14,15 @@ fun Prov.installVSC(vararg options: String) = requireAll {
     prerequisitesVSCinstall()
 
     installVSCPackage()
+    installVSCodiumPackage()
 
     if (options.contains("clojure")) {
-        installExtensions(clojureExtensions)
+        installExtensionsCode(clojureExtensions)
+        installExtensionsCodium(clojureExtensions)
     }
     if (options.contains("python")) {
-        installExtensions(pythonExtensions)
+        installExtensionsCode(pythonExtensions)
+        installExtensionsCodium(pythonExtensions)
     }
 
     provisionAdditionalTools()
@@ -57,8 +60,12 @@ private fun Prov.installVSCPackage() = def {
     //    installVscWithApt()
 }
 
+private fun Prov.installVSCodiumPackage() = def {
+    cmd("sudo snap install codium --classic")
+}
 
-private fun Prov.installExtensions(extensions: List<String>) = optional {
+
+private fun Prov.installExtensionsCode(extensions: List<String>) = optional {
     var res = ProvResult(true)
     for (ext in extensions) {
         res = cmd("code --install-extension $ext")
@@ -67,10 +74,20 @@ private fun Prov.installExtensions(extensions: List<String>) = optional {
     // Settings can be found at $HOME/.config/Code/User/settings.json
 }
 
+private fun Prov.installExtensionsCodium(extensions: List<String>) = optional {
+    var res = ProvResult(true)
+    for (ext in extensions) {
+        res = cmd("codium --install-extension $ext")
+    }
+    res
+    // Settings can be found at $HOME/.config/Code/User/settings.json
+}
 
-private fun Prov.provisionAdditionalTools() = requireAll {
+
+internal fun Prov.provisionAdditionalTools() = requireAll {
     // Joker
-    cmd("curl -Lo joker-0.12.2-linux-amd64.zip https://github.com/candid82/joker/releases/download/v0.12.2/joker-0.12.2-linux-amd64.zip")
-    cmd("unzip joker-0.12.2-linux-amd64.zip")
+    val version = "0.18.0"
+    cmd("curl -Lo joker-${version}-linux-amd64.zip https://github.com/candid82/joker/releases/download/v${version}/joker-${version}-linux-amd64.zip")
+    cmd("unzip joker-${version}-linux-amd64.zip")
     cmd("sudo mv joker /usr/local/bin/")
 }

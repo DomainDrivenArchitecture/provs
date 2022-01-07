@@ -8,7 +8,7 @@ import org.domaindrivenarchitecture.provs.core.docker.dockerimages.UbuntuPlusUse
 import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
 
-val testDockerWithSudo = !"true".equals(System.getProperty("testdockerwithoutsudo")?.lowercase())
+val testDockerWithSudo = ("true" != System.getProperty("testdockerwithoutsudo")?.lowercase())
 
 const val defaultTestContainerName = "provs_test"
 

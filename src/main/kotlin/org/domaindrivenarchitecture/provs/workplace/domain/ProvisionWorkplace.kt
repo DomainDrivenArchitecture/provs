@@ -69,7 +69,7 @@ fun Prov.provisionWorkplace(
         installGopass()
         aptInstallFromPpa("nextcloud-devs", "client", "nextcloud-client")
 
-        optional() {
+        optional {
             aptInstall(DRAWING_TOOLS)
         }
 
@@ -91,6 +91,7 @@ fun Prov.provisionWorkplace(
 
         // IDEs
         installVSC("python", "clojure")
+        //installVSC("python", "clojure")
         installIntelliJ()
 
         installDevOps()
