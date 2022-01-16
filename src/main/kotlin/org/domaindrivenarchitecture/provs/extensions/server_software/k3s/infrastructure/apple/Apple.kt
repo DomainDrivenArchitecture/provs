@@ -2,7 +2,10 @@ package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.infras
 
 import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.core.remote
 import org.domaindrivenarchitecture.provs.core.repeatTaskUntilSuccess
+import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.applyK3sConfig
+import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.installK3sServer
 
 
 /**
@@ -67,3 +70,20 @@ spec:
   ports:
     - port: 5678 # Default port for image
     """
+
+
+/**
+ * Example how to install k3s and add apple
+ */
+fun main() {
+
+    val host = "123.34.56.78"
+
+    remote(host, "root").task {
+        installK3sServer(host = host)
+        applyK3sConfig(appleConfig())
+
+        // optional check
+        checkAppleService(host)
+    }
+}
