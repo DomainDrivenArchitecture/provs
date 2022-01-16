@@ -1,7 +1,9 @@
 package org.domaindrivenarchitecture.provs.ubuntu.user
 
+import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileContent
 import org.domaindrivenarchitecture.provs.ubuntu.keys.*
@@ -41,9 +43,12 @@ internal class ProvisionUserKtTest {
     @ContainerTest
     fun createUser() {
         // given
-        val a = defaultTestContainer()
+        val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
         val newUser = "testnewuser3"
-        a.createFile("~/.ssh/authorized_keys", "newdummykey")
+        a.task {
+            createDir(".ssh")
+            createFile("~/.ssh/authorized_keys", "newdummykey")
+        }
 
         // when
         val res = a.createUser(newUser, copyAuthorizedSshKeysFromCurrentUser = true)
@@ -61,7 +66,10 @@ internal class ProvisionUserKtTest {
         // given
         val a = defaultTestContainer()
         val newUser = "testnewsudouser3"
-        a.createFile("~/.ssh/authorized_keys","newdummykey")
+        a.task {
+            createDir(".ssh")
+            createFile("~/.ssh/authorized_keys", "newdummykey")
+        }
 
         // when
         val res = a.createUser(newUser, sudo = true, copyAuthorizedSshKeysFromCurrentUser = true)
