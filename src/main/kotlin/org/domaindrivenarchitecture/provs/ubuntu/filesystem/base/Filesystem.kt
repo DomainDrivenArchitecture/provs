@@ -222,12 +222,15 @@ fun Prov.deleteDir(dir: String, path: String, sudo: Boolean = false): ProvResult
 
 
 fun Prov.userHome(): String {
-    val user = cmd("whoami").out
+    val user = cmd("whoami").out?.trim()
     if (user == null) {
         throw RuntimeException("Could not determine user with whoami")
     } else {
-        // assume default home folder
-        return "/home/" + user.trim() + "/"
+        // set default home folder
+        return if (user == "root")
+            "/root/"
+        else
+            "/home/$user/"
     }
 }
 
