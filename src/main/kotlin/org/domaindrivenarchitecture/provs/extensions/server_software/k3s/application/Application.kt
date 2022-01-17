@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.application
 
 import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.installK3sServer
+import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain.installK3sServer
 
 
 /**

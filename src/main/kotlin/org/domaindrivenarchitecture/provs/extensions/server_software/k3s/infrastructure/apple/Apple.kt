@@ -4,8 +4,8 @@ import org.domaindrivenarchitecture.provs.core.Prov
 import org.domaindrivenarchitecture.provs.core.ProvResult
 import org.domaindrivenarchitecture.provs.core.remote
 import org.domaindrivenarchitecture.provs.core.repeatTaskUntilSuccess
-import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.applyK3sConfig
-import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.installK3sServer
+import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain.applyK3sConfig
+import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain.installK3sServer
 
 
 /**
@@ -80,7 +80,7 @@ fun main() {
     val host = "123.34.56.78"
 
     remote(host, "root").task {
-        installK3sServer(host = host)
+        installK3sServer(tlsHost = host)
         applyK3sConfig(appleConfig())
 
         // optional check
