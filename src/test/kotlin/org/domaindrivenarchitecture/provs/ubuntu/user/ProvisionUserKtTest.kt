@@ -1,6 +1,5 @@
 package org.domaindrivenarchitecture.provs.ubuntu.user
 
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir
@@ -43,7 +42,7 @@ internal class ProvisionUserKtTest {
     @ContainerTest
     fun createUser() {
         // given
-        val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
+        val a = defaultTestContainer()
         val newUser = "testnewuser3"
         a.task {
             createDir(".ssh")
