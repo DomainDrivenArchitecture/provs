@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.firewall.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.ubuntu.keys
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.configureGpgKeys
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.configureSshKeys
 import org.domaindrivenarchitecture.provs.ubuntu.secret.SecretSourceType

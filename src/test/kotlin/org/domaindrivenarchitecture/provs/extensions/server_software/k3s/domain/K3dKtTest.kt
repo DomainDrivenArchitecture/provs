@@ -1,10 +1,10 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain
 
-import org.domaindrivenarchitecture.provs.core.docker
-import org.domaindrivenarchitecture.provs.core.docker.containerExec
-import org.domaindrivenarchitecture.provs.core.docker.provideContainer
-import org.domaindrivenarchitecture.provs.core.local
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.docker
+import org.domaindrivenarchitecture.provs.framework.core.docker.containerExec
+import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
+import org.domaindrivenarchitecture.provs.framework.core.local
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.infrastructure.apple.appleConfig
 import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.infrastructure.apple.checkAppleService
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest

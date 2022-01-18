@@ -1,7 +1,11 @@
 package org.domaindrivenarchitecture.provs.core
 
 import ch.qos.logback.classic.Level
-import org.domaindrivenarchitecture.provs.core.docker.provideContainer
+import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
+import org.domaindrivenarchitecture.provs.framework.core.ProgressType
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi

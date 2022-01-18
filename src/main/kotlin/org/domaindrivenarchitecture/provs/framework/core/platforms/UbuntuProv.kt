@@ -1,11 +1,11 @@
-package org.domaindrivenarchitecture.provs.core.platforms
+package org.domaindrivenarchitecture.provs.framework.core.platforms
 
-import org.domaindrivenarchitecture.provs.core.ProgressType
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.escapeAndEncloseByDoubleQuoteForShell
-import org.domaindrivenarchitecture.provs.core.processors.LocalProcessor
-import org.domaindrivenarchitecture.provs.core.processors.Processor
+import org.domaindrivenarchitecture.provs.framework.core.ProgressType
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.escapeAndEncloseByDoubleQuoteForShell
+import org.domaindrivenarchitecture.provs.framework.core.processors.LocalProcessor
+import org.domaindrivenarchitecture.provs.framework.core.processors.Processor
 
 const val SHELL = "/bin/bash"
 

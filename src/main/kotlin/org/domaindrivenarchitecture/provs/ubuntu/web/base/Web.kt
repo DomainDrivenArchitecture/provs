@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.ubuntu.web.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.tags.Api
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.tags.Api
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall

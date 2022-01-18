@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.workplace.application
 
 import kotlinx.serialization.SerializationException
-import org.domaindrivenarchitecture.provs.core.cli.createProvInstance
+import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
 import java.io.FileNotFoundException
 import kotlin.system.exitProcess

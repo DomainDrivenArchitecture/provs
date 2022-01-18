@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.ubuntu.keys.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.Secret
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall

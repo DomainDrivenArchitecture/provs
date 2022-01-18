@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
-import org.domaindrivenarchitecture.provs.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.Prov
 
 
 fun Prov.installIntelliJ() = task {

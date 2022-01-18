@@ -1,7 +1,8 @@
 package org.domaindrivenarchitecture.provs.ubuntu.filesystem.base
 
-import org.domaindrivenarchitecture.provs.core.*
-import org.domaindrivenarchitecture.provs.core.platforms.SHELL
+import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
+import org.domaindrivenarchitecture.provs.framework.core.*
+import org.domaindrivenarchitecture.provs.framework.core.getLocalFileContent
 import java.io.File
 
 

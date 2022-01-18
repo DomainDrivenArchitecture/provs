@@ -1,11 +1,11 @@
-package org.domaindrivenarchitecture.provs.core.processors
+package org.domaindrivenarchitecture.provs.framework.core.processors
 
-import org.domaindrivenarchitecture.provs.core.ProgressType
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.docker.provideContainer
-import org.domaindrivenarchitecture.provs.core.escapeAndEncloseByDoubleQuoteForShell
-import org.domaindrivenarchitecture.provs.core.platforms.SHELL
-import org.domaindrivenarchitecture.provs.core.tags.Api
+import org.domaindrivenarchitecture.provs.framework.core.ProgressType
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
+import org.domaindrivenarchitecture.provs.framework.core.escapeAndEncloseByDoubleQuoteForShell
+import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
+import org.domaindrivenarchitecture.provs.framework.core.tags.Api
 
 enum class ContainerStartMode {
     USE_RUNNING_ELSE_CREATE,

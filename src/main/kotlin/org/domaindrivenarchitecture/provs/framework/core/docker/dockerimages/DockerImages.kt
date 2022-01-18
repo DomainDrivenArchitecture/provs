@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.core.docker.dockerimages
+package org.domaindrivenarchitecture.provs.framework.core.docker.dockerimages
 
 
 interface DockerImage {

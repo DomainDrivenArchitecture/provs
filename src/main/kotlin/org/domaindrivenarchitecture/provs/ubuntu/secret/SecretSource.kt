@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.ubuntu.secret
 
-import org.domaindrivenarchitecture.provs.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.*
 import kotlinx.serialization.Serializable
 

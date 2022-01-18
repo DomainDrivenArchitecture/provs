@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.docker.provideContainer
-import org.domaindrivenarchitecture.provs.core.echoCommandForTextWithNewlinesReplaced
-import org.domaindrivenarchitecture.provs.core.repeatTaskUntilSuccess
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
+import org.domaindrivenarchitecture.provs.framework.core.echoCommandForTextWithNewlinesReplaced
+import org.domaindrivenarchitecture.provs.framework.core.repeatTaskUntilSuccess
 
 
 /**

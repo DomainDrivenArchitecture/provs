@@ -41,7 +41,7 @@ internal class EntryKtTest {
     @Test
     fun test_without_method_argument() {
         // when
-        main("org.domaindrivenarchitecture.provs.core.entry.EntryTestKt")
+        org.domaindrivenarchitecture.provs.framework.core.entry.main("org.domaindrivenarchitecture.provs.core.entry.EntryTestKt")
 
         // then
         assertEquals("main is fun \n", outContent.toString())
@@ -50,7 +50,10 @@ internal class EntryKtTest {
     @Test
     fun test_method_main_without_args() {
         // when
-        main("org.domaindrivenarchitecture.provs.core.entry.EntryTestKt", "main")
+        org.domaindrivenarchitecture.provs.framework.core.entry.main(
+            "org.domaindrivenarchitecture.provs.core.entry.EntryTestKt",
+            "main"
+        )
 
         // then
         assertEquals("main is fun \n", outContent.toString())
@@ -59,7 +62,10 @@ internal class EntryKtTest {
     @Test
     fun test_named_method_without_args() {
         // when
-        main("org.domaindrivenarchitecture.provs.core.entry.EntryTestKt", "testfun")
+        org.domaindrivenarchitecture.provs.framework.core.entry.main(
+            "org.domaindrivenarchitecture.provs.core.entry.EntryTestKt",
+            "testfun"
+        )
 
         // then
         assertEquals("test is fun \n", outContent.toString())
@@ -68,7 +74,12 @@ internal class EntryKtTest {
     @Test
     fun test_method_main_with_args() {
         // when
-        main("org.domaindrivenarchitecture.provs.core.entry.EntryTestKt", "main", "arg1", "arg2")
+        org.domaindrivenarchitecture.provs.framework.core.entry.main(
+            "org.domaindrivenarchitecture.provs.core.entry.EntryTestKt",
+            "main",
+            "arg1",
+            "arg2"
+        )
 
         // then
         assertEquals("main is fun arg1 arg2\n", outContent.toString())
@@ -77,7 +88,12 @@ internal class EntryKtTest {
     @Test
     fun test_named_method_with_args() {
         // when
-        main("org.domaindrivenarchitecture.provs.core.entry.EntryTestKt", "testfun", "arg1", "arg2")
+        org.domaindrivenarchitecture.provs.framework.core.entry.main(
+            "org.domaindrivenarchitecture.provs.core.entry.EntryTestKt",
+            "testfun",
+            "arg1",
+            "arg2"
+        )
 
         // then
         assertEquals("test is fun arg1 arg2\n", outContent.toString())

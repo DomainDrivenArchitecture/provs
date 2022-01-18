@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.workplace.application
 
-import org.domaindrivenarchitecture.provs.core.cli.TargetCliCommand
+import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
 
 
 class WorkplaceCliCommand(val configFile: String, val target: TargetCliCommand) {

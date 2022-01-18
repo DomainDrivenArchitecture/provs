@@ -1,11 +1,12 @@
-package org.domaindrivenarchitecture.provs.core.docker
+package org.domaindrivenarchitecture.provs.framework.core.docker
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.docker.dockerimages.DockerImage
-import org.domaindrivenarchitecture.provs.core.docker.platforms.*
-import org.domaindrivenarchitecture.provs.core.platforms.UbuntuProv
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.docker.dockerimages.DockerImage
+import org.domaindrivenarchitecture.provs.framework.core.docker.platforms.*
+import org.domaindrivenarchitecture.provs.framework.core.platforms.UbuntuProv
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.docker.platforms.*
 
 private const val DOCKER_NOT_SUPPORTED = "docker not yet supported for "
 

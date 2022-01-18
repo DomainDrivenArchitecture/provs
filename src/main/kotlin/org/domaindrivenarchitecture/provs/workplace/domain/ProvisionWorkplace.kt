@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.workplace.domain
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstallFromPpa

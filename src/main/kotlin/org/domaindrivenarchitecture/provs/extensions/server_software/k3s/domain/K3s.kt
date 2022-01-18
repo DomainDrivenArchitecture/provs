@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.echoCommandForText
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.echoCommandForText
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 
 

@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.core.cli
 
+import org.domaindrivenarchitecture.provs.framework.core.cli.parseTarget
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

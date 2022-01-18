@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.ubuntu.install.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 
 
 private var aptInit = false

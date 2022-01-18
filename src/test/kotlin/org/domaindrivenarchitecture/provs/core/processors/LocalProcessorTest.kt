@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.core.processors
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.escapeAndEncloseByDoubleQuoteForShell
-import org.domaindrivenarchitecture.provs.core.escapeProcentForPrintf
-import org.domaindrivenarchitecture.provs.core.escapeSingleQuoteForShell
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.escapeAndEncloseByDoubleQuoteForShell
+import org.domaindrivenarchitecture.provs.framework.core.escapeProcentForPrintf
+import org.domaindrivenarchitecture.provs.framework.core.escapeSingleQuoteForShell
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

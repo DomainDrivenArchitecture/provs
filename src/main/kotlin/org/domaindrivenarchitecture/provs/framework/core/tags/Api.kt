@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.core.tags
+package org.domaindrivenarchitecture.provs.framework.core.tags
 
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.EXPRESSION)
 @Retention(AnnotationRetention.SOURCE)

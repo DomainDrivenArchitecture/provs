@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
-import org.domaindrivenarchitecture.provs.core.getResourceAsText
+import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir

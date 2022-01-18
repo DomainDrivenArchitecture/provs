@@ -2,8 +2,8 @@ package org.domaindrivenarchitecture.provs.workplace.application
 
 import kotlinx.cli.ArgType
 import kotlinx.cli.optional
-import org.domaindrivenarchitecture.provs.core.cli.CliTargetParser
-import org.domaindrivenarchitecture.provs.core.cli.TargetCliCommand
+import org.domaindrivenarchitecture.provs.framework.core.cli.CliTargetParser
+import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
 
 
 open class CliWorkplaceParser(name: String) : CliTargetParser(name) {

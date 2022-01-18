@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.applic
 
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import org.domaindrivenarchitecture.provs.core.cli.CliTargetParser
+import org.domaindrivenarchitecture.provs.framework.core.cli.CliTargetParser
 
 class CliK3sArgumentsParser(name: String) : CliTargetParser(name) {
 

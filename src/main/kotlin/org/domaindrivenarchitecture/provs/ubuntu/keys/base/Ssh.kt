@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.ubuntu.keys.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createSecretFile
 import org.domaindrivenarchitecture.provs.ubuntu.keys.KeyPair

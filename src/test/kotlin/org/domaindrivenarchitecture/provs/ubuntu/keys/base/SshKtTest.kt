@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.ubuntu.keys.base
 
-import org.domaindrivenarchitecture.provs.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.ubuntu.keys.*

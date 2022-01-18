@@ -1,6 +1,8 @@
 package org.domaindrivenarchitecture.provs.core.processors
 
-import org.domaindrivenarchitecture.provs.core.platforms.SHELL
+import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.testDockerWithSudo
 import org.junit.jupiter.api.Assertions.assertEquals

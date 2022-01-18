@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.core
+package org.domaindrivenarchitecture.provs.framework.core
 
 import java.util.*
 

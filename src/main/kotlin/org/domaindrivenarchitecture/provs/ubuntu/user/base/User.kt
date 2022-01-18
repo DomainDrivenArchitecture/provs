@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.ubuntu.user.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.Secret
-import org.domaindrivenarchitecture.provs.core.processors.RemoteProcessor
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.processors.RemoteProcessor
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileExists
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.userHome

@@ -1,6 +1,6 @@
-package org.domaindrivenarchitecture.provs.core.processors
+package org.domaindrivenarchitecture.provs.framework.core.processors
 
-import org.domaindrivenarchitecture.provs.core.escapeNewline
+import org.domaindrivenarchitecture.provs.framework.core.escapeNewline
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException

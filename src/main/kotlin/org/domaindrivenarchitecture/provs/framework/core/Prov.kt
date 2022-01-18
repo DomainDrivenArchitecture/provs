@@ -1,9 +1,9 @@
-package org.domaindrivenarchitecture.provs.core
+package org.domaindrivenarchitecture.provs.framework.core
 
-import org.domaindrivenarchitecture.provs.core.platforms.SHELL
-import org.domaindrivenarchitecture.provs.core.platforms.UbuntuProv
-import org.domaindrivenarchitecture.provs.core.processors.LocalProcessor
-import org.domaindrivenarchitecture.provs.core.processors.Processor
+import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
+import org.domaindrivenarchitecture.provs.framework.core.platforms.UbuntuProv
+import org.domaindrivenarchitecture.provs.framework.core.processors.LocalProcessor
+import org.domaindrivenarchitecture.provs.framework.core.processors.Processor
 import org.slf4j.LoggerFactory
 
 

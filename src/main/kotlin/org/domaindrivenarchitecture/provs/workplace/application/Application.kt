@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.workplace.application
 
-import org.domaindrivenarchitecture.provs.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.workplace.domain.provisionWorkplace
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
 

@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.core.cli
+package org.domaindrivenarchitecture.provs.framework.core.cli
 
 
 class TargetCliCommand(

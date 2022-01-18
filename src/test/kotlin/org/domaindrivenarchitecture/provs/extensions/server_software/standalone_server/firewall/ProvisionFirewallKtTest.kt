@@ -1,13 +1,13 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.firewall
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.docker.dockerProvideImage
-import org.domaindrivenarchitecture.provs.core.docker.dockerimages.UbuntuPlusUser
-import org.domaindrivenarchitecture.provs.core.docker.exitAndRmContainer
-import org.domaindrivenarchitecture.provs.core.local
-import org.domaindrivenarchitecture.provs.core.processors.ContainerEndMode
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
-import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.docker.dockerProvideImage
+import org.domaindrivenarchitecture.provs.framework.core.docker.dockerimages.UbuntuPlusUser
+import org.domaindrivenarchitecture.provs.framework.core.docker.exitAndRmContainer
+import org.domaindrivenarchitecture.provs.framework.core.local
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerEndMode
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall

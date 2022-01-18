@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.extensions.demos
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.local
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.local
 
 
 fun Prov.helloWorld() = def {

@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.ubuntu.secret.SecretSource
 
 

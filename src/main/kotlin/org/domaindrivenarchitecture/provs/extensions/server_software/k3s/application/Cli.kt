@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.application
 
-import org.domaindrivenarchitecture.provs.core.cli.createProvInstance
+import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
 import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain.installK3sAsContainers
 import kotlin.system.exitProcess
 

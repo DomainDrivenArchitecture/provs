@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.nexus
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.docker.containerRuns
-import org.domaindrivenarchitecture.provs.core.remote
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.docker.containerRuns
+import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileExists
 import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.createUser

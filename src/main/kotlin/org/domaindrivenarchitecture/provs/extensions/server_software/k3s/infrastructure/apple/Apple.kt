@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.infrastructure.apple
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.remote
-import org.domaindrivenarchitecture.provs.core.repeatTaskUntilSuccess
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.remote
+import org.domaindrivenarchitecture.provs.framework.core.repeatTaskUntilSuccess
 import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain.applyK3sConfig
 import org.domaindrivenarchitecture.provs.extensions.server_software.k3s.domain.installK3sServer
 

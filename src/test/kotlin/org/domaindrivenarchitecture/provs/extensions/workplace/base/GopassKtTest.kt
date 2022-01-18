@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.extensions.workplace.base
 
-import org.domaindrivenarchitecture.provs.core.Secret
-import org.domaindrivenarchitecture.provs.core.remote
+import org.domaindrivenarchitecture.provs.framework.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.*

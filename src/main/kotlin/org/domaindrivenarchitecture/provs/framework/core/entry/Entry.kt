@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.core.entry
+package org.domaindrivenarchitecture.provs.framework.core.entry
 
 /**
  * Calls a static method of a class.

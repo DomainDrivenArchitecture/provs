@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.json.Json
-import org.domaindrivenarchitecture.provs.core.tags.Api
+import org.domaindrivenarchitecture.provs.framework.core.tags.Api
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
 import java.io.BufferedReader
 import java.io.FileReader

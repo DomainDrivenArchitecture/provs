@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.extensions.demos
 
-import org.domaindrivenarchitecture.provs.core.*
+import org.domaindrivenarchitecture.provs.framework.core.*
 
 
 /**

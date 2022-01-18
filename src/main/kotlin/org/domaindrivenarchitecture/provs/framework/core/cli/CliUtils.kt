@@ -1,9 +1,9 @@
-package org.domaindrivenarchitecture.provs.core.cli
+package org.domaindrivenarchitecture.provs.framework.core.cli
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.Secret
-import org.domaindrivenarchitecture.provs.core.local
-import org.domaindrivenarchitecture.provs.core.remote
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.local
+import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.GopassSecretSource
 import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.PromptSecretSource
 import org.domaindrivenarchitecture.provs.ubuntu.user.base.currentUserCanSudo

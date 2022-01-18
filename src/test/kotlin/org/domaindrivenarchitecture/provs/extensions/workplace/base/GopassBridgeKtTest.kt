@@ -1,11 +1,11 @@
 package org.domaindrivenarchitecture.provs.extensions.workplace.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.Secret
-import org.domaindrivenarchitecture.provs.core.docker.exitAndRmContainer
-import org.domaindrivenarchitecture.provs.core.local
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.docker.exitAndRmContainer
+import org.domaindrivenarchitecture.provs.framework.core.local
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi

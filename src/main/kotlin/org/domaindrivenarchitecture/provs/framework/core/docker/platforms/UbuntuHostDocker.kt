@@ -1,15 +1,15 @@
-package org.domaindrivenarchitecture.provs.core.docker.platforms
+package org.domaindrivenarchitecture.provs.framework.core.docker.platforms
 
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.docker.containerRuns
-import org.domaindrivenarchitecture.provs.core.docker.dockerImageExists
-import org.domaindrivenarchitecture.provs.core.docker.dockerimages.DockerImage
-import org.domaindrivenarchitecture.provs.core.docker.exitAndRmContainer
-import org.domaindrivenarchitecture.provs.core.escapeSingleQuote
-import org.domaindrivenarchitecture.provs.core.fileSeparator
-import org.domaindrivenarchitecture.provs.core.hostUserHome
-import org.domaindrivenarchitecture.provs.core.platforms.UbuntuProv
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.docker.containerRuns
+import org.domaindrivenarchitecture.provs.framework.core.docker.dockerImageExists
+import org.domaindrivenarchitecture.provs.framework.core.docker.dockerimages.DockerImage
+import org.domaindrivenarchitecture.provs.framework.core.docker.exitAndRmContainer
+import org.domaindrivenarchitecture.provs.framework.core.escapeSingleQuote
+import org.domaindrivenarchitecture.provs.framework.core.fileSeparator
+import org.domaindrivenarchitecture.provs.framework.core.hostUserHome
+import org.domaindrivenarchitecture.provs.framework.core.platforms.UbuntuProv
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 
 
 fun UbuntuProv.provideContainerPlatform(

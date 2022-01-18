@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.ubuntu.utils
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.docker
-import org.domaindrivenarchitecture.provs.core.echoCommandForText
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.docker
+import org.domaindrivenarchitecture.provs.framework.core.echoCommandForText
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.junit.jupiter.api.Assertions.assertEquals

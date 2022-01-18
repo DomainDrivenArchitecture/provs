@@ -1,10 +1,10 @@
-package org.domaindrivenarchitecture.provs.core
+package org.domaindrivenarchitecture.provs.framework.core
 
-import org.domaindrivenarchitecture.provs.core.docker.provideContainer
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
-import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
-import org.domaindrivenarchitecture.provs.core.processors.RemoteProcessor
-import org.domaindrivenarchitecture.provs.core.tags.Api
+import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
+import org.domaindrivenarchitecture.provs.framework.core.processors.RemoteProcessor
+import org.domaindrivenarchitecture.provs.framework.core.tags.Api
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileContent
 import java.io.File
 import java.net.InetAddress

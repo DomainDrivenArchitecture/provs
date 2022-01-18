@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.core.processors
 
-import org.domaindrivenarchitecture.provs.core.newline
+import org.domaindrivenarchitecture.provs.framework.core.newline
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals

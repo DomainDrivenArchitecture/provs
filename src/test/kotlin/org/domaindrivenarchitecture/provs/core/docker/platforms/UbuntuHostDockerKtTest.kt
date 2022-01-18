@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.core.docker.platforms
 
-import org.domaindrivenarchitecture.provs.core.ProvResult
-import org.domaindrivenarchitecture.provs.core.docker.containerRuns
-import org.domaindrivenarchitecture.provs.core.docker.exitAndRmContainer
-import org.domaindrivenarchitecture.provs.core.docker.runContainer
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.docker.containerRuns
+import org.domaindrivenarchitecture.provs.framework.core.docker.exitAndRmContainer
+import org.domaindrivenarchitecture.provs.framework.core.docker.runContainer
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.test.testLocal
 import org.junit.jupiter.api.Assertions.assertEquals

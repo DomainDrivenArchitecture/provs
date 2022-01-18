@@ -50,7 +50,7 @@ Run:
 
 You'll be prompted for the password of the remote user.
 
-### Install k3s
+### Provision k3s
 
 ```bash
 java -jar provs-server.jar -i -r <ip or hostname> -u <remote_username>

@@ -1,9 +1,9 @@
-package org.domaindrivenarchitecture.provs.core.processors
+package org.domaindrivenarchitecture.provs.framework.core.processors
 
-import org.domaindrivenarchitecture.provs.core.Secret
-import org.domaindrivenarchitecture.provs.core.escapeAndEncloseByDoubleQuoteForShell
-import org.domaindrivenarchitecture.provs.core.escapeNewline
-import org.domaindrivenarchitecture.provs.core.platforms.SHELL
+import org.domaindrivenarchitecture.provs.framework.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.escapeAndEncloseByDoubleQuoteForShell
+import org.domaindrivenarchitecture.provs.framework.core.escapeNewline
+import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
 import net.schmizz.sshj.SSHClient
 import net.schmizz.sshj.connection.channel.direct.Session
 import net.schmizz.sshj.connection.channel.direct.Session.Command

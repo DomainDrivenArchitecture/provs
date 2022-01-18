@@ -1,12 +1,12 @@
 package org.domaindrivenarchitecture.provs.core.platformTest
 
-import org.domaindrivenarchitecture.provs.core.ProgressType
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.docker.dockerImageExists
-import org.domaindrivenarchitecture.provs.core.docker.dockerProvideImage
-import org.domaindrivenarchitecture.provs.core.docker.dockerimages.DockerImage
-import org.domaindrivenarchitecture.provs.core.processors.ContainerStartMode
-import org.domaindrivenarchitecture.provs.core.processors.ContainerUbuntuHostProcessor
+import org.domaindrivenarchitecture.provs.framework.core.ProgressType
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.docker.dockerImageExists
+import org.domaindrivenarchitecture.provs.framework.core.docker.dockerProvideImage
+import org.domaindrivenarchitecture.provs.framework.core.docker.dockerimages.DockerImage
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.test.testDockerWithSudo

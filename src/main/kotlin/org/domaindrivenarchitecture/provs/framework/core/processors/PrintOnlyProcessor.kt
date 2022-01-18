@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.core.processors
+package org.domaindrivenarchitecture.provs.framework.core.processors
 
 
 @Suppress("unused")  // used externally

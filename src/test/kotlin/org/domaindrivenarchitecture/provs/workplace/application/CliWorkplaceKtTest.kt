@@ -6,8 +6,9 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.mockk.verify
 import org.domaindrivenarchitecture.provs.core.*
-import org.domaindrivenarchitecture.provs.core.cli.retrievePassword
-import org.domaindrivenarchitecture.provs.core.processors.PrintOnlyProcessor
+import org.domaindrivenarchitecture.provs.framework.core.cli.retrievePassword
+import org.domaindrivenarchitecture.provs.framework.core.processors.PrintOnlyProcessor
+import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceConfig
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType

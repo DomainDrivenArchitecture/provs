@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.k3s.application
 
-import org.domaindrivenarchitecture.provs.core.cli.TargetCliCommand
+import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
 
 
 class ServerCliCommand(private val k3sType: String, val target: TargetCliCommand) {
@@ -29,7 +29,8 @@ fun parseServerArguments(
         parser.sshWithPasswordPrompt,
         parser.sshWithGopassPath,
         parser.sshWithKey
-    ))
+    )
+    )
 }
 
 

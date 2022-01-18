@@ -1,10 +1,10 @@
 package org.domaindrivenarchitecture.provs.ubuntu.git.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
-import org.domaindrivenarchitecture.provs.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.ubuntu.keys.base.isHostKnown
-import org.domaindrivenarchitecture.provs.core.echoCommandForText
+import org.domaindrivenarchitecture.provs.framework.core.echoCommandForText
 import java.io.File
 
 val knownHostsFile = "~/.ssh/known_hosts"

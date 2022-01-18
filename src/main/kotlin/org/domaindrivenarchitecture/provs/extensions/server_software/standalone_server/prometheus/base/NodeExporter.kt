@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.extensions.server_software.standalone_server.prometheus.base
 
-import org.domaindrivenarchitecture.provs.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileContainsText
