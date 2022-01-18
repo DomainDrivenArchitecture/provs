@@ -2,8 +2,8 @@ package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.whoami
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
 fun Prov.installVirtualBoxGuestAdditions() = def {
     // if running in a VirtualBox vm

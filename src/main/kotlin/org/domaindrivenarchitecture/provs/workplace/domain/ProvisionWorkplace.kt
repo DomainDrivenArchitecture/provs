@@ -2,15 +2,15 @@ package org.domaindrivenarchitecture.provs.workplace.domain
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.ubuntu.git.provisionGit
-import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstallFromPpa
-import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptPurge
-import org.domaindrivenarchitecture.provs.ubuntu.keys.KeyPair
-import org.domaindrivenarchitecture.provs.ubuntu.keys.base.gpgFingerprint
-import org.domaindrivenarchitecture.provs.ubuntu.keys.provisionKeys
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.currentUserCanSudo
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.whoami
+import org.domaindrivenarchitecture.provs.framework.ubuntu.git.provisionGit
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstallFromPpa
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptPurge
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 import org.domaindrivenarchitecture.provs.workplace.infrastructure.*
 
 

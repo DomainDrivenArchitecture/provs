@@ -4,11 +4,11 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.remote
-import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.GopassSecretSource
-import org.domaindrivenarchitecture.provs.ubuntu.secret.secretSources.PromptSecretSource
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.currentUserCanSudo
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.makeUserSudoerWithNoSudoPasswordRequired
-import org.domaindrivenarchitecture.provs.ubuntu.user.base.whoami
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.GopassSecretSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.makeUserSudoerWithNoSudoPasswordRequired
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 import kotlin.system.exitProcess
 
 

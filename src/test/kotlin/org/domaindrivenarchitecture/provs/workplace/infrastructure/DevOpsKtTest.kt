@@ -3,9 +3,9 @@ package org.domaindrivenarchitecture.provs.workplace.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.fileContainsText
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 

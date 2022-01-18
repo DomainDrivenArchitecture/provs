@@ -2,12 +2,12 @@ package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.userHome
-import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.ubuntu.install.base.isPackageInstalled
-import org.domaindrivenarchitecture.provs.ubuntu.web.base.downloadFromURL
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
+import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
 fun Prov.downloadGopassBridge() = def {

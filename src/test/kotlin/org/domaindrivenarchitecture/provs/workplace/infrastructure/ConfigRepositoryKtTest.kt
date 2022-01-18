@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import com.charleskorn.kaml.InvalidPropertyValueException
-import org.domaindrivenarchitecture.provs.ubuntu.secret.SecretSourceType
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceType
 import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

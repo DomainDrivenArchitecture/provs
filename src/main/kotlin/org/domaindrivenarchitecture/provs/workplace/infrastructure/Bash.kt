@@ -2,8 +2,10 @@ package org.domaindrivenarchitecture.provs.workplace.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.ubuntu.filesystem.base.*
-import org.domaindrivenarchitecture.provs.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.addTextToFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.dirExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import java.io.File
 
 
