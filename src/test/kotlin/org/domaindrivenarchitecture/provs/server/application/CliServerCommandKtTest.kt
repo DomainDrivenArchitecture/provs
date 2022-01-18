@@ -1,11 +1,9 @@
 package org.domaindrivenarchitecture.provs.server.application
 
-import org.domaindrivenarchitecture.provs.server.application.CliK3sArgumentsParser
-import org.domaindrivenarchitecture.provs.server.application.parseServerArguments
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
-internal class CliK3sCommandKtTest {
+internal class CliServerCommandKtTest {
 
     @Test
     fun test_parseServerArguments_are_valid_for_k3s() {
@@ -14,7 +12,7 @@ internal class CliK3sCommandKtTest {
 
         // then
         assertTrue(cmd.isValid())
-        assertEquals(CliK3sArgumentsParser.K3sType.K3S, cmd.type())
+        assertEquals(CliServerArgumentsParser.K3sType.K3S, cmd.type())
     }
 
     @Test
@@ -24,7 +22,7 @@ internal class CliK3sCommandKtTest {
 
         // then
         assertFalse(cmd.isValid())
-        assertEquals(CliK3sArgumentsParser.K3sType.K3S, cmd.type())
+        assertEquals(CliServerArgumentsParser.K3sType.K3S, cmd.type())
     }
 
     @Test
@@ -34,7 +32,7 @@ internal class CliK3sCommandKtTest {
 
         // then
         assertTrue(cmd.isValid())
-        assertEquals(CliK3sArgumentsParser.K3sType.K3S, cmd.type())
+        assertEquals(CliServerArgumentsParser.K3sType.K3S, cmd.type())
     }
 
     @Test
@@ -44,6 +42,6 @@ internal class CliK3sCommandKtTest {
 
         // then
         assertTrue(cmd.isValid())
-        assertEquals(CliK3sArgumentsParser.K3sType.K3D, cmd.type())
+        assertEquals(CliServerArgumentsParser.K3sType.K3D, cmd.type())
     }
 }

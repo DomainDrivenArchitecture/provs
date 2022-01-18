@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.server.application.main
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
-internal class CliKtTest {
+internal class CliServerKtTest {
 
     @Test
     @Disabled // run manually -- todo mock execution

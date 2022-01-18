@@ -8,16 +8,16 @@ class ServerCliCommand(private val k3sType: String, val target: TargetCliCommand
         return target.isValid() && hasValidK3sType()
     }
     private fun hasValidK3sType(): Boolean {
-        return CliK3sArgumentsParser.K3sType.values().map { it.name }.contains(k3sType.uppercase())
+        return CliServerArgumentsParser.K3sType.values().map { it.name }.contains(k3sType.uppercase())
     }
-    fun type() = CliK3sArgumentsParser.K3sType.valueOf(k3sType.uppercase())
+    fun type() = CliServerArgumentsParser.K3sType.valueOf(k3sType.uppercase())
 }
 
 fun parseServerArguments(
     programName: String = "java -jar provs.jar",
     args: Array<String>
 ): ServerCliCommand {
-    val parser = CliK3sArgumentsParser(programName)
+    val parser = CliServerArgumentsParser(programName)
     parser.parse(args)
 
     return ServerCliCommand(
