@@ -2,9 +2,9 @@ package org.domaindrivenarchitecture.provs.framework.extensions.workplace
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
-import org.domaindrivenarchitecture.provs.workplace.domain.WorkplaceType
-import org.domaindrivenarchitecture.provs.workplace.domain.provisionWorkplace
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.getConfig
+import org.domaindrivenarchitecture.provs.desktop.domain.WorkplaceType
+import org.domaindrivenarchitecture.provs.desktop.domain.provisionWorkplace
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 

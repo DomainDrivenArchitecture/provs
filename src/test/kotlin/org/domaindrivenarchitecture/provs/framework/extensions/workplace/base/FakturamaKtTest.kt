@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.framework.extensions.workplace.base
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.installFakturama
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.installFakturama
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 

@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.privateGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.publicGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.*
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.*
 import org.junit.jupiter.api.Assertions.assertFalse
 
 

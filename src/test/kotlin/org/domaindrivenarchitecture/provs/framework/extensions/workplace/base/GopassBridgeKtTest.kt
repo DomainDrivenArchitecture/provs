@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.privateGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.publicGPGSnakeoilKey
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.configureGopassBridgeJsonApi
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.downloadGopassBridge
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.installGopass
-import org.domaindrivenarchitecture.provs.workplace.infrastructure.installGopassBridgeJsonApi
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.configureGopassBridgeJsonApi
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.downloadGopassBridge
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.installGopass
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.installGopassBridgeJsonApi
 
 
 internal class GopassBridgeKtTest {
