@@ -59,6 +59,7 @@ fun Prov.provisionWorkplace(
         aptInstall(BASH_UTILS)
         aptInstall(OS_ANALYSIS)
         aptInstall(ZIP_UTILS)
+        aptInstall(PASSWORD_TOOLS)
 
         aptInstall(BROWSER)
         aptInstall(EMAIL_CLIENT)
@@ -91,6 +92,7 @@ fun Prov.provisionWorkplace(
 
         // IDEs
         installVSC("python", "clojure")
+        aptInstall(CLOJURE_TOOLS)
         installIntelliJ()
 
         installDevOps()

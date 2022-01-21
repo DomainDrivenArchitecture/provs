@@ -33,3 +33,7 @@ val VPNC = "vpnc network-manager-vpnc network-manager-vpnc-gnome vpnc-scripts"
 val JAVA_JDK = "openjdk-8-jdk openjdk-11-jdk openjdk-17-jdk"
 
 val DRAWING_TOOLS = "inkscape dia"
+
+val CLOJURE_TOOLS = "leiningen"
+
+val PASSWORD_TOOLS = "pwgen"
