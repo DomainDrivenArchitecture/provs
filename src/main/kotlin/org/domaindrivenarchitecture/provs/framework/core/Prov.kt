@@ -12,6 +12,8 @@ enum class ResultMode { NONE, LAST, ALL, FAILEXIT }
 enum class OS { LINUX }
 
 
+private const val RESULT_PREFIX = ">  "
+
 /**
  * This main class offers methods to execute shell commands.
  * The commands are executed locally, remotely (via ssh) or in a docker container
@@ -285,10 +287,10 @@ open class Prov protected constructor(
         // post-handling
         val returnValue =
             if (mode == ResultMode.LAST) {
-                if (internalResultIsLeaf(resultIndex) || taskName == "cmd" || taskName?.replace(" (requireLast)", "") == "repeatTaskUntilSuccess") {  // todo: improve and remove replace function
+                if (internalResultIsLeaf(resultIndex) || taskName == "cmd" || taskName?.replace(" (requireLast)", "") == "repeatTaskUntilSuccess") {
                     // for a leaf (task with mo subtask) or tasks "cmd" resp. "repeatUntilTrue" provide also out and err of original results
                     // because results of cmd and leafs are not included in the reporting
-                    // and the caller of repeatUntilTrue might need the complete result (incl. out and err) and not only success value
+                    // and the caller of repeatUntilTrue might need to see the complete result (incl. out and err) and not only success value
                     res.copy()
                 } else {
                     // just pass success value, no other data of the original result
@@ -350,16 +352,7 @@ open class Prov protected constructor(
     private val ANSI_RESET = "\u001B[0m"
     private val ANSI_BRIGHT_RED = "\u001B[91m"
     private val ANSI_BRIGHT_GREEN = "\u001B[92m"
-    // uncomment if needed
-    //    val ANSI_BLACK = "\u001B[30m"
-    //    val ANSI_RED = "\u001B[31m"
-    //    val ANSI_GREEN = "\u001B[32m"
-    //    val ANSI_YELLOW = "\u001B[33m"
-    //    val ANSI_BLUE = "\u001B[34m"
-    //    val ANSI_PURPLE = "\u001B[35m"
-    //    val ANSI_CYAN = "\u001B[36m"
-    //    val ANSI_WHITE = "\u001B[37m"
-    val ANSI_GRAY = "\u001B[90m"
+    private val ANSI_GRAY = "\u001B[90m"
 
     private fun printResults() {
         println(
@@ -367,26 +360,20 @@ open class Prov protected constructor(
                     "============================================== "
         )
         for (result in internalResults) {
-            val outputLine = result.toString().escapeControlChars()
-                .replaceFirst("Success --", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET + " --")
-                .replaceFirst("FAILED --", ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET + " --")
-            println(outputLine)
+            println(result.toString().escapeControlChars().formattedAsResultLine())
         }
         if (internalResults.size > 1) {
             println("----------------------------------------------------------------------------------------------------- ")
-            println(
-                "Overall " + internalResults[0].toString().take(10)
-                    .replace("Success", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET)
-                    .replace("FAILED", ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET)
-            )
+            println("Overall " + internalResults[0].toString().take(10).formattedAsResultLine())
         }
         println("============================================ SUMMARY END ============================================ " + newline())
     }
 
-    private fun String.formattedAsResultLine(): String = this
-        .replace("Success", ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET)
-        .replace("FAILED", ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET)
-        .replace("executing...", ANSI_GRAY + "executing..." + ANSI_RESET)
+    private fun String.formattedAsResultLine(): String =
+        this
+            .replaceFirst("${RESULT_PREFIX}Success", RESULT_PREFIX + ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET)
+            .replaceFirst("${RESULT_PREFIX}FAILED", RESULT_PREFIX + ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET)
+            .replace("${RESULT_PREFIX}executing...", RESULT_PREFIX + ANSI_GRAY + "executing..." + ANSI_RESET)
 
 
     private fun initProgress() {
@@ -435,6 +422,6 @@ internal data class ResultLine(val level: Int, val method: String?, var provResu
     }
 
     private fun prefix(level: Int): String {
-        return "---".repeat(level) + ">  "
+        return "---".repeat(level) + RESULT_PREFIX
     }
 }
