@@ -41,7 +41,7 @@ internal class EntryKtTest {
     @Test
     fun test_without_method_argument() {
         // when
-        org.domaindrivenarchitecture.provs.framework.core.entry.main("org.domaindrivenarchitecture.provs.core.entry.EntryTestKt")
+        org.domaindrivenarchitecture.provs.framework.core.entry.main("org.domaindrivenarchitecture.provs.framework.core.entry.EntryTestKt")
 
         // then
         assertEquals("main is fun \n", outContent.toString())
@@ -51,7 +51,7 @@ internal class EntryKtTest {
     fun test_method_main_without_args() {
         // when
         org.domaindrivenarchitecture.provs.framework.core.entry.main(
-            "org.domaindrivenarchitecture.provs.core.entry.EntryTestKt",
+            "org.domaindrivenarchitecture.provs.framework.core.entry.EntryTestKt",
             "main"
         )
 
@@ -63,7 +63,7 @@ internal class EntryKtTest {
     fun test_named_method_without_args() {
         // when
         org.domaindrivenarchitecture.provs.framework.core.entry.main(
-            "org.domaindrivenarchitecture.provs.core.entry.EntryTestKt",
+            "org.domaindrivenarchitecture.provs.framework.core.entry.EntryTestKt",
             "testfun"
         )
 
@@ -75,7 +75,7 @@ internal class EntryKtTest {
     fun test_method_main_with_args() {
         // when
         org.domaindrivenarchitecture.provs.framework.core.entry.main(
-            "org.domaindrivenarchitecture.provs.core.entry.EntryTestKt",
+            "org.domaindrivenarchitecture.provs.framework.core.entry.EntryTestKt",
             "main",
             "arg1",
             "arg2"
@@ -89,7 +89,7 @@ internal class EntryKtTest {
     fun test_named_method_with_args() {
         // when
         org.domaindrivenarchitecture.provs.framework.core.entry.main(
-            "org.domaindrivenarchitecture.provs.core.entry.EntryTestKt",
+            "org.domaindrivenarchitecture.provs.framework.core.entry.EntryTestKt",
             "testfun",
             "arg1",
             "arg2"
