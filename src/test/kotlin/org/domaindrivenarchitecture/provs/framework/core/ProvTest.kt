@@ -426,6 +426,7 @@ internal class ProvTest {
     }
 
     @Test
+    @ContainerTest
     @NonCi
     fun inContainer_locally() {
         // given
