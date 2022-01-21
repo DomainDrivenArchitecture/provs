@@ -5,6 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.echoCommandForText
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sInfra
+import org.domaindrivenarchitecture.provs.server.infrastructure.provisionNetwork
 
 
 /**
@@ -13,5 +14,6 @@ import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sInfr
  * If tlsHost is specified, then tls (if configured) also applies to the specified host.
  */
 fun Prov.provisionK3s() = task {
+    provisionNetwork()
     provisionK3sInfra()
 }

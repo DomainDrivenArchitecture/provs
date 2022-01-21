@@ -10,6 +10,7 @@ package org.domaindrivenarchitecture.provs.framework.core.entry
  * @param args[1] (optional) static method of the class with a vararg parameter of type String; if not specified, the "main" method is used
  * @param args[2...] (optional) String parameters that are passed to the method; can be only used if method name (args[1]) is provided
  */
+// TODO: jem - 2022.01.21 - do we need this way or can this be removed?
 fun main(vararg args: String) {
 
     if (args.isNotEmpty()) {

@@ -1,0 +1,9 @@
+network:
+  version: 2
+  ethernets:
+    lo:
+      renderer: networkd
+      match:
+        name: lo
+      addresses:
+        - 192.168.5.1/32
