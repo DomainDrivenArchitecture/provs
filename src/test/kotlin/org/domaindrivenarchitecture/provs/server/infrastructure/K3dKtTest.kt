@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.server.domain
+package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.docker
 import org.domaindrivenarchitecture.provs.framework.core.docker.containerExec
@@ -7,6 +7,8 @@ import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.server.apple.appleConfig
 import org.domaindrivenarchitecture.provs.server.apple.checkAppleService
+import org.domaindrivenarchitecture.provs.server.domain.applyK8sConfig
+import org.domaindrivenarchitecture.provs.server.domain.installK3sAsContainers
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.junit.jupiter.api.Assertions.assertTrue
