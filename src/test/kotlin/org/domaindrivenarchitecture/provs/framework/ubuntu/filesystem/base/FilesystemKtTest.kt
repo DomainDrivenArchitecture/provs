@@ -119,6 +119,7 @@ internal class FilesystemKtTest {
 
 
     @Test
+    @ContainerTest
     fun userHome() {
         // given
         val prov = defaultTestContainer()

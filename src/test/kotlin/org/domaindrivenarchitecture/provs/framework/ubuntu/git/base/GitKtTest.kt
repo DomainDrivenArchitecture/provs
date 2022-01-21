@@ -1,12 +1,9 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.git.base
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.git.base.gitClone
-import org.domaindrivenarchitecture.provs.framework.ubuntu.git.base.trustGithub
-import org.domaindrivenarchitecture.provs.framework.ubuntu.git.base.trustGitlab
-import org.domaindrivenarchitecture.provs.test.defaultTestContainer
-import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.isHostKnown
+import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
