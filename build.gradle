@@ -18,7 +18,7 @@ apply plugin: 'kotlinx-serialization'
 
 
 group = 'org.domaindrivenarchitecture.provs'
-version = '0.8.37-SNAPSHOT'
+version = '0.9.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -99,10 +99,10 @@ task fatJarLatest(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Fatjar of provs',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliWorkplaceKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.desktop.application.CliWorkplaceKt'
     }
     with jar
-    archiveFileName = 'provs.jar'
+    archiveFileName = 'provs-desktop.jar'
 }
 
 task fatJarK3s(type: Jar) {
@@ -116,13 +116,13 @@ task fatJarK3s(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Fatjar of provs k3s',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.extensions.server_software.k3s.application.CliKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.server.application.ApplicationKt'
     }
     with jar
     archiveFileName = 'provs-server.jar'
 }
 
-task uberjarWorkplace(type: Jar) {
+task uberjarDesktop(type: Jar) {
 
     from sourceSets.main.output
 
@@ -137,9 +137,29 @@ task uberjarWorkplace(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Uberjar of provs',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.workplace.application.CliKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.desktop.application.CliKt'
     }
-    archiveFileName = 'provs-workplace.jar'
+    archiveFileName = 'provs-desktop.jar'
+}
+
+task uberjarServer(type: Jar) {
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    } {
+        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
+
+    manifest {
+        attributes 'Implementation-Title': 'Uberjar of provs',
+                'Implementation-Version': project.version,
+                'Main-Class': 'org.domaindrivenarchitecture.provs.server.application.ApplicationKt'
+    }
+    archiveFileName = 'provs-server.jar'
 }
 
 task uberjarEntry(type: Jar) {
