@@ -21,6 +21,7 @@ import org.domaindrivenarchitecture.provs.desktop.infrastructure.configureGopass
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.downloadGopassBridge
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.installGopass
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.installGopassBridgeJsonApi
+import org.junit.jupiter.api.Disabled
 
 
 internal class GopassBridgeKtTest {
@@ -77,6 +78,7 @@ internal class GopassBridgeKtTest {
     @ContainerTest
     @Test
     @NonCi
+    @Disabled // long running test (> 1 min); if needed enable test and run manually
     fun test_install_GopassBridgeJsonApi_with_incompatible_gopass_jsonapi_version_installed() {
         // given
         val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
@@ -111,6 +113,7 @@ internal class GopassBridgeKtTest {
     @ContainerTest
     @Test
     @NonCi
+    @Disabled // long running test (> 1 min); if needed enable test and run manually
     fun test_install_GopassBridgeJsonApi_with_incompatible_gopass_version_installed() {
         // given
         val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
