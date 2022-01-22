@@ -1,9 +1,6 @@
 package org.domaindrivenarchitecture.provs.server.application
 
-import kotlinx.cli.ArgType
 import kotlinx.cli.Subcommand
-import kotlinx.cli.default
-import org.domaindrivenarchitecture.provs.desktop.application.WorkplaceCliCommand
 import org.domaindrivenarchitecture.provs.framework.core.cli.CliTargetParser
 import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
@@ -13,7 +10,7 @@ class CliArgumentsParser(
     name: String
     ) : CliTargetParser(name) {
 
-    val modules: List<ServerSubcommand> = listOf(K3s(), K3d())
+    private val modules: List<ServerSubcommand> = listOf(K3s(), K3d())
     init {
         subcommands(*modules.toTypedArray())
     }

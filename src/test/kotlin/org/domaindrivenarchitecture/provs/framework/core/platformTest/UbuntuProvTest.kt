@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 internal class UbuntuProvTest {
 
     private fun Prov.ping(url: String) = def {
-        xec("ping", "-c", "4", url)
+        xec("ping", "-c", "2", url)
     }
 
     private fun Prov.outerPing() = def {
@@ -87,15 +87,13 @@ internal class UbuntuProvTest {
 
         // when
         val res1 = a.xec("/usr/bin/printf", "hi")
-        val res2 = a.xec("/bin/ping", "-c", "2", "gitlab.com")
-        val res3 = a.xec("/bin/bash", "-c", "echo echoed")
+        val res2 = a.xec("/bin/bash", "-c", "echo echoed")
 
         // then
         assert(res1.success)
         assert(res1.out?.trim() == "hi")
         assert(res2.success)
-        assert(res3.success)
-        assert(res3.out?.trim() == "echoed")
+        assert(res2.out?.trim() == "echoed")
     }
 
     @Test
