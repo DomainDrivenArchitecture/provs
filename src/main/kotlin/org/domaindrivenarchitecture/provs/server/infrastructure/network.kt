@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFileFromResource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFileFromResourceTemplate
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
 
 val loopbackFile = "/etc/netplan/99-loopback.yaml"
@@ -14,10 +14,11 @@ fun Prov.testNetworkExists(): Boolean {
 
 fun Prov.provisionNetwork() = task {
     if(!testNetworkExists()) {
-        createFileFromResource(
+        createFileFromResourceTemplate(
             loopbackFile,
             "99-loopback.yaml.template",
             resourcePath,
+            mapOf("ip" to "192.168.5.1/32"),
             "644",
             sudo = true
         )

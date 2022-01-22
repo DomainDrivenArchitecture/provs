@@ -6,4 +6,4 @@ network:
       match:
         name: lo
       addresses:
-        - 192.168.5.1/32
+        - $ip

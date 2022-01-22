@@ -52,7 +52,15 @@ fun String.escapeBacktick(): String = replace("`", "\\`")
 fun String.escapeDollar(): String = replace("$", "\\$")
 fun String.escapeSingleQuoteForShell(): String = replace("'", "'\"'\"'")
 fun String.escapeProcentForPrintf(): String = replace("%", "%%")
-fun String.endingWithFileSeparator(): String = if (length > 0 && (last() != fileSeparatorChar())) this + fileSeparator() else this
+fun String.endingWithFileSeparator(): String = if (isNotEmpty() && (last() != fileSeparatorChar())) this + fileSeparator() else this
+
+
+// --------------  Functions for system related properties    -----------------
+fun fileSeparator(): String = File.separator
+fun fileSeparatorChar(): Char = File.separatorChar
+fun newline(): String = System.getProperty("line.separator")
+fun hostUserHome(): String = System.getProperty("user.home") + fileSeparator()
+
 
 /**
  * Put String between double quotes and escapes chars that need to be escaped (by backslash) for use in Unix Shell String
@@ -82,12 +90,19 @@ internal fun echoCommandForTextWithNewlinesReplaced(text: String): String {
 }
 
 
-fun fileSeparator(): String = File.separator
-fun fileSeparatorChar(): Char = File.separatorChar
-fun newline(): String = System.getProperty("line.separator")
-fun hostUserHome(): String = System.getProperty("user.home") + fileSeparator()
+/**
+ * Returns content of a local file as String (from the filesystem on the machine where provs has been initiated)
+ */
+internal fun getLocalFileContent(fullyQualifiedLocalFileName: String, sudo: Boolean = false): String {
+    val content = local().fileContent(fullyQualifiedLocalFileName, sudo)
+    check(content != null, { "Could not retrieve content from file: $fullyQualifiedLocalFileName" })
+    return content
+}
 
 
+/**
+ * Returns content of a resource file as String
+ */
 fun getResourceAsText(path: String): String {
     val resource = Thread.currentThread().contextClassLoader.getResource(path)
     requireNotNull(resource) { "Resource $path not found" }
@@ -95,12 +110,54 @@ fun getResourceAsText(path: String): String {
 }
 
 
-internal fun getLocalFileContent(fullyQualifiedLocalFileName: String, sudo: Boolean = false): String {
-    val content = local().fileContent(fullyQualifiedLocalFileName, sudo)
-    check(content != null, { "Could not retrieve content from file: $fullyQualifiedLocalFileName" })
-    return content
+/**
+ * Returns content of a resource file as String with the variables resolved
+ */
+fun getResourceResolved(path: String, values: Map<String, String>): String {
+    val resource = Thread.currentThread().contextClassLoader.getResource(path)
+    requireNotNull(resource) { "Resource $path not found" }
+    return resource.readText().resolve(values)
 }
 
+
+/**
+ * Returns a String in which placeholders (e.g. $var or ${var}) are replaced by the specified values.
+ * This function can be used for resolving templates at RUNTIME (e.g. for templates read from files) as
+ * for compile time this functionality is already provided by the compiler out-of-the-box, of course.
+ * For a usage example see the corresponding test.
+ */
+fun String.resolve(
+    values: Map<String, String>
+): String {
+    var text = this
+
+    // replace all simple variable patterns (i.e. without curly braces)
+    val matcherSimple = Regex("\\$([a-zA-Z_][a-zA-Z_0-9]*)")
+    var match = matcherSimple.find(text)
+    while (match != null) {
+        val variableName = match.groupValues.get(1)
+        val newText = values.get(variableName)
+        require(newText != null, { "No value found for: " + variableName })
+        text = text.replace("\$$variableName", newText)
+        match = matcherSimple.find(text)
+    }
+
+    // replace all variables within curly braces
+    val matcherWithBraces = Regex("\\$\\{([a-zA-Z_][a-zA-Z_0-9]*)}")
+    match = matcherWithBraces.find(text)
+    while (match != null) {
+        val variableName = match.groupValues.get(1)
+        val newText = values.get(variableName)
+        require(newText != null, { "No value found for: " + variableName })
+        text = text.replace("\${$variableName}", newText)
+        match = matcherWithBraces.find(text)
+    }
+
+    // replace escaped dollars
+    text = text.replace("\${'$'}", "\$")
+
+    return text
+}
 
 /**
  * Returns default local Prov instance.
@@ -126,7 +183,7 @@ fun remote(host: String, remoteUser: String, password: Secret? = null, platform:
 
 
 /**
- * Returns Prov instance which eexcutes its tasks in a local docker container with name containerName.
+ * Returns Prov instance which executes its tasks in a local docker container with name containerName.
  * If a container with the given name is running already, it'll be reused if parameter useExistingContainer is set to true.
  * If a container is reused, it is not checked if it has the correct, specified image.
  * Determines automatically if sudo is required if sudo is null, otherwise the specified sudo is used

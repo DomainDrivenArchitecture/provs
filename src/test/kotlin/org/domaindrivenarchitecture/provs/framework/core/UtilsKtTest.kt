@@ -66,4 +66,60 @@ internal class UtilsKtTest {
     fun test_remote() {
         assertTrue(remote("127.0.0.1", "user").cmd("echo sth").success)
     }
+
+    @Test
+    fun test_resolveTemplate_successfully() {
+        // given
+        val DOUBLE_ESCAPED_DOLLAR = "\${'\${'\$'}'}"
+        val input = """
+            line1
+            line2: ${'$'}var1
+              line3
+                line4=${'$'}var2
+              line5 with 3 dollars ${'$'}${'$'}${'$'}
+              line6${'$'}{var3}withpostfix
+              line7 with double escaped dollars ${DOUBLE_ESCAPED_DOLLAR}
+                """.trimIndent()
+
+        // when
+        val res = input.resolve(values = mapOf("var1" to "VALUE1", "var2" to "VALUE2", "var3" to "VALUE3"))
+
+        // then
+        val ESCAPED_DOLLAR = "\${'\$'}"
+        val RESULT = """
+            line1
+            line2: VALUE1
+              line3
+                line4=VALUE2
+              line5 with 3 dollars ${'$'}${'$'}${'$'}
+              line6VALUE3withpostfix
+              line7 with double escaped dollars $ESCAPED_DOLLAR
+                """.trimIndent()
+
+        assertEquals(RESULT, res)
+    }
+
+
+    @Test
+    fun test_resolveTemplate_with_invalid_data_throws_exception() {
+        // given
+        val DOUBLE_ESCAPED_DOLLAR = "\${'\${'\$'}'}"
+        val input = """
+            line1
+            line2: ${'$'}var1
+              line3
+                line4=${'$'}var2
+              line5 with 3 dollars ${'$'}${'$'}${'$'}
+              line6${'$'}{var3}withpostfix
+              line7 with double escaped dollars ${DOUBLE_ESCAPED_DOLLAR}
+                """.trimIndent()
+
+        // when
+        val e = assertThrows(IllegalArgumentException::class.java) {
+            input.resolve(values = mapOf("var1" to "VALUE1", "var2" to "VALUE2", "wrongkey" to "VALUE3"))
+        }
+
+        // then
+        assertEquals(e.message, "No value found for: var3")
+    }
 }

@@ -6,11 +6,17 @@ import org.domaindrivenarchitecture.provs.framework.core.getLocalFileContent
 import java.io.File
 
 
+/**
+ * Returns true if the given file exists.
+ */
 fun Prov.fileExists(file: String, sudo: Boolean = false): Boolean {
     return cmdNoEval((if (sudo) "sudo " else "") + "test -e " + file).success
 }
 
 
+/**
+ * Creates a file with its content retrieved from a local resource file
+ */
 fun Prov.createFileFromResource(
     fullyQualifiedFilename: String,
     resourceFilename: String,
@@ -21,6 +27,26 @@ fun Prov.createFileFromResource(
     createFile(
         fullyQualifiedFilename,
         getResourceAsText(resourcePath.endingWithFileSeparator() + resourceFilename),
+        posixFilePermission,
+        sudo
+    )
+}
+
+
+/**
+ * Creates a file with its content retrieved of a local resource file in which placeholders are substituted with the specified values.
+ */
+fun Prov.createFileFromResourceTemplate(
+    fullyQualifiedFilename: String,
+    resourceFilename: String,
+    resourcePath: String = "",
+    values: Map<String, String>,
+    posixFilePermission: String? = null,
+    sudo: Boolean = false
+): ProvResult = def {
+    createFile(
+        fullyQualifiedFilename,
+        getResourceAsText(resourcePath.endingWithFileSeparator() + resourceFilename).resolve(values),
         posixFilePermission,
         sudo
     )
@@ -46,6 +72,9 @@ fun Prov.copyFileFromLocal(
 }
 
 
+/**
+ * Creates a file with the specified data. If text is null, an empty file is created
+ */
 fun Prov.createFile(
     fullyQualifiedFilename: String,
     text: String?,
@@ -96,7 +125,7 @@ fun Prov.deleteFile(file: String, path: String? = null, sudo: Boolean = false): 
 
 
 fun Prov.fileContainsText(file: String, content: String, sudo: Boolean = false): Boolean {
-    return cmdNoEval((if (sudo) "sudo " else "") + "grep '${content.escapeSingleQuote()}' $file").success
+    return cmdNoEval((if (sudo) "sudo " else "") + "grep -- '${content.escapeSingleQuote()}' $file").success
 }
 
 

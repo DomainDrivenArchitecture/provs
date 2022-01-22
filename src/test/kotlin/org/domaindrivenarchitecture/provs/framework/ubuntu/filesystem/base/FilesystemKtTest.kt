@@ -207,4 +207,23 @@ internal class FilesystemKtTest {
         val content = defaultTestContainer().fileContent( "copiedFileFromLocal")
         assertEquals("resource text\n", content)
     }
+
+    @Test
+    @ContainerTest
+    fun test_fileContainsText() {
+        // given
+        defaultTestContainer().createFile("testfilecontainingtext", "abc\n- def\nefg")
+
+        // when
+        val res = defaultTestContainer().fileContainsText("testfilecontainingtext", "abc")
+        val res2 = defaultTestContainer().fileContainsText("testfilecontainingtext", "de")
+        val res3 = defaultTestContainer().fileContainsText("testfilecontainingtext", "- def")
+        val res4 = defaultTestContainer().fileContainsText("testfilecontainingtext", "xyy")
+
+        // then
+        assertTrue(res)
+        assertTrue(res2)
+        assertTrue(res3)
+        assertFalse(res4)
+    }
 }
