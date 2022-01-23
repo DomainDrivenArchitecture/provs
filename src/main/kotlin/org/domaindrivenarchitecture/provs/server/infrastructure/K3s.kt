@@ -13,10 +13,10 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 fun Prov.provisionK3sInfra(docker: Boolean = false, tlsHost: String? = null, options: String? = null) = task {
     val tlsSanOption = tlsHost?.let { "--tls-san ${it}" } ?: ""
 
-    val k3sOptions = if (tlsHost == null && options == null)
+    val k3sAllOptions = if (tlsHost == null && options == null)
         ""
     else
-        "INSTALL_K3S_EXEC=\"$options $tlsSanOption\""
+        "INSTALL_K3S_EXEC=\"$tlsSanOption ${options ?: ""}\""
 
     aptInstall("curl")
     if (!chk("k3s -version")) {
@@ -24,10 +24,10 @@ fun Prov.provisionK3sInfra(docker: Boolean = false, tlsHost: String? = null, opt
             // might not work if docker already installed
             sh("""
                 curl https://releases.rancher.com/install-docker/19.03.sh | sh
-                curl -sfL https://get.k3s.io | $k3sOptions sh -s - --docker
+                curl -sfL https://get.k3s.io | $k3sAllOptions sh -s - --docker
             """.trimIndent())
         } else {
-            cmd("curl -sfL https://get.k3s.io | $k3sOptions sh -")
+            cmd("curl -sfL https://get.k3s.io | $k3sAllOptions sh -")
         }
     } else {
         ProvResult(true)
@@ -35,6 +35,7 @@ fun Prov.provisionK3sInfra(docker: Boolean = false, tlsHost: String? = null, opt
 }
 
 
+@Suppress("unused")
 fun Prov.uninstallK3sServer() = task {
     cmd("sudo /usr/local/bin/k3s-uninstall.sh")
 }
