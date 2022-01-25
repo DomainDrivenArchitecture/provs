@@ -69,6 +69,7 @@ fun hostUserHome(): String = System.getProperty("user.home") + fileSeparator()
 fun String.escapeAndEncloseByDoubleQuoteForShell(): String {
     return "\"" + this.escapeForShell() + "\""
 }
+
 fun String.escapeForShell(): String {
     // see https://www.shellscript.sh/escape.html
     return this.escapeBackslash().escapeBacktick().escapeDoubleQuote().escapeDollar()
@@ -123,40 +124,33 @@ fun getResourceResolved(path: String, values: Map<String, String>): String {
 /**
  * Returns a String in which placeholders (e.g. $var or ${var}) are replaced by the specified values.
  * This function can be used for resolving templates at RUNTIME (e.g. for templates read from files) as
- * for compile time this functionality is already provided by the compiler out-of-the-box, of course.
+ * for compile time this functionality is already provided by the compiler out-of-the-box.
+ *
  * For a usage example see the corresponding test.
  */
-fun String.resolve(
-    values: Map<String, String>
-): String {
-    var text = this
+fun String.resolve(values: Map<String, String>): String {
 
-    // replace all simple variable patterns (i.e. without curly braces)
-    val matcherSimple = Regex("\\$([a-zA-Z_][a-zA-Z_0-9]*)")
-    var match = matcherSimple.find(text)
-    while (match != null) {
-        val variableName = match.groupValues.get(1)
-        val newText = values.get(variableName)
-        require(newText != null, { "No value found for: " + variableName })
-        text = text.replace("\$$variableName", newText)
-        match = matcherSimple.find(text)
+    val result = StringBuilder()
+
+    val matcherSimple = "\\$([a-zA-Z_][a-zA-Z_0-9]*)"           // simple placeholder e.g. $var
+    val matcherWithBraces = "\\$\\{([a-zA-Z_][a-zA-Z_0-9]*)}"   // placeholder within braces e.g. ${var}
+
+    // match a placeholder (like $var or ${var}) or ${'$'} (escaped dollar)
+    val allMatches = Regex("$matcherSimple|$matcherWithBraces|\\\$\\{'(\\\$)'}").findAll(this)
+
+    var position = 0
+    allMatches.forEach {
+        val range = it.range
+        val placeholder = this.substring(range)
+        val variableName = it.groups.filterNotNull()[1].value
+        val newText =
+            if ("\${'\$'}" == placeholder) "$"
+            else values[variableName] ?: throw IllegalArgumentException("Could not resolve placeholder $placeholder")
+        result.append(this.substring(position, range.start)).append(newText)
+        position = range.last + 1
     }
-
-    // replace all variables within curly braces
-    val matcherWithBraces = Regex("\\$\\{([a-zA-Z_][a-zA-Z_0-9]*)}")
-    match = matcherWithBraces.find(text)
-    while (match != null) {
-        val variableName = match.groupValues.get(1)
-        val newText = values.get(variableName)
-        require(newText != null, { "No value found for: " + variableName })
-        text = text.replace("\${$variableName}", newText)
-        match = matcherWithBraces.find(text)
-    }
-
-    // replace escaped dollars
-    text = text.replace("\${'$'}", "\$")
-
-    return text
+    result.append(this.substring(position))
+    return result.toString()
 }
 
 /**

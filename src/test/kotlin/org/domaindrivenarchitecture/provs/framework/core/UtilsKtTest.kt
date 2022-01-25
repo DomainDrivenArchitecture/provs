@@ -120,6 +120,6 @@ internal class UtilsKtTest {
         }
 
         // then
-        assertEquals(e.message, "No value found for: var3")
+        assertEquals(e.message, "Could not resolve placeholder \${var3}")
     }
 }
