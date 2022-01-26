@@ -6,4 +6,5 @@ network:
       match:
         name: lo
       addresses:
-        - $ip
+        - ${loopback_ipv4}
+        - ${loopback_ipv6}

@@ -18,7 +18,7 @@ fun Prov.provisionNetwork() = task {
             loopbackFile,
             "99-loopback.yaml.template",
             resourcePath,
-            mapOf("ip" to "192.168.5.1/32"),
+            mapOf("loopback_ipv4" to "192.168.5.1/32", "loopback_ipv6" to "fc00::5:1/128"),
             "644",
             sudo = true
         )

@@ -1,0 +1,14 @@
+etcd-disable-snapshots: true
+default-local-storage-path: /var
+flannel-backend: none
+disable-network-policy: true
+cluster-cidr:
+  - 10.42.0.0/16
+  - fd42::/48
+service-cidr:
+  - 10.43.0.0/16
+  - fd43::/112
+node-ip:
+  - ${node_ipv4}
+  - ${node_ipv6}
+bind-address: ${loopback_ipv4}
