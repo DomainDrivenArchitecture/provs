@@ -374,6 +374,7 @@ open class Prov protected constructor(
             .replaceFirst("${RESULT_PREFIX}Success", RESULT_PREFIX + ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET)
             .replaceFirst("${RESULT_PREFIX}FAILED", RESULT_PREFIX + ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET)
             .replace("${RESULT_PREFIX}executing...", RESULT_PREFIX + ANSI_GRAY + "executing..." + ANSI_RESET)
+            .take(400)
 
 
     private fun initProgress() {
