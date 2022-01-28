@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.repeatTaskUntilSuccess
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 
 private const val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
@@ -132,7 +133,10 @@ fun Prov.provisionK3sCertManager(endpoint: CertManagerEndPoint) = task {
         sudo = true
     )
     cmd("kubectl apply -f $certManagerDeployment", sudo = true)
-    cmd("kubectl apply -f $certManagerIssuer", sudo = true)
+
+    repeatTaskUntilSuccess(10, 10) {
+        cmd("kubectl apply -f $certManagerIssuer", sudo = true)
+    }
 }
 
 /*

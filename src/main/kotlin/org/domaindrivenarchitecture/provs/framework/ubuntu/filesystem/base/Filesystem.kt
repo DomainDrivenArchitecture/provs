@@ -79,23 +79,44 @@ fun Prov.createFile(
     fullyQualifiedFilename: String,
     text: String?,
     posixFilePermission: String? = null,
-    sudo: Boolean = false
-): ProvResult =
-    def {
-        val withSudo = if (sudo) "sudo " else ""
-        posixFilePermission?.let {
-            ensureValidPosixFilePermission(posixFilePermission)
-            cmd(withSudo + "install -m $posixFilePermission /dev/null $fullyQualifiedFilename")
-        }
-        if (text != null) {
+    sudo: Boolean = false,
+    overwriteIfExisting: Boolean = false
+): ProvResult = task {
+    val maxBlockSize = 100000
+
+    if (!overwriteIfExisting && fileExists(fullyQualifiedFilename, sudo)) {
+        return@task ProvResult(true, "File $fullyQualifiedFilename already existing.")
+    }
+    val withSudo = if (sudo) "sudo " else ""
+
+    posixFilePermission?.let {
+        ensureValidPosixFilePermission(posixFilePermission)
+    }
+    val modeOption = posixFilePermission?.let { "-m $it"} ?: ""
+
+    // create empty file resp. clear file
+    cmd(withSudo + "install $modeOption /dev/null $fullyQualifiedFilename")
+
+    if (text != null) {
+        if (text.length <= maxBlockSize) {
             cmd(
                 "printf '%s' " + text
                     .escapeAndEncloseByDoubleQuoteForShell() + " | ${if (sudo) "sudo" else ""} tee $fullyQualifiedFilename > /dev/null"
             )
         } else {
-            cmd(withSudo + "touch $fullyQualifiedFilename")
+            val chunkedTest = text.chunked(maxBlockSize)
+            for (chunk in chunkedTest) {
+                cmd(
+                    "printf '%s' " + chunk
+                        .escapeAndEncloseByDoubleQuoteForShell() + " | ${if (sudo) "sudo" else ""} tee -a $fullyQualifiedFilename > /dev/null"
+                )
+            }
+            ProvResult(true) // dummy
         }
+    } else {
+        cmd(withSudo + "touch $fullyQualifiedFilename")
     }
+}
 
 
 fun Prov.createSecretFile(
