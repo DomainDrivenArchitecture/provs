@@ -4,11 +4,11 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 
-// TODO: jem - 2022.01.24 - these are global vars without scope / ns !
-val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
-val k3sCalicoFile = "/var/lib/rancher/k3s/server/manifests/calico.yaml"
-val k3sInstallFile = "/usr/local/bin/k3s-install.sh"
-val k3sResourcePath = "org/domaindrivenarchitecture/provs/infrastructure/k3s/"
+private const val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
+private const val k3sCalicoFile = "/var/lib/rancher/k3s/server/manifests/calico.yaml"
+private const val k3sAppleFile = "/var/lib/rancher/k3s/server/manifests/apple.yaml"
+private const val k3sInstallFile = "/usr/local/bin/k3s-install.sh"
+private const val k3sResourcePath = "org/domaindrivenarchitecture/provs/infrastructure/k3s/"
 
 fun Prov.testConfigExists(): Boolean {
     return fileExists(k3sConfigFile)
@@ -26,7 +26,8 @@ fun Prov.deprovisionK3sInfra() = task {
  * If tlsHost is specified, then tls (if configured) also applies to the specified host.
  */
 fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: String, loopbackIpv6: String,
-                           nodeIpv6: String? = null, docker: Boolean = false, tlsHost: String? = null) = task {
+                           nodeIpv6: String? = null, docker: Boolean = false, installApple: Boolean = false,
+                           tlsHost: String? = null) = task {
     val isDualStack = nodeIpv6?.isNotEmpty() ?: false
     if (testConfigExists()) {
         deprovisionK3sInfra()
@@ -47,7 +48,6 @@ fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: Stri
                 "644",
                 sudo = true
             )
-
              */
         } else {
             k3sConfigFileName += ".ipv4"
@@ -67,8 +67,15 @@ fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: Stri
             "755",
             sudo = true
         )
-        // TODO: doeas not work yet cmd("k3s-install.sh")
-
+        // TODO: does not work yet cmd("k3s-install.sh")
+        cmd("sh /root/k3s-install.sh")
+        createFileFromResource(
+            k3sAppleFile,
+            "apple.yaml",
+            k3sResourcePath,
+            "644",
+            sudo = true
+        )
         /*
 
         org/domaindrivenarchitecture/provs/infrastructure/k3s/config.yaml.template.template

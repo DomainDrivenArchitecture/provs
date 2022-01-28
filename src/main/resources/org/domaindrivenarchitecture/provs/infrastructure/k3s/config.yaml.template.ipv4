@@ -1,6 +1,6 @@
-etcd-disable-snapshots: true
 default-local-storage-path: /var
 tls-san: ${tls_name}
+disable-network-policy: true
 cluster-cidr:
   - 10.42.0.0/16
 service-cidr:
@@ -8,3 +8,4 @@ service-cidr:
 node-ip:
   - ${node_ipv4}
 bind-address: ${loopback_ipv4}
+advertise-address: ${loopback_ipv4}
