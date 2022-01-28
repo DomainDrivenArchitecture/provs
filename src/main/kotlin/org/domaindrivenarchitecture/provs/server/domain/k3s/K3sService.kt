@@ -1,9 +1,8 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.core.echoCommandForText
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.server.infrastructure.CertManagerEndPoint
+import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sCertManager
 import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sInfra
 import org.domaindrivenarchitecture.provs.server.infrastructure.provisionNetwork
 
@@ -22,4 +21,5 @@ fun Prov.provisionK3s() = task {
     provisionNetwork(loopbackIpv4 = loopbackIpv4, loopbackIpv6 = loopbackIpv6)
     provisionK3sInfra(tlsName = "statistics.prod.meissa-gmbh.de", nodeIpv4 = nodeIpv4, nodeIpv6 = nodeIpv6,
         loopbackIpv4 = loopbackIpv4, loopbackIpv6 = loopbackIpv6, installApple = true)
+    provisionK3sCertManager(CertManagerEndPoint.STAGING)
 }

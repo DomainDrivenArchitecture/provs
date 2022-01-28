@@ -7,8 +7,15 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 private const val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
 private const val k3sCalicoFile = "/var/lib/rancher/k3s/server/manifests/calico.yaml"
 private const val k3sAppleFile = "/var/lib/rancher/k3s/server/manifests/apple.yaml"
+private const val certManagerDeployment = "/etc/rancher/k3s/certmanager.yaml"
+private const val certManagerIssuer = "/etc/rancher/k3s/issuer.yaml"
 private const val k3sInstallFile = "/usr/local/bin/k3s-install.sh"
 private const val k3sResourcePath = "org/domaindrivenarchitecture/provs/infrastructure/k3s/"
+
+enum class CertManagerEndPoint {
+    STAGING, PROD
+}
+
 
 fun Prov.testConfigExists(): Boolean {
     return fileExists(k3sConfigFile)
@@ -105,6 +112,27 @@ fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: Stri
     } else {
         ProvResult(true)
     }
+}
+
+
+fun Prov.provisionK3sCertManager(endpoint: CertManagerEndPoint) = task {
+    createFileFromResource(
+        certManagerDeployment,
+        "cert-manager.yaml",
+        k3sResourcePath,
+        "644",
+        sudo = true
+    )
+    createFileFromResourceTemplate(
+        certManagerIssuer,
+        "le-issuer.template.yaml",
+        k3sResourcePath,
+        mapOf("endpoint" to endpoint.name.lowercase()),
+        "644",
+        sudo = true
+    )
+    cmd("kubectl apply -f $certManagerDeployment", sudo = true)
+    cmd("kubectl apply -f $certManagerIssuer", sudo = true)
 }
 
 /*
