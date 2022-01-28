@@ -2,12 +2,56 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.domaindrivenarchitecture.provs.test.testLocal
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.io.File
 
 
 internal class FilesystemKtTest {
+
+    val testtext = "tabs \t\t\t triple quotes \"\"\"" + """
+    \\ \\\ \\\\ \\\\\
+    '\t%s \\ " ""
+    ' "${'$'}arg")"
+    '%s' "${'$'}@" | 's/\([][!#${'$'}%&()*;<=>?\_`{|}]\)/\\\1/g;'
+    "${'$'}@" | sed -e 's/"/\\"/g'
+    apostrophe's ' " \" \' and special chars ${'$'} {} ${'$'}\{something}!§${'$'}%[]\\ äöüß ${'$'}\notakotlinvariable ${'$'}notakotlinvariable and tabs 	 and \t are should be handled correctly
+    """
+
+    @Test
+    fun test_createFile_locally() {
+        // given
+        val prov = testLocal()
+
+        // when
+        val filename = "tmp/testfile9"
+        val res2 = prov.createFile(filename, testtext)
+        val textFromFile = prov.fileContent(filename)
+        prov.deleteFile(filename)
+
+        // then
+        assertTrue(res2.success)
+        assertEquals(testtext, textFromFile)
+    }
+
+    @Test
+    @ContainerTest
+    fun test_createFile_in_container() {
+        // given
+        val prov = defaultTestContainer()
+        val filename = "testfile8"
+
+        // when
+        val res = prov.createFile(filename, testtext)
+        val res2 = prov.createFile("sudo$filename", testtext, sudo = true)
+
+        // then
+        assertTrue(res.success)
+        assertTrue(res2.success)
+        assertEquals(testtext, prov.fileContent(filename))
+        assertEquals(testtext, prov.fileContent("sudo$filename"))
+    }
 
     @Test
     @ContainerTest

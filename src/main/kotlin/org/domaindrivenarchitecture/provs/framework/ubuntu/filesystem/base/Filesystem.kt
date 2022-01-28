@@ -88,17 +88,10 @@ fun Prov.createFile(
             cmd(withSudo + "install -m $posixFilePermission /dev/null $fullyQualifiedFilename")
         }
         if (text != null) {
-            if (sudo) {
-                cmd(
-                    "printf " + text.escapeProcentForPrintf()
-                        .escapeAndEncloseByDoubleQuoteForShell() + " | sudo tee $fullyQualifiedFilename > /dev/null"
-                )
-            } else {
-                cmd(
-                    "printf " + text.escapeProcentForPrintf()
-                        .escapeAndEncloseByDoubleQuoteForShell() + " > $fullyQualifiedFilename"
-                )
-            }
+            cmd(
+                "printf '%s' " + text
+                    .escapeAndEncloseByDoubleQuoteForShell() + " | ${if (sudo) "sudo" else ""} tee $fullyQualifiedFilename > /dev/null"
+            )
         } else {
             cmd(withSudo + "touch $fullyQualifiedFilename")
         }

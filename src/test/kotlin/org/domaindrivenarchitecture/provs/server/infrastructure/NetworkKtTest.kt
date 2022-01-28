@@ -30,7 +30,6 @@ internal class NetworkKtTest {
         // assertTrue(res.success) -- netplan is not working in an unprivileged container - see also https://askubuntu.com/questions/813588/systemctl-failed-to-connect-to-bus-docker-ubuntu16-04-container
 
         // check file content snippet
-        assertTrue(res.success)
         assertTrue(p.fileContainsText("/etc/netplan/99-loopback.yaml", content = "- 192.168.5.1/32", sudo = true))
     }
 }
