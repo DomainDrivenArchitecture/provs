@@ -6,7 +6,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 
 // TODO: jem - 2022.01.24 - these are global vars without scope / ns !
 val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
-val k3sCalicoFile = "/etc/rancher/k3s/calico.yaml"
+val k3sCalicoFile = "/var/lib/rancher/k3s/server/manifests/calico.yaml"
 val k3sInstallFile = "/usr/local/bin/k3s-install.sh"
 val k3sResourcePath = "org/domaindrivenarchitecture/provs/infrastructure/k3s/"
 
@@ -15,7 +15,7 @@ fun Prov.testConfigExists(): Boolean {
 }
 
 fun Prov.deprovisionK3sInfra() = task {
-    deleteFile(k3sCalicoFile, sudo = true)
+    //deleteFile(k3sCalicoFile, sudo = true)
     deleteFile(k3sInstallFile, sudo = true)
     cmd("k3s-uninstall.sh")
 }
@@ -25,16 +25,38 @@ fun Prov.deprovisionK3sInfra() = task {
  * If docker is true, then docker will be installed (may conflict if docker is already existing) and k3s will be installed with docker option.
  * If tlsHost is specified, then tls (if configured) also applies to the specified host.
  */
-fun Prov.provisionK3sInfra(docker: Boolean = false, tlsHost: String? = null, options: String? = null) = task {
-    deprovisionK3sInfra()
+fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: String, loopbackIpv6: String,
+                           nodeIpv6: String? = null, docker: Boolean = false, tlsHost: String? = null) = task {
+    val isDualStack = nodeIpv6?.isNotEmpty() ?: false
+    if (testConfigExists()) {
+        deprovisionK3sInfra()
+    }
     if (!testConfigExists()) {
         createDirs("/etc/rancher/k3s/", sudo = true)
+        var k3sConfigFileName = "config.yaml.template"
+        var k3sConfigMap: Map<String, String> = mapOf("loopback_ipv4" to loopbackIpv4, "loopback_ipv6" to loopbackIpv6,
+            "node_ipv4" to nodeIpv4, "tls_name" to tlsName)
+        if (isDualStack) {
+            k3sConfigFileName += ".dual"
+            k3sConfigMap = k3sConfigMap.plus("node_ipv6" to nodeIpv6!!)
+            /*
+            createFileFromResource(
+                k3sCalicoFile,
+                "calico.yaml",
+                k3sResourcePath,
+                "644",
+                sudo = true
+            )
+
+             */
+        } else {
+            k3sConfigFileName += ".ipv4"
+        }
         createFileFromResourceTemplate(
             k3sConfigFile,
-            "config.yaml.template",
+            k3sConfigFileName,
             k3sResourcePath,
-            mapOf("loopback_ipv4" to "192.168.5.1", "loopback_ipv6" to "fc00::5:1",
-            "node_ipv4" to "159.69.176.151", "node_ipv6" to "2a01:4f8:c010:2f72::1"),
+            k3sConfigMap,
             "644",
             sudo = true
         )
@@ -45,15 +67,7 @@ fun Prov.provisionK3sInfra(docker: Boolean = false, tlsHost: String? = null, opt
             "755",
             sudo = true
         )
-        createFileFromResource(
-            k3sCalicoFile,
-            "calico.yaml",
-            k3sResourcePath,
-            "644",
-            sudo = true
-        )
-        // TODO: verify the download !
-        //cmd("curl -sfL https://get.k3s.io | sh -")
+        // TODO: doeas not work yet cmd("k3s-install.sh")
 
         /*
 

@@ -14,6 +14,7 @@ import org.domaindrivenarchitecture.provs.server.infrastructure.provisionNetwork
  * If tlsHost is specified, then tls (if configured) also applies to the specified host.
  */
 fun Prov.provisionK3s() = task {
-    provisionNetwork()
-    provisionK3sInfra()
+    provisionNetwork(loopbackIpv4 = "192.168.5.1", loopbackIpv6 = "fc00::5:1")
+    provisionK3sInfra(tlsName = "statistics.prod.meissa-gmbh.de", nodeIpv4 = "162.55.166.39", nodeIpv6 = "2a01:4f8:c010:622b::1",
+        loopbackIpv4 = "192.168.5.1", loopbackIpv6 = "fc00::5:1")
 }

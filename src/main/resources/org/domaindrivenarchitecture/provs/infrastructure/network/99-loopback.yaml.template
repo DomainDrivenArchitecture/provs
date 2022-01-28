@@ -6,5 +6,5 @@ network:
       match:
         name: lo
       addresses:
-        - ${loopback_ipv4}
-        - ${loopback_ipv6}
+        - ${loopback_ipv4}/32
+        - ${loopback_ipv6}/128

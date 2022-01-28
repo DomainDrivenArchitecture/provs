@@ -12,13 +12,13 @@ fun Prov.testNetworkExists(): Boolean {
     return fileExists(loopbackFile)
 }
 
-fun Prov.provisionNetwork() = task {
+fun Prov.provisionNetwork(loopbackIpv4: String, loopbackIpv6: String) = task {
     if(!testNetworkExists()) {
         createFileFromResourceTemplate(
             loopbackFile,
             "99-loopback.yaml.template",
             resourcePath,
-            mapOf("loopback_ipv4" to "192.168.5.1/32", "loopback_ipv6" to "fc00::5:1/128"),
+            mapOf("loopback_ipv4" to loopbackIpv4, "loopback_ipv6" to loopbackIpv6),
             "644",
             sudo = true
         )
