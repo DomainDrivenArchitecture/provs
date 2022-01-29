@@ -7,24 +7,24 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 
 private const val k3sResourcePath = "org/domaindrivenarchitecture/provs/infrastructure/k3s/"
 private const val k3sManifestsDir = "/etc/rancher/k3s/manifests/"
-private const val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
-private const val k3sAppleFile = k3sManifestsDir + "apple.yaml"
+private const val k3sConfig = "/etc/rancher/k3s/config.yaml"
+private const val k3sTraeficWorkaround = "/var/lib/rancher/k3s/server/manifests/traefik-workaround.yaml"
+private const val k3sApple = k3sManifestsDir + "apple.yaml"
 private const val certManagerDeployment = k3sManifestsDir + "certmanager.yaml"
 private const val certManagerIssuer = k3sManifestsDir + "issuer.yaml"
-
-private const val k3sInstallFile = "/usr/local/bin/k3s-install.sh"
+private const val k3sInstall = "/usr/local/bin/k3s-install.sh"
 
 enum class CertManagerEndPoint {
     STAGING, PROD
 }
 
 fun Prov.testConfigExists(): Boolean {
-    return fileExists(k3sConfigFile)
+    return fileExists(k3sConfig)
 }
 
 fun Prov.deprovisionK3sInfra() = task {
-    deleteFile(k3sInstallFile, sudo = true)
-    deleteFile(k3sAppleFile, sudo = true)
+    deleteFile(k3sInstall, sudo = true)
+    deleteFile(k3sApple, sudo = true)
     deleteFile(certManagerDeployment, sudo = true)
     deleteFile(certManagerIssuer, sudo = true)
     cmd("k3s-uninstall.sh")
@@ -36,7 +36,7 @@ fun Prov.deprovisionK3sInfra() = task {
  * If tlsHost is specified, then tls (if configured) also applies to the specified host.
  */
 fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: String, loopbackIpv6: String,
-                           nodeIpv6: String? = null, tlsHost: String? = null) = task {
+                           nodeIpv6: String? = null) = task {
     val isDualStack = nodeIpv6?.isNotEmpty() ?: false
     if (!testConfigExists()) {
         createDirs(k3sManifestsDir, sudo = true)
@@ -50,7 +50,7 @@ fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: Stri
             k3sConfigFileName += ".ipv4.template.yaml"
         }
         createFileFromResourceTemplate(
-            k3sConfigFile,
+            k3sConfig,
             k3sConfigFileName,
             k3sResourcePath,
             k3sConfigMap,
@@ -58,13 +58,25 @@ fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: Stri
             sudo = true
         )
         createFileFromResource(
-            k3sInstallFile,
+            k3sInstall,
             "k3s-install.sh",
             k3sResourcePath,
             "755",
             sudo = true
         )
         cmd("k3s-install.sh")
+        if(isDualStack) {
+            // see https://github.com/k3s-io/k3s/discussions/5003
+            createFileFromResource(
+                k3sTraeficWorkaround,
+                "traefic.yaml",
+                k3sResourcePath,
+                "644",
+                sudo = true
+            )
+        } else {
+            ProvResult(true)
+        }
     } else {
         ProvResult(true)
     }
@@ -96,14 +108,14 @@ fun Prov.provisionK3sCertManager(endpoint: CertManagerEndPoint) = task {
 
 fun Prov.provisionK3sApple(fqdn: String, endpoint: CertManagerEndPoint) = task {
     createFileFromResourceTemplate(
-        k3sAppleFile,
+        k3sApple,
         "apple.template.yaml",
         k3sResourcePath,
         mapOf("fqdn" to fqdn, "issuer_name" to endpoint.name.lowercase()),
         "644",
         sudo = true
     )
-    cmd("kubectl apply -f $k3sAppleFile", sudo = true)
+    cmd("kubectl apply -f $k3sApple", sudo = true)
 
     repeatTaskUntilSuccess(10, 10) {
         cmd("kubectl apply -f $certManagerIssuer", sudo = true)
