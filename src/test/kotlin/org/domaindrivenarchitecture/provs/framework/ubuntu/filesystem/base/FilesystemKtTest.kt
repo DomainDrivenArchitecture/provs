@@ -23,6 +23,7 @@ internal class FilesystemKtTest {
     fun test_createFile_locally() {
         // given
         val prov = testLocal()
+        prov.createDir("tmp")
 
         // when
         val filename = "tmp/testfile9"

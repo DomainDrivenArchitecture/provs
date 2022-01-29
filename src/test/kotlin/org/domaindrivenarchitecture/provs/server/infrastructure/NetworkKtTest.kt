@@ -1,14 +1,12 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 internal class NetworkKtTest {
 
@@ -16,7 +14,7 @@ internal class NetworkKtTest {
     @ContainerTest
     fun test_provisionNetwork() {
         // given
-        val p = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
+        val p = defaultTestContainer()
         p.task {
             aptInstall("dbus netplan.io")
             createDirs("/etc/netplan", sudo = true)
@@ -24,6 +22,7 @@ internal class NetworkKtTest {
         }
 
         // when
+        @Suppress("UNUSED_VARIABLE")  // see comments below: about netplan not working in unprivileged container++++
         val res = p.provisionNetwork( "192.168.5.1", loopbackIpv6 = "fc00::5:1")
 
         // then
