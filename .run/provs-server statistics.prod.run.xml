@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="provs-server statistics.prod" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="org.domaindrivenarchitecture.provs.server.application.ApplicationKt" />
+    <module name="provs.main" />
+    <option name="PROGRAM_PARAMETERS" value="k3s -r statistics.prod.meissa-gmbh.de -u root -k" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
