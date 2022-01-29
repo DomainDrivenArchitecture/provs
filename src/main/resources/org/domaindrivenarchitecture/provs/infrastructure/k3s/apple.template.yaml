@@ -4,17 +4,23 @@ metadata:
   name: apple-ingress
   annotations:
     kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: ${issuer_name}
 spec:
   rules:
-    - http:
+    - host: ${fqdn}
+      http:
         paths:
-          - path: /apple
-            pathType: Prefix
+          - pathType: Prefix
+            path: /apple
             backend:
               service:
                 name: apple-service
                 port:
                   number: 5678
+  tls:
+    - hosts:
+      - ${fqdn}
+      secretName: apple-cert
 ---
 
 kind: Pod

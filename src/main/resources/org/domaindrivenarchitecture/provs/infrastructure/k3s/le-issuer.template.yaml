@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-${endpoint}-issuer
+  name: ${endpoint}
 spec:
   acme:
     email: admin@meissa-gmbh.de
-    server: https://acme${endpoint}-v02.api.letsencrypt.org/directory
+    server: https://acme-${endpoint}-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: letsencrypt-${endpoint}-account-key
+      name: ${endpoint}
     solvers:
     - http01:
         ingress:

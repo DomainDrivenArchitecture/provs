@@ -1,11 +1,7 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.server.infrastructure.CertManagerEndPoint
-import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sCertManager
-import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sInfra
-import org.domaindrivenarchitecture.provs.server.infrastructure.provisionNetwork
-
+import org.domaindrivenarchitecture.provs.server.infrastructure.*
 
 /**
  * Installs a k3s server.
@@ -15,11 +11,16 @@ import org.domaindrivenarchitecture.provs.server.infrastructure.provisionNetwork
 fun Prov.provisionK3s() = task {
     val loopbackIpv4 = "192.168.5.1"
     val loopbackIpv6 = "fc00::5:1"
-    val nodeIpv4 = "162.55.164.138"
-    val nodeIpv6 = "2a01:4f8:c010:622b::1"
+    val nodeIpv4 = "159.69.176.151"
+    val nodeIpv6 = "2a01:4f8:c010:672f::1"
+    val fqdn = "statistics.test.meissa-gmbh.de"
 
     provisionNetwork(loopbackIpv4 = loopbackIpv4, loopbackIpv6 = loopbackIpv6)
-    provisionK3sInfra(tlsName = "statistics.prod.meissa-gmbh.de", nodeIpv4 = nodeIpv4, nodeIpv6 = nodeIpv6,
-        loopbackIpv4 = loopbackIpv4, loopbackIpv6 = loopbackIpv6, installApple = true)
+    if (testConfigExists()) {
+        deprovisionK3sInfra()
+    }
+    provisionK3sInfra(tlsName = fqdn, nodeIpv4 = nodeIpv4, nodeIpv6 = nodeIpv6,
+        loopbackIpv4 = loopbackIpv4, loopbackIpv6 = loopbackIpv6)
     provisionK3sCertManager(CertManagerEndPoint.STAGING)
+    provisionK3sApple(fqdn, CertManagerEndPoint.STAGING)
 }
