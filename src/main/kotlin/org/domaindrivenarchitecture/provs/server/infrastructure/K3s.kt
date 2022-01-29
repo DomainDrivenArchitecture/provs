@@ -40,14 +40,14 @@ fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: Stri
     val isDualStack = nodeIpv6?.isNotEmpty() ?: false
     if (!testConfigExists()) {
         createDirs(k3sManifestsDir, sudo = true)
-        var k3sConfigFileName = "config.yaml.template"
+        var k3sConfigFileName = "config"
         var k3sConfigMap: Map<String, String> = mapOf("loopback_ipv4" to loopbackIpv4, "loopback_ipv6" to loopbackIpv6,
             "node_ipv4" to nodeIpv4, "tls_name" to tlsName)
         if (isDualStack) {
-            k3sConfigFileName += ".dual"
+            k3sConfigFileName += ".dual.template.yaml"
             k3sConfigMap = k3sConfigMap.plus("node_ipv6" to nodeIpv6!!)
         } else {
-            k3sConfigFileName += ".ipv4"
+            k3sConfigFileName += ".ipv4.template.yaml"
         }
         createFileFromResourceTemplate(
             k3sConfigFile,
