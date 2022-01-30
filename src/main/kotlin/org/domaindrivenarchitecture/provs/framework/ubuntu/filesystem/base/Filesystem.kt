@@ -80,39 +80,32 @@ fun Prov.createFile(
     text: String?,
     posixFilePermission: String? = null,
     sudo: Boolean = false,
-    overwriteIfExisting: Boolean = false
+    overwriteIfExisting: Boolean = true
 ): ProvResult = task {
-    val maxBlockSize = 100000
-
-    if (!overwriteIfExisting && fileExists(fullyQualifiedFilename, sudo)) {
-        return@task ProvResult(true, "File $fullyQualifiedFilename already existing.")
-    }
+    val maxBlockSize = 50000
     val withSudo = if (sudo) "sudo " else ""
 
     posixFilePermission?.let {
         ensureValidPosixFilePermission(posixFilePermission)
     }
+    if (!overwriteIfExisting && fileExists(fullyQualifiedFilename, sudo)) {
+        return@task ProvResult(true, "File $fullyQualifiedFilename already existing.")
+    }
+
     val modeOption = posixFilePermission?.let { "-m $it"} ?: ""
 
     // create empty file resp. clear file
     cmd(withSudo + "install $modeOption /dev/null $fullyQualifiedFilename")
 
     if (text != null) {
-        if (text.length <= maxBlockSize) {
+        val chunkedTest = text.chunked(maxBlockSize)
+        for (chunk in chunkedTest) {
             cmd(
-                "printf '%s' " + text
-                    .escapeAndEncloseByDoubleQuoteForShell() + " | ${if (sudo) "sudo" else ""} tee $fullyQualifiedFilename > /dev/null"
+                "printf '%s' " + chunk
+                    .escapeAndEncloseByDoubleQuoteForShell() + " | $withSudo tee -a $fullyQualifiedFilename > /dev/null"
             )
-        } else {
-            val chunkedTest = text.chunked(maxBlockSize)
-            for (chunk in chunkedTest) {
-                cmd(
-                    "printf '%s' " + chunk
-                        .escapeAndEncloseByDoubleQuoteForShell() + " | ${if (sudo) "sudo" else ""} tee -a $fullyQualifiedFilename > /dev/null"
-                )
-            }
-            ProvResult(true) // dummy
         }
+        ProvResult(true) // dummy
     } else {
         cmd(withSudo + "touch $fullyQualifiedFilename")
     }
@@ -265,6 +258,7 @@ fun Prov.deleteDir(dir: String, path: String, sudo: Boolean = false): ProvResult
 }
 
 
+// --------------------- various functions ----------------------
 fun Prov.userHome(): String {
     val user = cmd("whoami").out?.trim()
     if (user == null) {
@@ -276,6 +270,15 @@ fun Prov.userHome(): String {
         else
             "/home/$user/"
     }
+}
+
+
+/**
+ * Returns number of bytes of a file or null if size could not be determined
+ */
+fun Prov.fileSize(filename: String): Int? {
+    val result = cmd("wc -c < $filename")
+    return result.out?.trim()?.toIntOrNull()
 }
 
 

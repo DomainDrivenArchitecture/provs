@@ -11,16 +11,12 @@ import java.io.File
 internal class FilesystemKtTest {
 
     val testtext = "tabs \t\t\t triple quotes \"\"\"" + """
-    \\ \\\ \\\\ \\\\\
-    '\t%s \\ " ""
-    ' "${'$'}arg")"
-    '%s' "${'$'}@" | 's/\([][!#${'$'}%&()*;<=>?\_`{|}]\)/\\\1/g;'
-    "${'$'}@" | sed -e 's/"/\\"/g'
-    apostrophe's ' " \" \' and special chars ${'$'} {} ${'$'}\{something}!§${'$'}%[]\\ äöüß ${'$'}\notakotlinvariable ${'$'}notakotlinvariable and tabs 	 and \t are should be handled correctly
+    newline
+    and apostrophe's ' '' ''' \' " "" \" and special chars ${'$'} {} ${'$'}\{something}<>äöüß!§@€%#|&/[]\\ äöüß %s %% %%% \\ \\\ \\\\ \\\\\ ${'$'}\notakotlinvariable ${'$'}notakotlinvariable and tabs 	 and \t should be handled correctly
     """
 
     @Test
-    fun test_createFile_locally() {
+    fun createFile_locally() {
         // given
         val prov = testLocal()
         prov.createDir("tmp")
@@ -38,7 +34,7 @@ internal class FilesystemKtTest {
 
     @Test
     @ContainerTest
-    fun test_createFile_in_container() {
+    fun createFile_in_container() {
         // given
         val prov = defaultTestContainer()
         val filename = "testfile8"
@@ -52,6 +48,24 @@ internal class FilesystemKtTest {
         assertTrue(res2.success)
         assertEquals(testtext, prov.fileContent(filename))
         assertEquals(testtext, prov.fileContent("sudo$filename"))
+    }
+
+    @Test
+    @ContainerTest
+    fun create_large_file_in_container() {
+        // given
+        val prov = defaultTestContainer()
+        val filename = "largetestfile"
+        val content = "012345äöüß".repeat(100000)
+
+        // when
+        val res = prov.createFile(filename, content)
+        val size = prov.fileSize(filename)
+
+        // then
+        assertTrue(res.success)
+        assertEquals(1400000, size)
+        // assertEquals(testtext, prov.fileContent(filename))
     }
 
     @Test
@@ -255,7 +269,7 @@ internal class FilesystemKtTest {
 
     @Test
     @ContainerTest
-    fun test_fileContainsText() {
+    fun fileContainsText() {
         // given
         defaultTestContainer().createFile("testfilecontainingtext", "abc\n- def\nefg")
 
