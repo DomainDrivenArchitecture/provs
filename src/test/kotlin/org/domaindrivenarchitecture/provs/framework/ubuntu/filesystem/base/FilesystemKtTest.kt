@@ -70,7 +70,7 @@ internal class FilesystemKtTest {
 
     @Test
     @ContainerTest
-    fun checkingCreatingDeletingFile() {
+    fun create_and_delete_file() {
         // given
         val prov = defaultTestContainer()
 
@@ -82,6 +82,7 @@ internal class FilesystemKtTest {
         val res4b = prov.fileContainsText("testfile", "some non-existing content")
         val res5 = prov.deleteFile("testfile")
         val res6 = prov.fileExists("testfile")
+        val res7 = prov.deleteFile("testfile")  // idem-potent
 
         // then
         assertFalse(res1)
@@ -91,12 +92,13 @@ internal class FilesystemKtTest {
         assertFalse(res4b)
         assertTrue(res5.success)
         assertFalse(res6)
+        assertTrue(res7.success)
     }
 
 
     @Test
     @ContainerTest
-    fun checkingCreatingDeletingFileWithSudo() {
+    fun create_and_delete_file_with_sudo() {
         // given
         val prov = defaultTestContainer()
 
@@ -111,6 +113,7 @@ internal class FilesystemKtTest {
         val res6 = prov.fileExists(file)
         val res7 = prov.deleteFile(file, sudo = true)
         val res8 = prov.fileExists(file)
+        val res9 = prov.deleteFile(file, sudo = true)  // check idem-potence
 
         // then
         assertFalse(res1)
@@ -122,12 +125,13 @@ internal class FilesystemKtTest {
         assertTrue(res6)
         assertTrue(res7.success)
         assertFalse(res8)
+        assertTrue(res9.success)
     }
 
 
     @Test
     @ContainerTest
-    fun checkingCreatingDeletingDir() {
+    fun create_and_delete_dir() {
         // given
         val prov = defaultTestContainer()
 
@@ -157,7 +161,7 @@ internal class FilesystemKtTest {
 
     @Test
     @ContainerTest
-    fun checkingCreatingDeletingDirWithSudo() {
+    fun create_and_delete_dir_with_sudo() {
         // given
         val prov = defaultTestContainer()
 

@@ -10,7 +10,7 @@ import java.io.File
  * Returns true if the given file exists.
  */
 fun Prov.fileExists(file: String, sudo: Boolean = false): Boolean {
-    return cmdNoEval((if (sudo) "sudo " else "") + "test -e " + file).success
+    return cmdNoEval(prefixWithSudo("test -e " + file, sudo)).success
 }
 
 
@@ -116,28 +116,32 @@ fun Prov.createSecretFile(
     fullyQualifiedFilename: String,
     secret: Secret,
     posixFilePermission: String? = null
-): ProvResult =
-    def {
-        posixFilePermission?.let {
-            ensureValidPosixFilePermission(posixFilePermission)
-            cmd("install -m $posixFilePermission /dev/null $fullyQualifiedFilename")
-        }
-        cmdNoLog("echo '" + secret.plain().escapeSingleQuote() + "' > $fullyQualifiedFilename")
+): ProvResult = def {
+    posixFilePermission?.let {
+        ensureValidPosixFilePermission(posixFilePermission)
+        cmd("install -m $posixFilePermission /dev/null $fullyQualifiedFilename")
     }
+    cmdNoLog("echo '" + secret.plain().escapeSingleQuote() + "' > $fullyQualifiedFilename")
+}
 
 
 fun Prov.deleteFile(file: String, path: String? = null, sudo: Boolean = false): ProvResult = def {
-    cmd((path?.let { "cd $path && " } ?: "") + (if (sudo) "sudo " else "") + "rm $file")
+    val fullyQualifiedFilename = (path?.normalizePath() ?: "") + file
+    if (fileExists(fullyQualifiedFilename, sudo = sudo)) {
+        cmd(prefixWithSudo("rm $fullyQualifiedFilename", sudo))
+    } else {
+        ProvResult(true, "File to be deleted did not exist.")
+    }
 }
 
 
 fun Prov.fileContainsText(file: String, content: String, sudo: Boolean = false): Boolean {
-    return cmdNoEval((if (sudo) "sudo " else "") + "grep -- '${content.escapeSingleQuote()}' $file").success
+    return cmdNoEval(prefixWithSudo( "grep -- '${content.escapeSingleQuote()}' $file", sudo)).success
 }
 
 
 fun Prov.fileContent(file: String, sudo: Boolean = false): String? {
-    return cmd((if (sudo) "sudo " else "") + "cat $file").out
+    return cmd(prefixWithSudo("cat $file", sudo)).out
 }
 
 
@@ -283,10 +287,23 @@ fun Prov.fileSize(filename: String): Int? {
 
 
 private fun ensureValidPosixFilePermission(posixFilePermission: String) {
-    if (!Regex("^[0-7]{3}$").matches(posixFilePermission)) throw RuntimeException("Wrong file permission ($posixFilePermission), permission must consist of 3 digits as e.g. 664 ")
+    if (!Regex("^[0-7]{3}$").matches(posixFilePermission)) throw IllegalArgumentException("Wrong file permission ($posixFilePermission), permission must consist of 3 digits as e.g. 664")
 }
 
 
+/**
+ * Returns a command encapsulated in a shell command and executed with sudo.
+ * For simple cases consider sudo as prefix instead.
+ * @see prefixWithSudo
+ */
 private fun String.sudoizeCommand(): String {
     return "sudo " + SHELL + " -c " + this.escapeAndEncloseByDoubleQuoteForShell()
+}
+
+
+/**
+ * Returns path with a trailing fileSeparator if path not empty
+ */
+private fun String.normalizePath(): String {
+    return if (this == "" || this.endsWith(fileSeparatorChar())) this else this + fileSeparator()
 }
