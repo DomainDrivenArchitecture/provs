@@ -6,12 +6,13 @@ import org.domaindrivenarchitecture.provs.framework.core.repeatTaskUntilSuccess
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 
 private const val k3sResourcePath = "org/domaindrivenarchitecture/provs/infrastructure/k3s/"
-private const val k3sManifestsDir = "/etc/rancher/k3s/manifests/"
+private const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
+private const val k3sAutomatedManifestsDir = "/var/lib/rancher/k3s/server/manifests/"
 private const val k3sConfig = "/etc/rancher/k3s/config.yaml"
 private const val k3sTraeficWorkaround = "/var/lib/rancher/k3s/server/manifests/traefik-workaround.yaml"
-private const val k3sApple = k3sManifestsDir + "apple.yaml"
-private const val certManagerDeployment = k3sManifestsDir + "certmanager.yaml"
-private const val certManagerIssuer = k3sManifestsDir + "issuer.yaml"
+private const val k3sApple = k3sAutomatedManifestsDir + "apple.yaml"
+private const val certManagerDeployment = k3sAutomatedManifestsDir + "certmanager.yaml"
+private const val certManagerIssuer = k3sManualManifestsDir + "issuer.yaml"
 private const val k3sInstall = "/usr/local/bin/k3s-install.sh"
 
 enum class CertManagerEndPoint {
@@ -39,7 +40,7 @@ fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: Stri
                            nodeIpv6: String? = null) = task {
     val isDualStack = nodeIpv6?.isNotEmpty() ?: false
     if (!testConfigExists()) {
-        createDirs(k3sManifestsDir, sudo = true)
+        createDirs(k3sAutomatedManifestsDir, sudo = true)
         var k3sConfigFileName = "config"
         var k3sConfigMap: Map<String, String> = mapOf("loopback_ipv4" to loopbackIpv4, "loopback_ipv6" to loopbackIpv6,
             "node_ipv4" to nodeIpv4, "tls_name" to tlsName)
@@ -99,8 +100,6 @@ fun Prov.provisionK3sCertManager(endpoint: CertManagerEndPoint) = task {
         "644",
         sudo = true
     )
-    cmd("kubectl apply -f $certManagerDeployment", sudo = true)
-
     repeatTaskUntilSuccess(10, 10) {
         cmd("kubectl apply -f $certManagerIssuer", sudo = true)
     }
@@ -115,9 +114,4 @@ fun Prov.provisionK3sApple(fqdn: String, endpoint: CertManagerEndPoint) = task {
         "644",
         sudo = true
     )
-    cmd("kubectl apply -f $k3sApple", sudo = true)
-
-    repeatTaskUntilSuccess(10, 10) {
-        cmd("kubectl apply -f $certManagerIssuer", sudo = true)
-    }
 }
