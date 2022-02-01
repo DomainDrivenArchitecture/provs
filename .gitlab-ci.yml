@@ -54,32 +54,6 @@ test:
     reports:
       junit: build/test-results/test/TEST-*.xml
 
-
-publish-snapshot-lib:
-  stage: publish
-  rules:
-    - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
-  script:
-    - ./gradlew -x assemble -x test jar
-    - ./gradlew -x assemble -x test publish
-  artifacts:
-    paths:
-      - build/libs/*.jar
-
-publish-released-lib:
-  stage: publish
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "push"
-      when: never
-    - if: $CI_COMMIT_TAG =~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
-  script:
-    - ./gradlew -x assemble -x test jar
-    - ./gradlew -x assemble -x test publish
-  artifacts:
-    paths:
-      - build/libs/*.jar
-
-
 .fatjars:
   stage: package
   rules:
@@ -127,6 +101,29 @@ uberjarjar:
       - 'build/libs/sha512sum.lst'
     expire_in: never
 
+publish-snapshot-lib:
+  stage: publish
+  rules:
+    - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
+  script:
+    - ./gradlew -x assemble -x test jar
+    - ./gradlew -x assemble -x test publish
+  artifacts:
+    paths:
+      - build/libs/*.jar
+
+publish-released-lib:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "push"
+      when: never
+    - if: $CI_COMMIT_TAG =~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
+  script:
+    - ./gradlew -x assemble -x test jar
+    - ./gradlew -x assemble -x test publish
+  artifacts:
+    paths:
+      - build/libs/*.jar
 
 release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
