@@ -5,6 +5,6 @@ import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3s
 
 fun provisionServer(prov: Prov,  cmd: ServerCliCommand) {
     when(cmd.serverType) {
-        ServerType.K3S -> prov.provisionK3s()
+        ServerType.K3S -> prov.provisionK3s(cmd.configFileName)
     }
 }

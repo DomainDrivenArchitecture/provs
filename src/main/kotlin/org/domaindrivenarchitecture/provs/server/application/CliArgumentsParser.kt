@@ -1,8 +1,10 @@
 package org.domaindrivenarchitecture.provs.server.application
 
+import kotlinx.cli.ArgType
 import kotlinx.cli.Subcommand
 import org.domaindrivenarchitecture.provs.framework.core.cli.CliTargetParser
 import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
+import org.domaindrivenarchitecture.provs.server.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 
@@ -29,17 +31,26 @@ class CliArgumentsParser(
                 sshWithPasswordPrompt,
                 sshWithGopassPath,
                 sshWithKey
-            )
+            ),
+            module.configFileName
         )
     }
 
     abstract class ServerSubcommand(name: String, description: String): Subcommand(name, description) {
-        var parsed = false
+        var parsed: Boolean = false
+        var configFileName: ConfigFileName? = null
     }
 
     class K3s: ServerSubcommand("k3s", "the k3s module") {
+        val cliConfigFileName by argument(
+            ArgType.String,
+            "configFilename",
+            "the filename containing the yaml config for k3s"
+        )
+
         override fun execute() {
-            parsed = true
+            super.configFileName = ConfigFileName(cliConfigFileName)
+            super.parsed = true
         }
     }
 

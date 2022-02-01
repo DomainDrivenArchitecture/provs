@@ -8,7 +8,8 @@ enum class ServerType {
 
 class ServerCliCommand(
     val serverType: ServerType,
-    val target: TargetCliCommand)
+    val target: TargetCliCommand,
+    val configFileName: ConfigFileName?,)
 {
     fun isValid(): Boolean {
         return target.isValid()
