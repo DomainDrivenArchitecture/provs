@@ -75,4 +75,4 @@ The fatjar is a Java jar-file incl. all required dependencies.
 
 Find below an example of a sequence diagram when provisioning a workplace:
 
-![img.png](docs/resources/provision-workplace-sequence.diagram.png)
+![img.png](doc/resources/provision-workplace-sequence.diagram.png)
