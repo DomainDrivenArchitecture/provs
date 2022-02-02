@@ -4,5 +4,5 @@
 /.gradle/
 
 /.idea/
-/MyIdeConfig.yaml
-/myServerConfig.yaml
+/My*
+/my*
