@@ -12,7 +12,7 @@ internal class CliArgumentParserTest {
         val parser = CliArgumentsParser("test")
 
         // when
-        val result = parser.parseCommand(args = arrayOf("k3s", "-l"))
+        val result = parser.parseCommand(args = arrayOf("k3s", "-l", "config.yaml"))
 
         // then
         assertTrue(result.isValid())

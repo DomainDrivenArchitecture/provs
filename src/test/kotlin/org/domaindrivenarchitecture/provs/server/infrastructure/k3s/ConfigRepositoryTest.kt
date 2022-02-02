@@ -15,7 +15,7 @@ internal class ConfigRepositoryTest {
     @Test
     fun getConfig_successful() {
         // when
-        val config = getK3sConfig(ConfigFileName("src/test/resources/myK3sServerConfig.yaml"))
+        val config = getK3sConfig(ConfigFileName("src/test/resources/k3sServerConfig.yaml"))
 
         // then
         assertEquals(K3sConfig(
