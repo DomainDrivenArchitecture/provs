@@ -3,10 +3,8 @@ package org.domaindrivenarchitecture.provs.server.infrastructure.k3s
 import com.charleskorn.kaml.InvalidPropertyValueException
 import com.charleskorn.kaml.UnknownPropertyException
 import org.domaindrivenarchitecture.provs.server.domain.ConfigFileName
-import org.domaindrivenarchitecture.provs.server.domain.k3s.Fqdn
-import org.domaindrivenarchitecture.provs.server.domain.k3s.Ipv4
-import org.domaindrivenarchitecture.provs.server.domain.k3s.Ipv6
-import org.domaindrivenarchitecture.provs.server.domain.k3s.Reprovision
+import org.domaindrivenarchitecture.provs.server.domain.k3s.*
+import org.domaindrivenarchitecture.provs.server.infrastructure.CertManagerEndPoint
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,12 +18,12 @@ internal class ConfigRepositoryTest {
         val config = getK3sConfig(ConfigFileName("src/test/resources/myK3sServerConfig.yaml"))
 
         // then
-        assertEquals(Ipv4("159.69.176.151"), config.nodeIpv4)
-        assertEquals(Ipv6("2a01:4f8:c010:672f::1"), config.nodeIpv6)
-        assertEquals(Ipv4("192.168.5.1"), config.loopbackIpv4)
-        assertEquals(Ipv6("fc00::5:1"), config.loopbackIpv6)
-        assertEquals(Fqdn("statistics.test.meissa-gmbh.de"), config.fqdn)
-        assertEquals(Reprovision(true), config.reprovision)
+        assertEquals(K3sConfig(
+            "statistics.test.meissa-gmbh.de",
+            Node("159.69.176.151", "2a01:4f8:c010:672f::1"),
+            Loopback("192.168.5.1", "fc00::5:1"),
+            true,
+            CertManagerEndPoint.PROD), config)
     }
 
     @Test

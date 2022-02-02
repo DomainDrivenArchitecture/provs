@@ -1,12 +1,14 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
+import kotlinx.serialization.Serializable
+import org.domaindrivenarchitecture.provs.server.infrastructure.CertManagerEndPoint
+
+@Serializable
 data class K3sConfig(
     val fqdn: Fqdn,
-    val nodeIpv4: Ipv4,
-    val nodeIpv6: Ipv6?,
-    val loopbackIpv4: Ipv4? = Ipv4("192.168.5.1"),
-    val loopbackIpv6: Ipv6? = Ipv6("fc00::5:1"),
-    val reprovision: Reprovision? = Reprovision(false)
+    val node: Node,
+    val loopback: Loopback = Loopback(ipv4 = "192.168.5.1", ipv6 = "fc00::5:1"),
+    val reprovision: Reprovision = false,
+    val letsencryptEndpoint: CertManagerEndPoint = CertManagerEndPoint.STAGING
 ) {
-
 }

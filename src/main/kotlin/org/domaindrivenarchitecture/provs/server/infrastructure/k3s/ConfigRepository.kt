@@ -15,16 +15,9 @@ public fun getK3sConfig(configFileName: ConfigFileName): K3sConfig {
     // deserializing
     val config =
         if (configFileName.fileName.lowercase().endsWith(".yaml")) {
-            Yaml.default.decodeFromString(K3sSerial.serializer(), inputAsString)
+            Yaml.default.decodeFromString(K3sConfig.serializer(), inputAsString)
         } else {
-            Json.decodeFromString(K3sSerial.serializer(), inputAsString)
+            Json.decodeFromString(K3sConfig.serializer(), inputAsString)
         }
-    return K3sConfig(
-        Fqdn(config.fqdn),
-        Ipv4(config.nodeIpv4),
-        config.nodeIpv6?.let { Ipv6(it) },
-        config.loopbackIpv4?.let { Ipv4(it) },
-        config.loopbackIpv6?.let { Ipv6(it) },
-        config.reprovision?.let { Reprovision(it) }
-    )
+    return config
 }
