@@ -1,6 +1,7 @@
 default-local-storage-path: /var
 tls-san: ${tls_name}
 disable-network-policy: true
+disable-cloud-controller: true
 cluster-cidr:
   - 10.42.0.0/16
 service-cidr:

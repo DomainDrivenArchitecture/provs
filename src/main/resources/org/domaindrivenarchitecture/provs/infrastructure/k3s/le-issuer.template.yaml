@@ -4,7 +4,7 @@ metadata:
   name: ${endpoint}
 spec:
   acme:
-    email: admin@meissa-gmbh.de
+    email: ${email}
     server: https://acme-${endpoint}-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: ${endpoint}
