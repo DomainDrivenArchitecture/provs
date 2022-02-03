@@ -1,5 +1,8 @@
 package org.domaindrivenarchitecture.provs.framework.extensions.workplace
 
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
+import org.domaindrivenarchitecture.provs.desktop.application.DesktopCliCommand
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.desktop.domain.WorkplaceType
@@ -9,6 +12,12 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 internal class ProvisionWorkplaceKtTest {
+
+    val cmd = DesktopCliCommand(
+        ConfigFileName("bla"),
+        listOf(),
+        TargetCliCommand(null, null, null, false, null, false)
+    )
 
     @Test
     @ContainerTest
