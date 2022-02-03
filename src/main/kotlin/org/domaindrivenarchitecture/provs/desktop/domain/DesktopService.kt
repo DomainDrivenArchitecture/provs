@@ -1,5 +1,8 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
+import org.domaindrivenarchitecture.provs.desktop.application.DesktopCliCommand
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.*
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.git.provisionGit
@@ -11,8 +14,14 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerpr
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
-import org.domaindrivenarchitecture.provs.desktop.infrastructure.*
 
+fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
+    // retrieve config
+    val conf = getConfig(cmd.configFile)
+    with (conf) {
+        prov.provisionWorkplace(type, ssh?.keyPair(), gpg?.keyPair(), gitUserName, gitEmail)
+    }
+}
 
 /**
  * Provisions software and configurations for a personal workplace.

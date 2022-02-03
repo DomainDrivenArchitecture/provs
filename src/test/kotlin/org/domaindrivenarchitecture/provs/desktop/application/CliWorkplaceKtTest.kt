@@ -9,7 +9,7 @@ import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.cli.retrievePassword
 import org.domaindrivenarchitecture.provs.framework.core.processors.PrintOnlyProcessor
 import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
-import org.domaindrivenarchitecture.provs.desktop.domain.WorkplaceConfig
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopConfig
 import org.domaindrivenarchitecture.provs.desktop.domain.WorkplaceType
 import org.domaindrivenarchitecture.provs.desktop.domain.provisionWorkplace
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
@@ -25,7 +25,7 @@ internal class CliWorkplaceKtTest {
     companion object {
 
         val printOnlyProv = Prov.newInstance(PrintOnlyProcessor())
-        val testConfig = WorkplaceConfig(WorkplaceType.MINIMAL, gitUserName = "gittestuser", gitEmail = "git@test.mail")
+        val testConfig = DesktopConfig(WorkplaceType.MINIMAL, gitUserName = "gittestuser", gitEmail = "git@test.mail")
 
         @BeforeAll
         @JvmStatic

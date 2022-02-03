@@ -6,7 +6,7 @@ import org.domaindrivenarchitecture.provs.framework.core.cli.CliTargetParser
 import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
 
 
-open class CliWorkplaceParser(name: String) : CliTargetParser(name) {
+open class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
     val configFileName by argument(
         ArgType.String,
@@ -15,10 +15,10 @@ open class CliWorkplaceParser(name: String) : CliTargetParser(name) {
     ).optional()
 
 
-    fun parseWorkplaceArguments(args: Array<String>): WorkplaceCliCommand {
+    fun parseWorkplaceArguments(args: Array<String>): DesktopCliCommand {
         super.parse(args)
 
-        return WorkplaceCliCommand(
+        return DesktopCliCommand(
             configFileName ?: "WorkplaceConfig.yaml",
             TargetCliCommand(
                 localHost,

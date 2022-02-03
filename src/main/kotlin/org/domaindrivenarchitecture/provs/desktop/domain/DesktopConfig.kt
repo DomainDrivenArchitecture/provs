@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-class WorkplaceConfig(
+class DesktopConfig(
     val type: WorkplaceType = WorkplaceType.MINIMAL,
     val ssh: KeyPairSource? = null,
     val gpg: KeyPairSource? = null,

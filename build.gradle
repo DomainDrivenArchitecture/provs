@@ -86,7 +86,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
-
+// todo: for fatjars there is no need???
 //create a single Jar with all dependencies excl. Kotlin libs without version-number
 task fatJarLatest(type: Jar) {
     from {
@@ -137,7 +137,7 @@ task uberjarDesktop(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Uberjar of provs',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.domaindrivenarchitecture.provs.desktop.application.CliKt'
+                'Main-Class': 'org.domaindrivenarchitecture.provs.desktop.application.ApplicationKt'
     }
     archiveFileName = 'provs-desktop.jar'
 }
