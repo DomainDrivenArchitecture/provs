@@ -1,3 +1,4 @@
+```plantuml
 @startuml
 
 autonumber
@@ -59,3 +60,4 @@ ProvisionWorkplace -> Infrastructure_functions: installVirtualBoxGuestAdditions
 ProvisionWorkplace -> Infrastructure_functions: configureNoSwappiness, ...
 
 @enduml
+```
