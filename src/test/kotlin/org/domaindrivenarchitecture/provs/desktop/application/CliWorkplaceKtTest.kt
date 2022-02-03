@@ -5,6 +5,8 @@ import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.mockk.verify
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.cli.retrievePassword
 import org.domaindrivenarchitecture.provs.framework.core.processors.PrintOnlyProcessor
@@ -26,6 +28,11 @@ internal class CliWorkplaceKtTest {
 
         val printOnlyProv = Prov.newInstance(PrintOnlyProcessor())
         val testConfig = DesktopConfig(WorkplaceType.MINIMAL, gitUserName = "gittestuser", gitEmail = "git@test.mail")
+        val cmd = DesktopCliCommand(
+            ConfigFileName("bla"),
+            listOf(),
+            TargetCliCommand(null, null, null, false, null, false)
+        )
 
         @BeforeAll
         @JvmStatic
@@ -118,7 +125,8 @@ internal class CliWorkplaceKtTest {
         System.setOut(originalOut)
         System.setErr(originalErr)
 
-        val expectedOutput = "Error: File\u001B[31m ConfigFileName(fileName=idontexist.yaml) \u001B[0m was not found.Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m ConfigFileName(fileName=idontexist.yaml) \u001B[0m and change the content according to your needs."
+        val expectedOutput =
+            "Error: File\u001B[31m ConfigFileName(fileName=idontexist.yaml) \u001B[0m was not found.Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m ConfigFileName(fileName=idontexist.yaml) \u001B[0m and change the content according to your needs."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
         verify(exactly = 0) { any<Prov>().provisionWorkplace(any(), cmd = cmd) }
@@ -144,7 +152,8 @@ internal class CliWorkplaceKtTest {
         System.setOut(originalOut)
         System.setErr(originalErr)
 
-        val expectedOutput = "Error: File \"ConfigFileName(fileName=src/test/resources/InvalidWorkplaceConfig.yaml)\" has an invalid format and or invalid data."
+        val expectedOutput =
+            "Error: File \"ConfigFileName(fileName=src/test/resources/InvalidWorkplaceConfig.yaml)\" has an invalid format and or invalid data."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
         verify(exactly = 0) { any<Prov>().provisionWorkplace(any(), cmd = cmd) }

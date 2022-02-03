@@ -8,7 +8,8 @@ import org.domaindrivenarchitecture.provs.desktop.domain.Scope
 class DesktopCliCommand(
     val configFile: ConfigFileName,
     val scopes: List<Scope>,
-    val target: TargetCliCommand, ) {
+    val target: TargetCliCommand,
+) {
 
     fun isValid(): Boolean {
         return configFile.fileName.isNotEmpty() && target.isValid()
@@ -18,4 +19,3 @@ class DesktopCliCommand(
         return scopes.isNotEmpty()
     }
 }
-
