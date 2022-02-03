@@ -1,8 +1,7 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure.k3s
 
-import com.charleskorn.kaml.InvalidPropertyValueException
 import com.charleskorn.kaml.UnknownPropertyException
-import org.domaindrivenarchitecture.provs.server.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.*
 import org.domaindrivenarchitecture.provs.server.infrastructure.CertManagerEndPoint
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -1,10 +1,10 @@
-package org.domaindrivenarchitecture.provs.framework.core.cli
+package org.domaindrivenarchitecture.provs.cofiguration.application
 
-import org.domaindrivenarchitecture.provs.framework.core.cli.parseTarget
+import org.domaindrivenarchitecture.provs.configuration.application.parseTarget
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-internal class TargetCliCommandTest {
+internal class CliTargetParserTest {
 
     @Test
     fun parse_localhost_with_default() {

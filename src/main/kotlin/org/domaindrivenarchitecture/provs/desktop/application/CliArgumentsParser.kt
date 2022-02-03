@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.desktop.application
 
 import kotlinx.cli.ArgType
-import kotlinx.cli.optional
-import org.domaindrivenarchitecture.provs.framework.core.cli.CliTargetParser
-import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
+import org.domaindrivenarchitecture.provs.configuration.application.CliTargetParser
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 
 
 open class CliArgumentsParser(name: String) : CliTargetParser(name) {
@@ -11,15 +11,15 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
     val configFileName by argument(
         ArgType.String,
         "configFilename",
-        "the filename containing the yaml config for the workplace"
-    ).optional()
+        "the filename containing the yaml config for the desktop"
+    )
 
 
     fun parseWorkplaceArguments(args: Array<String>): DesktopCliCommand {
         super.parse(args)
 
         return DesktopCliCommand(
-            configFileName ?: "WorkplaceConfig.yaml",
+            ConfigFileName(configFileName),
             TargetCliCommand(
                 localHost,
                 remoteHost,

@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.server.infrastructure.k3s
 
 import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.json.Json
-import org.domaindrivenarchitecture.provs.server.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.*
 import java.io.BufferedReader
 import java.io.FileReader

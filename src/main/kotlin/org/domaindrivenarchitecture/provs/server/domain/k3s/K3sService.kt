@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.server.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.server.infrastructure.*
 import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
 

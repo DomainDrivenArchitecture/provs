@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.server.domain
 
-import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 
 enum class ServerType {
     K3D, K3S

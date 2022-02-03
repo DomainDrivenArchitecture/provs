@@ -2,9 +2,9 @@ package org.domaindrivenarchitecture.provs.server.application
 
 import kotlinx.cli.ArgType
 import kotlinx.cli.Subcommand
-import org.domaindrivenarchitecture.provs.framework.core.cli.CliTargetParser
-import org.domaindrivenarchitecture.provs.framework.core.cli.TargetCliCommand
-import org.domaindrivenarchitecture.provs.server.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.application.CliTargetParser
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 

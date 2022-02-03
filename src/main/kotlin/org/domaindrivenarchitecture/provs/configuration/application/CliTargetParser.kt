@@ -1,8 +1,9 @@
-package org.domaindrivenarchitecture.provs.framework.core.cli
+package org.domaindrivenarchitecture.provs.configuration.application
 
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 
 open class CliTargetParser(name: String) : ArgParser(name) {
     val remoteHost by option(
@@ -33,4 +34,21 @@ open class CliTargetParser(name: String) : ArgParser(name) {
         shortName = "k",
         description = "provision over ssh using user & ssh key"
     ).default(false)
+}
+
+fun parseTarget(
+    programName: String = "java -jar provs.jar",
+    args: Array<String>
+): TargetCliCommand {
+    val parser = CliTargetParser(programName)
+    parser.parse(args)
+
+    return TargetCliCommand(
+        parser.localHost,
+        parser.remoteHost,
+        parser.userName,
+        parser.sshWithPasswordPrompt,
+        parser.sshWithGopassPath,
+        parser.sshWithKey
+    )
 }

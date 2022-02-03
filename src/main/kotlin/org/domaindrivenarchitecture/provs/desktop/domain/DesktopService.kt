@@ -17,7 +17,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
 fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
     // retrieve config
-    val conf = getConfig(cmd.configFile)
+    val conf = getConfig(cmd.configFile.fileName)
     with (conf) {
         prov.provisionWorkplace(type, ssh?.keyPair(), gpg?.keyPair(), gitUserName, gitEmail)
     }

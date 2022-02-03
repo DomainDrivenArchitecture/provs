@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.framework.core.cli
+package org.domaindrivenarchitecture.provs.configuration.domain
 
 
 class TargetCliCommand(
@@ -27,19 +27,3 @@ class TargetCliCommand(
     }
 }
 
-fun parseTarget(
-    programName: String = "java -jar provs.jar",
-    args: Array<String>
-): TargetCliCommand {
-    val parser = CliTargetParser(programName)
-    parser.parse(args)
-
-    return TargetCliCommand(
-        parser.localHost,
-        parser.remoteHost,
-        parser.userName,
-        parser.sshWithPasswordPrompt,
-        parser.sshWithGopassPath,
-        parser.sshWithKey
-    )
-}
