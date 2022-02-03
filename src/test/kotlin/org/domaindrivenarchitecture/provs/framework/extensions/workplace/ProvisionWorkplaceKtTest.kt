@@ -21,7 +21,8 @@ internal class ProvisionWorkplaceKtTest {
         val res = a.provisionWorkplace(
             WorkplaceType.MINIMAL,
             gitUserName = "testuser",
-            gitEmail = "testuser@test.org"
+            gitEmail = "testuser@test.org",
+            cmd = cmd
         )
 
         // then
@@ -44,6 +45,7 @@ internal class ProvisionWorkplaceKtTest {
             config.gpg?.keyPair(),
             config.gitUserName,
             config.gitEmail,
+            cmd,
         )
 
         // then

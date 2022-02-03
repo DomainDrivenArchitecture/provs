@@ -36,18 +36,19 @@ fun Prov.deprovisionK3sInfra() = task {
  * If docker is true, then docker will be installed (may conflict if docker is already existing) and k3s will be installed with docker option.
  * If tlsHost is specified, then tls (if configured) also applies to the specified host.
  */
-fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: String, loopbackIpv6: String,
+fun Prov.provisionK3sInfra(tlsName: String, nodeIpv4: String, loopbackIpv4: String, loopbackIpv6: String?,
                            nodeIpv6: String? = null) = task {
-    val isDualStack = nodeIpv6?.isNotEmpty() ?: false
+    val isDualStack = nodeIpv6 != null && loopbackIpv6 != null
     if (!testConfigExists()) {
         createDirs(k3sAutomatedManifestsDir, sudo = true)
         createDirs(k3sManualManifestsDir, sudo = true)
         var k3sConfigFileName = "config"
-        var k3sConfigMap: Map<String, String> = mapOf("loopback_ipv4" to loopbackIpv4, "loopback_ipv6" to loopbackIpv6,
+        var k3sConfigMap: Map<String, String> = mapOf("loopback_ipv4" to loopbackIpv4,
             "node_ipv4" to nodeIpv4, "tls_name" to tlsName)
         if (isDualStack) {
             k3sConfigFileName += ".dual.template.yaml"
             k3sConfigMap = k3sConfigMap.plus("node_ipv6" to nodeIpv6!!)
+                .plus("loopback_ipv6" to loopbackIpv6!!)
         } else {
             k3sConfigFileName += ".ipv4.template.yaml"
         }

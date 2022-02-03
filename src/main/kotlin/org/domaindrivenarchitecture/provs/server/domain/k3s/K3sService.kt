@@ -13,12 +13,15 @@ import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
 fun Prov.provisionK3s(configFileName: ConfigFileName?) = task {
     val k3sConfig: K3sConfig = getK3sConfig(configFileName!!)
 
-    provisionNetwork(loopbackIpv4 = k3sConfig.loopback.ipv4, loopbackIpv6 = k3sConfig.loopback.ipv6!!)
+    provisionNetwork(loopbackIpv4 = k3sConfig.loopback.ipv4, loopbackIpv6 = k3sConfig.loopback.ipv6)
     if (k3sConfig.reprovision && testConfigExists()) {
         deprovisionK3sInfra()
     }
-    provisionK3sInfra(tlsName = k3sConfig.fqdn, nodeIpv4 = k3sConfig.node.ipv4, nodeIpv6 = k3sConfig.node.ipv6,
-        loopbackIpv4 = k3sConfig.loopback.ipv4, loopbackIpv6 = k3sConfig.loopback.ipv6)
+    provisionK3sInfra(
+        tlsName = k3sConfig.fqdn, nodeIpv4 = k3sConfig.node.ipv4, nodeIpv6 = k3sConfig.node.ipv6,
+        loopbackIpv4 = k3sConfig.loopback.ipv4, loopbackIpv6 = k3sConfig.loopback.ipv6
+    )
+
     provisionK3sCertManager(k3sConfig.letsencryptEndpoint)
     provisionK3sApple(k3sConfig.fqdn, k3sConfig.letsencryptEndpoint)
 }

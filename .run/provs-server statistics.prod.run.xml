@@ -2,7 +2,7 @@
   <configuration default="false" name="provs-server statistics.prod" type="JetRunConfigurationType">
     <option name="MAIN_CLASS_NAME" value="org.domaindrivenarchitecture.provs.server.application.ApplicationKt" />
     <module name="provs.main" />
-    <option name="PROGRAM_PARAMETERS" value="k3s -r statistics.prod.meissa-gmbh.de -u root -k myServerKonfig.yaml" />
+    <option name="PROGRAM_PARAMETERS" value="k3s -r statistics.prod.meissa-gmbh.de -u root -k myK3sServerConfig.yaml" />
     <shortenClasspath name="NONE" />
     <method v="2">
       <option name="Make" enabled="true" />

@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="provs-desktop" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="org.domaindrivenarchitecture.provs.desktop.application.ApplicationKt" />
+    <module name="provs.main" />
+    <option name="PROGRAM_PARAMETERS" value="-s provs -l myIdeConfig.yaml" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
