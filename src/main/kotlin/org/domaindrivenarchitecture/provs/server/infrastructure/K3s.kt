@@ -66,7 +66,7 @@ fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
             "755",
             sudo = true
         )
-        cmd("k3s-install.sh")
+        cmd("INSTALL_K3S_CHANNEL=latest k3s-install.sh")
         if (k3sConfig.isDualStack()) {
             // see https://github.com/k3s-io/k3s/discussions/5003
             createFileFromResource(
