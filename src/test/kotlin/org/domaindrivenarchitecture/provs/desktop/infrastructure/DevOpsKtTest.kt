@@ -28,7 +28,7 @@ internal class DevOpsKtTest {
         assertTrue(
             defaultTestContainer().fileContainsText(
                 "~/.bashrc.d/kubectl.sh",
-                getResourceAsText("workplace/infrastructure/kubectl.sh")
+                getResourceAsText("org/domaindrivenarchitecture/provs/desktop/infrastructure/kubectl.sh")
             )
         )
         assertTrue(

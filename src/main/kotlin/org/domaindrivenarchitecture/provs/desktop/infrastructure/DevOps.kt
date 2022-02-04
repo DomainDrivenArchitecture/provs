@@ -37,7 +37,7 @@ fun Prov.installYq(
 }
 
 fun Prov.installKubectlAndTools(): ProvResult = def {
-    val resourcePath = "workplace/infrastructure/"
+    val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure"
 
     task("installKubectl") {
         val kubeConfigFile = "~/.bashrc.d/kubectl.sh"
