@@ -8,7 +8,7 @@ import org.domaindrivenarchitecture.provs.server.domain.CertmanagerEndpoint
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Certmanager
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 
-private const val k3sResourcePath = "org/domaindrivenarchitecture/provs/infrastructure/k3s/"
+private const val k3sResourcePath = "org/domaindrivenarchitecture/provs/server/infrastructure/k3s/"
 private const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
 private const val k3sAutomatedManifestsDir = "/var/lib/rancher/k3s/server/manifests/"
 private const val k3sConfigFile = "/etc/rancher/k3s/config.yaml"

@@ -7,7 +7,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileE
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 
 val loopbackFile = "/etc/netplan/99-loopback.yaml"
-val resourcePath = "org/domaindrivenarchitecture/provs/infrastructure/network/"
+val resourcePath = "org/domaindrivenarchitecture/provs/server/infrastructure/network/"
 
 fun Prov.testNetworkExists(): Boolean {
     return fileExists(loopbackFile)
