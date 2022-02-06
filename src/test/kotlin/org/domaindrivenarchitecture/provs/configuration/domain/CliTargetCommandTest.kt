@@ -1,7 +1,6 @@
-package org.domaindrivenarchitecture.provs.cofiguration.domain
+package org.domaindrivenarchitecture.provs.configuration.domain
 
 import io.mockk.*
-import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance

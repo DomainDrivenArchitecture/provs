@@ -1,6 +1,5 @@
-package org.domaindrivenarchitecture.provs.cofiguration.application
+package org.domaindrivenarchitecture.provs.configuration.application
 
-import org.domaindrivenarchitecture.provs.configuration.application.parseTarget
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
