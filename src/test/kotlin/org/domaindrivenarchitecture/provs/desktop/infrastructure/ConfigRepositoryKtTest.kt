@@ -1,8 +1,10 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import com.charleskorn.kaml.InvalidPropertyValueException
+import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceType
 import org.domaindrivenarchitecture.provs.desktop.domain.WorkplaceType
+import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,17 +33,17 @@ internal class ConfigRepositoryKtTest {
 
     @Test
     fun getConfig_fails_due_to_invalidProperty() {
-        assertThrows<InvalidPropertyValueException> {
+        val exception = assertThrows<InvalidPropertyValueException> {
             getConfig("src/test/resources/InvalidWorkplaceConfig.yaml")
         }
-
+        assertEquals("Value for 'type' is invalid: Value 'WRONGTYPE' is not a valid option, permitted choices are: IDE, MINIMAL, OFFICE", exception.message)
     }
 
     @Test
-    fun getConfig_fails_due_to_non_existing_file() {
-        assertThrows<FileNotFoundException> {
-            getConfig("src/test/resources/Idonotexist.yaml")
+    fun getConfig_fails_due_to_missing_file() {
+        val exception = assertThrows<FileNotFoundException> {
+            getK3sConfig(ConfigFileName("src/test/resources/Idonotexist.yaml"))
         }
-
+        assertEquals("src/test/resources/Idonotexist.yaml (No such file or directory)", exception.message)
     }
 }

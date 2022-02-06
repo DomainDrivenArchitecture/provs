@@ -1,9 +1,12 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure.k3s
 
-import com.charleskorn.kaml.UnknownPropertyException
+import kotlinx.serialization.SerializationException
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
-import org.domaindrivenarchitecture.provs.server.domain.k3s.*
 import org.domaindrivenarchitecture.provs.server.domain.CertmanagerEndpoint
+import org.domaindrivenarchitecture.provs.server.domain.k3s.Certmanager
+import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
+import org.domaindrivenarchitecture.provs.server.domain.k3s.Loopback
+import org.domaindrivenarchitecture.provs.server.domain.k3s.Node
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -33,18 +36,18 @@ internal class ConfigRepositoryTest {
     }
 
     @Test
-    fun getConfig_fails_due_to_invalidProperty() {
-        assertThrows<UnknownPropertyException> {
+    fun getConfig_fails_due_to_missing_property() {
+        val exception = assertThrows<SerializationException> {
             getK3sConfig(ConfigFileName("src/test/resources/InvalidWorkplaceConfig.yaml"))
         }
-
+        assertEquals("Fields [fqdn, node] are required for type with serial name 'org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig', but they were missing", exception.message)
     }
 
     @Test
-    fun getConfig_fails_due_to_non_existing_file() {
-        assertThrows<FileNotFoundException> {
+    fun getConfig_fails_due_to_missing_file() {
+        val exception = assertThrows<FileNotFoundException> {
             getK3sConfig(ConfigFileName("src/test/resources/Idonotexist.yaml"))
         }
-
+        assertEquals("src/test/resources/Idonotexist.yaml (No such file or directory)", exception.message)
     }
 }

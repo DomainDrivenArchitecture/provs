@@ -1,12 +1,11 @@
-package org.domaindrivenarchitecture.provs.framework.core.cli
+package org.domaindrivenarchitecture.provs.cofiguration.domain
 
-import io.mockk.every
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
-import io.mockk.verify
+import io.mockk.*
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.Secret
+import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
+import org.domaindrivenarchitecture.provs.framework.core.cli.retrievePassword
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.PrintOnlyProcessor
 import org.domaindrivenarchitecture.provs.framework.core.remote
@@ -20,6 +19,7 @@ internal class CliTargetCommandKtTest {
         @BeforeAll
         @JvmStatic
         internal fun beforeAll() {
+            mockkObject(Prov)
             mockkStatic(::local)
             mockkStatic(::remote)
             every { remote(any(), any(), any(), any()) } returns Prov.newInstance(PrintOnlyProcessor())
@@ -31,6 +31,7 @@ internal class CliTargetCommandKtTest {
         @AfterAll
         @JvmStatic
         internal fun afterAll() {
+            unmockkObject(Prov)
             unmockkStatic(::local)
             unmockkStatic(::remote)
             unmockkStatic(::retrievePassword)
