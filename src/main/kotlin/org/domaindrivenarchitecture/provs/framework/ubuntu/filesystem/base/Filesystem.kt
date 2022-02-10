@@ -92,7 +92,7 @@ fun Prov.createFile(
         return@task ProvResult(true, "File $fullyQualifiedFilename already existing.")
     }
 
-    val modeOption = posixFilePermission?.let { "-m $it"} ?: ""
+    val modeOption = posixFilePermission?.let { "-m $it" } ?: ""
 
     // create empty file resp. clear file
     cmd(withSudo + "install $modeOption /dev/null $fullyQualifiedFilename")
@@ -100,6 +100,7 @@ fun Prov.createFile(
     if (text != null) {
         val chunkedTest = text.chunked(maxBlockSize)
         for (chunk in chunkedTest) {
+            // todo: consider usage of function addTextToFile
             cmd(
                 "printf '%s' " + chunk
                     .escapeAndEncloseByDoubleQuoteForShell() + " | $withSudo tee -a $fullyQualifiedFilename > /dev/null"
@@ -136,12 +137,18 @@ fun Prov.deleteFile(file: String, path: String? = null, sudo: Boolean = false): 
 
 
 fun Prov.fileContainsText(file: String, content: String, sudo: Boolean = false): Boolean {
-    return cmdNoEval(prefixWithSudo( "grep -- '${content.escapeSingleQuote()}' $file", sudo)).success
+    // todo consider grep e.g. for content without newlines
+    //        return cmdNoEval(prefixWithSudo("grep -- '${content.escapeSingleQuote()}' $file", sudo)).success
+    val fileContent = fileContent(file, sudo = sudo)
+    return if (fileContent == null)
+        false
+    else
+        fileContent.contains(content)
 }
 
 
 fun Prov.fileContent(file: String, sudo: Boolean = false): String? {
-    return cmd(prefixWithSudo("cat $file", sudo)).out
+    return cmdNoEval(prefixWithSudo("cat $file", sudo)).out
 }
 
 
@@ -160,15 +167,14 @@ fun Prov.addTextToFile(
     sudo: Boolean = false
 ): ProvResult =
     def {
-        // TODO find solution without trim handling spaces, newlines, etc correctly
-        val findCmd = "grep '${text.trim().escapeSingleQuote()}' ${file}"
-        val findResult = cmdNoEval(if (sudo) findCmd.sudoizeCommand() else findCmd)
-        if (!findResult.success || !doNotAddIfExisting) {
-            val addCmd = "printf \"" + text.escapeDoubleQuote() + "\" >> " + file
-            cmd(if (sudo) addCmd.sudoizeCommand() else addCmd)
-        } else {
-            ProvResult(true)
+        val fileContainsText = fileContainsText(file.path, text, sudo = sudo)
+        if (fileContainsText && doNotAddIfExisting) {
+            return@def ProvResult(true, out = "Text already in file")
         }
+        cmd(
+            "printf '%s' " + text
+                .escapeAndEncloseByDoubleQuoteForShell() + " | ${sudoAsText(sudo)} tee -a ${file.path} > /dev/null"
+        )
     }
 
 

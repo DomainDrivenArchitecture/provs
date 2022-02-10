@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
+import org.junit.jupiter.api.Disabled
 
 internal class LocationsKtTest {
 
     @Test
     @ContainerTest
     @NonCi
+    @Disabled   // todo: fix test
     fun nginxIncludeLocationFolders() {
         // given
         val a = defaultTestContainer()

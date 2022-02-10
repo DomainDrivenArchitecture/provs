@@ -54,6 +54,7 @@ fun String.escapeSingleQuoteForShell(): String = replace("'", "'\"'\"'")
 fun String.escapeProcentForPrintf(): String = replace("%", "%%")
 fun String.endingWithFileSeparator(): String = if (isNotEmpty() && (last() != fileSeparatorChar())) this + fileSeparator() else this
 fun prefixWithSudo(text: String, sudo: Boolean): String = if (sudo) "sudo $text" else text
+fun sudoAsText(sudo: Boolean): String = if (sudo) "sudo" else ""
 
 // --------------  Functions for system related properties    -----------------
 fun fileSeparator(): String = File.separator
