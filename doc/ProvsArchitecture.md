@@ -32,7 +32,12 @@ package application {
 }
 
 package domain {
-    class Service
+    class Service {
+      cleanup (): means remove parts (install & configuration) to enable e.g. re-provision in some cases, results in an error otherwise.
+      provision (): means install & configure.
+      install (): install packages, files but not configuration files. Fire & forget (re-) installation is posible.
+      configure (): install and apply configuration.
+    }
     class Domain
 }
 Application ..> Service
