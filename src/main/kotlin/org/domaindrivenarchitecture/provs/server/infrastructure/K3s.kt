@@ -10,6 +10,7 @@ import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 
 private const val k3sResourcePath = "org/domaindrivenarchitecture/provs/server/infrastructure/k3s/"
 private const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
+private const val k8sCredentialsPath = "/etc/kubernetes/"
 private const val k3sAutomatedManifestsDir = "/var/lib/rancher/k3s/server/manifests/"
 private const val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
 private const val k3sTraeficWorkaround = k3sManualManifestsDir + "traefik.yaml"
@@ -37,6 +38,7 @@ fun Prov.deprovisionK3sInfra() = task {
  */
 fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
     if (!testConfigExists()) {
+        createDirs(k8sCredentialsPath, sudo = true)
         createDirs(k3sAutomatedManifestsDir, sudo = true)
         createDirs(k3sManualManifestsDir, sudo = true)
         var k3sConfigFileName = "config"
@@ -80,6 +82,7 @@ fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
         } else {
             ProvResult(true)
         }
+        cmd("ln -s /etc/rancher/k3s/k3s.yaml" + k8sCredentialsPath + "admin.conf", sudo = true)
     } else {
         ProvResult(true)
     }
