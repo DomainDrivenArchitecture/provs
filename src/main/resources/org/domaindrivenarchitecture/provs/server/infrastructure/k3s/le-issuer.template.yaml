@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: ${endpoint}
+  name: ${name}
 spec:
   acme:
     email: ${email}
-    server: https://acme-${endpoint}-v02.api.letsencrypt.org/directory
+    server: ${endpoint}
     privateKeySecretRef:
-      name: ${endpoint}
+      name: ${name}
     solvers:
     - http01:
         ingress:

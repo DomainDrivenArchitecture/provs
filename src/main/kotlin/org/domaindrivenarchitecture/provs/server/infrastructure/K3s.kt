@@ -103,7 +103,8 @@ fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
         "le-issuer.template.yaml",
         k3sResourcePath,
         mapOf(
-            "endpoint" to certmanager.letsencryptEndpoint.name.lowercase(),
+            "endpoint" to certmanager.letsencryptEndpoint.endpointUri(),
+            "name" to certmanager.letsencryptEndpoint.name.lowercase(),
             "email" to certmanager.email
         ),
         "644",

@@ -35,7 +35,7 @@ internal class NetworkKtTest {
                 loopback = Loopback("192.168.5.1", "fc00::5:1"),
                 certmanager = Certmanager(
                     email = "admin@meissa-gmbh.de",
-                    letsencryptEndpoint = CertmanagerEndpoint.PROD
+                    letsencryptEndpoint = CertmanagerEndpoint.prod
                 ),
                 apple = true,
                 reprovision = true
