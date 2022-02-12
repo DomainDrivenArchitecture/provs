@@ -20,12 +20,17 @@ internal class WebKtTest {
 
         // when
         val res = a.downloadFromURL("file:///tmp/" + file, "file2", "/tmp")
+        val res2 = a.downloadFromURL("file:///tmp/" + file, "file2", "/tmp")
+        val res3 = a.downloadFromURL("file:///tmp/" + file, "file2", "/tmp", overwrite = true)
 
         // then
-        val res2 = a.fileContent("/tmp/file2")
+        val res4 = a.fileContent("/tmp/file2")
 
         assertTrue(res.success)
-        assertEquals("hello", res2)
+        assertEquals("File /tmp/file2 already exists.", res2.out)
+        assertTrue(res3.success)
+        assertEquals(null, res3.out)
+        assertEquals("hello", res4)
     }
 
     @ContainerTest

@@ -310,6 +310,6 @@ private fun String.sudoizeCommand(): String {
 /**
  * Returns path with a trailing fileSeparator if path not empty
  */
-private fun String.normalizePath(): String {
+fun String.normalizePath(): String {
     return if (this == "" || this.endsWith(fileSeparatorChar())) this else this + fileSeparator()
 }
