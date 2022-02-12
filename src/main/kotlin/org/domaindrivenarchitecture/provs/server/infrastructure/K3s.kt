@@ -82,7 +82,7 @@ fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
         } else {
             ProvResult(true)
         }
-        cmd("ln -s /etc/rancher/k3s/k3s.yaml" + k8sCredentialsPath + "admin.conf", sudo = true)
+        cmd("ln -s /etc/rancher/k3s/k3s.yaml " + k8sCredentialsPath + "admin.conf", sudo = true)
     } else {
         ProvResult(true)
     }
