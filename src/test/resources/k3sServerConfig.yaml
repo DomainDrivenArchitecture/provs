@@ -4,6 +4,6 @@ node:
   ipv6: 2a01:4f8:c010:672f::1
 certmanager:
   email: admin@meissa-gmbh.de
-  letsencryptEndpoint: PROD
+  letsencryptEndpoint: prod
 apple: true
 reprovision: true
