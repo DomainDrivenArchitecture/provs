@@ -125,6 +125,8 @@ fun Prov.provisionWorkplace(
             // IDEs
             installVSC("python", "clojure")
             aptInstall(CLOJURE_TOOLS)
+            installShadowCljs()
+
             installIntelliJ()
 
             installDevOps()
