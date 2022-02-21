@@ -25,7 +25,10 @@ internal class GopassKtTest {
     @Test
     fun test_configureGopass_fails_with_path_starting_with_tilde() {
         // when
-        val res = defaultTestContainer().configureGopass("~/somedir")
+        val res = defaultTestContainer().task {
+            deleteFile(".config/gopass/config.yml")
+            configureGopass("~/somedir")
+        }
 
         // then
         assertFalse(res.success)

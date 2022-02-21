@@ -2,10 +2,7 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
@@ -44,16 +41,22 @@ fun Prov.installGopass(
 }
 
 
-fun Prov.configureGopass(gopassRootFolder: String? = null) = def {
-    if ((gopassRootFolder != null) && (gopassRootFolder.trim().length > 0) && ("~" == gopassRootFolder.trim().substring(0, 1))) {
-        return@def ProvResult(false, err = "Gopass cannot be initialized with folders starting with ~")
-    }
+fun Prov.configureGopass(gopassRootFolder: String? = null) = task {
+    val configFile = ".config/gopass/config.yml"
     val defaultRootFolder = userHome() + ".password-store"
     val rootFolder = gopassRootFolder ?: defaultRootFolder
+
+    if (fileExists(configFile)) {
+        return@task ProvResult(true, out = "Gopass already configured in file $configFile")
+    }
+
+    if ((gopassRootFolder != null) && (!gopassRootFolder.startsWith("/"))) {
+        return@task ProvResult(false, err = "Gopass cannot be initialized with a relative path or path starting with ~")
+    }
     // use default
     createDir(rootFolder)
     createDirs(".config/gopass")
-    createFile("~/.config/gopass/config.yml", gopassConfig(rootFolder))
+    createFile(configFile, gopassConfig(rootFolder))
 
     // auto-completion
     configureBashForUser()
@@ -61,35 +64,31 @@ fun Prov.configureGopass(gopassRootFolder: String? = null) = def {
 }
 
 
-fun Prov.gopassMountStore(storeName: String, path: String, indexOfRecepientKey: Int = 0) = def {
-    cmd("printf \"$indexOfRecepientKey\\n\" | gopass mounts add $storeName $path")
+fun Prov.gopassMountStore(storeName: String, path: String) = def {
+    cmd("gopass mounts add $storeName $path")
+}
+
+
+@Suppress("unused")
+fun Prov.gopassInitStore(storeName: String, indexOfRecepientKey: Int = 0) = def {
+    cmd("printf \"$indexOfRecepientKey\\n\" | gopass init --store=$storeName")
 }
 
 
 internal fun gopassConfig(gopassRoot: String): String {
     return """
-root:
-  askformore: false
-  autoclip: true
-  autoprint: false
-  autoimport: true
-  autosync: false
-  check_recipient_hash: false
-  cliptimeout: 45
-  concurrency: 1
-  editrecipients: false
-  exportkeys: true
-  nocolor: false
-  noconfirm: true
-  nopager: false
-  notifications: true
-  path: gpgcli-gitcli-fs+file://$gopassRoot
-  recipient_hash:
-    .gpg-id: 3078303637343130344341383141343930350aa69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26
-  safecontent: false
-  usesymbols: false
-mounts: {}
-    """.trim() + "\n"
+        autoclip: true
+        autoimport: true
+        cliptimeout: 45
+        exportkeys: false
+        nocolor: false
+        nopager: false
+        notifications: true
+        parsing: true
+        path: $gopassRoot
+        safecontent: false
+        mounts: {}
+    """.trimIndent() + "\n"
 }
 
 
