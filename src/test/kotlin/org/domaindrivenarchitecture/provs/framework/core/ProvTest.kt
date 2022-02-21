@@ -407,6 +407,44 @@ internal class ProvTest {
     }
 
     @Test
+    fun task_with_subtask_and_failed_result_fails() {
+        // given
+        fun Prov.inner() {
+            addResultToEval(ProvResult(true))
+        }
+
+        fun Prov.outer() = task {
+            inner()
+            ProvResult(false)
+        }
+
+        // when
+        val res = testLocal().outer()
+
+        //then
+        assertEquals(ProvResult(false), res)
+    }
+
+    @Test
+    fun task_with_failing_subtask_and_successful_result_fails() {
+        // given
+        fun Prov.inner() = task {
+            ProvResult(false)
+        }
+
+        fun Prov.outer() = task {
+            inner()
+            ProvResult(true)
+        }
+
+        // when
+        val res = testLocal().outer()
+
+        //then
+        assertEquals(ProvResult(false), res)
+    }
+
+    @Test
     fun addResultToEval_failure() {
         // given
         fun Prov.inner() {

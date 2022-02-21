@@ -274,7 +274,7 @@ open class Prov protected constructor(
         level++
 
         // call the actual function
-        val res = if (!exit) {
+        val sublevelResult = if (!exit) {
             progress(internalResult)
             @Suppress("UNUSED_EXPRESSION") // false positive
             a()
@@ -291,20 +291,20 @@ open class Prov protected constructor(
                     // for a leaf (task with mo subtask) or tasks "cmd" resp. "repeatUntilTrue" provide also out and err of original results
                     // because results of cmd and leafs are not included in the reporting
                     // and the caller of repeatUntilTrue might need to see the complete result (incl. out and err) and not only success value
-                    res.copy()
+                    sublevelResult.copy()
                 } else {
                     // just pass success value, no other data of the original result
-                    ProvResult(res.success)
+                    ProvResult(sublevelResult.success)
                 }
             } else if (mode == ResultMode.ALL) {
                 // leaf
-                if (internalResultIsLeaf(resultIndex)) res.copy()
+                if (internalResultIsLeaf(resultIndex)) sublevelResult.copy()
                 // evaluate subcalls' results
-                else ProvResult(cumulativeSuccessSublevel(resultIndex) ?: false)
+                else ProvResult((cumulativeSuccessSublevel(resultIndex) ?: false) && sublevelResult.success)
             } else if (mode == ResultMode.NONE) {
                 ProvResult(true)
             } else if (mode == ResultMode.FAILEXIT) {
-                return if (res.success) {
+                return if (sublevelResult.success) {
                     ProvResult(true)
                 } else {
                     exit = true
