@@ -17,23 +17,6 @@ import org.junit.jupiter.api.Test
 
 internal class UbuntuProvTest {
 
-    private fun Prov.ping(url: String) = def {
-        xec("ping", "-c", "2", url)
-    }
-
-    private fun Prov.outerPing() = def {
-        ping("gitlab.com")
-    }
-
-    @Test
-    fun that_ping_works() {
-        // when
-        val res = testLocal().outerPing()
-
-        // then
-        assert(res.success)
-    }
-
     @Test
     fun that_cmd_works() {
         // given
