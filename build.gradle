@@ -18,7 +18,7 @@ apply plugin: 'kotlinx-serialization'
 
 
 group = 'org.domaindrivenarchitecture.provs'
-version = '0.9.7'
+version = '0.9.8-SNAPSHOT'
 
 repositories {
     mavenCentral()
