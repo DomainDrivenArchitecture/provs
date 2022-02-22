@@ -92,7 +92,7 @@ fun Prov.provisionWorkplace(
 
     if (desktopType == DesktopType.IDE) {
 
-        aptInstall(JAVA_JDK)
+        aptInstall(JAVA)
 
         aptInstall(OPEN_VPM)
         aptInstall(OPENCONNECT)
