@@ -1,21 +1,15 @@
-package org.domaindrivenarchitecture.provs.desktop.application
+package org.domaindrivenarchitecture.provs.desktop.domain
 
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
-import org.domaindrivenarchitecture.provs.desktop.domain.Scope
 
 
 class DesktopCliCommand(
-    val configFile: ConfigFileName,
-    val scopes: List<Scope>,
+    val type: DesktopType,
     val target: TargetCliCommand,
+    val configFile: ConfigFileName?,
 ) {
-
     fun isValid(): Boolean {
-        return configFile.fileName.isNotEmpty() && target.isValid()
-    }
-
-    fun haScope(): Boolean {
-        return scopes.isNotEmpty()
+        return target.isValid()
     }
 }

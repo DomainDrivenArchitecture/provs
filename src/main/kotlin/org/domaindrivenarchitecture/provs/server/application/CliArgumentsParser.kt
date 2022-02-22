@@ -8,11 +8,10 @@ import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 
-class CliArgumentsParser(
-    name: String
-    ) : CliTargetParser(name) {
+class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
     private val modules: List<ServerSubcommand> = listOf(K3s(), K3d())
+
     init {
         subcommands(*modules.toTypedArray())
     }
@@ -36,12 +35,12 @@ class CliArgumentsParser(
         )
     }
 
-    abstract class ServerSubcommand(name: String, description: String): Subcommand(name, description) {
+    abstract class ServerSubcommand(name: String, description: String) : Subcommand(name, description) {
         var parsed: Boolean = false
         var configFileName: ConfigFileName? = null
     }
 
-    class K3s: ServerSubcommand("k3s", "the k3s module") {
+    class K3s : ServerSubcommand("k3s", "the k3s module") {
         val cliConfigFileName by argument(
             ArgType.String,
             "configFilename",
@@ -54,12 +53,11 @@ class CliArgumentsParser(
         }
     }
 
-    class K3d: ServerSubcommand("k3d", "the k3s module") {
+    class K3d : ServerSubcommand("k3d", "the k3s module") {
         override fun execute() {
             TODO("Not yet implemented")
         }
     }
-
 
 
 }

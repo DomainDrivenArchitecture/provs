@@ -1,35 +1,29 @@
 package org.domaindrivenarchitecture.provs.desktop.application
 
 import kotlinx.cli.ArgType
-import kotlinx.cli.default
-import kotlinx.cli.multiple
+import kotlinx.cli.Subcommand
 import org.domaindrivenarchitecture.provs.configuration.application.CliTargetParser
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
-import org.domaindrivenarchitecture.provs.desktop.domain.Scope
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopCliCommand
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
 
 
 open class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
-    val configFileName by argument(
-        ArgType.String,
-        "configFilename",
-        "the filename containing the yaml config for the desktop"
-    )
+    private val modules: List<DesktopSubcommand> = listOf(Basic(), Office(), Ide())
 
-    val scopes by option (
-        type = ArgType.Choice<Scope>(),
-        shortName = "s",
-        fullName = "scope",
-        description = "only provision component in scope."
-    ).multiple()
+    init {
+        subcommands(*modules.toTypedArray())
+    }
 
-    fun parseWorkplaceArguments(args: Array<String>): DesktopCliCommand {
+    fun parseCommand(args: Array<String>): DesktopCliCommand {
         super.parse(args)
 
+        val module = modules.first { it.parsed }
+
         return DesktopCliCommand(
-            ConfigFileName(configFileName),
-            scopes,
+            DesktopType.valueOf(module.name.uppercase()),
             TargetCliCommand(
                 localHost,
                 remoteHost,
@@ -37,7 +31,28 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
                 sshWithPasswordPrompt,
                 sshWithGopassPath,
                 sshWithKey
-            )
+            ),
+            module.configFileName
         )
     }
+
+    abstract class DesktopSubcommand(name: String, description: String) : Subcommand(name, description) {
+        var parsed: Boolean = false
+        var configFileName: ConfigFileName? = null
+        val cliConfigFileName by option(
+            ArgType.String,
+            "config-file",
+            "c",
+            "the filename containing the yaml config",
+        )
+
+        override fun execute() {
+            configFileName = cliConfigFileName?.let { ConfigFileName(it) }
+            parsed = true
+        }
+    }
+
+    class Basic : DesktopSubcommand("basic", "basic desktop for a user")
+    class Office : DesktopSubcommand("office", "includes office software like Thunderbird, LibreOffice, etc")
+    class Ide : DesktopSubcommand("ide", "includes office software as well as ides like VSCode, etc")
 }

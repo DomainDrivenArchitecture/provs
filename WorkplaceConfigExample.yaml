@@ -1,6 +1,3 @@
-# type is required
-type: MINIMAL   # MINIMAL, OFFICE or IDE
-
 # fields below are optional, either remove them or update them with your data
 ssh:
   sourceType: FILE       # FILE or GOPASS

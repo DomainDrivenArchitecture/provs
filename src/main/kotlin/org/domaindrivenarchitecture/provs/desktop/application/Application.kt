@@ -1,11 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.application
 
 import kotlinx.serialization.SerializationException
-import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.desktop.domain.provisionWorkplace
-import org.domaindrivenarchitecture.provs.desktop.domain.DesktopConfig
 import org.domaindrivenarchitecture.provs.desktop.domain.provisionDesktop
-import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
 import java.io.FileNotFoundException
 import kotlin.system.exitProcess
@@ -15,7 +11,7 @@ import kotlin.system.exitProcess
  */
 fun main(args: Array<String>) {
 
-    val cmd = CliArgumentsParser("java -jar provs-desktop.jar").parseWorkplaceArguments(args)
+    val cmd = CliArgumentsParser("java -jar provs-desktop.jar").parseCommand(args)
     if (!cmd.isValid()) {
         println("Arguments are not valid, pls try option -h for help.")
         exitProcess(1)

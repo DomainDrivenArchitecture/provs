@@ -1,1 +1,3 @@
-type: WRONGTYPE   # IDE, OFFICE or MINIMAL
+ssh:
+  sourceType: xxx
+

@@ -3,7 +3,6 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 import com.charleskorn.kaml.InvalidPropertyValueException
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceType
-import org.domaindrivenarchitecture.provs.desktop.domain.WorkplaceType
 import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -18,7 +17,6 @@ internal class ConfigRepositoryKtTest {
         val config = getConfig("src/test/resources/TestWorkplaceConfig.yaml")
 
         // then
-        assertEquals(WorkplaceType.OFFICE, config.type)
         assertEquals("username", config.gitUserName)
         assertEquals("for@git.email", config.gitEmail)
 
@@ -36,7 +34,7 @@ internal class ConfigRepositoryKtTest {
         val exception = assertThrows<InvalidPropertyValueException> {
             getConfig("src/test/resources/InvalidWorkplaceConfig.yaml")
         }
-        assertEquals("Value for 'type' is invalid: Value 'WRONGTYPE' is not a valid option, permitted choices are: IDE, MINIMAL, OFFICE", exception.message)
+        assertEquals("Value for 'sourceType' is invalid: Value 'xxx' is not a valid option, permitted choices are: FILE, GOPASS, PASS, PLAIN, PROMPT", exception.message)
     }
 
     @Test

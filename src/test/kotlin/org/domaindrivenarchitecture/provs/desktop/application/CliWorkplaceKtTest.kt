@@ -4,13 +4,14 @@ import ch.qos.logback.classic.Level
 import io.mockk.*
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopCliCommand
 import org.domaindrivenarchitecture.provs.desktop.domain.DesktopConfig
-import org.domaindrivenarchitecture.provs.desktop.domain.WorkplaceType
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
 import org.domaindrivenarchitecture.provs.desktop.domain.provisionWorkplace
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.cli.retrievePassword
-import org.domaindrivenarchitecture.provs.framework.core.processors.PrintOnlyProcessor
+import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
 import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -23,32 +24,32 @@ internal class CliWorkplaceKtTest {
 
     companion object {
 
-        val testConfig = DesktopConfig(WorkplaceType.MINIMAL, gitUserName = "gittestuser", gitEmail = "git@test.mail")
+        val testConfig = DesktopConfig(gitUserName = "gittestuser", gitEmail = "git@test.mail")
         val cmd = DesktopCliCommand(
-            ConfigFileName("bla"),
-            listOf(),
-            TargetCliCommand(null, null, null, false, null, false)
+            DesktopType.BASIC,
+            TargetCliCommand(null, null, null, false, null, false),
+            ConfigFileName("bla")
         )
 
         @BeforeAll
         @JvmStatic
         internal fun beforeAll() {
-            val printOnlyProv = Prov.newInstance(PrintOnlyProcessor())
+            val dummyProv = Prov.newInstance(DummyProcessor())
 
             mockkObject(Prov)
-            every { Prov.newInstance(any(), any(), any(), any(), ) } returns printOnlyProv
+            every { Prov.newInstance(any(), any(), any(), any(), ) } returns dummyProv
 
             mockkStatic(::local)
-            every { local() } returns printOnlyProv
+            every { local() } returns dummyProv
 
             mockkStatic(::remote)
-            every { remote(any(), any(), any(), any()) } returns printOnlyProv
+            every { remote(any(), any(), any(), any()) } returns dummyProv
 
             mockkStatic(::getConfig)
             every { getConfig("testconfig.yaml") } returns testConfig
 
             mockkStatic(Prov::provisionWorkplace)
-            every { any<Prov>().provisionWorkplace(any(), any(), any(), any(), any(), any()) } returns ProvResult(
+            every { any<Prov>().provisionWorkplace(any(), any(), any(), any(), any(), ) } returns ProvResult(
                 true,
                 cmd = "mocked command"
             )
@@ -73,18 +74,17 @@ internal class CliWorkplaceKtTest {
     fun provision_workplace_remotely() {
 
         // when
-        main(arrayOf("-i", "-r", "host123.xyz", "-u", "user123", "testconfig.yaml"))
+        main(arrayOf("basic", "-i", "-r", "host123.xyz", "-u", "user123", "-c", "testconfig.yaml"))
 
         // then
         verify { remote("host123.xyz", "user123", Secret("sec"), any()) }
         verify {
             any<Prov>().provisionWorkplace(
-                WorkplaceType.MINIMAL,
+                DesktopType.BASIC,
                 null,
                 null,
                 testConfig.gitUserName,
                 testConfig.gitEmail,
-                any()   // todo should be: cmd , but needs to be fixed
             )
         }
     }
@@ -103,7 +103,7 @@ internal class CliWorkplaceKtTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        main(arrayOf("-l", "idontexist.yaml"))
+        main(arrayOf("basic", "-c", "idontexist.yaml", "-r", "remotehost", "-u", "someuser", "-k"))
 
         // then
         System.setOut(originalOut)
@@ -113,7 +113,7 @@ internal class CliWorkplaceKtTest {
             "Error: File\u001B[31m ConfigFileName(fileName=idontexist.yaml) \u001B[0m was not found.Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m ConfigFileName(fileName=idontexist.yaml) \u001B[0m and change the content according to your needs."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
-        verify(exactly = 0) { any<Prov>().provisionWorkplace(any(), cmd = cmd) }
+        verify(exactly = 0) { any<Prov>().provisionWorkplace(any(), any(), any(), any(), any(), ) }
     }
 
     @Test
@@ -130,7 +130,7 @@ internal class CliWorkplaceKtTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        main(arrayOf("-l", "src/test/resources/InvalidWorkplaceConfig.yaml"))
+        main(arrayOf("basic", "-c", "src/test/resources/InvalidWorkplaceConfig.yaml", "-r", "remotehost", "-u", "someuser", "-k"))
 
         // then
         System.setOut(originalOut)
@@ -140,6 +140,6 @@ internal class CliWorkplaceKtTest {
             "Error: File \"ConfigFileName(fileName=src/test/resources/InvalidWorkplaceConfig.yaml)\" has an invalid format and or invalid data."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
-        verify(exactly = 0) { any<Prov>().provisionWorkplace(any(), cmd = cmd) }
+        verify(exactly = 0) { any<Prov>().provisionWorkplace(any(), any(), any(), any(), any(), ) }
     }
 }
