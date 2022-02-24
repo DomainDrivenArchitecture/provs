@@ -14,13 +14,17 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
+
 fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
     // retrieve config
     val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
-    with(conf) {
-        prov.provisionWorkplace(cmd.type, ssh?.keyPair(), gpg?.keyPair(), gitUserName, gitEmail)
+    if (cmd.submodules == null) {
+        prov.provisionWorkplace(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail)
+    } else {
+        prov.provisionWorkplaceSubmodules(cmd.submodules)
     }
 }
+
 
 /**
  * Provisions software and configurations for a personal workplace.
@@ -36,7 +40,7 @@ fun Prov.provisionWorkplace(
     gpg: KeyPair? = null,
     gitUserName: String? = null,
     gitEmail: String? = null,
-) = requireAll {
+) = task {
 
     if (!currentUserCanSudo()) {
         throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionWorkplace")
@@ -110,6 +114,22 @@ fun Prov.provisionWorkplace(
         installDevOps()
 
         installPython()
+    }
+    ProvResult(true)
+}
+
+
+/**
+ * Provisions submodules for a personal workplace.
+ *
+ * Prerequisites: module must already been installed
+ */
+fun Prov.provisionWorkplaceSubmodules(
+    submodules: List<String>
+) = task {
+    if (submodules.contains(DesktopSubmodule.PROVSBINARIES.name.lowercase())) {
+        aptInstall("jarwrapper")
+        installProvsBinaries()
     }
     ProvResult(true)
 }

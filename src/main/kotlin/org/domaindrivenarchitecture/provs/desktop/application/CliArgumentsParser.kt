@@ -28,23 +28,33 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
                 target,
                 passwordInteractive
             ),
-            module.configFileName
+            module.configFileName,
+            module.submodules
         )
     }
 
     abstract class DesktopSubcommand(name: String, description: String) : Subcommand(name, description) {
         var parsed: Boolean = false
         var configFileName: ConfigFileName? = null
+        var submodules: List<String>? = null
+
         val cliConfigFileName by option(
             ArgType.String,
             "config-file",
             "c",
             "the filename containing the yaml config",
         )
+        val only by option(
+            ArgType.String,
+            "only",
+            "o",
+            "provisions only parts (currently possible: provsbinaries)",
+        )
 
         override fun execute() {
             configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             parsed = true
+            submodules = only?.split(",")
         }
     }
 

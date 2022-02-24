@@ -8,6 +8,7 @@ class DesktopCliCommand(
     val type: DesktopType,
     val target: TargetCliCommand,
     val configFile: ConfigFileName?,
+    val submodules: List<String>? = null
 ) {
     fun isValid(): Boolean {
         return target.isValid()
