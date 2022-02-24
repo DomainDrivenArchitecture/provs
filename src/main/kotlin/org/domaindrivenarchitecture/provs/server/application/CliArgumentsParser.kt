@@ -24,12 +24,8 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         return ServerCliCommand(
             ServerType.valueOf(module.name.uppercase()),
             TargetCliCommand(
-                localHost,
-                remoteHost,
-                userName,
-                sshWithPasswordPrompt,
-                sshWithGopassPath,
-                sshWithKey
+                target,
+                passwordInteractive
             ),
             module.configFileName
         )
@@ -41,14 +37,15 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
     }
 
     class K3s : ServerSubcommand("k3s", "the k3s module") {
-        val cliConfigFileName by argument(
+        val cliConfigFileName by option(
             ArgType.String,
-            "configFilename",
+            "config-file",
+            "c",
             "the filename containing the yaml config for k3s"
         )
 
         override fun execute() {
-            super.configFileName = ConfigFileName(cliConfigFileName)
+            super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             super.parsed = true
         }
     }

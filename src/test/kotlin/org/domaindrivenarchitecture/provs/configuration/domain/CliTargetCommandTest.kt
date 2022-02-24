@@ -41,7 +41,7 @@ internal class CliTargetCommandKtTest {
     @Test
     fun createProvInstance_local() {
         // given
-        val cliCommand = TargetCliCommand(true, null, null, false, null, false)
+        val cliCommand = TargetCliCommand("local", false)
 
         // when
         createProvInstance(cliCommand)
@@ -53,7 +53,7 @@ internal class CliTargetCommandKtTest {
     @Test
     fun createProvInstance_remote_with_sshKey() {
         // given
-        val cliCommand = TargetCliCommand(false, "host123", "user123", false, null, true)
+        val cliCommand = TargetCliCommand("user123@host123", false)
 
         // when
         createProvInstance(cliCommand)
@@ -65,7 +65,7 @@ internal class CliTargetCommandKtTest {
     @Test
     fun createProvInstance_remote_with_interactive_password_retrieval() {
         // given
-        val cliCommand = TargetCliCommand(false, "host123", "user123", true, null, false)
+        val cliCommand = TargetCliCommand("user123:sec@host123", false)
 
         // when
         createProvInstance(cliCommand)

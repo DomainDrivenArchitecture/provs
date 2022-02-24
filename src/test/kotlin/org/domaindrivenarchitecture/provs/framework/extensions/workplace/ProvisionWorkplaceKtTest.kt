@@ -1,23 +1,14 @@
 package org.domaindrivenarchitecture.provs.framework.extensions.workplace
 
-import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
-import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
-import org.domaindrivenarchitecture.provs.desktop.domain.DesktopCliCommand
-import org.domaindrivenarchitecture.provs.test.defaultTestContainer
-import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
 import org.domaindrivenarchitecture.provs.desktop.domain.provisionWorkplace
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
+import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 internal class ProvisionWorkplaceKtTest {
-
-    val cmd = DesktopCliCommand(
-        DesktopType.BASIC,
-        TargetCliCommand(null, null, null, false, null, false),
-        ConfigFileName("bla")
-    )
 
     @Test
     @ContainerTest

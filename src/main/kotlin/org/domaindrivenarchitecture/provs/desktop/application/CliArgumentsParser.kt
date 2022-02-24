@@ -25,12 +25,8 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
         return DesktopCliCommand(
             DesktopType.valueOf(module.name.uppercase()),
             TargetCliCommand(
-                localHost,
-                remoteHost,
-                userName,
-                sshWithPasswordPrompt,
-                sshWithGopassPath,
-                sshWithKey
+                target,
+                passwordInteractive
             ),
             module.configFileName
         )

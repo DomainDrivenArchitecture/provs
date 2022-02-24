@@ -5,7 +5,6 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.remote
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.GopassSecretSource
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.makeUserSudoerWithNoSudoPasswordRequired
@@ -26,15 +25,16 @@ fun createProvInstance(
     remoteHostSetSudoWithoutPasswordRequired: Boolean = false
 ): Prov {
     if (targetCommand.isValid()) {
-        val password: Secret? = if (targetCommand.isValidRemote()) retrievePassword(targetCommand) else null
+        val password: Secret? = targetCommand.remoteTarget()?.password
 
+        val remoteTarget = targetCommand.remoteTarget()
         if (targetCommand.isValidLocalhost()) {
             return local()
-        } else if (targetCommand.isValidRemote()) {
+        } else if (targetCommand.isValidRemote() && remoteTarget != null) {
             return createProvInstanceRemote(
-                targetCommand.remoteHost!!,
-                targetCommand.userName!!,
-                targetCommand.sshWithKey,
+                remoteTarget.host,
+                remoteTarget.user,
+                remoteTarget.password == null,
                 password,
                 remoteHostSetSudoWithoutPasswordRequired
             )
@@ -81,15 +81,13 @@ private fun createProvInstanceRemote(
 }
 
 
+// todo: consider removal as password can be retrieved by PromptSecretSource
 internal fun retrievePassword(cliCommand: TargetCliCommand): Secret? {
     var password: Secret? = null
-    if (cliCommand.isValidRemote()) {
-        if (cliCommand.sshWithPasswordPrompt) {
-            password =
-                PromptSecretSource("Password for user $cliCommand.userName!! on $cliCommand.remoteHost!!").secret()
-        } else if (cliCommand.sshWithGopassPath != null) {
-            password = GopassSecretSource(cliCommand.sshWithGopassPath).secret()
-        }
+    if (cliCommand.isValidRemote() && cliCommand.passwordInteractive) {
+        password =
+            PromptSecretSource("Password for user $cliCommand.userName!! on $cliCommand.remoteHost!!").secret()
+
     }
     return password
 }

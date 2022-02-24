@@ -27,7 +27,7 @@ internal class CliWorkplaceKtTest {
         val testConfig = DesktopConfig(gitUserName = "gittestuser", gitEmail = "git@test.mail")
         val cmd = DesktopCliCommand(
             DesktopType.BASIC,
-            TargetCliCommand(null, null, null, false, null, false),
+            TargetCliCommand("user@host", false),
             ConfigFileName("bla")
         )
 
@@ -74,7 +74,7 @@ internal class CliWorkplaceKtTest {
     fun provision_workplace_remotely() {
 
         // when
-        main(arrayOf("basic", "-i", "-r", "host123.xyz", "-u", "user123", "-c", "testconfig.yaml"))
+        main(arrayOf("basic", "user123:sec@host123.xyz", "-c", "testconfig.yaml"))
 
         // then
         verify { remote("host123.xyz", "user123", Secret("sec"), any()) }
@@ -103,7 +103,7 @@ internal class CliWorkplaceKtTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        main(arrayOf("basic", "-c", "idontexist.yaml", "-r", "remotehost", "-u", "someuser", "-k"))
+        main(arrayOf("basic", "someuser@remotehost", "-c", "idontexist.yaml"))
 
         // then
         System.setOut(originalOut)
@@ -130,7 +130,7 @@ internal class CliWorkplaceKtTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        main(arrayOf("basic", "-c", "src/test/resources/InvalidWorkplaceConfig.yaml", "-r", "remotehost", "-u", "someuser", "-k"))
+        main(arrayOf("basic", "someuser@remotehost", "-c", "src/test/resources/InvalidWorkplaceConfig.yaml"))
 
         // then
         System.setOut(originalOut)
