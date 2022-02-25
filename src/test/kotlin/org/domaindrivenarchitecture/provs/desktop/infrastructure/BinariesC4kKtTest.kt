@@ -15,5 +15,10 @@ internal class BinariesC4kKtTest {
         // then
         assertTrue(res.success)
         assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/c4k-nextcloud-standalone.jar", sudo = true))
+        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/c4k-jira-standalone.jar", sudo = true))
+        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/c4k-jitsi-standalone.jar", sudo = true))
+        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/c4k-shynet-standalone.jar", sudo = true))
+        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/c4k-mastodon-bot-standalone.jar", sudo = true))
+        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/c4k-keycloak-standalone.jar", sudo = true))
     }
 }
