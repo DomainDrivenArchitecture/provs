@@ -38,7 +38,7 @@ internal class GitKtTest {
 
         // when
         prov.trustGithub()
-        val res = prov.gitClone("https://github.com/DomainDrivenArchitecture/dda-git-crate.git", "~/")
+        val res = prov.gitClone("https://gitlab.com/domaindrivenarchitecture/overview.git", "~/")
 
         // then
         assertTrue(res.success)

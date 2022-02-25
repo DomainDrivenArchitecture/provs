@@ -16,6 +16,7 @@ import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.private
 import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.publicGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.*
+import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertFalse
 
 
@@ -34,8 +35,7 @@ internal class GopassKtTest {
         assertFalse(res.success)
     }
 
-    @ContainerTest
-    @Test
+    @ExtensiveContainerTest
     fun test_installAndConfigureGopassAndMountStore() {
         // given
         val a = defaultTestContainer()
