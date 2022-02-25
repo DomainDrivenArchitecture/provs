@@ -24,55 +24,48 @@ Additionally, it is possible to define a custom processor if needed.
 ### Prerequisites
 
 * A **Java Virtual machine** (JVM) is required.
-* Download the latest `provs.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
-* For server functionality (such as install k3s) download the latest `provs-server.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
+* Install `jarwrapper` (e.g. `sudo apt install jarwrapper`)
+* Download the latest `provs-desktop.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
+* Make the jar-file executable by `chmod +x provs-desktop.jar`
+* For server functionality (e.g. k3s) download the latest `provs-server.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
+
+### Usage format
+
+`provs-desktop.jar <type> <target> [<options>]`
+
+**type** can be: 
+* basic - install some basic packages)
+* office - install office software (LibreOffice), E-Mail (Thunderbird), etc 
+* ide - same as office with additionally ide-software (VSCode, IntelliJ, etc) 
+
+**target** can be: 
+* `local`
+* `user123:mypassword@myhost.com` - general format is: <user[:password]@host> - 
+  * if password is omitted, then ssh-keys will be used for authentication
+  * if password is omitted but option `-p` is provided the password will be prompted interactively 
+
+**options** 
+* `-p` for interactive password question
 
 
-### Show usage options
+#### Show usage options
 
+`provs-desktop.jar -h`
 
-`java -jar provs.jar -h`
+### Examples
 
-### Provision a desktop workplace locally
+#### Provision a basic desktop workplace locally
 
-Ensure a config file is in place (default config file name is "WorkplaceConfig.yaml") with at least the workplace type specified, e.g.
-```type: MINIMAL```
+`provs-desktop.jar basic local`
 
-Possible types are currently: MINIMAL, OFFICE or IDE.
+#### Provision an office desktop workplace remotely
 
-Run:
+`provs-desktop.jar office myuser@myhost.com -p`
 
-`java -jar provs.jar -l`
-
-### Provision a desktop workplace remotely
-
-`java -jar provs.jar -i -r <ip> -u <remote_username>`
-
-You'll be prompted for the password of the remote user.
+You'll be prompted for the password of the remote user due to option `-p`.
 
 ### Provision k3s
 
 ```bash
-java -jar provs-server.jar -i -r <ip or hostname> -u <remote_username>
-# Example:
-java -jar provs-server.jar -i -r 192.168.56.141 -u testuser
+provs-server.jar k3s myuser@myhost.com 
 ```
-
-You'll be prompted for the password of the remote user.
-
-
-## For developers
-
-### Build the jar-file yourself
-
-* Clone this repo
-* Build the fatjar file by `./gradlew fatJarLatest`
-* In folder build/libs you'll find the file `provs.jar`
-
-The fatjar is a Java jar-file incl. all required dependencies.
-
-### Sequence diagram
-
-Find below an example of a sequence diagram when provisioning a workplace:
-
-![img.png](doc/resources/provision-workplace-sequence.diagram.png)
