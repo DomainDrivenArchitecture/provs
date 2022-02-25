@@ -62,7 +62,7 @@ internal class WebKtTest {
         a.createFile("/tmp/" + srcFile, "hello")
 
         // when
-        val res = a.downloadFromURL("file:///tmp/" + srcFile, targetFile, "tmp", sha256sum = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824WRONG")
+        val res = a.downloadFromURL("file:///tmp/" + srcFile, targetFile, "tmp", sha256sum = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824WRONG", overwrite = true)
 
         // then
         val res2 = a.fileExists("tmp/$targetFile")
