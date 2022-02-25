@@ -50,11 +50,15 @@ under development - we are working hard on seting up our environments using prov
 ### Examples
 #### Provision a basic desktop workplace locally
 
-`provs-desktop.jar basic local`
+```bash
+provs-desktop.jar basic local`
+```
 
 #### Provision an office desktop workplace remotely
 
-`provs-desktop.jar office myuser@myhost.com -p`
+```bash
+provs-desktop.jar office myuser@myhost.com -p`
+```
 
 You'll be prompted for the password of the remote user due to option `-p`.
 
