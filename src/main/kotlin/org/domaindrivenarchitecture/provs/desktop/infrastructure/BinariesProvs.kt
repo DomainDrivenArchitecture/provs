@@ -7,11 +7,11 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 fun Prov.installBinariesProvs() = task {
     // check for latest stable release on: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
-    // release 0.9.6
-    val jobId = "2083873496"
+    // release 0.9.8
+    val jobId = "2137287031"
     val installationPath = " /usr/local/bin/"
-    val provsServerSha256sum = "1127d0a939e1d3eec8e15cd3969f565732b89d9ca10bbaf134840d25aeb3f03b"
-    val provsDesktopSha256sum = "626f1e01fca5845a54ddd1e645e52bb4b05d04a4cfa060cd18f1ad15a5d387ad"
+    val provsDesktopSha256sum = "8ad8ca69adf9b3da0a56d088a8694b366528fdcb4ad6b5047b42f32c4877d7ce"
+    val provsServerSha256sum = "91adf9bf6bad18b891eed53e23ad03182824daf3c724599255ee8a56294bf88c"
 
     createDirs(installationPath, sudo = true)
 

@@ -42,7 +42,7 @@ Additionally, it is possible to define a custom processor if needed.
 * `local`
 * `user123:mypassword@myhost.com` - general format is: <user[:password]@host> - 
   * if password is omitted, then ssh-keys will be used for authentication
-  * if password is omitted but option `-p` is provided the password will be prompted interactively 
+  * if password is omitted but option `-p` is provided, then the password will be prompted interactively 
 
 **options** 
 * `-p` for interactive password question
