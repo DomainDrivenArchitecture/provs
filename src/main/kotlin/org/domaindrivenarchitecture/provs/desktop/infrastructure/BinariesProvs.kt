@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.creat
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
-fun Prov.installBinariesProvs() = task {
+fun Prov.installBinariesProvs(reprovision: Boolean = false) = task {
     // check for latest stable release on: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
     // release 0.9.8
     val jobId = "2137287031"
@@ -16,21 +16,22 @@ fun Prov.installBinariesProvs() = task {
     createDirs(installationPath, sudo = true)
 
     downloadFromURL(
-        "https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/$jobId/artifacts/raw/build/libs/provs-server.jar",
-        path = installationPath,
-        filename = "provs-server.jar",
-        sha256sum = provsServerSha256sum,
-        sudo = true
-    )
-
-    downloadFromURL(
         "https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/$jobId/artifacts/raw/build/libs/provs-desktop.jar",
         path = installationPath,
         filename = "provs-desktop.jar",
         sha256sum = provsDesktopSha256sum,
-        sudo = true
+        sudo = true,
+        overwrite = reprovision
     )
+    cmd("chmod 755 /usr/local/bin/provs-desktop.jar", sudo = true)
 
+    downloadFromURL(
+        "https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/$jobId/artifacts/raw/build/libs/provs-server.jar",
+        path = installationPath,
+        filename = "provs-server.jar",
+        sha256sum = provsServerSha256sum,
+        sudo = true,
+        overwrite = reprovision
+    )
     cmd("chmod 755 /usr/local/bin/provs-server.jar" , sudo = true)
-    cmd("chmod 755  /usr/local/bin/provs-desktop.jar", sudo = true)
 }

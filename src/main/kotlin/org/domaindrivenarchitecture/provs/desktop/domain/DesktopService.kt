@@ -1,7 +1,6 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.*
-import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.git.provisionGit
@@ -129,7 +128,11 @@ fun Prov.provisionWorkplaceSubmodules(
 ) = task {
     if (submodules.contains(DesktopSubmodule.PROVSBINARIES.name.lowercase())) {
         aptInstall("jarwrapper")
-        installBinariesProvs()
+        installBinariesProvs(true)
+    }
+    if (submodules.contains(DesktopSubmodule.C4KBINARIES.name.lowercase())) {
+        aptInstall("jarwrapper")
+        installBinariesC4k(true)
     }
     ProvResult(true)
 }
