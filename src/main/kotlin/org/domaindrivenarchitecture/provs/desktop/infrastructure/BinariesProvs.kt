@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.creat
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
-fun Prov.installProvsBinaries() = task {
+fun Prov.installBinariesProvs() = task {
     // check for latest stable release on: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
     // release 0.9.6
     val jobId = "2083873496"
@@ -30,4 +30,7 @@ fun Prov.installProvsBinaries() = task {
         sha256sum = provsDesktopSha256sum,
         sudo = true
     )
+
+    cmd("chmod 755 /usr/local/bin/provs-server.jar" , sudo = true)
+    cmd("chmod 755  /usr/local/bin/provs-desktop.jar", sudo = true)
 }

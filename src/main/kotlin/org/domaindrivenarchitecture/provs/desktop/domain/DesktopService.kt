@@ -91,7 +91,7 @@ fun Prov.provisionWorkplace(
         installRedshift()
         configureRedshift()
 
-        installProvsBinaries()
+        installBinariesProvs()
     }
 
     if (desktopType == DesktopType.IDE) {
@@ -129,7 +129,7 @@ fun Prov.provisionWorkplaceSubmodules(
 ) = task {
     if (submodules.contains(DesktopSubmodule.PROVSBINARIES.name.lowercase())) {
         aptInstall("jarwrapper")
-        installProvsBinaries()
+        installBinariesProvs()
     }
     ProvResult(true)
 }
