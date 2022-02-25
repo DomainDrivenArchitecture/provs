@@ -26,8 +26,8 @@ fun Prov.installBinariesC4k() = task {
         }
 
     }
-    downloadC4k(Binary("1824231745", "c4k-nextcloud-standalone.jar",
-        "5b7eeecf745c720184be4fccdd61a49509ae5e322558506eb6bc3c3ed680c23f"))
+    downloadC4k(Binary("2138015489", "c4k-nextcloud-standalone.jar",
+        "47b6f71664903816eab0e4950d4ab0d564ea365ddb2b9c2a7bcb2736a2d941cb"))
     downloadC4k(Binary("2136806347", "c4k-jira-standalone.jar",
         "585f26e3b70bec32f052f488688718d8c9a6d15222b8a2141a69fa1bea136179"))
     downloadC4k(Binary("2136561868", "c4k-keycloak-standalone.jar",
