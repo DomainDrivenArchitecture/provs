@@ -91,6 +91,7 @@ fun Prov.provisionWorkplace(
         configureRedshift()
 
         installBinariesProvs()
+        installBinariesC4k()
     }
 
     if (desktopType == DesktopType.IDE) {

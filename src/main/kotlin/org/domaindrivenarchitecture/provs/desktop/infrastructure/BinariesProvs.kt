@@ -21,7 +21,7 @@ fun Prov.installBinariesProvs(reprovision: Boolean = false) = task {
         filename = "provs-desktop.jar",
         sha256sum = provsDesktopSha256sum,
         sudo = true,
-        overwrite = reprovision
+        overwrite = false    // don't overwrite, as code always refers to an older version, for which the checksum is known
     )
     cmd("chmod 755 /usr/local/bin/provs-desktop.jar", sudo = true)
 
