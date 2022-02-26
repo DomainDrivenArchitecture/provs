@@ -7,7 +7,7 @@ import java.io.FileNotFoundException
 import kotlin.system.exitProcess
 
 /**
- * Provisions a workplace locally or on a remote machine. Use option -h for help.
+ * Provisions a desktop workplace locally or on a remote machine. Use option -h for help.
  */
 fun main(args: Array<String>) {
 
