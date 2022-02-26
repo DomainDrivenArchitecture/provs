@@ -5,11 +5,11 @@
 
 ## Purpose
 
-provs provide cli-tools for provisioning desktop // server
-* provs-desktop minimal - provides as minimal virtual-box able setup (e.g. swappiness / randomutils)  
-* provs-desktop offic - provides enhancements like zim / gopass / fakturama
+provs provides cli-based tooling for provisioning desktop // server
+* provs-desktop minimal - provides a minimal setup (e.g. swappiness / randomutils) e.g. for setup on a VirtualBox  
+* provs-desktop office - provides enhancements like zim / gopass / fakturama
 * provs-desktop ide - provides development environments for java / kotlin / python / clojure / terraform
-* provs-server k3s - provides a production ready & dualstack able k3s setup
+* provs-server k3s - provides a production ready & k3s setup with dualstack option
 
 In general provs combines
 * being able to use the power of shell commands
@@ -18,7 +18,7 @@ In general provs combines
 
 ## Status
 
-under development - we are working hard on seting up our environments using provs.
+under development - we are working hard on setting up our environments using provs.
 
 ## Try out
 ### Prerequisites
