@@ -11,7 +11,7 @@ import kotlin.system.exitProcess
  */
 fun main(args: Array<String>) {
 
-    val cmd = CliArgumentsParser("java -jar provs-desktop.jar").parseCommand(args)
+    val cmd = CliArgumentsParser("provs-desktop.jar subcommand target").parseCommand(args)
     if (!cmd.isValid()) {
         println("Arguments are not valid, pls try option -h for help.")
         exitProcess(1)

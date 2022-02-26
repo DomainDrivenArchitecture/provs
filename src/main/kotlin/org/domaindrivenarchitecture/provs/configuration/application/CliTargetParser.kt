@@ -8,13 +8,13 @@ import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 open class CliTargetParser(name: String) : ArgParser(name) {
     val target by argument(
         ArgType.String,
-        description = "target: either 'local' or remote with 'user[:password]@host' (e.g. 'username@somehost.com' without password for ssh-key authorization)",
+        description = "target: either 'local' or remote with 'user[:password]@host'",
     )
     val passwordInteractive by option(
         ArgType.Boolean,
         "password-interactive",
         "p",
-        "prompt for password",
+        "prompt for password for remote target",
     ).default(false)
 }
 
