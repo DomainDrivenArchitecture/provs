@@ -128,6 +128,29 @@ task uberjarServer(type: Jar) {
     archiveFileName = 'provs-server.jar'
 }
 
+// copy jar to /usr/local/bin and make it executable
+// Remark: to be able to use it you must have jarwrapper installed (sudo apt install jarwrapper)
+task installlocally {
+    dependsOn(uberjarServer, uberjarDesktop)
+    doLast {
+        exec {
+            executable "sh"
+            args '-c', 'sudo cp ~/repo/dda/provs/build/libs/provs-server.jar /usr/local/bin/'
+        }
+        exec {
+            executable "sh"
+            args '-c', 'sudo cp ~/repo/dda/provs/build/libs/provs-desktop.jar /usr/local/bin/'
+        }
+        exec {
+            executable "sh"
+            args '-c', 'sudo chmod 755 /usr/local/bin/provs-server.jar'
+        }
+        exec {
+            executable "sh"
+            args '-c', 'sudo chmod 755 /usr/local/bin/provs-desktop.jar'
+        }
+    }
+}
 
 task sourceJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
