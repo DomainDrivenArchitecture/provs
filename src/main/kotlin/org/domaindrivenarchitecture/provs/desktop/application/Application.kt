@@ -23,12 +23,12 @@ fun main(args: Array<String>) {
         provisionDesktop(prov, cmd)
     } catch (e: SerializationException) {
         println(
-            "Error: File \"${cmd.configFile}\" has an invalid format and or invalid data.\n"
+            "Error: File \"${cmd.configFile?.fileName}\" has an invalid format and or invalid data.\n"
         )
     } catch (e: FileNotFoundException) {
         println(
-            "Error: File\u001b[31m ${cmd.configFile} \u001b[0m was not found.\n" +
-                    "Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m ${cmd.configFile} \u001B[0m " +
+            "Error: File\u001b[31m ${cmd.configFile?.fileName} \u001b[0m was not found.\n" +
+                    "Pls copy file \u001B[31m WorkplaceConfigExample.yaml \u001B[0m to file \u001B[31m ${cmd.configFile?.fileName} \u001B[0m " +
                     "and change the content according to your needs.\n"
         )
     }
