@@ -4,6 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.isHostKnown
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
@@ -30,7 +31,7 @@ internal class GitKtTest {
     }
 
     @Test
-    @ContainerTest
+    @ExtensiveContainerTest
     fun gitClone() {
         // given
         val prov = defaultTestContainer()
