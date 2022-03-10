@@ -18,3 +18,10 @@ inline fun <reified T : Any> String.yamlToType() = Yaml(configuration = YamlConf
     T::class.serializer(),
     this
 )
+
+
+@OptIn(InternalSerializationApi::class)
+inline fun <reified T : Any> T.toYaml() = Yaml(configuration = YamlConfiguration(strictMode = false)).encodeToString(
+    T::class.serializer(),
+    this
+)
