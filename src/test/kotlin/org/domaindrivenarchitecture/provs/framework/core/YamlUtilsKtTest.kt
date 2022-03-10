@@ -34,13 +34,7 @@ internal class YamlUtilsKtTest {
             fqdn: "host"
             node:
               ipv4: "1.2.3.4"
-              ipv6: null
-            loopback:
-              ipv4: "192.168.5.1"
-              ipv6: "fc00::5:1"
-            certmanager: null
-            apple: null
-            reprovision: false""".trimIndent()
+            """.trimIndent()
 
         assertEquals(expected, yaml)
     }
