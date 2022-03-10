@@ -78,7 +78,7 @@ fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
                 "644",
                 sudo = true
             )
-            cmd ("kubectl apply -f $k3sTraeficWorkaround", sudo = true)
+            cmd("kubectl apply -f $k3sTraeficWorkaround", sudo = true)
         } else {
             ProvResult(true)
         }
@@ -97,7 +97,7 @@ fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
         "644",
         sudo = true
     )
-    cmd ("kubectl apply -f $certManagerDeployment", sudo = true)
+    cmd("kubectl apply -f $certManagerDeployment", sudo = true)
     createFileFromResourceTemplate(
         certManagerIssuer,
         "le-issuer.template.yaml",
@@ -115,12 +115,28 @@ fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
     }
 }
 
-fun Prov.provisionK3sApple(fqdn: String, endpoint: CertmanagerEndpoint) = task {
+fun Prov.provisionK3sApple(fqdn: String, endpoint: CertmanagerEndpoint?) = task {
+    val endpointName = endpoint?.name?.lowercase()
+
+    val issuer = if (endpointName != null)
+        endpointName
+    else {
+        createFileFromResourceTemplate(
+            k3sApple,
+            "selfsigned-certificate.template.yaml",
+            k3sResourcePath,
+            mapOf("host" to fqdn),
+            "644",
+            sudo = true
+        )
+        "selfsigned-issuer"
+    }
+
     createFileFromResourceTemplate(
         k3sApple,
         "apple.template.yaml",
         k3sResourcePath,
-        mapOf("fqdn" to fqdn, "issuer_name" to endpoint.name.lowercase()),
+        mapOf("fqdn" to fqdn, "issuer_name" to issuer),
         "644",
         sudo = true
     )

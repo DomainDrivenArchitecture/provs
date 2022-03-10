@@ -21,7 +21,7 @@ fun Prov.provisionK3s(configFileName: ConfigFileName?) = task {
         provisionK3sCertManager(k3sConfig.certmanager)
     }
     if (k3sConfig.apple != null && k3sConfig.apple) {
-        provisionK3sApple(k3sConfig.fqdn, k3sConfig.certmanager!!.letsencryptEndpoint)
+        provisionK3sApple(k3sConfig.fqdn, k3sConfig.certmanager?.letsencryptEndpoint)
     }
     ProvResult(true)
 }

@@ -12,9 +12,6 @@ data class K3sConfig(
     val apple: Apple? = null,
     val reprovision: Reprovision = false
 ) {
-
-    // valid only if: apple != null >> certmanager != null
-
     fun isDualStack(): Boolean {
       return node.ipv6 != null && loopback.ipv6 != null
     }

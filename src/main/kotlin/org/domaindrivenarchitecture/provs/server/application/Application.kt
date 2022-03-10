@@ -13,7 +13,7 @@ import kotlin.system.exitProcess
  */
 fun main(args: Array<String>) {
 
-    val checkedArgs = if (args.size == 0) arrayOf("-h") else args
+    val checkedArgs = if (args.isEmpty()) arrayOf("-h") else args
 
     val cmd = CliArgumentsParser("java -jar provs-server.jar").parseCommand(checkedArgs)
     if (!cmd.isValid()) {

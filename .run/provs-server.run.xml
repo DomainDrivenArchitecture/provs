@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="provs-server statistics.dev" type="JetRunConfigurationType">
+  <configuration default="false" name="provs-server_k3s" type="JetRunConfigurationType">
     <option name="MAIN_CLASS_NAME" value="org.domaindrivenarchitecture.provs.server.application.ApplicationKt" />
     <module name="provs.main" />
-    <option name="PROGRAM_PARAMETERS" value="k3s -r statistics.test.meissa-gmbh.de -u root -k myK3sServerConfig.yaml" />
+    <option name="PROGRAM_PARAMETERS" value="k3s root@192.168.56.123 -p" />
     <shortenClasspath name="NONE" />
     <method v="2">
       <option name="Make" enabled="true" />
