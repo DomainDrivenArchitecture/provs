@@ -30,7 +30,7 @@ internal class K3sConfigRepositoryTest {
                     email = "admin@meissa-gmbh.de",
                     letsencryptEndpoint = CertmanagerEndpoint.prod
                 ),
-                apple = true,
+                echo = true,
                 reprovision = true
             ), config
         )
@@ -49,6 +49,6 @@ internal class K3sConfigRepositoryTest {
         val exception = assertThrows<FileNotFoundException> {
             getK3sConfig(ConfigFileName("src/test/resources/Idonotexist.yaml"))
         }
-        assertEquals("src/test/resources/Idonotexist.yaml (No such file or directory)", exception.message)
+        assertEquals(FileNotFoundException::class.java, exception.javaClass)
     }
 }

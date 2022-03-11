@@ -2,4 +2,5 @@ package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 typealias Reprovision = Boolean
 typealias Apple = Boolean
+typealias Echo = Boolean
 typealias Email = String

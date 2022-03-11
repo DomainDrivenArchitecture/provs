@@ -28,8 +28,7 @@ fun Prov.testConfigExists(): Boolean {
 
 fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
     if (!testConfigExists()) {
-        installK3s()
-        configureK3s(k3sConfig)
+        installK3s(k3sConfig)
     } else {
         ProvResult(true)
     }
@@ -44,18 +43,7 @@ fun Prov.deprovisionK3sInfra() = task {
 }
 
 
-fun Prov.installK3s() = task {
-    createFileFromResource(
-        k3sInstall,
-        "k3s-install.sh",
-        k3sResourcePath,
-        "755",
-        sudo = true
-    )
-    cmd("INSTALL_K3S_CHANNEL=latest k3s-install.sh")
-}
-
-fun Prov.configureK3s(k3sConfig: K3sConfig) = task {
+fun Prov.installK3s(k3sConfig: K3sConfig) = task {
     createDirs(k8sCredentialsPath, sudo = true)
     createDirs(k3sAutomatedManifestsDir, sudo = true)
     createDirs(k3sManualManifestsDir, sudo = true)
@@ -79,6 +67,14 @@ fun Prov.configureK3s(k3sConfig: K3sConfig) = task {
         "644",
         sudo = true
     )
+    createFileFromResource(
+        k3sInstall,
+        "k3s-install.sh",
+        k3sResourcePath,
+        "755",
+        sudo = true
+    )
+    cmd("INSTALL_K3S_CHANNEL=latest k3s-install.sh")
     if (k3sConfig.isDualStack()) {
         // see https://github.com/k3s-io/k3s/discussions/5003
         createFileFromResource(
@@ -94,7 +90,6 @@ fun Prov.configureK3s(k3sConfig: K3sConfig) = task {
     }
     cmd("ln -s /etc/rancher/k3s/k3s.yaml " + k8sCredentialsPath + "admin.conf", sudo = true)
 }
-
 
 fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
     createFileFromResource(
@@ -120,34 +115,6 @@ fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
     repeatTaskUntilSuccess(10, 10) {
         cmd("kubectl apply -f $certManagerIssuer", sudo = true)
     }
-}
-
-fun Prov.provisionK3sApple(fqdn: String, endpoint: CertmanagerEndpoint? = null) = task {
-    val endpointName = endpoint?.name?.lowercase()
-
-    val issuer = if (endpointName != null)
-        endpointName
-    else {
-        createFileFromResourceTemplate(
-            selfsignedCertificate,
-            "selfsigned-certificate.template.yaml",
-            k3sResourcePath,
-            mapOf("host" to fqdn),
-            "644",
-            sudo = true
-        )
-        "selfsigned-issuer"
-    }
-
-    createFileFromResourceTemplate(
-        k3sApple,
-        "apple.template.yaml",
-        k3sResourcePath,
-        mapOf("fqdn" to fqdn, "issuer_name" to issuer),
-        "644",
-        sudo = true
-    )
-    cmd("kubectl apply -f $k3sApple", sudo = true)
 }
 
 fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null) = task {

@@ -42,6 +42,6 @@ internal class K3sConfigRepositoryKtTest {
         val exception = assertThrows<FileNotFoundException> {
             getK3sConfig(ConfigFileName("src/test/resources/Idonotexist.yaml"))
         }
-        assertEquals("src/test/resources/Idonotexist.yaml (No such file or directory)", exception.message)
+        assertEquals(FileNotFoundException::class.java, exception.javaClass)
     }
 }

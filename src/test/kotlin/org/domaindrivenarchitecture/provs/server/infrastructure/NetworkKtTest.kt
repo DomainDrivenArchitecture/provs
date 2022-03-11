@@ -37,7 +37,7 @@ internal class NetworkKtTest {
                     email = "admin@meissa-gmbh.de",
                     letsencryptEndpoint = CertmanagerEndpoint.prod
                 ),
-                apple = true,
+                echo = true,
                 reprovision = true
             )
         )

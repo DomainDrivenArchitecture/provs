@@ -9,7 +9,7 @@ data class K3sConfig(
     val node: Node,
     val loopback: Loopback = Loopback(ipv4 = "192.168.5.1", ipv6 = "fc00::5:1"),
     val certmanager: Certmanager? = null,
-    val apple: Apple? = null,
+    val echo: Echo? = null,
     val reprovision: Reprovision = false
 ) {
     fun isDualStack(): Boolean {

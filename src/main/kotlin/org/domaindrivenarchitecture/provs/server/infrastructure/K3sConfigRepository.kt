@@ -15,7 +15,7 @@ fun getK3sConfig(fileName: ConfigFileName? = null): K3sConfig {
     val filename = fileName?.fileName ?: DEFAULT_CONFIG_FILE
 
     if ((filename.substringAfterLast("/") == DEFAULT_CONFIG_FILE) && !File(filename).exists()) {
-        writeK3sConfig(ConfigFileName(filename), K3sConfig("localhost", Node("127.0.0.1"), apple = true))
+        writeK3sConfig(ConfigFileName(filename), K3sConfig("localhost", Node("127.0.0.1"), echo = true))
     }
     return readFromFile(filename).yamlToType()
 }
