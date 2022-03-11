@@ -19,6 +19,8 @@ spec:
   valuesContent: |-
     service:
       spec:
+        type: LoadBalancer
+        externalTrafficPolicy: Local
         ipFamilyPolicy: RequireDualStack
     rbac:
       enabled: true

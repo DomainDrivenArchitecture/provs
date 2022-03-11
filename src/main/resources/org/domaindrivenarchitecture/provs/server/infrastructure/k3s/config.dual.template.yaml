@@ -1,9 +1,11 @@
 default-local-storage-path: /var
 tls-san: ${tls_name}
+kube-proxy-arg proxy-mode: ipvs
 disable-network-policy: true
 disable-cloud-controller: true
 disable:
   - traefik
+  - servicelb
 cluster-cidr:
   - 10.42.0.0/16
   - fd42::/48

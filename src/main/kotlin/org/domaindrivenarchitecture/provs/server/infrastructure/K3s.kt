@@ -48,16 +48,19 @@ fun Prov.installK3s(k3sConfig: K3sConfig) = task {
     createDirs(k3sAutomatedManifestsDir, sudo = true)
     createDirs(k3sManualManifestsDir, sudo = true)
     var k3sConfigFileName = "config"
+    var metallbConfigFileName = "metallb-config"
     var k3sConfigMap: Map<String, String> = mapOf(
         "loopback_ipv4" to k3sConfig.loopback.ipv4,
         "node_ipv4" to k3sConfig.node.ipv4, "tls_name" to k3sConfig.fqdn
     )
     if (k3sConfig.isDualStack()) {
         k3sConfigFileName += ".dual.template.yaml"
+        metallbConfigFileName += ".dual.template.yaml"
         k3sConfigMap = k3sConfigMap.plus("node_ipv6" to k3sConfig.node.ipv6!!)
             .plus("loopback_ipv6" to k3sConfig.loopback.ipv6!!)
     } else {
         k3sConfigFileName += ".ipv4.template.yaml"
+        metallbConfigFileName += ".ipv4.template.yaml"
     }
     createFileFromResourceTemplate(
         k3sConfigFile,
@@ -75,6 +78,33 @@ fun Prov.installK3s(k3sConfig: K3sConfig) = task {
         sudo = true
     )
     cmd("INSTALL_K3S_CHANNEL=latest k3s-install.sh")
+
+    // metallb
+    createFileFromResource(
+        k3sManualManifestsDir + "metallb-namespace.yaml",
+        "metallb-namespace.yaml",
+        k3sResourcePath,
+        sudo = true
+    )
+    createFileFromResource(
+        k3sManualManifestsDir + "metallb-manifest.yaml",
+        "metallb-0.10.2-manifest.yaml",
+        k3sResourcePath,
+        sudo = true
+    )
+    createFileFromResourceTemplate(
+        k3sManualManifestsDir + "metallb-config.yaml",
+        metallbConfigFileName,
+        k3sResourcePath,
+        k3sConfigMap,
+        "644",
+        sudo = true
+    )
+    cmd("kubectl apply -f ${k3sManualManifestsDir}metallb-namespace.yaml", sudo = true)
+    cmd("kubectl apply -f ${k3sManualManifestsDir}metallb-manifest.yaml", sudo = true)
+    cmd("kubectl apply -f ${k3sManualManifestsDir}metallb-config.yaml", sudo = true)
+
+    // traefic
     if (k3sConfig.isDualStack()) {
         // see https://github.com/k3s-io/k3s/discussions/5003
         createFileFromResource(
