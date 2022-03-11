@@ -1,0 +1,46 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: echo-ingress
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: ${issuer_name}
+spec:
+  rules:
+    - host: ${fqdn}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /echo
+            backend:
+              service:
+                name: echo-service
+                port:
+                  number: 80
+  tls:
+    - hosts:
+      - ${fqdn}
+      secretName: echo-cert
+---
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: echo-app
+  labels:
+    app: echo
+spec:
+  containers:
+    - name: echo-app
+      image: traefik/whoami
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: echo-service
+spec:
+  selector:
+    app: echo
+  ports:
+    - port: 80 # Default port for image

@@ -13,10 +13,12 @@ private const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
 private const val k8sCredentialsPath = "/etc/kubernetes/"
 private const val k3sAutomatedManifestsDir = "/var/lib/rancher/k3s/server/manifests/"
 private const val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
-private const val k3sTraeficWorkaround = k3sManualManifestsDir + "traefik.yaml"
+private const val k3sTraefikWorkaround = k3sManualManifestsDir + "traefik.yaml"
 private const val certManagerDeployment = k3sManualManifestsDir + "certmanager.yaml"
 private const val certManagerIssuer = k3sManualManifestsDir + "issuer.yaml"
+private const val selfsignedCertificate = k3sManualManifestsDir + "selfsigned-certificate.yaml"
 private const val k3sApple = k3sManualManifestsDir + "apple.yaml"
+private const val k3sEcho = k3sManualManifestsDir + "echo.yaml"
 private const val k3sInstall = "/usr/local/bin/k3s-install.sh"
 
 
@@ -80,13 +82,13 @@ fun Prov.configureK3s(k3sConfig: K3sConfig) = task {
     if (k3sConfig.isDualStack()) {
         // see https://github.com/k3s-io/k3s/discussions/5003
         createFileFromResource(
-            k3sTraeficWorkaround,
-            "traefic.yaml",
+            k3sTraefikWorkaround,
+            "traefik.yaml",
             k3sResourcePath,
             "644",
             sudo = true
         )
-        cmd("kubectl apply -f $k3sTraeficWorkaround", sudo = true)
+        cmd("kubectl apply -f $k3sTraefikWorkaround", sudo = true)
     } else {
         ProvResult(true)
     }
@@ -120,14 +122,14 @@ fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
     }
 }
 
-fun Prov.provisionK3sApple(fqdn: String, endpoint: CertmanagerEndpoint?) = task {
+fun Prov.provisionK3sApple(fqdn: String, endpoint: CertmanagerEndpoint? = null) = task {
     val endpointName = endpoint?.name?.lowercase()
 
     val issuer = if (endpointName != null)
         endpointName
     else {
         createFileFromResourceTemplate(
-            k3sApple,
+            selfsignedCertificate,
             "selfsigned-certificate.template.yaml",
             k3sResourcePath,
             mapOf("host" to fqdn),
@@ -146,4 +148,32 @@ fun Prov.provisionK3sApple(fqdn: String, endpoint: CertmanagerEndpoint?) = task 
         sudo = true
     )
     cmd("kubectl apply -f $k3sApple", sudo = true)
+}
+
+fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null) = task {
+    val endpointName = endpoint?.name?.lowercase()
+
+    val issuer = if (endpointName != null)
+        endpointName
+    else {
+        createFileFromResourceTemplate(
+            selfsignedCertificate,
+            "selfsigned-certificate.template.yaml",
+            k3sResourcePath,
+            mapOf("host" to fqdn),
+            "644",
+            sudo = true
+        )
+        "selfsigned-issuer"
+    }
+
+    createFileFromResourceTemplate(
+        k3sEcho,
+        "echo.template.yaml",
+        k3sResourcePath,
+        mapOf("fqdn" to fqdn, "issuer_name" to issuer),
+        "644",
+        sudo = true
+    )
+    cmd("kubectl apply -f $k3sEcho", sudo = true)
 }
