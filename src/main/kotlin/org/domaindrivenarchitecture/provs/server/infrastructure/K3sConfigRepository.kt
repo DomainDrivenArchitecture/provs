@@ -23,6 +23,3 @@ fun getK3sConfig(fileName: ConfigFileName? = null): K3sConfig {
 fun writeK3sConfig(fileName: ConfigFileName, config: K3sConfig) {
     writeToFile(fileName.fileName, config.toYaml())
 }
-fun main() {
-    getK3sConfig()
-}

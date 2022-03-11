@@ -19,8 +19,18 @@ private const val certManagerIssuer = k3sManualManifestsDir + "issuer.yaml"
 private const val k3sApple = k3sManualManifestsDir + "apple.yaml"
 private const val k3sInstall = "/usr/local/bin/k3s-install.sh"
 
+
 fun Prov.testConfigExists(): Boolean {
     return fileExists(k3sConfigFile)
+}
+
+fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
+    if (!testConfigExists()) {
+        installK3s()
+        configureK3s(k3sConfig)
+    } else {
+        ProvResult(true)
+    }
 }
 
 fun Prov.deprovisionK3sInfra() = task {
@@ -31,61 +41,56 @@ fun Prov.deprovisionK3sInfra() = task {
     cmd("k3s-uninstall.sh")
 }
 
-/**
- * Installs a k3s server.
- * If docker is true, then docker will be installed (may conflict if docker is already existing) and k3s will be installed with docker option.
- * If tlsHost is specified, then tls (if configured) also applies to the specified host.
- */
-fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
-    if (!testConfigExists()) {
-        createDirs(k8sCredentialsPath, sudo = true)
-        createDirs(k3sAutomatedManifestsDir, sudo = true)
-        createDirs(k3sManualManifestsDir, sudo = true)
-        var k3sConfigFileName = "config"
-        var k3sConfigMap: Map<String, String> = mapOf(
-            "loopback_ipv4" to k3sConfig.loopback.ipv4,
-            "node_ipv4" to k3sConfig.node.ipv4, "tls_name" to k3sConfig.fqdn
-        )
-        if (k3sConfig.isDualStack()) {
-            k3sConfigFileName += ".dual.template.yaml"
-            k3sConfigMap = k3sConfigMap.plus("node_ipv6" to k3sConfig.node.ipv6!!)
-                .plus("loopback_ipv6" to k3sConfig.loopback.ipv6!!)
-        } else {
-            k3sConfigFileName += ".ipv4.template.yaml"
-        }
-        createFileFromResourceTemplate(
-            k3sConfigFile,
-            k3sConfigFileName,
+
+fun Prov.installK3s() = task {
+    createFileFromResource(
+        k3sInstall,
+        "k3s-install.sh",
+        k3sResourcePath,
+        "755",
+        sudo = true
+    )
+    cmd("INSTALL_K3S_CHANNEL=latest k3s-install.sh")
+}
+
+fun Prov.configureK3s(k3sConfig: K3sConfig) = task {
+    createDirs(k8sCredentialsPath, sudo = true)
+    createDirs(k3sAutomatedManifestsDir, sudo = true)
+    createDirs(k3sManualManifestsDir, sudo = true)
+    var k3sConfigFileName = "config"
+    var k3sConfigMap: Map<String, String> = mapOf(
+        "loopback_ipv4" to k3sConfig.loopback.ipv4,
+        "node_ipv4" to k3sConfig.node.ipv4, "tls_name" to k3sConfig.fqdn
+    )
+    if (k3sConfig.isDualStack()) {
+        k3sConfigFileName += ".dual.template.yaml"
+        k3sConfigMap = k3sConfigMap.plus("node_ipv6" to k3sConfig.node.ipv6!!)
+            .plus("loopback_ipv6" to k3sConfig.loopback.ipv6!!)
+    } else {
+        k3sConfigFileName += ".ipv4.template.yaml"
+    }
+    createFileFromResourceTemplate(
+        k3sConfigFile,
+        k3sConfigFileName,
+        k3sResourcePath,
+        k3sConfigMap,
+        "644",
+        sudo = true
+    )
+    if (k3sConfig.isDualStack()) {
+        // see https://github.com/k3s-io/k3s/discussions/5003
+        createFileFromResource(
+            k3sTraeficWorkaround,
+            "traefic.yaml",
             k3sResourcePath,
-            k3sConfigMap,
             "644",
             sudo = true
         )
-        createFileFromResource(
-            k3sInstall,
-            "k3s-install.sh",
-            k3sResourcePath,
-            "755",
-            sudo = true
-        )
-        cmd("INSTALL_K3S_CHANNEL=latest k3s-install.sh")
-        if (k3sConfig.isDualStack()) {
-            // see https://github.com/k3s-io/k3s/discussions/5003
-            createFileFromResource(
-                k3sTraeficWorkaround,
-                "traefic.yaml",
-                k3sResourcePath,
-                "644",
-                sudo = true
-            )
-            cmd("kubectl apply -f $k3sTraeficWorkaround", sudo = true)
-        } else {
-            ProvResult(true)
-        }
-        cmd("ln -s /etc/rancher/k3s/k3s.yaml " + k8sCredentialsPath + "admin.conf", sudo = true)
+        cmd("kubectl apply -f $k3sTraeficWorkaround", sudo = true)
     } else {
         ProvResult(true)
     }
+    cmd("ln -s /etc/rancher/k3s/k3s.yaml " + k8sCredentialsPath + "admin.conf", sudo = true)
 }
 
 

@@ -16,11 +16,13 @@ fun Prov.provisionK3s(configFileName: ConfigFileName?) = task {
     if (k3sConfig.reprovision && testConfigExists()) {
         deprovisionK3sInfra()
     }
+
     provisionK3sInfra(k3sConfig)
+
     if (k3sConfig.certmanager != null) {
         provisionK3sCertManager(k3sConfig.certmanager)
     }
-    if (k3sConfig.apple != null && k3sConfig.apple) {
+    if (k3sConfig.apple == true) {
         provisionK3sApple(k3sConfig.fqdn, k3sConfig.certmanager?.letsencryptEndpoint)
     }
     ProvResult(true)
