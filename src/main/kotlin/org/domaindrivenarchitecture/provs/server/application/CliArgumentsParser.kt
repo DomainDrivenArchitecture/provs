@@ -7,6 +7,8 @@ import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
+import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
 
 class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
@@ -21,19 +23,32 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
         val module = modules.first { it.parsed }
 
-        return ServerCliCommand(
-            ServerType.valueOf(module.name.uppercase()),
-            TargetCliCommand(
-                target,
-                passwordInteractive
-            ),
-            module.configFileName
-        )
+        val serverType = ServerType.valueOf(module.name.uppercase())
+        when(serverType) {
+            ServerType.K3S -> return K3sCliCommand(
+                ServerType.valueOf(module.name.uppercase()),
+                TargetCliCommand(
+                    target,
+                    passwordInteractive
+                ),
+                module.configFileName,
+                module.applicationFileName
+            )
+            else -> return ServerCliCommand(
+                ServerType.valueOf(module.name.uppercase()),
+                TargetCliCommand(
+                    target,
+                    passwordInteractive
+                ),
+                module.configFileName
+            )
+        }
     }
 
     abstract class ServerSubcommand(name: String, description: String) : Subcommand(name, description) {
         var parsed: Boolean = false
         var configFileName: ConfigFileName? = null
+        var applicationFileName: ApplicationFileName? = null
     }
 
     class K3s : ServerSubcommand("k3s", "the k3s module") {
@@ -43,9 +58,16 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
             "c",
             "the filename containing the yaml config for k3s"
         )
+        val cliApplicationFileName by option(
+            ArgType.String,
+            "application-file",
+            "a",
+            "the filename containing the yaml a application deployment"
+        )
 
         override fun execute() {
             super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
+            super.applicationFileName = cliApplicationFileName?.let { ApplicationFileName(it) }
             super.parsed = true
         }
     }

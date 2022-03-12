@@ -9,8 +9,8 @@ import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
 /**
  * Installs a k3s server.
  */
-fun Prov.provisionK3s(configFileName: ConfigFileName?) = task {
-    val k3sConfig: K3sConfig = getK3sConfig(configFileName)
+fun Prov.provisionK3s(cli: K3sCliCommand) = task {
+    val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
 
     provisionNetwork(k3sConfig)
     if (k3sConfig.reprovision && testConfigExists()) {
@@ -24,6 +24,9 @@ fun Prov.provisionK3s(configFileName: ConfigFileName?) = task {
     }
     if (k3sConfig.echo == true) {
         provisionK3sEcho(k3sConfig.fqdn, k3sConfig.certmanager?.letsencryptEndpoint)
+    }
+    if (cli.applicationFileName != null) {
+        provisionK3sApplication(cli.applicationFileName)
     }
     ProvResult(true)
 }

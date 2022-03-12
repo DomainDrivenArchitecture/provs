@@ -5,6 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.repeatTaskUntilSuccess
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.server.domain.CertmanagerEndpoint
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Certmanager
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 
@@ -173,4 +174,14 @@ fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null) =
         sudo = true
     )
     cmd("kubectl apply -f $k3sEcho", sudo = true)
+}
+
+fun Prov.provisionK3sApplication(applicationFileName: ApplicationFileName) = task {
+    copyFileFromLocal(
+        fullyQualifiedLocalFilename = applicationFileName.fullqualified(),
+        fullyQualifiedFilename = k3sManualManifestsDir + "application.yaml",
+        posixFilePermission = "644",
+        sudo = true
+    )
+    cmd("kubectl apply -f ${k3sManualManifestsDir}application.yaml", sudo = true)
 }

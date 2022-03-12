@@ -7,7 +7,7 @@ enum class ServerType {
     K3D, K3S
 }
 
-class ServerCliCommand(
+open class ServerCliCommand(
     val serverType: ServerType,
     val target: TargetCliCommand,
     val configFileName: ConfigFileName?,)
