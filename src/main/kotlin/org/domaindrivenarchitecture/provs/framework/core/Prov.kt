@@ -21,7 +21,7 @@ private const val RESULT_PREFIX = ">  "
  */
 open class Prov protected constructor(
     private val processor: Processor,
-    val name: String? = null,
+    private val instanceName: String? = null,
     private val progressType: ProgressType = ProgressType.BASIC
 ) {
     init {
@@ -356,7 +356,7 @@ open class Prov protected constructor(
 
     private fun printResults() {
         println(
-            "============================================== SUMMARY " + (if (name != null) "(" + name + ") " else "") +
+            "============================================== SUMMARY " + (if (instanceName != null) "(" + instanceName + ") " else "") +
                     "============================================== "
         )
         for (result in internalResults) {
