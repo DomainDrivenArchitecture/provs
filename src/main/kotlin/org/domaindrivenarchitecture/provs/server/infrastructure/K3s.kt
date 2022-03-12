@@ -18,7 +18,6 @@ private const val k3sTraefikWorkaround = k3sManualManifestsDir + "traefik.yaml"
 private const val certManagerDeployment = k3sManualManifestsDir + "certmanager.yaml"
 private const val certManagerIssuer = k3sManualManifestsDir + "issuer.yaml"
 private const val selfsignedCertificate = k3sManualManifestsDir + "selfsigned-certificate.yaml"
-private const val k3sApple = k3sManualManifestsDir + "apple.yaml"
 private const val k3sEcho = k3sManualManifestsDir + "echo.yaml"
 private const val k3sInstall = "/usr/local/bin/k3s-install.sh"
 
@@ -37,7 +36,6 @@ fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
 
 fun Prov.deprovisionK3sInfra() = task {
     deleteFile(k3sInstall, sudo = true)
-    deleteFile(k3sApple, sudo = true)
     deleteFile(certManagerDeployment, sudo = true)
     deleteFile(certManagerIssuer, sudo = true)
     cmd("k3s-uninstall.sh")
