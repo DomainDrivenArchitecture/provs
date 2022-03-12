@@ -1,6 +1,5 @@
 package org.domaindrivenarchitecture.provs.framework.core
 
-import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
 import org.domaindrivenarchitecture.provs.framework.core.platforms.UbuntuProv
 import org.domaindrivenarchitecture.provs.framework.core.processors.LocalProcessor
 import org.domaindrivenarchitecture.provs.framework.core.processors.Processor
@@ -13,11 +12,13 @@ enum class OS { LINUX }
 
 
 private const val RESULT_PREFIX = ">  "
+private const val NOT_IMPLEMENTED = "Not implemented"
+
 
 /**
  * This main class offers methods to execute shell commands.
- * The commands are executed locally, remotely (via ssh) or in a docker container
- * depending on the processor which is passed to the constructor.
+ * The commands are executed locally, remotely (via ssh) or in a docker container depending on
+ * the processor which is passed to the constructor.
  */
 open class Prov protected constructor(
     private val processor: Processor,
@@ -59,13 +60,11 @@ open class Prov protected constructor(
         }
     }
 
-
     private val internalResults = arrayListOf<ResultLine>()
     private var level = 0
     private var previousLevel = 0
     private var exit = false
     private var runInContainerWithName: String? = null
-
 
     /**
      * Defines a task with a custom name instead of the name of the calling function.
@@ -111,21 +110,23 @@ open class Prov protected constructor(
         return handle(ResultMode.FAILEXIT) { a() }
     }
 
-    // todo: add sudo and update test
-    fun inContainer(containerName: String, a: Prov.() -> ProvResult): ProvResult {
+    /**
+     * Runs the provided task in the specified (running) container
+     */
+    fun taskInContainer(containerName: String, task: Prov.() -> ProvResult): ProvResult {
         runInContainerWithName = containerName
-        val res = handle(ResultMode.ALL) { a() }
+        val res = handle(ResultMode.ALL) { task() }
         runInContainerWithName = null
         return res
     }
 
-
     /**
-     *  execute program with parameters
+     * Executes a program with (optional) parameters.
+     * args[0] contains the program name, the other args (if provided) specify the parameters.
      */
-    fun xec(vararg s: String): ProvResult {
-        val cmd = runInContainerWithName?.let { cmdInContainer(it, *s) } ?: s
-        val result = processor.x(*cmd)
+    fun exec(vararg args: String): ProvResult {
+        val cmd = runInContainerWithName?.let { execInContainer(it, *args) } ?: args
+        val result = processor.exec(*cmd)
         return ProvResult(
             success = (result.exitCode == 0),
             cmd = result.argsToString(),
@@ -135,11 +136,12 @@ open class Prov protected constructor(
     }
 
     /**
-     *  execute program with parameters without logging (to be used if secrets are involved)
+     * Executes a program with (optional) parameters without logging (e.g. to be used if secrets are involved)
+     * args[0] contains the program name, the other args (if provided) specify the parameters.
      */
-    fun xecNoLog(vararg s: String): ProvResult {
-        val cmd = runInContainerWithName?.let { cmdInContainer(it, *s) } ?: s
-        val result = processor.xNoLog(*cmd)
+    fun execNoLog(vararg s: String): ProvResult {
+        val cmd = runInContainerWithName?.let { execInContainer(it, *s) } ?: s
+        val result = processor.execNoLog(*cmd)
         return ProvResult(
             success = (result.exitCode == 0),
             cmd = "***",
@@ -148,8 +150,13 @@ open class Prov protected constructor(
         )
     }
 
-
-    private val NOT_IMPLEMENTED = "Not implemented"
+    /**
+     * Executes a program with (optional) parameters in the specified  container.
+     * args[0] contains the program name, the other args (if provided) specify the parameters.
+     */
+    protected open fun execInContainer(containerName: String, vararg args: String): Array<String> {
+        throw Exception(NOT_IMPLEMENTED)
+    }
 
     /**
      * Executes a command by using the shell.
@@ -232,23 +239,6 @@ open class Prov protected constructor(
         }
         ProvResult(success)
     }
-
-
-    // todo: put logic in subclasses, such as UbuntuProv
-    private fun cmdInContainer(containerName: String, vararg args: String): Array<String> {
-        return arrayOf(SHELL, "-c", "sudo docker exec $containerName " + buildCommand(*args))
-    }
-
-    private fun buildCommand(vararg args: String): String {
-        return if (args.size == 1)
-            args[0].escapeAndEncloseByDoubleQuoteForShell()
-        else
-            if (args.size == 3 && SHELL.equals(args[0]) && "-c".equals(args[1]))
-                SHELL + " -c " + args[2].escapeAndEncloseByDoubleQuoteForShell()
-            else
-                args.joinToString(separator = " ")
-    }
-
 
     /**
      * Provides result handling, e.g. gather results for result summary

@@ -76,7 +76,7 @@ fun UbuntuProv.dockerProvideImagePlatform(image: DockerImage, skipIfExisting: Bo
 
     val path = hostUserHome() + "tmp_docker_img" + fileSeparator()
 
-    if (!xec("test", "-d", path).success) {
+    if (!exec("test", "-d", path).success) {
         cmd("cd ${hostUserHome()} && mkdir tmp_docker_img")
     }
 

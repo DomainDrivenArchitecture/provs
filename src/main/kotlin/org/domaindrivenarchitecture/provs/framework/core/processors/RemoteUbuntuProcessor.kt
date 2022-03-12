@@ -17,7 +17,11 @@ import java.net.InetAddress
 import java.util.concurrent.TimeUnit
 
 
-class RemoteProcessor(ip: InetAddress, user: String, password: Secret? = null) : Processor {
+/**
+ * Executes task on a remote machine.
+ * Attention: host key is currently not being verified
+ */
+class RemoteProcessor(host: InetAddress, user: String, password: Secret? = null) : Processor {
 
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")
@@ -28,13 +32,13 @@ class RemoteProcessor(ip: InetAddress, user: String, password: Secret? = null) :
 
     init {
         try {
-            log.info("Connecting to $ip with user: $user with " + if (password != null) "password" else "ssh-key")
+            log.info("Connecting to $host with user: $user with " + if (password != null) "password" else "ssh-key")
 
             ssh.loadKnownHosts()
 
-            // todo: replace PromiscuousVerifier by more secure solution
+            // Attention: host key is not verified
             ssh.addHostKeyVerifier(PromiscuousVerifier())
-            ssh.connect(ip)
+            ssh.connect(host)
 
             if (password != null) {
                 ssh.authPassword(user, password.plain())
@@ -52,11 +56,11 @@ class RemoteProcessor(ip: InetAddress, user: String, password: Secret? = null) :
         }
     }
 
-    override fun x(vararg args: String): ProcessResult {
+    override fun exec(vararg args: String): ProcessResult {
         return execute(true, *args)
     }
 
-    override fun xNoLog(vararg args: String): ProcessResult {
+    override fun execNoLog(vararg args: String): ProcessResult {
         return execute(false, *args)
     }
 

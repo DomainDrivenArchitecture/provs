@@ -477,7 +477,7 @@ internal class ProvTest {
 
         // then
         fun Prov.outer() = def {
-            inContainer(containerName) {
+            taskInContainer(containerName) {
                 inner()
                 cmd("echo testfile > testfile.txt")
             }
@@ -503,7 +503,7 @@ internal class ProvTest {
         // then
         val res = remote(host, remoteUser).def {
             inner()  // executed on the remote host
-            inContainer("prov_default") {
+            taskInContainer("prov_default") {
                 inner()  // executed in the container on the remote host
             }
         }

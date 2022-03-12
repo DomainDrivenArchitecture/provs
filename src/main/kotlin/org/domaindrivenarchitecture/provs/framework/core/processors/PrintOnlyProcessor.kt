@@ -4,7 +4,7 @@ package org.domaindrivenarchitecture.provs.framework.core.processors
 @Suppress("unused")  // used externally
 class PrintOnlyProcessor : Processor {
 
-    override fun x(vararg args: String): ProcessResult
+    override fun exec(vararg args: String): ProcessResult
     {
         print("PrintOnlyProcessor >>> ")
         for (n in args) print("\"$n\" ")
@@ -12,7 +12,7 @@ class PrintOnlyProcessor : Processor {
         return ProcessResult(0, args = args)
     }
 
-    override fun xNoLog(vararg args: String): ProcessResult
+    override fun execNoLog(vararg args: String): ProcessResult
     {
         print("PrintOnlyProcessor >>> ********")
         return ProcessResult(0, args = args)

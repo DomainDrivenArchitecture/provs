@@ -24,15 +24,29 @@ class UbuntuProv internal constructor(
     }
 
     override fun cmd(cmd: String, dir: String?, sudo: Boolean): ProvResult = def {
-        xec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
+        exec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
     }
 
     override fun cmdNoLog(cmd: String, dir: String?, sudo: Boolean): ProvResult {
-        return xecNoLog(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
+        return execNoLog(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
     }
 
     override fun cmdNoEval(cmd: String, dir: String?, sudo: Boolean): ProvResult {
-        return xec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
+        return exec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
+    }
+
+    override fun execInContainer(containerName: String, vararg args: String): Array<String> {
+        return arrayOf(SHELL, "-c", "sudo docker exec $containerName " + buildCommand(*args))
+    }
+
+    private fun buildCommand(vararg args: String): String {
+        return if (args.size == 1)
+            args[0].escapeAndEncloseByDoubleQuoteForShell()
+        else
+            if (args.size == 3 && SHELL.equals(args[0]) && "-c".equals(args[1]))
+                SHELL + " -c " + args[2].escapeAndEncloseByDoubleQuoteForShell()
+            else
+                args.joinToString(separator = " ")
     }
 }
 

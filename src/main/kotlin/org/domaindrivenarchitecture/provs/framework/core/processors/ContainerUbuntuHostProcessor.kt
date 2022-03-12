@@ -40,17 +40,17 @@ open class ContainerUbuntuHostProcessor(
 
     private val hostShell = "/bin/bash"
 
-    override fun x(vararg args: String): ProcessResult {
-        return localExecution.x(hostShell, "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
+    override fun exec(vararg args: String): ProcessResult {
+        return localExecution.exec(hostShell, "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
     }
 
-    override fun xNoLog(vararg args: String): ProcessResult {
-        return localExecution.xNoLog(hostShell, "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
+    override fun execNoLog(vararg args: String): ProcessResult {
+        return localExecution.execNoLog(hostShell, "-c", dockerCmd + "exec $containerName " + buildCommand(*args))
     }
 
     private fun exitAndRm() {
-        localExecution.x(hostShell, "-c", dockerCmd + "stop $containerName")
-        localExecution.x(hostShell, "-c", dockerCmd + "rm $containerName")
+        localExecution.exec(hostShell, "-c", dockerCmd + "stop $containerName")
+        localExecution.exec(hostShell, "-c", dockerCmd + "rm $containerName")
     }
 
     private fun quoteString(s: String): String {

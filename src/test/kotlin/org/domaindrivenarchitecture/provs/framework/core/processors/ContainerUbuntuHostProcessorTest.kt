@@ -18,7 +18,7 @@ class ContainerUbuntuHostProcessorTest {
             ContainerUbuntuHostProcessor("provs_ubuntuhost_test", "ubuntu", DEFAULT_START_MODE_TEST_CONTAINER, sudo = testDockerWithSudo)
 
         // when
-        val res = processor.x(SHELL, "-c", "echo -n abc")
+        val res = processor.exec(SHELL, "-c", "echo -n abc")
 
         // then
         assertEquals(0, res.exitCode)

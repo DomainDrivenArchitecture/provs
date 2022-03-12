@@ -29,12 +29,12 @@ open class LocalProcessor : Processor {
         return System.getProperty("user.home") ?: File.separator
     }
 
-    override fun x(vararg args: String): ProcessResult {
+    override fun exec(vararg args: String): ProcessResult {
         return execute(true, *args)
     }
 
 
-    override fun xNoLog(vararg args: String): ProcessResult {
+    override fun execNoLog(vararg args: String): ProcessResult {
         return execute(false, *args)
     }
 

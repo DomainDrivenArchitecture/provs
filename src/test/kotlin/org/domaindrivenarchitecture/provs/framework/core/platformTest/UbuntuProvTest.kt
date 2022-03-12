@@ -69,8 +69,8 @@ internal class UbuntuProvTest {
         val a = testLocal()
 
         // when
-        val res1 = a.xec("/usr/bin/printf", "hi")
-        val res2 = a.xec("/bin/bash", "-c", "echo echoed")
+        val res1 = a.exec("/usr/bin/printf", "hi")
+        val res2 = a.exec("/bin/bash", "-c", "echo echoed")
 
         // then
         assert(res1.success)
