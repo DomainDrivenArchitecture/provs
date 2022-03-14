@@ -1,3 +1,7 @@
+#!/bin/sh
+set -e
+set -o noglob
+
 function main() {
     local cluster_name="${1}"; shift
 

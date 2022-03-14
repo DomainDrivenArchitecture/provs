@@ -59,32 +59,33 @@ fun Prov.installKubectlAndTools(): ProvResult = def {
         }
     }
 
-    task("install tunnel alias") {
-        val tunnelAliasFile = "~/.bashrc.d/ssh_alias.sh"
-        if (!fileExists(tunnelAliasFile)) {
-            val tunnelAlias = """
-                alias sshu='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-                alias ssht='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -L 8002:localhost:8002 -L 6443:192.168.5.1:6443'    
-            """.trimIndent()
-            createFile(tunnelAliasFile, tunnelAlias, "640")
-        } else {
-            ProvResult(true, out = "tunnel alias already installed")
-        }
+    task("install ssh helper") {
+        createFileFromResource(
+            "/usr/local/bin/sshu.sh",
+            "sshu.sh",
+            resourcePath,
+            "555",
+            sudo = true
+        )
+        createFileFromResource(
+            "/usr/local/bin/ssht.sh",
+            "ssht.sh",
+            resourcePath,
+            "555",
+            sudo = true
+        )
     }
 
     task("install k8sCreateContext") {
         val k8sContextFile = "/usr/local/bin/k8s-create-context.sh"
-        if (!fileExists(k8sContextFile)) {
-            createFileFromResource(
-                k8sContextFile,
-                "k8s-create-context.sh",
-                resourcePath,
-                "555",
-                sudo = true
-            )
-        } else {
-            ProvResult(true)
-        }
+        createFileFromResource(
+            k8sContextFile,
+            "k8s-create-context.sh",
+            resourcePath,
+            "555",
+            sudo = true
+        )
+
     }
 }
 
@@ -104,17 +105,18 @@ fun Prov.installTerraform(): ProvResult = def {
 
 
 // --------------------------------------------  AWS credentials file  -----------------------------------------------
-fun Prov.installAwsCredentials(id: String = "REPLACE_WITH_YOUR_ID", key: String = "REPLACE_WITH_YOUR_KEY"): ProvResult = def {
-    val dir = "~/.aws"
+fun Prov.installAwsCredentials(id: String = "REPLACE_WITH_YOUR_ID", key: String = "REPLACE_WITH_YOUR_KEY"): ProvResult =
+    def {
+        val dir = "~/.aws"
 
-    if (!dirExists(dir)) {
-        createDirs(dir)
-        createFile("~/.aws/config", awsConfig())
-        createFile("~/.aws/credentials", awsCredentials(id, key))
-    } else {
-        ProvResult(true, "aws credential folder already installed")
+        if (!dirExists(dir)) {
+            createDirs(dir)
+            createFile("~/.aws/config", awsConfig())
+            createFile("~/.aws/credentials", awsCredentials(id, key))
+        } else {
+            ProvResult(true, "aws credential folder already installed")
+        }
     }
-}
 
 fun awsConfig(): String {
     return """
