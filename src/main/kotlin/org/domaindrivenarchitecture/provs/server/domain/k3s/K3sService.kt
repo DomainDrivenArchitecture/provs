@@ -1,7 +1,6 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.server.infrastructure.*
 import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
@@ -17,7 +16,7 @@ fun Prov.provisionK3s(cli: K3sCliCommand) = task {
         deprovisionK3sInfra()
     }
 
-    provisionK3sInfra(k3sConfig)
+    installK3s(k3sConfig)
 
     if (k3sConfig.certmanager != null) {
         provisionK3sCertManager(k3sConfig.certmanager)

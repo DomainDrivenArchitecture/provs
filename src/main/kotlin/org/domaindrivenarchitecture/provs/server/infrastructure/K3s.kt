@@ -7,171 +7,124 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.server.domain.CertmanagerEndpoint
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Certmanager
+import org.domaindrivenarchitecture.provs.server.domain.k3s.FileMode
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
+import java.io.File
 
-private const val k3sResourcePath = "org/domaindrivenarchitecture/provs/server/infrastructure/k3s/"
-private const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
-private const val k8sCredentialsPath = "/etc/kubernetes/"
+// -----------------------------------  directories  --------------------------------
+
+private const val k3sResourceDir = "org/domaindrivenarchitecture/provs/server/infrastructure/k3s/"
+
+private const val k8sCredentialsDir = "/etc/kubernetes/"
 private const val k3sAutomatedManifestsDir = "/var/lib/rancher/k3s/server/manifests/"
-private const val k3sConfigFile = "/etc/rancher/k3s/config.yaml"
-private const val k3sTraefikWorkaround = k3sManualManifestsDir + "traefik.yaml"
-private const val certManagerDeployment = k3sManualManifestsDir + "certmanager.yaml"
-private const val certManagerIssuer = k3sManualManifestsDir + "issuer.yaml"
-private const val selfsignedCertificate = k3sManualManifestsDir + "selfsigned-certificate.yaml"
-private const val k3sEcho = k3sManualManifestsDir + "echo.yaml"
-private const val k3sInstall = "/usr/local/bin/k3s-install.sh"
+private const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
 
+// -----------------------------------  files  --------------------------------
+
+private val k3sInstallScript = File( "/usr/local/bin/k3s-install.sh")
+private val k3sConfigFile = File( "/etc/rancher/k3s/config.yaml")
+private val k3sKubeConfig = File("/etc/rancher/k3s/k3s.yaml")
+
+private val k3sTraefikWorkaround = File(k3sManualManifestsDir, "traefik.yaml")
+private val certManagerDeployment = File(k3sManualManifestsDir, "cert-manager.yaml")
+
+private val certManagerIssuer = File(k3sManualManifestsDir, "le-issuer.yaml")
+private val k3sEcho = File(k3sManualManifestsDir, "echo.yaml")
+private val selfSignedCertificate = File(k3sManualManifestsDir, "selfsigned-certificate.yaml")
+
+
+// -----------------------------------  public functions  --------------------------------
 
 fun Prov.testConfigExists(): Boolean {
-    return fileExists(k3sConfigFile)
+    return fileExists(k3sConfigFile.path)
 }
 
-fun Prov.provisionK3sInfra(k3sConfig: K3sConfig) = task {
-    if (!testConfigExists()) {
-        installK3s(k3sConfig)
-    } else {
-        ProvResult(true)
-    }
-}
 
 fun Prov.deprovisionK3sInfra() = task {
-    deleteFile(k3sInstall, sudo = true)
-    deleteFile(certManagerDeployment, sudo = true)
-    deleteFile(certManagerIssuer, sudo = true)
+    deleteFile(k3sInstallScript.path, sudo = true)
+    deleteFile(certManagerDeployment.path, sudo = true)
+    deleteFile(certManagerIssuer.path, sudo = true)
+    deleteFile(k3sKubeConfig.path, sudo = true)
     cmd("k3s-uninstall.sh")
 }
 
 
 fun Prov.installK3s(k3sConfig: K3sConfig) = task {
-    createDirs(k8sCredentialsPath, sudo = true)
+    if (testConfigExists()) {
+        return@task ProvResult(true, out = "K3s config is already in place, so skip (re)provisioning.")
+    }
+
+    createDirs(k8sCredentialsDir, sudo = true)
     createDirs(k3sAutomatedManifestsDir, sudo = true)
     createDirs(k3sManualManifestsDir, sudo = true)
-    var k3sConfigFileName = "config"
-    var metallbConfigFileName = "metallb-config"
+
     var k3sConfigMap: Map<String, String> = mapOf(
         "loopback_ipv4" to k3sConfig.loopback.ipv4,
-        "node_ipv4" to k3sConfig.node.ipv4, "tls_name" to k3sConfig.fqdn
+        "node_ipv4" to k3sConfig.node.ipv4,
+        "tls_name" to k3sConfig.fqdn
     )
+    var k3sConfigResourceFileName = "config"
+    var metallbConfigResourceFileName = "metallb-config"
     if (k3sConfig.isDualStack()) {
-        k3sConfigFileName += ".dual.template.yaml"
-        metallbConfigFileName += ".dual.template.yaml"
+        k3sConfigResourceFileName += ".dual.template.yaml"
+        metallbConfigResourceFileName += ".dual.template.yaml"
         k3sConfigMap = k3sConfigMap.plus("node_ipv6" to k3sConfig.node.ipv6!!)
             .plus("loopback_ipv6" to k3sConfig.loopback.ipv6!!)
     } else {
-        k3sConfigFileName += ".ipv4.template.yaml"
-        metallbConfigFileName += ".ipv4.template.yaml"
+        k3sConfigResourceFileName += ".ipv4.template.yaml"
+        metallbConfigResourceFileName += ".ipv4.template.yaml"
     }
-    createFileFromResourceTemplate(
-        k3sConfigFile,
-        k3sConfigFileName,
-        k3sResourcePath,
-        k3sConfigMap,
-        "644",
-        sudo = true
-    )
-    createFileFromResource(
-        k3sInstall,
-        "k3s-install.sh",
-        k3sResourcePath,
-        "755",
-        sudo = true
-    )
+
+    createK3sFileFromResourceTemplate(k3sConfigFile, k3sConfigMap, alternativeResourceTemplate = File(k3sConfigResourceFileName))
+    createK3sFileFromResource(k3sInstallScript, posixFilePermission = "755")
     cmd("INSTALL_K3S_CHANNEL=latest k3s-install.sh")
 
     // metallb
-    createFileFromResource(
-        k3sManualManifestsDir + "metallb-namespace.yaml",
-        "metallb-namespace.yaml",
-        k3sResourcePath,
-        sudo = true
-    )
-    createFileFromResource(
-        k3sManualManifestsDir + "metallb-manifest.yaml",
-        "metallb-0.10.2-manifest.yaml",
-        k3sResourcePath,
-        sudo = true
-    )
-    createFileFromResourceTemplate(
-        k3sManualManifestsDir + "metallb-config.yaml",
-        metallbConfigFileName,
-        k3sResourcePath,
+    applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-namespace.yaml"))
+    applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-0.10.2-manifest.yaml"))
+    applyK3sFileFromResourceTemplate(
+        File(k3sManualManifestsDir, "metallb-config.yaml"),
         k3sConfigMap,
-        "644",
-        sudo = true
+        alternativeResourceName = File(metallbConfigResourceFileName)
     )
-    cmd("kubectl apply -f ${k3sManualManifestsDir}metallb-namespace.yaml", sudo = true)
-    cmd("kubectl apply -f ${k3sManualManifestsDir}metallb-manifest.yaml", sudo = true)
-    cmd("kubectl apply -f ${k3sManualManifestsDir}metallb-config.yaml", sudo = true)
 
-    // traefic
+    // traefik
     if (k3sConfig.isDualStack()) {
         // see https://github.com/k3s-io/k3s/discussions/5003
-        createFileFromResource(
-            k3sTraefikWorkaround,
-            "traefik.yaml",
-            k3sResourcePath,
-            "644",
-            sudo = true
-        )
-        cmd("kubectl apply -f $k3sTraefikWorkaround", sudo = true)
+        createK3sFileFromResource(k3sTraefikWorkaround)
+        applyK3sFile(k3sTraefikWorkaround)
     } else {
         ProvResult(true)
     }
-    cmd("ln -s /etc/rancher/k3s/k3s.yaml " + k8sCredentialsPath + "admin.conf", sudo = true)
+    cmd("ln -sf $k3sKubeConfig " + k8sCredentialsDir + "admin.conf", sudo = true)
 }
 
 fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
-    createFileFromResource(
-        certManagerDeployment,
-        "cert-manager.yaml",
-        k3sResourcePath,
-        "644",
-        sudo = true
+
+    applyK3sFileFromResource(certManagerDeployment)
+
+    val issuerMap = mapOf(
+        "endpoint" to certmanager.letsencryptEndpoint.endpointUri(),
+        "name" to certmanager.letsencryptEndpoint.name.lowercase(),
+        "email" to certmanager.email
     )
-    cmd("kubectl apply -f $certManagerDeployment", sudo = true)
-    createFileFromResourceTemplate(
-        certManagerIssuer,
-        "le-issuer.template.yaml",
-        k3sResourcePath,
-        mapOf(
-            "endpoint" to certmanager.letsencryptEndpoint.endpointUri(),
-            "name" to certmanager.letsencryptEndpoint.name.lowercase(),
-            "email" to certmanager.email
-        ),
-        "644",
-        sudo = true
-    )
+    createK3sFileFromResourceTemplate(certManagerIssuer, issuerMap)
     repeatTaskUntilSuccess(10, 10) {
-        cmd("kubectl apply -f $certManagerIssuer", sudo = true)
+        applyK3sFile(certManagerIssuer)
     }
 }
 
 fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null) = task {
     val endpointName = endpoint?.name?.lowercase()
 
-    val issuer = if (endpointName != null)
-        endpointName
-    else {
-        createFileFromResourceTemplate(
-            selfsignedCertificate,
-            "selfsigned-certificate.template.yaml",
-            k3sResourcePath,
-            mapOf("host" to fqdn),
-            "644",
-            sudo = true
-        )
+    val issuer = if (endpointName == null) {
+        createK3sFileFromResourceTemplate(selfSignedCertificate, mapOf("host" to fqdn))
         "selfsigned-issuer"
+    } else {
+        endpointName
     }
 
-    createFileFromResourceTemplate(
-        k3sEcho,
-        "echo.template.yaml",
-        k3sResourcePath,
-        mapOf("fqdn" to fqdn, "issuer_name" to issuer),
-        "644",
-        sudo = true
-    )
-    cmd("kubectl apply -f $k3sEcho", sudo = true)
+    applyK3sFileFromResourceTemplate(k3sEcho, mapOf("fqdn" to fqdn, "issuer_name" to issuer))
 }
 
 fun Prov.provisionK3sApplication(applicationFileName: ApplicationFileName) = task {
@@ -182,4 +135,59 @@ fun Prov.provisionK3sApplication(applicationFileName: ApplicationFileName) = tas
         sudo = true
     )
     cmd("kubectl apply -f ${k3sManualManifestsDir}application.yaml", sudo = true)
+}
+
+
+// ============================  private functions  =============================
+
+private fun Prov.createK3sFileFromResource(
+    file: File,
+    posixFilePermission: FileMode? = "644"
+) = task {
+    createFileFromResource(
+        file.path,
+        file.name,
+        k3sResourceDir,
+        posixFilePermission,
+        sudo = true
+    )
+}
+
+private fun Prov.applyK3sFileFromResource(file: File, posixFilePermission: String? = "644") = task {
+    createK3sFileFromResource(file, posixFilePermission)
+    applyK3sFile(file)
+}
+
+private fun Prov.applyK3sFileFromResourceTemplate(
+    file: File,
+    values: Map<String, String>,
+    posixFilePermission: String? = "644",
+    alternativeResourceName: File? = null
+) = task {
+    createK3sFileFromResourceTemplate(file, values, posixFilePermission, alternativeResourceName)
+    applyK3sFile(file)
+}
+
+private fun Prov.createK3sFileFromResourceTemplate(
+    file: File,
+    values: Map<String, String>,
+    posixFilePermission: String? = "644",
+    alternativeResourceTemplate: File? = null
+) = task {
+    createFileFromResourceTemplate(
+        file.path,
+        alternativeResourceTemplate?.name ?: file.templateName(),
+        k3sResourceDir,
+        values,
+        posixFilePermission,
+        sudo = true
+    )
+}
+
+private fun Prov.applyK3sFile(file: File) = task {
+    cmd("kubectl apply -f ${file.path}", sudo = true)
+}
+
+private fun File.templateName(): String {
+    return this.name.replace(".yaml", ".template.yaml")
 }
