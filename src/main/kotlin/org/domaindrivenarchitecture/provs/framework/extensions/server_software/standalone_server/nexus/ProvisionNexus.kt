@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.docker.containerRuns
 import org.domaindrivenarchitecture.provs.framework.core.remote
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.createUser
 import org.domaindrivenarchitecture.provs.framework.extensions.server_software.standalone_server.certbot.provisionCertbot
@@ -31,7 +31,7 @@ fun Prov.provisionNexusWithDocker(portAccessibleFromNetwork: Boolean = false) = 
         cmd("sudo docker run -d --restart unless-stopped -p 8081:8081 --name nexus -v nexus-data:/nexus-data sonatype/nexus3")
 
         for (n in 0..3) {
-            if (fileExists("/var/lib/docker/volumes/$volume/_data/admin.password", sudo = true)) {
+            if (checkFile("/var/lib/docker/volumes/$volume/_data/admin.password", sudo = true)) {
                 val res = cmd("sudo cat /var/lib/docker/volumes/$volume/_data/admin.password")
                 println("Admin Password:" + res.out)
                 break

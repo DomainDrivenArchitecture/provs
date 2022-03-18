@@ -38,7 +38,7 @@ private val localPathProvisionerConfig = File(k3sManualManifestsDir, "local-path
 // -----------------------------------  public functions  --------------------------------
 
 fun Prov.testConfigExists(): Boolean {
-    return fileExists(k3sConfigFile.path)
+    return checkFile(k3sConfigFile.path)
 }
 
 

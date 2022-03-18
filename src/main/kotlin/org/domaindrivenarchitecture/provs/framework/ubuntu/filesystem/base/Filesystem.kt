@@ -9,7 +9,15 @@ import java.io.File
 /**
  * Returns true if the given file exists.
  */
+@Deprecated("Use checkFile", replaceWith = ReplaceWith("checkFile(file)"))
 fun Prov.fileExists(file: String, sudo: Boolean = false): Boolean {
+    return cmdNoEval(prefixWithSudo("test -e " + file, sudo)).success
+}
+
+/**
+ * Returns true if the given file exists.
+ */
+fun Prov.checkFile(file: String, sudo: Boolean = false): Boolean {
     return cmdNoEval(prefixWithSudo("test -e " + file, sudo)).success
 }
 
@@ -88,7 +96,7 @@ fun Prov.createFile(
     posixFilePermission?.let {
         ensureValidPosixFilePermission(posixFilePermission)
     }
-    if (!overwriteIfExisting && fileExists(fullyQualifiedFilename, sudo)) {
+    if (!overwriteIfExisting && checkFile(fullyQualifiedFilename, sudo)) {
         return@task ProvResult(true, "File $fullyQualifiedFilename already existing.")
     }
 
@@ -128,7 +136,7 @@ fun Prov.createSecretFile(
 
 fun Prov.deleteFile(file: String, path: String? = null, sudo: Boolean = false): ProvResult = task {
     val fullyQualifiedFilename = (path?.normalizePath() ?: "") + file
-    if (fileExists(fullyQualifiedFilename, sudo = sudo)) {
+    if (checkFile(fullyQualifiedFilename, sudo = sudo)) {
         cmd(prefixWithSudo("rm $fullyQualifiedFilename", sudo))
     } else {
         ProvResult(true, "File to be deleted did not exist.")
@@ -142,8 +150,9 @@ fun Prov.fileContainsText(file: String, content: String, sudo: Boolean = false):
     val fileContent = fileContent(file, sudo = sudo)
     return if (fileContent == null) {
         false
-    } else
+    } else {
         fileContent.contains(content)
+    }
 }
 
 

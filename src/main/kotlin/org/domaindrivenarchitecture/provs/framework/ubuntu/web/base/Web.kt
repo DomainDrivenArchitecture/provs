@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.normalizePath
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 
@@ -27,7 +27,7 @@ fun Prov.downloadFromURL(
     val finalFilename: String = filename ?:  url.substringAfterLast("/")
     val fqFilename: String = (path?.normalizePath() ?: "") + finalFilename
 
-    if (!overwrite && fileExists(fqFilename, sudo = sudo)) {
+    if (!overwrite && checkFile(fqFilename, sudo = sudo)) {
         return@task ProvResult(true, out = "File $fqFilename already exists.")
     }
 

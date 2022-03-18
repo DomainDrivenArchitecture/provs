@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.framework.extensions.server_software.standalone_server.nginx
 
 import org.domaindrivenarchitecture.provs.framework.extensions.server_software.standalone_server.nginx.base.*
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.replaceTextInFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
@@ -67,7 +67,7 @@ internal class ProvisionNginxKtTest {
         val a = defaultTestContainer()
         a.task {
             val file = "/etc/ssl/openssl.cnf"
-            if (fileExists(file)) {
+            if (checkFile(file)) {
                 replaceTextInFile(file, "RANDFILE", "#RANDFILE")
             }
             aptInstall("openssl")

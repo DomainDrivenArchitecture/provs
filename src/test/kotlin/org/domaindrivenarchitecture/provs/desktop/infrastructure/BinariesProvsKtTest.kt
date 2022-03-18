@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -17,7 +17,7 @@ internal class BinariesProvsKtTest {
 
         // then
         assertTrue(res.success)
-        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/provs-server.jar", sudo = true))
-        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/provs-desktop.jar", sudo = true))
+        assertTrue(defaultTestContainer().checkFile(" /usr/local/bin/provs-server.jar", sudo = true))
+        assertTrue(defaultTestContainer().checkFile(" /usr/local/bin/provs-desktop.jar", sudo = true))
     }
 }

@@ -63,7 +63,7 @@ private fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String
     if (isHostKnown(host)) {
         return@task ProvResult(true, out = "Host already known")
     }
-    if (!fileExists(knownHostsFile)) {
+    if (!checkFile(knownHostsFile)) {
         createDir(".ssh")
         createFile(knownHostsFile, null)
     }

@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.extensions.server_software.standalone_server.nginx.base.NginxConf
 import org.domaindrivenarchitecture.provs.framework.extensions.server_software.standalone_server.nginx.base.createNginxLocationFolders
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 
 
@@ -19,7 +19,7 @@ fun Prov.provisionNginxStandAlone(config: NginxConf? = null) = task {
     createNginxLocationFolders()
 
     if (config != null) {
-        if (fileExists(NGINX_CONFIG_FILE)) {
+        if (checkFile(NGINX_CONFIG_FILE)) {
             cmd("sudo mv $NGINX_CONFIG_FILE $NGINX_CONFIG_FILE-orig")
         }
         createFile(NGINX_CONFIG_FILE, config.conf, sudo = true)

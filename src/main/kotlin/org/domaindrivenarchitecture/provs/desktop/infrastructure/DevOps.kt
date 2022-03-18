@@ -21,7 +21,7 @@ fun Prov.installYq(
 ): ProvResult = task {
     val path = "/usr/bin/"
     val filename = "yq"
-    if (!fileExists(path + filename)) {
+    if (!checkFile(path + filename)) {
         downloadFromURL(
             "https://github.com/mikefarah/yq/releases/download/v$version/yq_linux_amd64",
             filename,
@@ -40,7 +40,7 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
 
     task("installKubectl") {
         val kubeConfigFile = "~/.bashrc.d/kubectl.sh"
-        if (!fileExists(kubeConfigFile)) {
+        if (!checkFile(kubeConfigFile)) {
             // prerequisites -- see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
             cmd("sudo apt-get update")
             aptInstall("apt-transport-https ca-certificates curl")

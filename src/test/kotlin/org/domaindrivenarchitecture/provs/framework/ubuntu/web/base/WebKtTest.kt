@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.web.base
 
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContent
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.*
@@ -65,7 +65,7 @@ internal class WebKtTest {
         val res = a.downloadFromURL("file:///tmp/" + srcFile, targetFile, "tmp", sha256sum = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824WRONG", overwrite = true)
 
         // then
-        val res2 = a.fileExists("tmp/$targetFile")
+        val res2 = a.checkFile("tmp/$targetFile")
 
         assertFalse(res.success)
         assertFalse(res2)

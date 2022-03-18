@@ -75,13 +75,13 @@ internal class FilesystemKtTest {
         val prov = defaultTestContainer()
 
         // when
-        val res1 = prov.fileExists("testfile")
+        val res1 = prov.checkFile("testfile")
         val res2 = prov.createFile("testfile", "some content")
-        val res3 = prov.fileExists("testfile")
+        val res3 = prov.checkFile("testfile")
         val res4a = prov.fileContainsText("testfile", "some content")
         val res4b = prov.fileContainsText("testfile", "some non-existing content")
         val res5 = prov.deleteFile("testfile")
-        val res6 = prov.fileExists("testfile")
+        val res6 = prov.checkFile("testfile")
         val res7 = prov.deleteFile("testfile")  // idem-potent
 
         // then
@@ -104,15 +104,15 @@ internal class FilesystemKtTest {
 
         // when
         val file = "/testfile"
-        val res1 = prov.fileExists(file)
+        val res1 = prov.checkFile(file)
         val res2 = prov.createFile(file, "some content", sudo = true)
-        val res3 = prov.fileExists(file)
+        val res3 = prov.checkFile(file)
         val res4a = prov.fileContainsText(file, "some content")
         val res4b = prov.fileContainsText(file, "some non-existing content")
         val res5 = prov.deleteFile(file)
-        val res6 = prov.fileExists(file)
+        val res6 = prov.checkFile(file)
         val res7 = prov.deleteFile(file, sudo = true)
-        val res8 = prov.fileExists(file)
+        val res8 = prov.checkFile(file)
         val res9 = prov.deleteFile(file, sudo = true)  // check idem-potence
 
         // then

@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.processors.RemoteProcessor
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
 import org.domaindrivenarchitecture.provs.framework.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
@@ -36,7 +36,7 @@ fun Prov.createUser(
         makeUserSudoerWithNoSudoPasswordRequired(userName)
     }
     val authorizedKeysFile = userHome() + ".ssh/authorized_keys"
-    if (copyAuthorizedSshKeysFromCurrentUser && fileExists(authorizedKeysFile)) {
+    if (copyAuthorizedSshKeysFromCurrentUser && checkFile(authorizedKeysFile)) {
         val sshPathForNewUser = "/home/$userName/.ssh"
         createDirs(sshPathForNewUser, sudo = true)
         cmd("chown $userName $sshPathForNewUser", sudo = true)
@@ -91,7 +91,7 @@ fun Prov.makeUserSudoerWithNoSudoPasswordRequired(
     overwriteFile: Boolean = false
 ): ProvResult = task {
     val userSudoFile = "/etc/sudoers.d/$userName"
-    if (!fileExists(userSudoFile) || overwriteFile) {
+    if (!checkFile(userSudoFile) || overwriteFile) {
         val sudoPrefix = if (password == null) "sudo" else "echo ${password.plain()} | sudo -S"
         // see https://stackoverflow.com/questions/323957/how-do-i-edit-etc-sudoers-from-a-script
         val result = cmdNoLog(sudoPrefix + " sh -c \"echo '$userName   ALL=(ALL) NOPASSWD:ALL' | (sudo su -c 'EDITOR=\"tee\" visudo -f " + userSudoFile + "')\"")

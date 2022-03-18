@@ -46,7 +46,7 @@ fun Prov.configureGopass(gopassRootFolder: String? = null) = task {
     val defaultRootFolder = userHome() + ".password-store"
     val rootFolder = gopassRootFolder ?: defaultRootFolder
 
-    if (fileExists(configFile)) {
+    if (checkFile(configFile)) {
         return@task ProvResult(true, out = "Gopass already configured in file $configFile")
     }
 

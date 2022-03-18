@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.framework.extensions.server_software.
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 
 
@@ -17,7 +17,7 @@ fun Prov.provisionCertbot(serverName: String, email: String?, additionalOptions:
         sudo snap install --classic certbot
     """.trimIndent())
 
-    if (!fileExists("/usr/bin/certbot")) {
+    if (!checkFile("/usr/bin/certbot")) {
         cmd("sudo ln -s /snap/bin/certbot /usr/bin/certbot")
         val emailOption = email?.let { " -m $it" } ?: "--register-unsafely-without-email"
         cmd("sudo certbot $additionalOptions -n --agree-tos $emailOption -d $serverName")

@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
 import org.domaindrivenarchitecture.provs.desktop.domain.provisionWorkplace
 import org.domaindrivenarchitecture.provs.desktop.domain.provisionWorkplaceSubmodules
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -62,8 +62,8 @@ internal class ProvisionWorkplaceKtTest {
 
         // then
         assertTrue(res.success)
-        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/provs-server.jar", sudo = true))
-        assertTrue(defaultTestContainer().fileExists(" /usr/local/bin/provs-desktop.jar", sudo = true))
+        assertTrue(defaultTestContainer().checkFile(" /usr/local/bin/provs-server.jar", sudo = true))
+        assertTrue(defaultTestContainer().checkFile(" /usr/local/bin/provs-desktop.jar", sudo = true))
     }
 
 }
