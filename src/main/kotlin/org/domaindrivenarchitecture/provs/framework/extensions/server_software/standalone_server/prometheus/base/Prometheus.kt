@@ -11,13 +11,13 @@ internal val configDir = "/etc/prometheus/"
 internal val configFile = "prometheus.yml"
 
 
-fun Prov.configurePrometheusDocker(config: String = prometheusDefaultConfig) = requireAll {
+fun Prov.configurePrometheusDocker(config: String = prometheusDefaultConfig) = task {
     createDirs(configDir, sudo = true)
     createFile(configDir + configFile, config, sudo = true)
 }
 
 
-fun Prov.runPrometheusDocker(nginxHost: String? = null) = requireAll {
+fun Prov.runPrometheusDocker(nginxHost: String? = null) = task {
     aptInstall("docker.io")
 
     val containerName = "prometheus"

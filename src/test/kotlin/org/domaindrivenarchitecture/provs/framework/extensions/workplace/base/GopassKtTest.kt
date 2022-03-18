@@ -79,7 +79,7 @@ internal class GopassKtTest {
         val a = remote(host, user)
 
         // when
-        val res = a.def {
+        val res = a.task {
             configureGpgKeys(
                 KeyPair(
                     pubKey,

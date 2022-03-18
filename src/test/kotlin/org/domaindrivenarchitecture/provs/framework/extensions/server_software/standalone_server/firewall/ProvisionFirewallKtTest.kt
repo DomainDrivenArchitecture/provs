@@ -35,7 +35,7 @@ internal class ProvisionFirewallKtTest {
         )
 
         // when
-        val res = a.requireAll {
+        val res = a.task {
             aptInstall("iptables")
             provisionFirewall()
         }

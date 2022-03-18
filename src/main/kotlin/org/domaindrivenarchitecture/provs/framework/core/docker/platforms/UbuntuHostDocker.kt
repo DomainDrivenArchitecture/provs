@@ -55,13 +55,13 @@ fun UbuntuProv.runContainerPlatform(
     containerName: String = "defaultProvContainer",
     imageName: String = "ubuntu",
     sudo: Boolean = true
-) = def {
+) = task {
     val dockerCmd = dockerCommand(sudo)
     cmd(dockerCmd + "run -dit --name=$containerName $imageName")
 }
 
 
-fun UbuntuProv.containerExecPlatform(containerName: String, cmd: String, sudo: Boolean = true) = def {
+fun UbuntuProv.containerExecPlatform(containerName: String, cmd: String, sudo: Boolean = true) = task {
     val dockerCmd = dockerCommand(sudo)
     cmd(dockerCmd + "exec $containerName $cmd")
 }
@@ -96,7 +96,7 @@ fun UbuntuProv.dockerImageExistsPlatform(imageName: String, sudo: Boolean): Bool
 fun UbuntuProv.exitAndRmContainerPlatform(
     containerName: String,
     sudo: Boolean
-) = requireAll {
+) = task {
     val dockerCmd = dockerCommand(sudo)
 
     if (containerRuns(containerName)) {

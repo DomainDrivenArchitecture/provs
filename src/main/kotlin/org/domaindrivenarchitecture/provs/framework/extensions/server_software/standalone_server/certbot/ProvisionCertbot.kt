@@ -10,7 +10,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
  * Provisions a certbot for the specified serverName and email to obtain and renew letsencrypt certificates
  * Parameter can be used to specify certbot options e.g. "--nginx" to configure nginx, see https://certbot.eff.org/docs/using.html#certbot-command-line-options
  */
-fun Prov.provisionCertbot(serverName: String, email: String?, additionalOptions: String? = "") = requireAll {
+fun Prov.provisionCertbot(serverName: String, email: String?, additionalOptions: String? = "") = task {
     aptInstall("snapd")
     sh("""
         sudo snap install core; sudo snap refresh core

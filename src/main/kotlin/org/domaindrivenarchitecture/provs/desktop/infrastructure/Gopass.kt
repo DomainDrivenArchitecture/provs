@@ -12,13 +12,13 @@ fun Prov.installGopass(
     version: String = "1.12.7",
     enforceVersion: Boolean = false,
     sha256sum: String = "0824d5110ff1e68bff1ba10c1be63acb67cb1ad8e3bccddd6b6fc989608beca8" // checksum for sha256sum version 8.30 (e.g. ubuntu 20.04)
-) = def {
+) = task {
 
     if (isPackageInstalled("gopass") && !enforceVersion) {
-        return@def ProvResult(true)
+        return@task ProvResult(true)
     }
     if (checkGopassVersion(version)) {
-        return@def ProvResult(true, out = "Version $version of gopass is already installed.")
+        return@task ProvResult(true, out = "Version $version of gopass is already installed.")
     }
 
     val path = "tmp"
@@ -64,13 +64,13 @@ fun Prov.configureGopass(gopassRootFolder: String? = null) = task {
 }
 
 
-fun Prov.gopassMountStore(storeName: String, path: String) = def {
+fun Prov.gopassMountStore(storeName: String, path: String) = task {
     cmd("gopass mounts add $storeName $path")
 }
 
 
 @Suppress("unused")
-fun Prov.gopassInitStore(storeName: String, indexOfRecepientKey: Int = 0) = def {
+fun Prov.gopassInitStore(storeName: String, indexOfRecepientKey: Int = 0) = task {
     cmd("printf \"$indexOfRecepientKey\\n\" | gopass init --store=$storeName")
 }
 

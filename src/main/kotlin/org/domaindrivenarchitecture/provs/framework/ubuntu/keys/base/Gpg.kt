@@ -17,7 +17,7 @@ import org.domaindrivenarchitecture.provs.framework.core.echoCommandForText
  * @param gpgKeys
  * @param trust whether to trust keys with trust-level 5 (ultimate)
  */
-fun Prov.configureGpgKeys(gpgKeys: KeyPair, trust: Boolean = false, skipIfExistin: Boolean = true) = requireAll {
+fun Prov.configureGpgKeys(gpgKeys: KeyPair, trust: Boolean = false, skipIfExistin: Boolean = true) = task {
     aptInstall("gnupg")
     val fingerprint = gpgFingerprint(gpgKeys.publicKey.plain())
     if (fingerprint == null) {
@@ -50,7 +50,7 @@ fun Prov.configureGpgKeys(gpgKeys: KeyPair, trust: Boolean = false, skipIfExisti
 }
 
 
-private fun Prov.configureGPGAgent() = def {
+private fun Prov.configureGPGAgent() = task {
     if (dirExists(".gnupg")) {
         createDir(".gnupg", "~/")
     }

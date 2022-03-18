@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.local
 
 
-fun Prov.helloWorld() = def {
+fun Prov.helloWorld() = task {
     cmd("echo Hello world!")
 }
 

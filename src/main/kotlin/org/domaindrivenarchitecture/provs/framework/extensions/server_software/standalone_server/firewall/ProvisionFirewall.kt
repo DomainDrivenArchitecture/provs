@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 
 
-fun Prov.saveIpTables() = requireAll {
+fun Prov.saveIpTables() = task {
     sh("""
         iptables-save > /etc/iptables/rules.v4
         ip6tables-save > /etc/iptables/rules.v6
@@ -15,7 +15,8 @@ fun Prov.saveIpTables() = requireAll {
 }
 
 
-fun Prov.makeIpTablesPersistent() = requireAll {
+@Suppress("unused")
+fun Prov.makeIpTablesPersistent() = task {
     // inspired by https://gist.github.com/alonisser/a2c19f5362c2091ac1e7
     // enables iptables-persistent to be installed without manual input
     sh("""
@@ -28,7 +29,8 @@ fun Prov.makeIpTablesPersistent() = requireAll {
 }
 
 
-fun Prov.resetFirewall() = requireAll {
+@Suppress("unused")
+fun Prov.resetFirewall() = task {
     sh("""
         #!/bin/bash
         sudo iptables -F
@@ -50,7 +52,7 @@ fun Prov.resetFirewall() = requireAll {
 }
 
 
-fun Prov.provisionFirewall(addNetworkProtections: Boolean = false) = requireAll {
+fun Prov.provisionFirewall(addNetworkProtections: Boolean = false) = task {
     if (addNetworkProtections) {
         networkProtections()
     }
@@ -111,7 +113,7 @@ fun Prov.provisionFirewall(addNetworkProtections: Boolean = false) = requireAll 
 }
 
 
-fun Prov.networkProtections() = def {
+fun Prov.networkProtections() = task {
     sh("""
         # Drop ICMP echo-request messages sent to broadcast or multicast addresses
         echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
@@ -137,7 +139,7 @@ fun Prov.networkProtections() = def {
 }
 
 
-fun Prov.ipTablesRecreateDockerRules() = requireAll {
+fun Prov.ipTablesRecreateDockerRules() = task {
     // see https://stackoverflow.com/questions/25917941/docker-how-to-re-create-dockers-additional-iptables-rules
     cmd("sudo service docker restart")
 }

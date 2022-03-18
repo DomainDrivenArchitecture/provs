@@ -7,7 +7,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
-fun Prov.installDevOps() = def {
+fun Prov.installDevOps() = task {
     installTerraform()
     installKubectlAndTools()
     installYq()
@@ -18,7 +18,7 @@ fun Prov.installDevOps() = def {
 fun Prov.installYq(
     version: String = "4.13.2",
     sha256sum: String = "d7c89543d1437bf80fee6237eadc608d1b121c21a7cbbe79057d5086d74f8d79"
-): ProvResult = def {
+): ProvResult = task {
     val path = "/usr/bin/"
     val filename = "yq"
     if (!fileExists(path + filename)) {
@@ -35,7 +35,7 @@ fun Prov.installYq(
     }
 }
 
-fun Prov.installKubectlAndTools(): ProvResult = def {
+fun Prov.installKubectlAndTools(): ProvResult = task {
     val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure"
 
     task("installKubectl") {
@@ -88,7 +88,7 @@ fun Prov.installKubectlAndTools(): ProvResult = def {
     }
 }
 
-fun Prov.installTerraform(): ProvResult = def {
+fun Prov.installTerraform(): ProvResult = task {
     val dir = "/usr/lib/tfenv/"
 
     if (!dirExists(dir)) {
@@ -105,7 +105,7 @@ fun Prov.installTerraform(): ProvResult = def {
 
 // --------------------------------------------  AWS credentials file  -----------------------------------------------
 fun Prov.installAwsCredentials(id: String = "REPLACE_WITH_YOUR_ID", key: String = "REPLACE_WITH_YOUR_KEY"): ProvResult =
-    def {
+    task {
         val dir = "~/.aws"
 
         if (!dirExists(dir)) {

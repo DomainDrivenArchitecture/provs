@@ -10,11 +10,11 @@ import java.io.File
 val knownHostsFile = "~/.ssh/known_hosts"
 
 
-fun Prov.gitClone(repo: String, path: String, pullIfExisting: Boolean = true): ProvResult = def {
+fun Prov.gitClone(repo: String, path: String, pullIfExisting: Boolean = true): ProvResult = task {
     val dir = cmdNoEval("basename $repo .git").out?.trim()
 
     if (dir == null) {
-        return@def ProvResult(false, err = "$repo is not a valid git repository")
+        return@task ProvResult(false, err = "$repo is not a valid git repository")
     }
 
     val pathToDir = if (path.endsWith("/")) path + dir else path + "/" + dir
@@ -30,7 +30,7 @@ fun Prov.gitClone(repo: String, path: String, pullIfExisting: Boolean = true): P
 }
 
 
-fun Prov.trustGithub() = def {
+fun Prov.trustGithub() = task {
     // current fingerprints from https://docs.github.com/en/github/authenticating-to-github/githubs-ssh-key-fingerprints
     val fingerprints = setOf(
         "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com", // (RSA)
@@ -42,7 +42,7 @@ fun Prov.trustGithub() = def {
 }
 
 
-fun Prov.trustGitlab() = def {
+fun Prov.trustGitlab() = task {
     // entries for known_hosts from https://docs.gitlab.com/ee/user/gitlab_com/
     val gitlabFingerprints = """
         gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
@@ -59,9 +59,9 @@ fun Prov.trustGitlab() = def {
  * Note: adding keys automatically is vulnerable to a man-in-the-middle attack and not considered secure.
  */
 // todo: consider making function public and moving to ssh package
-private fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String>?) = def {
+private fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String>?) = task {
     if (isHostKnown(host)) {
-        return@def ProvResult(true, out = "Host already known")
+        return@task ProvResult(true, out = "Host already known")
     }
     if (!fileExists(knownHostsFile)) {
         createDir(".ssh")
@@ -74,7 +74,7 @@ private fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String
         // logic based on https://serverfault.com/questions/447028/non-interactive-git-clone-ssh-fingerprint-prompt
         val actualKeys = findSshKeys(host)
         if (actualKeys == null || actualKeys.size == 0) {
-            return@def ProvResult(false, out = "No valid keys found for host: $host")
+            return@task ProvResult(false, out = "No valid keys found for host: $host")
         }
         val actualFingerprints = getFingerprintsForKeys(actualKeys)
         for (fingerprintToBeAdded in fingerprintsOfKeysToBeAdded) {
@@ -88,7 +88,7 @@ private fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String
                 }
             }
             if (indexOfKeyFound == -1) {
-                return@def ProvResult(
+                return@task ProvResult(
                     false,
                     err = "Fingerprint ($fingerprintToBeAdded) could not be found in actual fingerprints: $actualFingerprints"
                 )

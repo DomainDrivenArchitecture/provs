@@ -12,7 +12,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 internal val defaultInstallationDir = "/usr/local/bin/"
 
 
-fun Prov.installNodeExporter() = requireAll {
+fun Prov.installNodeExporter() = task {
     // inspired by https://devopscube.com/monitor-linux-servers-prometheus-node-exporter/ and
     // https://www.howtoforge.com/tutorial/how-to-install-prometheus-and-node-exporter-on-centos-8/#step-install-and-configure-nodeexporter
     val downloadFileBasename = "node_exporter-1.0.1.linux-amd64"
@@ -33,7 +33,7 @@ fun Prov.installNodeExporter() = requireAll {
 }
 
 
-fun Prov.runNodeExporter() = def {
+fun Prov.runNodeExporter() = task {
     createFile("/etc/systemd/system/node_exporter.service", nodeExporterServiceConf(whoami()?:"nouserfound"), sudo = true)
 
     sh("""
@@ -52,7 +52,7 @@ fun Prov.runNodeExporter() = def {
 fun Prov.addNodeExporterToPrometheusConf (
     prometheusConf: String = "/etc/prometheus/prometheus.yml",
     sudo: Boolean = true
-) = requireAll {
+) = task {
     val prometheusConfNodeExporter = """
 scrape_configs:
   - job_name: 'node_exporter'

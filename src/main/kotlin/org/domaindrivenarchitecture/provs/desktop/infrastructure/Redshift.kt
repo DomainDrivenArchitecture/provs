@@ -6,12 +6,12 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.creat
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 
 
-fun Prov.installRedshift() = def {
+fun Prov.installRedshift() = task {
     aptInstall("redshift redshift-gtk")
 }
 
 
-fun Prov.configureRedshift() = def {
+fun Prov.configureRedshift() = task {
     aptInstall("redshift redshift-gtk")
 
     createDir(".config")

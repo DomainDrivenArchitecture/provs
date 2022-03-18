@@ -7,7 +7,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 
 
-fun Prov.installZimWiki() = def {
+fun Prov.installZimWiki() = task {
     if (isPackageInstalled("zim")) {
         ProvResult(true, out = "zim already installed.")
     } else {

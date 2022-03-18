@@ -47,7 +47,7 @@ internal class GopassBridgeKtTest {
         // given
         local().exitAndRmContainer("provs_test")
         val a = defaultTestContainer()
-        val preparationResult = a.def {
+        val preparationResult = a.task {
             aptInstallCurl()
             configureGpgKeys(
                 KeyPair(Secret(publicGPGSnakeoilKey()), Secret(privateGPGSnakeoilKey())),
@@ -65,7 +65,7 @@ internal class GopassBridgeKtTest {
         assertTrue(preparationResult.success)
 
         // when
-        val res = a.def {
+        val res = a.task {
             installGopassBridgeJsonApi()
             configureGopassBridgeJsonApi()
         }
@@ -81,7 +81,7 @@ internal class GopassBridgeKtTest {
     fun test_install_GopassBridgeJsonApi_with_incompatible_gopass_jsonapi_version_installed() {
         // given
         val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
-        val preparationResult = a.def {
+        val preparationResult = a.task {
             aptInstallCurl()
 
             configureGpgKeys(
@@ -100,7 +100,7 @@ internal class GopassBridgeKtTest {
         assertTrue(preparationResult.success)
 
         // when
-        val res = a.def {
+        val res = a.task {
             installGopassBridgeJsonApi()
             configureGopassBridgeJsonApi()
         }
@@ -116,7 +116,7 @@ internal class GopassBridgeKtTest {
     fun test_install_GopassBridgeJsonApi_with_incompatible_gopass_version_installed() {
         // given
         val a = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
-        val preparationResult = a.def {
+        val preparationResult = a.task {
             aptInstallCurl()
             configureGpgKeys(
                 KeyPair(Secret(publicGPGSnakeoilKey()), Secret(privateGPGSnakeoilKey())),
@@ -134,7 +134,7 @@ internal class GopassBridgeKtTest {
         assertTrue(preparationResult.success)
 
         // when
-        val res = a.def {
+        val res = a.task {
             installGopassBridgeJsonApi()
             configureGopassBridgeJsonApi()
         }
@@ -143,7 +143,7 @@ internal class GopassBridgeKtTest {
         assertFalse(res.success)
     }
 
-    private fun Prov.aptInstallCurl() = def {
+    private fun Prov.aptInstallCurl() = task {
         cmd("apt-get update", sudo = true)
         aptInstall("curl")
     }

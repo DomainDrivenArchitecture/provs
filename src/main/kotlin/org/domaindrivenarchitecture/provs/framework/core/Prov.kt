@@ -78,6 +78,7 @@ open class Prov protected constructor(
      * defines a task with default success behavior, i.e. returns success if all subtasks finished with success.
      * Same as requireAll.
      */
+    @Deprecated("Use function task instead", replaceWith = ReplaceWith("task()"))
     fun def(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.ALL) { a() }
     }
@@ -99,6 +100,7 @@ open class Prov protected constructor(
     /**
      * defines a task, which returns success if all subtasks finished with success
      */
+    @Suppress("unused")
     fun requireAll(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.ALL) { a() }
     }
@@ -216,7 +218,7 @@ open class Prov protected constructor(
      * Adds a ProvResult to the overall success evaluation.
      * Intended for use in methods which do not automatically add results.
      */
-    fun addResultToEval(result: ProvResult) = requireAll {
+    fun addResultToEval(result: ProvResult) = task {
         result
     }
 
@@ -225,7 +227,7 @@ open class Prov protected constructor(
      * Multi-line commands within the script are not supported.
      * Empty lines and comments (all text behind # in a line) are supported, i.e. they are ignored.
      */
-    fun sh(script: String, dir: String? = null, sudo: Boolean = false) = def {
+    fun sh(script: String, dir: String? = null, sudo: Boolean = false) = task {
         val lines = script.trimIndent().replace("\\\n", "").replace("\r\n", "\n").split("\n")
         val linesWithoutComments = lines.stream().map { it.split("#")[0] }
         val linesNonEmpty = linesWithoutComments.filter { it.trim().isNotEmpty() }

@@ -10,7 +10,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackag
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
-fun Prov.downloadGopassBridge() = def {
+fun Prov.downloadGopassBridge() = task {
     val version = "0.8.0"
     val filename = "gopass_bridge-${version}-fx.xpi"
     val downloadDir = "${userHome()}Downloads/"
@@ -23,7 +23,7 @@ fun Prov.downloadGopassBridge() = def {
     // needs manual install with: firefox Downloads/gopass_bridge-0.8.0-fx.xpi
 }
 
-fun Prov.installGopassBridgeJsonApi() = def {
+fun Prov.installGopassBridgeJsonApi() = task {
     // see https://github.com/gopasspw/gopass-jsonapi
     val gopassBridgeVersion = "1.11.1"
     val requiredGopassVersion = "1.12"
@@ -69,7 +69,7 @@ fun Prov.installGopassBridgeJsonApi() = def {
     }
 }
 
-fun Prov.configureGopassBridgeJsonApi() = def {
+fun Prov.configureGopassBridgeJsonApi() = task {
     if (isPackageInstalled("gopass-jsonapi")) {
         // configure for firefox and choose default for each:
         // "Install for all users? [y/N/q]",

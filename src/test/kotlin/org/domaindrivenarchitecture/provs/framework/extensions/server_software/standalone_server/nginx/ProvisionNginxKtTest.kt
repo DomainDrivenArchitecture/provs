@@ -34,7 +34,7 @@ internal class ProvisionNginxKtTest {
         a.aptInstall("curl")
 
         // when
-        val res = a.requireAll {
+        val res = a.task {
             provisionNginxStandAlone(NginxConf(config))
             cmd("curl localhost")
         }
@@ -51,7 +51,7 @@ internal class ProvisionNginxKtTest {
         val a = defaultTestContainer()
 
         // when
-        val res = a.requireAll {
+        val res = a.task {
             provisionNginxStandAlone()
         }
 
@@ -65,7 +65,7 @@ internal class ProvisionNginxKtTest {
     fun provisionNginxStandAlone_sslConfig() {
         // given
         val a = defaultTestContainer()
-        a.def {
+        a.task {
             val file = "/etc/ssl/openssl.cnf"
             if (fileExists(file)) {
                 replaceTextInFile(file, "RANDFILE", "#RANDFILE")
@@ -74,7 +74,7 @@ internal class ProvisionNginxKtTest {
         }
 
         // when
-        val res = a.def {
+        val res = a.task {
             nginxCreateSelfSignedCertificate()
 
             provisionNginxStandAlone(

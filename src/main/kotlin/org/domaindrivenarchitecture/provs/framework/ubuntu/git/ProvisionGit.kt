@@ -10,7 +10,7 @@ fun Prov.provisionGit(
     email: String? = null,
     signingKey: String? = null,
     diffTool: String? = null
-): ProvResult = def {
+): ProvResult = task {
 
     aptInstall("git")
 

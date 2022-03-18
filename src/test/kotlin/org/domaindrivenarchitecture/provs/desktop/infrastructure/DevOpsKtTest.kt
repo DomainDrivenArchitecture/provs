@@ -13,7 +13,7 @@ internal class DevOpsKtTest {
     @ExtensiveContainerTest
     fun installKubectlAndTools() {
         // given
-        defaultTestContainer().def {
+        defaultTestContainer().task {
             createDirs("/etc/bash_completion.d", sudo = true)
             createDir(".bashrc.d")
         }

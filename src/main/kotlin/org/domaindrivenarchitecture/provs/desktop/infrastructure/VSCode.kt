@@ -6,7 +6,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 
 
-fun Prov.installVSC(vararg options: String) = requireAll {
+fun Prov.installVSC(vararg options: String) = task {
     val clojureExtensions =
         arrayListOf("betterthantomorrow.calva", "martinklepsch.clojure-joker-linter", "DavidAnson.vscode-markdownlint")
     val pythonExtensions = arrayListOf("ms-python.python")
@@ -29,13 +29,13 @@ fun Prov.installVSC(vararg options: String) = requireAll {
 }
 
 
-private fun Prov.prerequisitesVSCinstall() = def {
+private fun Prov.prerequisitesVSCinstall() = task {
     aptInstall("curl gpg unzip apt-transport-https")
 }
 
 
 @Suppress("unused") // only required for installation of vscode via apt
-private fun Prov.installVscWithApt() = requireAll {
+private fun Prov.installVscWithApt() = task {
     val packageName = "code"
     if (!isPackageInstalled(packageName)) {
         // see https://code.visualstudio.com/docs/setup/linux
@@ -53,14 +53,14 @@ private fun Prov.installVscWithApt() = requireAll {
 }
 
 
-private fun Prov.installVSCPackage() = def {
+private fun Prov.installVSCPackage() = task {
     cmd("sudo snap install code --classic")
 
     // to install via apt use:
     //    installVscWithApt()
 }
 
-private fun Prov.installVSCodiumPackage() = def {
+private fun Prov.installVSCodiumPackage() = task {
     cmd("sudo snap install codium --classic")
 }
 
@@ -84,7 +84,7 @@ private fun Prov.installExtensionsCodium(extensions: List<String>) = optional {
 }
 
 
-internal fun Prov.provisionAdditionalTools() = requireAll {
+internal fun Prov.provisionAdditionalTools() = task {
     // Joker
     val version = "0.18.0"
     cmd("curl -Lo joker-${version}-linux-amd64.zip https://github.com/candid82/joker/releases/download/v${version}/joker-${version}-linux-amd64.zip")

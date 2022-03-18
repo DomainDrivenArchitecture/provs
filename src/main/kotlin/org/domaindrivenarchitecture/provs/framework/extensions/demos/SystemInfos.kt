@@ -19,14 +19,14 @@ fun main(vararg args: String) {
         if (args.size !in 2..3)  {
             println("Wrong number of arguments. Please specify either host and user if connection is done by ssh key or otherwise host, user and password. E.g. 172.0.0.123 username password")
         } else {
-            val password = if (args.size == 2) null else Secret(args[3])
+            val password = if (args.size == 2) null else Secret(args[2])
             remote(args[0], args[1], password = password).printInfos()
         }
     }
 }
 
 
-fun Prov.printInfos() = def {
+fun Prov.printInfos() = task {
     println("\nUbuntu Version:\n${ubuntuVersion()}")
     println("\nCurrent directory:\n${currentDir()}")
     println("\nTime zone:\n${timeZone()}")

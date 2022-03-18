@@ -18,7 +18,7 @@ import org.domaindrivenarchitecture.provs.framework.extensions.server_software.s
  * If you would want nexus to be accessible directly from the internet (e.g. for test or demo reasons)
  * set parameter portAccessibleFromNetwork to true.
  */
-fun Prov.provisionNexusWithDocker(portAccessibleFromNetwork: Boolean = false) = requireAll {
+fun Prov.provisionNexusWithDocker(portAccessibleFromNetwork: Boolean = false) = task {
     // https://blog.sonatype.com/sonatype-nexus-installation-using-docker
     // https://medium.com/@AhGh/how-to-setup-sonatype-nexus-3-repository-manager-using-docker-7ff89bc311ce
     aptInstall("docker.io")
@@ -66,10 +66,10 @@ private fun Prov.getDefaultNetworkingInterface(): String? {
 @Suppress("unused") // to be used externally
 fun provisionNexusServer(serverName: String, certbotEmail: String) {
     val userName = "nexus" + 7
-    remote(serverName, "root").def {
+    remote(serverName, "root").task {
         createUser(userName, copyAuthorizedSshKeysFromCurrentUser = true, sudo = true)
     }
-    remote(serverName, userName).requireAll {
+    remote(serverName, userName).task {
         provisionNexusWithDocker()
 
         if (provisionNginxStandAlone(NginxConf.nginxReverseProxyHttpConfig(serverName)).success) {

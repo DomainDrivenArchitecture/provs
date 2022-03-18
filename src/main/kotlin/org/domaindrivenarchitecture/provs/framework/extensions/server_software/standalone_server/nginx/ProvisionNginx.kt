@@ -12,7 +12,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 internal const val NGINX_CONFIG_FILE = "/etc/nginx/nginx.conf"
 
 
-fun Prov.provisionNginxStandAlone(config: NginxConf? = null) = requireAll {
+fun Prov.provisionNginxStandAlone(config: NginxConf? = null) = task {
 
     aptInstall("nginx")
 

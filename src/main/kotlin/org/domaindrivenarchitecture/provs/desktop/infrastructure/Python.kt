@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 
 
-fun Prov.installPython() = def {
+fun Prov.installPython() = task {
     installPython3()
     installVenv()
     installPybuilder()
@@ -13,26 +13,26 @@ fun Prov.installPython() = def {
     installJupyterlab()
 }
 
-fun Prov.installPython3(): ProvResult = def {
+fun Prov.installPython3(): ProvResult = task {
     aptInstall("python3.8-venv python3-pip")
 }
 
-fun Prov.installVenv(): ProvResult = def {
+fun Prov.installVenv(): ProvResult = task {
     val venvHome = "~/.python/meissa"
     cmd("python3 -m venv " + venvHome)
     cmd("source " + venvHome + "/bin/activate")
     cmd("pip3 install pip --upgrade")
 }
 
-fun Prov.installPybuilder(): ProvResult = def {
+fun Prov.installPybuilder(): ProvResult = task {
     cmd("pip3 install pybuilder ddadevops pypandoc mockito coverage unittest-xml-reporting deprecation python_terraform " +
             "boto3")
 }
 
-fun Prov.installRestClient(): ProvResult = def {
+fun Prov.installRestClient(): ProvResult = task {
     cmd("pip3 install requests")
 }
 
-fun Prov.installJupyterlab(): ProvResult = def {
+fun Prov.installJupyterlab(): ProvResult = task {
     cmd("pip3 install jupyterlab pandas matplotlib")
 }

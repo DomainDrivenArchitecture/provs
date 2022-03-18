@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.core.endingWithFileSeparator
 import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.addTextToFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
@@ -12,11 +11,11 @@ import java.io.File
 
 private val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure/"
 
-fun Prov.configureBash() = def {
+fun Prov.configureBash() = task {
     configureBashForUser()
 }
 
-fun Prov.configureBashForUser(): ProvResult = def {
+fun Prov.configureBashForUser(): ProvResult = task {
     val dirname = "~/.bashrc.d"
     if(!dirExists(dirname)) {
         createDir(dirname)

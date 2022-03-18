@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.creat
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
-fun Prov.installFakturama() = def {
+fun Prov.installFakturama() = task {
     createDir("/tmp", sudo = true)
     downloadFromURL( "https://files.fakturama.info/release/v2.1.1/Installer_Fakturama_linux_x64_2.1.1b.deb", "fakturama.deb", "/tmp")
     cmd("sudo dpkg -i fakturama.deb", "/tmp")

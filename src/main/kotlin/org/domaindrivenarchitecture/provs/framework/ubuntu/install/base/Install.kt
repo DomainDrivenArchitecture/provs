@@ -11,7 +11,7 @@ private var aptInit = false
  *
  * @param packages the packages to be installed, packages must be separated by space if there are more than one
  */
-fun Prov.aptInstall(packages: String): ProvResult = def {
+fun Prov.aptInstall(packages: String): ProvResult = task {
     if (!aptInit) {
         cmd("sudo apt-get update")
         cmd("sudo apt-get install -qy apt-utils")
@@ -32,11 +32,10 @@ fun Prov.aptInstall(packages: String): ProvResult = def {
  *
  * @param packages the packages to be installed, packages must be separated by space if there are more than one
  */
-// todo: add test
-fun Prov.snapInstall(packages: String, classic: Boolean = false): ProvResult = def {
+fun Prov.snapInstall(packages: String, classic: Boolean = false): ProvResult = task {
     val packageList = packages.split(" ")
-    for (packg in packageList) {
-        cmd("sudo snap install $packg" + if (classic) " --classic" else "")
+    for (pkg in packageList) {
+        cmd("sudo snap install $pkg" + if (classic) " --classic" else "")
     }
     ProvResult(true) // dummy
 }
@@ -47,7 +46,7 @@ fun Prov.snapInstall(packages: String, classic: Boolean = false): ProvResult = d
  *
  * @param packageName the package to install
  */
-fun Prov.aptInstallFromPpa(launchPadUser: String, ppaName: String, packageName: String): ProvResult = def {
+fun Prov.aptInstallFromPpa(launchPadUser: String, ppaName: String, packageName: String): ProvResult = task {
     aptInstall("software-properties-common") // for being able to use add-apt-repository
     cmd("sudo add-apt-repository -y ppa:$launchPadUser/$ppaName")
     aptInstall(packageName)

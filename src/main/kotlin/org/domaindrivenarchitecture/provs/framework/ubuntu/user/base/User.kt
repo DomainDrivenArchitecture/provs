@@ -27,7 +27,7 @@ fun Prov.createUser(
     password: Secret? = null,
     sudo: Boolean = false,
     copyAuthorizedSshKeysFromCurrentUser: Boolean = false
-): ProvResult = requireAll {
+): ProvResult = task {
     if (!userExists(userName)) {
         cmd("sudo adduser --gecos \"First Last,RoomNumber,WorkPhone,HomePhone\" --disabled-password --home /home/$userName $userName")
     }
@@ -54,7 +54,7 @@ fun Prov.createUser(
  * Installs and configures git for the user if gitEmail is provided in the config.
  * Does NOT CREATE the user.
  */
-fun Prov.configureUser(config: UserConfig) = requireAll {
+fun Prov.configureUser(config: UserConfig) = task {
     provisionKeys(
         config.gpg?.keyPair(),
         config.ssh?.keyPair()
@@ -70,7 +70,7 @@ fun Prov.configureUser(config: UserConfig) = requireAll {
 
 
 @Suppress("unused")
-fun Prov.deleteUser(userName: String, deleteHomeDir: Boolean = false): ProvResult = requireAll {
+fun Prov.deleteUser(userName: String, deleteHomeDir: Boolean = false): ProvResult = task {
     val flagToDeleteHomeDir = if (deleteHomeDir) " -r " else ""
     if (userExists(userName)) {
         cmd("sudo userdel $flagToDeleteHomeDir $userName")
@@ -89,7 +89,7 @@ fun Prov.makeUserSudoerWithNoSudoPasswordRequired(
     userName: String,
     password: Secret? = null,
     overwriteFile: Boolean = false
-): ProvResult = def {
+): ProvResult = task {
     val userSudoFile = "/etc/sudoers.d/$userName"
     if (!fileExists(userSudoFile) || overwriteFile) {
         val sudoPrefix = if (password == null) "sudo" else "echo ${password.plain()} | sudo -S"
@@ -108,7 +108,7 @@ fun Prov.makeUserSudoerWithNoSudoPasswordRequired(
  * IMPORTANT: Current user must already by sudoer when calling this function.
  */
 @Suppress("unused") // used externally
-fun Prov.makeUserSudoerWithNoSudoPasswordRequired(password: Secret) = def {
+fun Prov.makeUserSudoerWithNoSudoPasswordRequired(password: Secret) = task {
     val currentUser = whoami()
     if (currentUser != null) {
         makeUserSudoerWithNoSudoPasswordRequired(currentUser, password, overwriteFile = true)
@@ -153,7 +153,7 @@ fun Prov.whoami(): String? {
  * @hostPassword pw of hostUser on the remote system;
  * ssh-key authentication will be used if hostPassword is null
  */
-@Suppress("api") // use externally
+@Suppress("unused") // use externally
 fun createRemoteUser(
     host: InetAddress,
     hostUser: String,

@@ -23,7 +23,7 @@ fun Prov.createFileFromResource(
     resourcePath: String = "",
     posixFilePermission: String? = null,
     sudo: Boolean = false
-): ProvResult = def {
+): ProvResult = task {
     createFile(
         fullyQualifiedFilename,
         getResourceAsText(resourcePath.endingWithFileSeparator() + resourceFilename),
@@ -43,7 +43,7 @@ fun Prov.createFileFromResourceTemplate(
     values: Map<String, String>,
     posixFilePermission: String? = null,
     sudo: Boolean = false
-): ProvResult = def {
+): ProvResult = task {
     createFile(
         fullyQualifiedFilename,
         getResourceAsText(resourcePath.endingWithFileSeparator() + resourceFilename).resolve(values),
@@ -62,7 +62,7 @@ fun Prov.copyFileFromLocal(
     fullyQualifiedLocalFilename: String,
     posixFilePermission: String? = null,
     sudo: Boolean = false
-): ProvResult = def {
+): ProvResult = task {
     createFile(
         fullyQualifiedFilename,
         getLocalFileContent(fullyQualifiedLocalFilename),
@@ -117,7 +117,7 @@ fun Prov.createSecretFile(
     fullyQualifiedFilename: String,
     secret: Secret,
     posixFilePermission: String? = null
-): ProvResult = def {
+): ProvResult = task {
     posixFilePermission?.let {
         ensureValidPosixFilePermission(posixFilePermission)
         cmd("install -m $posixFilePermission /dev/null $fullyQualifiedFilename")
@@ -126,7 +126,7 @@ fun Prov.createSecretFile(
 }
 
 
-fun Prov.deleteFile(file: String, path: String? = null, sudo: Boolean = false): ProvResult = def {
+fun Prov.deleteFile(file: String, path: String? = null, sudo: Boolean = false): ProvResult = task {
     val fullyQualifiedFilename = (path?.normalizePath() ?: "") + file
     if (fileExists(fullyQualifiedFilename, sudo = sudo)) {
         cmd(prefixWithSudo("rm $fullyQualifiedFilename", sudo))
@@ -140,9 +140,9 @@ fun Prov.fileContainsText(file: String, content: String, sudo: Boolean = false):
     // todo consider grep e.g. for content without newlines
     //        return cmdNoEval(prefixWithSudo("grep -- '${content.escapeSingleQuote()}' $file", sudo)).success
     val fileContent = fileContent(file, sudo = sudo)
-    return if (fileContent == null)
+    return if (fileContent == null) {
         false
-    else
+    } else
         fileContent.contains(content)
 }
 
@@ -166,10 +166,10 @@ fun Prov.addTextToFile(
     doNotAddIfExisting: Boolean = true,
     sudo: Boolean = false
 ): ProvResult =
-    def {
+    task {
         val fileContainsText = fileContainsText(file.path, text, sudo = sudo)
         if (fileContainsText && doNotAddIfExisting) {
-            return@def ProvResult(true, out = "Text already in file")
+            return@task ProvResult(true, out = "Text already in file")
         }
         cmd(
             "printf '%s' " + text
@@ -178,12 +178,12 @@ fun Prov.addTextToFile(
     }
 
 
-fun Prov.replaceTextInFile(file: String, oldText: String, replacement: String) = def {
+fun Prov.replaceTextInFile(file: String, oldText: String, replacement: String) = task {
     replaceTextInFile(file, Regex.fromLiteral(oldText), Regex.escapeReplacement(replacement))
 }
 
 
-fun Prov.replaceTextInFile(file: String, oldText: Regex, replacement: String) = def {
+fun Prov.replaceTextInFile(file: String, oldText: Regex, replacement: String) = task {
     // todo: only use sudo for root or if owner different from current
     val content = fileContent(file, true)
     if (content != null) {
@@ -195,7 +195,7 @@ fun Prov.replaceTextInFile(file: String, oldText: Regex, replacement: String) = 
 }
 
 
-fun Prov.insertTextInFile(file: String, textBehindWhichToInsert: Regex, textToInsert: String) = def {
+fun Prov.insertTextInFile(file: String, textBehindWhichToInsert: Regex, textToInsert: String) = task {
     // todo: only use sudo for root or if owner different from current
     val content = fileContent(file, true)
     if (content != null) {
@@ -231,7 +231,7 @@ fun Prov.createDir(
     path: String = "~/",
     failIfExisting: Boolean = false,
     sudo: Boolean = false
-): ProvResult = def {
+): ProvResult = task {
     if (!failIfExisting && dirExists(dir, path, sudo)) {
         ProvResult(true)
     } else {
@@ -246,7 +246,7 @@ fun Prov.createDirs(
     path: String = "~/",
     failIfExisting: Boolean = false,
     sudo: Boolean = false
-): ProvResult = def {
+): ProvResult = task {
     if (!failIfExisting && dirExists(dirs, path, sudo)) {
         ProvResult(true)
     } else {

@@ -15,11 +15,11 @@ import java.io.PrintStream
 
 internal class ProvTest {
 
-    private fun Prov.def_returnungFalse() = def {
+    private fun Prov.task_returningFalse() = task {
         ProvResult(false)
     }
 
-    private fun Prov.def_returningTrue() = def {
+    private fun Prov.task_returningTrue() = task {
         ProvResult(true)
     }
 
@@ -74,178 +74,178 @@ internal class ProvTest {
     }
 
     @Test
-    fun def_modeOptional_result_true() {
+    fun task_modeOptional_result_true() {
         // given
-        fun Prov.tst_def() = optional {
-            def_returnungFalse()
-            def_returningTrue()
-            def_returnungFalse()
+        fun Prov.tst_task() = optional {
+            task_returningFalse()
+            task_returningTrue()
+            task_returningFalse()
         }
 
         // when
-        val res = testLocal().tst_def().success
+        val res = testLocal().tst_task().success
 
         // then
         assert(res)
     }
 
     @Test
-    fun def_modeLast_result_true() {
+    fun task_modeLast_result_true() {
         // given
-        fun Prov.tst_def() = requireLast {
-            def_returnungFalse()
-            def_returningTrue()
+        fun Prov.tst_task() = requireLast {
+            task_returningFalse()
+            task_returningTrue()
         }
 
         // when
-        val res = testLocal().tst_def().success
+        val res = testLocal().tst_task().success
 
         // then
         assert(res)
     }
 
     @Test
-    fun def_modeLast_result_false() {
+    fun task_modeLast_result_false() {
         // given
-        fun Prov.tst_def() = requireLast {
-            def_returningTrue()
-            def_returnungFalse()
+        fun Prov.tst_task() = requireLast {
+            task_returningTrue()
+            task_returningFalse()
         }
 
         // when
-        val res = testLocal().tst_def().success
+        val res = testLocal().tst_task().success
 
         // then
         assert(!res)
     }
 
     @Test
-    fun def_mode_ALL_result_true() {
+    fun task_mode_ALL_result_true() {
         // given
-        fun Prov.tst_def_all_true_mode_ALL() = requireAll {
-            def_returningTrue()
-            def_returningTrue()
+        fun Prov.tst_task_all_true_mode_ALL() = task {
+            task_returningTrue()
+            task_returningTrue()
         }
 
         // when
-        val res = testLocal().tst_def_all_true_mode_ALL().success
+        val res = testLocal().tst_task_all_true_mode_ALL().success
 
         // then
         assert(res)
     }
 
     // given
-    fun Prov.tst_def_one_false_mode_ALL() = requireAll {
-        def_returningTrue()
-        def_returnungFalse()
-        def_returningTrue()
+    fun Prov.tst_task_one_false_mode_ALL() = task {
+        task_returningTrue()
+        task_returningFalse()
+        task_returningTrue()
     }
 
     @Test
-    fun def_modeALL_resultFalse() {
+    fun task_modeALL_resultFalse() {
         // when
-        val res = testLocal().tst_def_one_false_mode_ALL().success
+        val res = testLocal().tst_task_one_false_mode_ALL().success
 
         // then
         assert(!res)
     }
 
     // given
-    fun Prov.tst_def_one_false_mode_ALL_nested() = requireAll {
-        def_returningTrue()
-        tst_def_one_false_mode_ALL()
-        def_returningTrue()
+    fun Prov.tst_task_one_false_mode_ALL_nested() = task {
+        task_returningTrue()
+        tst_task_one_false_mode_ALL()
+        task_returningTrue()
         tst_ALL_returningTrue()
     }
 
     // given
-    fun Prov.tst_ALL_returningTrue() = requireAll {
+    fun Prov.tst_ALL_returningTrue() = task {
         ProvResult(true)
     }
 
     @Test
-    fun def_modeALLnested_resultFalse() {
+    fun task_modeALLnested_resultFalse() {
         // when
-        val res = testLocal().tst_def_one_false_mode_ALL_nested().success
+        val res = testLocal().tst_task_one_false_mode_ALL_nested().success
 
         // then
         assert(!res)
     }
 
     @Test
-    fun def_mode_ALL_LAST_NONE_nested() {
+    fun task_mode_ALL_LAST_NONE_nested() {
         // given
-        fun Prov.tst_def_last() = def {
-            def_returningTrue()
-            def_returnungFalse()
+        fun Prov.tst_task_last() = task {
+            task_returningTrue()
+            task_returningFalse()
         }
 
-        fun Prov.tst_def_one_false_mode_ALL() = requireAll {
-            tst_def_last()
-            def_returningTrue()
+        fun Prov.tst_task_one_false_mode_ALL() = task {
+            tst_task_last()
+            task_returningTrue()
         }
 
         // when
-        val res = testLocal().tst_def_one_false_mode_ALL().success
+        val res = testLocal().tst_task_one_false_mode_ALL().success
 
         // then
         assert(!res)
     }
 
     @Test
-    fun def_mode_FAILEXIT_nested_false() {
+    fun task_mode_FAILEXIT_nested_false() {
         // given
-        fun Prov.tst_def_failexit_inner() = exitOnFailure {
-            def_returningTrue()
-            def_returnungFalse()
+        fun Prov.tst_task_failexit_inner() = exitOnFailure {
+            task_returningTrue()
+            task_returningFalse()
         }
 
-        fun Prov.tst_def_failexit_outer() = exitOnFailure {
-            tst_def_failexit_inner()
-            def_returningTrue()
+        fun Prov.tst_task_failexit_outer() = exitOnFailure {
+            tst_task_failexit_inner()
+            task_returningTrue()
         }
 
         // when
-        val res = testLocal().tst_def_failexit_outer().success
+        val res = testLocal().tst_task_failexit_outer().success
 
         // then
         assert(!res)
     }
 
     @Test
-    fun def_mode_FAILEXIT_nested_true() {
+    fun task_mode_FAILEXIT_nested_true() {
         // given
-        fun Prov.tst_def_failexit_inner() = exitOnFailure {
-            def_returningTrue()
-            def_returningTrue()
+        fun Prov.tst_task_failexit_inner() = exitOnFailure {
+            task_returningTrue()
+            task_returningTrue()
         }
 
-        fun Prov.tst_def_failexit_outer() = exitOnFailure {
-            tst_def_failexit_inner()
-            def_returningTrue()
+        fun Prov.tst_task_failexit_outer() = exitOnFailure {
+            tst_task_failexit_inner()
+            task_returningTrue()
         }
 
         // when
-        val res = testLocal().tst_def_failexit_outer().success
+        val res = testLocal().tst_task_failexit_outer().success
 
         // then
         assert(res)
     }
 
     @Test
-    fun def_mode_multiple_nested() {
+    fun task_mode_multiple_nested() {
         // given
-        fun Prov.tst_nested() = def {
-            requireAll {
-                def_returningTrue()
-                def {
-                    def_returnungFalse()
-                    def_returningTrue()
+        fun Prov.tst_nested() = task {
+            task {
+                task_returningTrue()
+                task {
+                    task_returningFalse()
+                    task_returningTrue()
                 }
-                def_returnungFalse()
-                def_returningTrue()
+                task_returningFalse()
+                task_returningTrue()
                 optional {
-                    def_returnungFalse()
+                    task_returningFalse()
                 }
             }
         }
@@ -428,7 +428,7 @@ internal class ProvTest {
             addResultToEval(ProvResult(true))
         }
 
-        fun Prov.outer() = requireAll {
+        fun Prov.outer() = task {
             inner()
             ProvResult(true)
         }
@@ -485,7 +485,7 @@ internal class ProvTest {
             addResultToEval(ProvResult(false))
         }
 
-        fun Prov.outer() = requireAll {
+        fun Prov.outer() = task {
             inner()
             ProvResult(true)
         }
@@ -505,19 +505,19 @@ internal class ProvTest {
         val containerName = "provs_test"
         testLocal().provideContainer(containerName, "ubuntu")
 
-        fun Prov.inner() = def {
+        fun Prov.inner() = task {
             cmd("echo in container")
         }
 
         // then
-        fun Prov.outer() = def {
+        fun Prov.outer() = task {
             taskInContainer(containerName) {
                 inner()
                 cmd("echo testfile > testfile.txt")
             }
         }
 
-        val res = testLocal().def { outer() }
+        val res = testLocal().task { outer() }
 
         // then
         assertEquals(true, res.success)
@@ -530,12 +530,12 @@ internal class ProvTest {
         val host = "192.168.56.135"
         val remoteUser = "az"
 
-        fun Prov.inner() = def {
+        fun Prov.inner() = task {
             cmd("echo 'in testfile' > testfile.txt")
         }
 
         // then
-        val res = remote(host, remoteUser).def {
+        val res = remote(host, remoteUser).task {
             inner()  // executed on the remote host
             taskInContainer("prov_default") {
                 inner()  // executed in the container on the remote host

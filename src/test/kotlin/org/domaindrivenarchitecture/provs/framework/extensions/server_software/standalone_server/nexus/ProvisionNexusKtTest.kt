@@ -15,7 +15,7 @@ internal class ProvisionNexusKtTest {
         val a = defaultTestContainer()
 
         // when
-        val res = a.requireAll {
+        val res = a.task {
             provisionNexusWithDocker()
         }
 

@@ -12,7 +12,7 @@ internal class FakturamaKtTest {
         // given
         val a = defaultTestContainer()
         // when
-        val res = a.def { installFakturama() }
+        val res = a.task { installFakturama() }
         // then
         assertTrue(res.success)
     }
