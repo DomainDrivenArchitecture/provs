@@ -91,7 +91,7 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
 fun Prov.installTerraform(): ProvResult = task {
     val dir = "/usr/lib/tfenv/"
 
-    if (!dirExists(dir)) {
+    if (!checkDir(dir)) {
         createDirs(dir, sudo = true)
         cmd("git clone https://github.com/tfutils/tfenv.git " + dir, sudo = true)
         cmd("rm " + dir + ".git/ -rf", sudo = true)
@@ -108,7 +108,7 @@ fun Prov.installAwsCredentials(id: String = "REPLACE_WITH_YOUR_ID", key: String 
     task {
         val dir = "~/.aws"
 
-        if (!dirExists(dir)) {
+        if (!checkDir(dir)) {
             createDirs(dir)
             createFile("~/.aws/config", awsConfig())
             createFile("~/.aws/credentials", awsCredentials(id, key))

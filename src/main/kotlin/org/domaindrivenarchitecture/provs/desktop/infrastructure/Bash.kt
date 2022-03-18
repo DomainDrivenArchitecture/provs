@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.addTextToFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.dirExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import java.io.File
 
@@ -17,7 +17,7 @@ fun Prov.configureBash() = task {
 
 fun Prov.configureBashForUser(): ProvResult = task {
     val dirname = "~/.bashrc.d"
-    if(!dirExists(dirname)) {
+    if(!checkDir(dirname)) {
         createDir(dirname)
         cmd("chmod 755 " + dirname)
         aptInstall("bash-completion screen")

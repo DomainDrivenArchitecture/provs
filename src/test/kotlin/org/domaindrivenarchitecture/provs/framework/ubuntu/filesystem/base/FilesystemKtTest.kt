@@ -136,15 +136,15 @@ internal class FilesystemKtTest {
         val prov = defaultTestContainer()
 
         // when
-        val res1 = prov.dirExists("testdir")
+        val res1 = prov.checkDir("testdir")
         val res2 = prov.createDir("testdir", "~/")
-        val res3 = prov.dirExists("testdir")
+        val res3 = prov.checkDir("testdir")
         val res4 = prov.deleteDir("testdir", "~/")
-        val res5 = prov.dirExists("testdir")
+        val res5 = prov.checkDir("testdir")
 
-        val res6 = prov.dirExists("testdir", "~/test")
+        val res6 = prov.checkDir("testdir", "~/test")
         val res7 = prov.createDirs("test/testdir")
-        val res8 = prov.dirExists("testdir", "~/test")
+        val res8 = prov.checkDir("testdir", "~/test")
         prov.deleteDir("testdir", "~/test/")
 
         // then
@@ -166,11 +166,11 @@ internal class FilesystemKtTest {
         val prov = defaultTestContainer()
 
         // when
-        val res1 = prov.dirExists("/testdir", sudo = true)
+        val res1 = prov.checkDir("/testdir", sudo = true)
         val res2 = prov.createDir("testdir", "/", sudo = true)
-        val res3 = prov.dirExists("/testdir", sudo = true)
+        val res3 = prov.checkDir("/testdir", sudo = true)
         val res4 = prov.deleteDir("testdir", "/", true)
-        val res5 = prov.dirExists("testdir", sudo = true)
+        val res5 = prov.checkDir("testdir", sudo = true)
 
         // then
         assertFalse(res1)

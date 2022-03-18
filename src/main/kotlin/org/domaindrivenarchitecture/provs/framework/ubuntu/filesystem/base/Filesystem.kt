@@ -227,6 +227,14 @@ fun Prov.insertTextInFile(file: String, textBehindWhichToInsert: Regex, textToIn
 
 // =============================  folder operations  ==========================
 
+fun Prov.checkDir(dir: String, path: String? = null, sudo: Boolean = false): Boolean {
+    val effectivePath = if (path != null) path else
+        (if (dir.startsWith(File.separator)) File.separator else "~" + File.separator)
+    val cmd = "cd $effectivePath && test -d $dir"
+    return cmdNoEval(if (sudo) cmd.sudoizeCommand() else cmd).success
+}
+
+@Deprecated("Use checkDir instead.", replaceWith = ReplaceWith("checkDir(dir)"))
 fun Prov.dirExists(dir: String, path: String? = null, sudo: Boolean = false): Boolean {
     val effectivePath = if (path != null) path else
         (if (dir.startsWith(File.separator)) File.separator else "~" + File.separator)
@@ -241,7 +249,7 @@ fun Prov.createDir(
     failIfExisting: Boolean = false,
     sudo: Boolean = false
 ): ProvResult = task {
-    if (!failIfExisting && dirExists(dir, path, sudo)) {
+    if (!failIfExisting && checkDir(dir, path, sudo)) {
         ProvResult(true)
     } else {
         val cmd = "cd $path && mkdir $dir"
@@ -256,7 +264,7 @@ fun Prov.createDirs(
     failIfExisting: Boolean = false,
     sudo: Boolean = false
 ): ProvResult = task {
-    if (!failIfExisting && dirExists(dirs, path, sudo)) {
+    if (!failIfExisting && checkDir(dirs, path, sudo)) {
         ProvResult(true)
     } else {
         val cmd = "cd $path && mkdir -p $dirs"

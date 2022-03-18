@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createSecretFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.dirExists
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
 import org.domaindrivenarchitecture.provs.framework.core.echoCommandForText
@@ -51,7 +51,7 @@ fun Prov.configureGpgKeys(gpgKeys: KeyPair, trust: Boolean = false, skipIfExisti
 
 
 private fun Prov.configureGPGAgent() = task {
-    if (dirExists(".gnupg")) {
+    if (checkDir(".gnupg")) {
         createDir(".gnupg", "~/")
     }
     val content = """

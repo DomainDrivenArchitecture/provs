@@ -18,7 +18,7 @@ fun Prov.gitClone(repo: String, path: String, pullIfExisting: Boolean = true): P
     }
 
     val pathToDir = if (path.endsWith("/")) path + dir else path + "/" + dir
-    if (dirExists(pathToDir + "/.git/")) {
+    if (checkDir(pathToDir + "/.git/")) {
         if (pullIfExisting) {
             cmd("cd $pathToDir && git pull")
         } else {
