@@ -275,6 +275,7 @@ open class Prov protected constructor(
         level--
 
         // post-handling
+        // determine result
         val returnValue =
             if (mode == ResultMode.LAST) {
                 if (internalResultIsLeaf(resultIndex) || taskName == "cmd" || taskName?.replace(" (requireLast)", "") == "repeatTaskUntilSuccess") {
@@ -338,9 +339,9 @@ open class Prov protected constructor(
         return res
     }
 
-
     private val ANSI_RESET = "\u001B[0m"
     private val ANSI_BRIGHT_RED = "\u001B[91m"
+    private val ANSI_BRIGHT_YELLOW = "\u001B[93m"
     private val ANSI_BRIGHT_GREEN = "\u001B[92m"
     private val ANSI_GRAY = "\u001B[90m"
 
@@ -349,8 +350,16 @@ open class Prov protected constructor(
             "============================================== SUMMARY " + (if (instanceName != null) "(" + instanceName + ") " else "") +
                     "============================================== "
         )
+        val successPerLevel = arrayListOf<Boolean>()
         for (result in internalResults) {
-            println(result.toString().escapeControlChars().formattedAsResultLine())
+            val currentLevel = result.level
+
+            // store level result
+            val currentLevelSucces = result.provResult?.success ?: false
+            if (currentLevel >= successPerLevel.size) successPerLevel.add(currentLevelSucces)
+
+            val successOfLevelAbove = if (currentLevel == 0) currentLevelSucces else successPerLevel[currentLevel - 1]
+            println(result.toString().escapeControlChars().formattedAsResultLine(successOfLevelAbove))
         }
         if (internalResults.size > 1) {
             println("----------------------------------------------------------------------------------------------------- ")
@@ -359,12 +368,14 @@ open class Prov protected constructor(
         println("============================================ SUMMARY END ============================================ " + newline())
     }
 
-    private fun String.formattedAsResultLine(): String =
-        this
+    private fun String.formattedAsResultLine(showFailedInYellow: Boolean = false): String {
+        val failedColor = if (showFailedInYellow) ANSI_BRIGHT_YELLOW else ANSI_BRIGHT_RED
+        return this
             .replaceFirst("${RESULT_PREFIX}Success", RESULT_PREFIX + ANSI_BRIGHT_GREEN + "Success" + ANSI_RESET)
-            .replaceFirst("${RESULT_PREFIX}FAILED", RESULT_PREFIX + ANSI_BRIGHT_RED + "FAILED" + ANSI_RESET)
+            .replaceFirst("${RESULT_PREFIX}FAILED", RESULT_PREFIX + failedColor + "FAILED" + ANSI_RESET)
             .replace("${RESULT_PREFIX}executing...", RESULT_PREFIX + ANSI_GRAY + "executing..." + ANSI_RESET)
             .take(400)
+    }
 
 
     private fun initProgress() {
