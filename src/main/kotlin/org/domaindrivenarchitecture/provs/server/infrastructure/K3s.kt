@@ -102,6 +102,7 @@ fun Prov.installK3s(k3sConfig: K3sConfig) = task {
     }
 
     applyK3sFileFromResource(localPathProvisionerConfig)
+    cmd("kubectl set env deployment -n kube-system local-path-provisioner DEPLOY_DATE=\"$(date)\"")
 
     cmd("ln -sf $k3sKubeConfig " + k8sCredentialsDir + "admin.conf", sudo = true)
 }
