@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
@@ -132,8 +131,4 @@ fun awsCredentials(id: String, key: String): String {
     aws_access_key_id = $id
     aws_secret_access_key = $key
     """.trimIndent()
-}
-
-fun main() {
-    local().installDevOps()
 }

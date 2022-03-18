@@ -17,6 +17,3 @@ open class Secret(private val value: String) {
         return Objects.hash(value)
     }
 }
-
-
-class Password(plainPassword: String) : Secret(plainPassword)
