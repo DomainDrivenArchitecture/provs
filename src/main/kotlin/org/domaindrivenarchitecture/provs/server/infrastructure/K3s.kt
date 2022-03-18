@@ -32,6 +32,8 @@ private val certManagerIssuer = File(k3sManualManifestsDir, "le-issuer.yaml")
 private val k3sEcho = File(k3sManualManifestsDir, "echo.yaml")
 private val selfSignedCertificate = File(k3sManualManifestsDir, "selfsigned-certificate.yaml")
 
+private val localPathProvisionerConfig = File(k3sManualManifestsDir, "local-path-provisioner-config.yaml")
+
 
 // -----------------------------------  public functions  --------------------------------
 
@@ -57,6 +59,8 @@ fun Prov.installK3s(k3sConfig: K3sConfig) = task {
     createDirs(k8sCredentialsDir, sudo = true)
     createDirs(k3sAutomatedManifestsDir, sudo = true)
     createDirs(k3sManualManifestsDir, sudo = true)
+    createDirs("/var/pvc1", sudo = true)
+    createDirs("/var/pvc2", sudo = true)
 
     var k3sConfigMap: Map<String, String> = mapOf(
         "loopback_ipv4" to k3sConfig.loopback.ipv4,
@@ -96,6 +100,9 @@ fun Prov.installK3s(k3sConfig: K3sConfig) = task {
     } else {
         ProvResult(true)
     }
+
+    applyK3sFileFromResource(localPathProvisionerConfig)
+
     cmd("ln -sf $k3sKubeConfig " + k8sCredentialsDir + "admin.conf", sudo = true)
 }
 
