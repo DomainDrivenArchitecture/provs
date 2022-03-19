@@ -11,6 +11,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.configureUs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.createUser
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.userExists
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.userIsInGroupSudo
+import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.Test
 internal class ProvisionUserKtTest {
 
     @Test
-    @ContainerTest
+    @ExtensiveContainerTest
     fun configureUser() {
         // given
         val a = defaultTestContainer()

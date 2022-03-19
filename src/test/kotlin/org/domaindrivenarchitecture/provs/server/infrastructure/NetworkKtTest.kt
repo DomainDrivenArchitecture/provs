@@ -9,14 +9,14 @@ import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Loopback
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Node
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
-import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 internal class NetworkKtTest {
 
     @Test
-    @ContainerTest
+    @ExtensiveContainerTest
     fun test_provisionNetwork() {
         // given
         val p = defaultTestContainer()

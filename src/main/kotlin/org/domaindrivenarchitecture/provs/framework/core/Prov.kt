@@ -349,18 +349,23 @@ open class Prov protected constructor(
 
     private fun printResults() {
         println(
-            "============================================== SUMMARY " + (if (instanceName != null) "(" + instanceName + ") " else "") +
+            "============================================== SUMMARY " +
+                    (if (instanceName != null) "(" + instanceName + ") " else "") +
                     "============================================== "
         )
         val successPerLevel = arrayListOf<Boolean>()
         for (result in internalResults) {
             val currentLevel = result.level
 
-            // store level result
-            val currentLevelSucces = result.provResult?.success ?: false
-            if (currentLevel >= successPerLevel.size) successPerLevel.add(currentLevelSucces)
+            // store level success
+            val successOfCurrentLevel = result.provResult?.success ?: false
+            if (currentLevel < successPerLevel.size) {
+                successPerLevel[currentLevel] = successOfCurrentLevel
+            } else {
+                successPerLevel.add(successOfCurrentLevel)
+            }
 
-            val successOfLevelAbove = if (currentLevel == 0) currentLevelSucces else successPerLevel[currentLevel - 1]
+            val successOfLevelAbove = if (currentLevel == 0) successOfCurrentLevel else successPerLevel[currentLevel - 1]
             println(result.toString().escapeControlChars().formattedAsResultLine(successOfLevelAbove))
         }
         if (internalResults.size > 1) {
