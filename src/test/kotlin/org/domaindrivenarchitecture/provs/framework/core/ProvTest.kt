@@ -396,7 +396,7 @@ internal class ProvTest {
     }
 
     @Test
-    fun check_returnsTrue() {
+    fun chk_returnsTrue() {
         // when
         val res = testLocal().chk("echo 123")
 
@@ -405,7 +405,7 @@ internal class ProvTest {
     }
 
     @Test
-    fun check_returnsFalse() {
+    fun chk_returnsFalse() {
         // when
         val res = testLocal().chk("cmddoesnotexist")
 
