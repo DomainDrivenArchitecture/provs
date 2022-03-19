@@ -354,6 +354,48 @@ internal class ProvTest {
     }
 
     @Test
+    @NonCi
+    fun prov_prints_correct_output_for_failure_that_is_not_taken_into_account() {
+
+        // given
+        setRootLoggingLevel(Level.OFF)
+
+        val outContent = ByteArrayOutputStream()
+        val errContent = ByteArrayOutputStream()
+        val originalOut = System.out
+        val originalErr = System.err
+
+        System.setOut(PrintStream(outContent))
+        System.setErr(PrintStream(errContent))
+
+        // when
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE).requireLast {
+            checkPrereq_evaluateToFailure()
+            task("returns success") {
+                ProvResult(true)
+            }
+        }
+
+        // then
+        System.setOut(originalOut)
+        System.setErr(originalErr)
+
+        println(outContent.toString())
+
+        val expectedOutput =
+            "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- prov_prints_correct_output_for_failure_not_taken_into_account (requireLast) \n" +
+                    "--->  \u001B[93mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- returns success \n" +
+                    "----------------------------------------------------------------------------------------------------- \n" +
+                    "Overall >  \u001B[92mSuccess\u001B[0m\n" +
+                    "============================================ SUMMARY END ============================================ \n" +
+                    "\n"
+
+        assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
+    }
+
+    @Test
     fun check_returnsTrue() {
         // when
         val res = testLocal().chk("echo 123")
