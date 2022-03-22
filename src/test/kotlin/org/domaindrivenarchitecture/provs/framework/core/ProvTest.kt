@@ -305,7 +305,7 @@ internal class ProvTest {
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
                     ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
-                    "--->  \u001B[93mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    "--->  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
@@ -346,7 +346,7 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
-                    ">  \u001B[91mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    ">  \u001B[91mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                     "============================================ SUMMARY END ============================================ \n" +
                     "\n"
 
@@ -384,8 +384,8 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
-                    ">  \u001B[92mSuccess\u001B[0m -- prov_prints_correct_output_for_failure_not_taken_into_account (requireLast) \n" +
-                    "--->  \u001B[93mFAILED\u001B[0m -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- prov_prints_correct_output_for_failure_that_is_not_taken_into_account (requireLast) \n" +
+                    "--->  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- returns success \n" +
                     "----------------------------------------------------------------------------------------------------- \n" +
                     "Overall >  \u001B[92mSuccess\u001B[0m\n" +

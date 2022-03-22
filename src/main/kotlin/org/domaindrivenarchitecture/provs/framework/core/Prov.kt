@@ -418,7 +418,7 @@ internal data class ResultLine(val level: Int, val method: String?, var provResu
     override fun toString(): String {
         val provResult = provResult
         return if (provResult != null) {
-            prefix(level) + (if (provResult.success) "Success -- " else "FAILED -- ") +
+            prefix(level) + (if (provResult.success) "Success -- " else "FAILED  -- ") +
                     method + " " + (provResult.cmd ?: "") +
                     (if (!provResult.success && provResult.err != null) " -- Error: " + provResult.err.escapeControlChars() else "")
         } else
