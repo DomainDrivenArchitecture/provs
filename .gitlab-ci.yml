@@ -81,7 +81,7 @@ test:
       dotenv: generate_executables.env
     expire_in: 6 months
 
-uberjarjar:
+uberjar:
   stage: package
   rules:
     - if: $CI_PIPELINE_SOURCE != "push"
@@ -106,7 +106,7 @@ publish-snapshot-lib:
   rules:
     - if: $CI_PIPELINE_SOURCE != "push"
       when: never
-    - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
+    - if: $CI_COMMIT_TAG !~ /^[0-9]+[.][0-9]+([.][0-9]+-SNAPSHOT)?$/
   script:
     - ./gradlew -x assemble -x test jar
     - ./gradlew -x assemble -x test publish
