@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
 
     val checkedArgs = if (args.isEmpty()) arrayOf("-h") else args
 
-    val cmd = CliArgumentsParser("java -jar provs-server.jar").parseCommand(checkedArgs)
+    val cmd = CliArgumentsParser("provs-server.jar").parseCommand(checkedArgs)
     if (!cmd.isValid()) {
         println("Arguments are not valid, pls try -h for help.")
         exitProcess(1)
@@ -25,5 +25,6 @@ fun main(args: Array<String>) {
     val prov = createProvInstance(cmd.target)
     when(cmd.serverType) {
         ServerType.K3S -> prov.provisionK3s(cmd as K3sCliCommand)
+        else -> { throw RuntimeException("Unknown serverType") }
     }
 }

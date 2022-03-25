@@ -7,7 +7,6 @@ import org.domaindrivenarchitecture.provs.server.domain.k3s.Certmanager
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Loopback
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Node
-import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

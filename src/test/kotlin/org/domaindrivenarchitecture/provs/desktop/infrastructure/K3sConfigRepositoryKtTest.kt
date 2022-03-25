@@ -3,7 +3,7 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 import com.charleskorn.kaml.InvalidPropertyValueException
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceType
-import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
+import org.domaindrivenarchitecture.provs.server.infrastructure.getK3sConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -3,7 +3,7 @@ package org.domaindrivenarchitecture.provs.server.domain.k3s
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.server.infrastructure.*
-import org.domaindrivenarchitecture.provs.server.infrastructure.k3s.getK3sConfig
+import org.domaindrivenarchitecture.provs.server.infrastructure.getK3sConfig
 
 /**
  * Installs a k3s server.

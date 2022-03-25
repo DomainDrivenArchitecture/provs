@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.server.infrastructure.k3s
+package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.framework.core.readFromFile
