@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
 
     val checkedArgs = if (args.isEmpty()) arrayOf("-h") else args
 
-    val cmd = CliArgumentsParser("provs-server.jar").parseCommand(checkedArgs)
+    val cmd = CliArgumentsParser("provs-server.jar subcommand target").parseCommand(checkedArgs)
     if (!cmd.isValid()) {
         println("Arguments are not valid, pls try -h for help.")
         exitProcess(1)
