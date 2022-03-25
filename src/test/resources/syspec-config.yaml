@@ -1,0 +1,3 @@
+command:
+  - command: "echo just_for_test"
+    out: "just_for_test"

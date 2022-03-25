@@ -45,3 +45,19 @@ internal fun findSpecConfigFromFile(file: ConfigFileName? = null): SpecConfig? {
         null
     }
 }
+
+internal fun getSpecConfigFromResource(resourcePath: String): SpecConfig {
+    val resource = Thread.currentThread().contextClassLoader.getResource(resourcePath)
+    requireNotNull(resource) { "Resource $resourcePath not found" }
+    return resource.readText().yamlToType()
+}
+
+internal fun findSpecConfigFromResource(resourcePath: String): SpecConfig? {
+    return try {
+        val config = getSpecConfigFromResource(resourcePath)
+        config
+    } catch (e: IllegalArgumentException) {
+        println("Error: " + e.message)
+        null
+    }
+}
