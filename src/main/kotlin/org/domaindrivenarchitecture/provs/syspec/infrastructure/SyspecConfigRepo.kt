@@ -18,14 +18,14 @@ internal fun findSpecConfigFromFile(file: ConfigFileName? = null): Result<SpecCo
         // provide default config
         writeSpecConfigToFile(filePath, SpecConfig(listOf(CommandSpec("echo just_for_demo", "just_for_demo"))))
     }
-    readFromFile(filePath).yamlToType()
+    readFromFile(filePath).yamlToType<SpecConfig>()
 }
 
 
 internal fun findSpecConfigFromResource(resourcePath: String): Result<SpecConfig> = runCatching {
     val resource = Thread.currentThread().contextClassLoader.getResource(resourcePath)
     requireNotNull(resource) { "Resource $resourcePath not found" }
-    return resource.readText().yamlToType()
+    resource.readText().yamlToType()
 }
 
 
