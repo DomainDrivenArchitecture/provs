@@ -28,6 +28,26 @@ internal class SyspecConfigRepoKtTest {
     }
 
     @Test
+    fun findSpecConfigFromFile_success() {
+        // when
+        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")  // null would reveal test error
+        val filePath = javaClass.classLoader.getResource("syspec-config.yaml").file
+        val res = findSpecConfigFromFile(ConfigFileName(filePath))
+
+        // then
+        assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res?.command)
+    }
+
+    @Test
+    fun findSpecConfigFromResource_success() {
+        // when
+        val res =findSpecConfigFromResource("syspec-config.yaml")
+
+        // then
+        assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res?.command)
+    }
+
+    @Test
     fun findSpecConfigFromFile_null() {
         // when
         val res = findSpecConfigFromFile(ConfigFileName("dontexist"))
