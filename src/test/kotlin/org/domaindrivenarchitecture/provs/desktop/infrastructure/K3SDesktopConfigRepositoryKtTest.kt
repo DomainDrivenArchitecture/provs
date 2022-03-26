@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.FileNotFoundException
 
-internal class K3sConfigRepositoryKtTest {
+internal class K3SDesktopConfigRepositoryKtTest {
 
     @Test
     fun getConfig_successful() {
