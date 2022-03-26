@@ -38,7 +38,7 @@ fun Prov.verify(cmd: CommandSpec) {
             val contains = (actual?.contains(expected) ?: false)
             verify(
                 contains,
-                "Output of command '${cmd.command}' does ${contains.falseToNot()}contain $expected ${if (!contains) "(Actual output: $actual)" else ""}"
+                "Output of command [${cmd.command}] does ${contains.falseToNot()}contain [$expected] ${if (!contains) " - Actual output: [$actual]" else ""}"
             )
         }
     }
@@ -55,10 +55,10 @@ fun Prov.verify(hostspec: HostSpec) {
         cmdNoEval("echo | openssl s_client -showcerts -servername ${hostspec.url} -connect ${hostspec.url}:443 2>/dev/null | openssl x509 -inform pem -noout -enddate")
 
     if (!res.success) {
-        verify(false, "Could not retrieve certificate from ${hostspec.url} due to error: ${res.err}")
+        verify(false, "Could not retrieve certificate from [${hostspec.url}] due to error: ${res.err}")
     } else {
         if (hostspec.expirationDays == null) {
-            verify(true, "Found a certificate on ${hostspec.url}")
+            verify(true, "Found a certificate on [${hostspec.url}]")
         } else {
             verifyCertExpiration(res.out, hostspec.url, hostspec.expirationDays)
         }
@@ -67,7 +67,7 @@ fun Prov.verify(hostspec: HostSpec) {
 
 fun Prov.verify(pkg: PackageSpec) {
     val res = isPackageInstalled(pkg.name)
-    verify(res == pkg.installed, "Package ${pkg.name} is ${res.falseToNot()}installed.")
+    verify(res == pkg.installed, "Package [${pkg.name}] is ${res.falseToNot()}installed.")
 }
 
 fun Prov.verify(ncConf: NetcatSpec) {
@@ -75,7 +75,7 @@ fun Prov.verify(ncConf: NetcatSpec) {
     val res = cmdNoEval("nc ${ncConf.host} ${ncConf.port} -z -w $timeout")
     verify(
         res.success == ncConf.reachable,
-        "Host ${ncConf.host} is ${res.success.falseToNot()}reachable at port ${ncConf.port}."
+        "Host [${ncConf.host}] is ${res.success.falseToNot()}reachable at port [${ncConf.port}]."
     )
 }
 
@@ -93,7 +93,7 @@ fun Prov.verify(socketConf: SocketSpec): ProvResult {
 fun Prov.verify(cert: CertificateFileSpec) {
     val res = cmdNoEval("openssl x509 -in ${cert.name} -noout -enddate")
     if (!res.success) {
-        verify(false, "Could not retrieve certificate from ${cert.name} due to error: ${res.err}")
+        verify(false, "Could not retrieve certificate from [${cert.name}] due to error: ${res.err}")
     } else {
         verifyCertExpiration(res.out, cert.name, cert.expirationDays)
     }
