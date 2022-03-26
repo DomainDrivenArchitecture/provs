@@ -12,27 +12,23 @@ import java.io.FileWriter
 private const val DEFAULT_CONFIG_FILE = "syspec-config.yaml"
 
 // ---------------------------------  read  ----------------------------------
-internal fun getSpecConfigFromFile(file: ConfigFileName? = null): SpecConfig {
-    val filename = file?.fileName ?: DEFAULT_CONFIG_FILE
-
-    if ((filename.substringAfterLast("/") == DEFAULT_CONFIG_FILE) && !File(filename).exists()) {
+internal fun findSpecConfigFromFile(file: ConfigFileName? = null): Result<SpecConfig> = runCatching {
+    val filePath = file?.fileName ?: DEFAULT_CONFIG_FILE
+    if ((filePath == DEFAULT_CONFIG_FILE) && !File(filePath).exists()) {
         // provide default config
-        writeSpecConfigToFile(filename, SpecConfig(listOf(CommandSpec("echo just_for_demo", "just_for_demo"))))
+        writeSpecConfigToFile(filePath, SpecConfig(listOf(CommandSpec("echo just_for_demo", "just_for_demo"))))
     }
-    return readFromFile(filename).yamlToType()
+    readFromFile(filePath).yamlToType()
 }
 
-internal fun findSpecConfigFromFile(file: ConfigFileName? = null): Result<SpecConfig> = runCatching { getSpecConfigFromFile(file) }
 
-
-internal fun getSpecConfigFromResource(resourcePath: String): SpecConfig {
+internal fun findSpecConfigFromResource(resourcePath: String): Result<SpecConfig> = runCatching {
     val resource = Thread.currentThread().contextClassLoader.getResource(resourcePath)
     requireNotNull(resource) { "Resource $resourcePath not found" }
     return resource.readText().yamlToType()
 }
 
-internal fun findSpecConfigFromResource(resourcePath: String): Result<SpecConfig> = runCatching { getSpecConfigFromResource(resourcePath) }
-
 
 // ---------------------------------   write  ----------------------------------
-internal fun writeSpecConfigToFile(fileName: String = DEFAULT_CONFIG_FILE, config: SpecConfig) = FileWriter(fileName).use { it.write(config.toYaml()) }
+internal fun writeSpecConfigToFile(fileName: String = DEFAULT_CONFIG_FILE, config: SpecConfig) =
+    FileWriter(fileName).use { it.write(config.toYaml()) }

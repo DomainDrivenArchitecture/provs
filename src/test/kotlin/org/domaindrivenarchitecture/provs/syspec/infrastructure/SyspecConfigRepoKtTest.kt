@@ -8,26 +8,6 @@ import org.junit.jupiter.api.Test
 internal class SyspecConfigRepoKtTest {
 
     @Test
-    fun getSpecConfigFromFile_success() {
-        // when
-        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")  // null would reveal test error
-        val filePath = javaClass.classLoader.getResource("syspec-config.yaml").file
-        val res = getSpecConfigFromFile(ConfigFileName(filePath))
-
-        // then
-        assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res.command)
-    }
-
-    @Test
-    fun getSpecConfigFromResource_success() {
-        // when
-        val res = getSpecConfigFromResource("syspec-config.yaml")
-
-        // then
-        assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res.command)
-    }
-
-    @Test
     fun findSpecConfigFromFile_success() {
         // when
         @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")  // null would reveal test error
