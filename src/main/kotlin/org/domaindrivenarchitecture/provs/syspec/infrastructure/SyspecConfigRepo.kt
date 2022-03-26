@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.syspec.infrastructure
 
-import com.charleskorn.kaml.Yaml
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.framework.core.readFromFile
+import org.domaindrivenarchitecture.provs.framework.core.toYaml
 import org.domaindrivenarchitecture.provs.framework.core.yamlToType
 import org.domaindrivenarchitecture.provs.syspec.domain.CommandSpec
 import org.domaindrivenarchitecture.provs.syspec.domain.SpecConfig
@@ -35,16 +35,4 @@ internal fun findSpecConfigFromResource(resourcePath: String): Result<SpecConfig
 
 
 // ---------------------------------   write  ----------------------------------
-internal fun writeSpecConfigToFile(
-    fileName: String = DEFAULT_CONFIG_FILE,
-    config: SpecConfig
-) {
-    FileWriter(fileName).use {
-        it.write(
-            Yaml.default.encodeToString(
-                SpecConfig.serializer(),
-                config
-            )
-        )
-    }
-}
+internal fun writeSpecConfigToFile(fileName: String = DEFAULT_CONFIG_FILE, config: SpecConfig) = FileWriter(fileName).use { it.write(config.toYaml()) }
