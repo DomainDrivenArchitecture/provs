@@ -9,24 +9,16 @@ import org.domaindrivenarchitecture.provs.syspec.infrastructure.verifySpecConfig
 
 
 fun Prov.verifySpec(configFile: ConfigFileName? = null) = task {
-    val spec = findSpecConfigFromFile(configFile)
-
-    if (spec == null) {
-        ProvResult(false, "Could not read file: ${configFile?.fileName}")
-    } else {
-        verifySpecConfig(spec)
-    }
+    val result = findSpecConfigFromFile(configFile)
+    val spec = result.getOrElse { return@task ProvResult(false, "Could not read file: ${configFile?.fileName} due to: ${result.exceptionOrNull()?.message}") }
+    verifySpecConfig(spec)
 }
 
 
 @Suppress("unused")   // Api
 fun Prov.verifySpecFromResource(resourceName: String) = task {
-    val spec = findSpecConfigFromResource(resourceName)
-
-    if (spec == null) {
-        ProvResult(false, "Could not read resource: ${resourceName}")
-    } else {
-        verifySpecConfig(spec)
-    }
+    val result = findSpecConfigFromResource(resourceName)
+    val spec = result.getOrElse { return@task ProvResult(false, "Could not read resource: $resourceName due to: ${result.exceptionOrNull()?.message}") }
+    verifySpecConfig(spec)
 }
 

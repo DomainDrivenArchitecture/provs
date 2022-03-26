@@ -35,7 +35,7 @@ internal class SyspecConfigRepoKtTest {
         val res = findSpecConfigFromFile(ConfigFileName(filePath))
 
         // then
-        assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res?.command)
+        assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res.getOrNull()?.command)
     }
 
     @Test
@@ -44,7 +44,7 @@ internal class SyspecConfigRepoKtTest {
         val res =findSpecConfigFromResource("syspec-config.yaml")
 
         // then
-        assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res?.command)
+        assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res.getOrNull()?.command)
     }
 
     @Test
@@ -53,7 +53,7 @@ internal class SyspecConfigRepoKtTest {
         val res = findSpecConfigFromFile(ConfigFileName("dontexist"))
 
         // then
-        assertNull(res)
+        assertNull(res.getOrNull())
     }
 
     @Test
@@ -62,6 +62,6 @@ internal class SyspecConfigRepoKtTest {
         val res = findSpecConfigFromResource("dontexist")
 
         // then
-        assertNull(res)
+        assertNull(res.getOrNull())
     }
 }
