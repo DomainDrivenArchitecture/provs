@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
@@ -30,10 +31,7 @@ internal class DevOpsKtTest {
             )
         )
         assertTrue(
-            defaultTestContainer().fileContainsText(
-                "/etc/bash_completion.d/kubernetes",
-                "\nkubectl completion bash\n"
-            )
+            defaultTestContainer().checkFile("/etc/bash_completion.d/kubernetes", sudo = true)
         )
     }
 }

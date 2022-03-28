@@ -39,7 +39,7 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
     val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure"
 
     task("installKubectl") {
-        val kubeConfigFile = "~/.bashrc.d/kubectl.sh"
+        val kubeConfigFile = ".bashrc.d/kubectl.sh"
         if (!checkFile(kubeConfigFile)) {
             // prerequisites -- see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
             cmd("sudo apt-get update")
@@ -48,6 +48,7 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
             cmd("echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | sudo tee /etc/apt/sources.list.d/kubernetes.list")
 
             // kubectl and bash completion
+            cmd("sudo apt update")
             aptInstall("kubectl")
             cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
             createDir(".bashrc.d")
