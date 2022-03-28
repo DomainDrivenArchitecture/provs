@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.domaindrivenarchitecture.provs.test.testLocal
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -267,7 +268,7 @@ internal class FilesystemKtTest {
         defaultTestContainer().copyFileFromLocal("copiedFileFromLocal", "$resourcesDirectory/resource-test")
 
         // then
-        val content = defaultTestContainer().fileContent( "copiedFileFromLocal")
+        val content = defaultTestContainer().fileContent("copiedFileFromLocal")
         assertEquals("resource text\n", content)
     }
 
@@ -275,18 +276,88 @@ internal class FilesystemKtTest {
     @ContainerTest
     fun fileContainsText() {
         // given
-        defaultTestContainer().createFile("testfilecontainingtext", "abc\n- def\nefg")
+        val file = "file_with_text"
+        defaultTestContainer().createFile(file, "\n\nabc\n- def\nefg\nhij\nklm\no\npq", sudo = true)
 
         // when
-        val res = defaultTestContainer().fileContainsText("testfilecontainingtext", "abc")
-        val res2 = defaultTestContainer().fileContainsText("testfilecontainingtext", "de")
-        val res3 = defaultTestContainer().fileContainsText("testfilecontainingtext", "- def")
-        val res4 = defaultTestContainer().fileContainsText("testfilecontainingtext", "xyy")
+        val res = defaultTestContainer().fileContainsText(file, "abc")
+        val res2 = defaultTestContainer().fileContainsText(file, "de")
+        val res3 = defaultTestContainer().fileContainsText(file, "- def")
+        val res4 = defaultTestContainer().fileContainsText(file, "xyy")
+        val res5 = defaultTestContainer().fileContainsText(file, "c\n- def\nefg\nhi")
+        val res6 = defaultTestContainer().fileContainsText(file, "\n\n")
+        val res7 = defaultTestContainer().fileContainsText(file, "\n\n\n")
+        val res8 = defaultTestContainer().fileContainsText(file, "\no\n")
+        val res10 = defaultTestContainer().fileContainsText(file, "\n\nabc")
 
         // then
         assertTrue(res)
         assertTrue(res2)
         assertTrue(res3)
         assertFalse(res4)
+        assertTrue(res5)
+        assertTrue(res6)
+        assertFalse(res7)
+        assertTrue(res8)
+        assertTrue(res10)
+    }
+
+    @Test
+    @ContainerTest
+    fun fileContainsText_with_sudo() {
+        // given
+        val file = "sudotestfilecontainingtext"
+        defaultTestContainer().createFile(file, "abc\n- def\nefg\nhij\nklm\nop", sudo = true)
+
+        // when
+        val res = defaultTestContainer().fileContainsText(file, "abc", sudo = true)
+        val res2 = defaultTestContainer().fileContainsText(file, "de", sudo = true)
+        val res3 = defaultTestContainer().fileContainsText(file, "- def", sudo = true)
+        val res4 = defaultTestContainer().fileContainsText(file, "xyy", sudo = true)
+        // test if newlines are recognized
+        val res5 = defaultTestContainer().fileContainsText(file, "c\n- def\nefg\nhi", sudo = true)
+
+        // then
+        assertTrue(res)
+        assertTrue(res2)
+        assertTrue(res3)
+        assertFalse(res4)
+        assertTrue(res5)
+    }
+
+    @ExtensiveContainerTest
+    fun fileContentLargeFile_success() {
+        // given
+        val prov = defaultTestContainer()
+        val filename = "largetestfile"
+        val content = "012345äöüß".repeat(100000)
+
+        // when
+        val res = prov.createFile(filename, content, overwriteIfExisting = true)
+        val size = prov.fileSize(filename)
+        val actualContent = prov.fileContentLargeFile(filename, chunkSize = 40000)
+
+        // then
+        assertTrue(res.success)
+        assertEquals(content, actualContent)
+        assertEquals(1400000, size)
+    }
+
+    @ExtensiveContainerTest
+    fun fileContentLargeFile_with_sudo_success() {
+        // given
+        val prov = defaultTestContainer()
+        val filename = "largetestfile"
+        val content = "012345äöüß".repeat(100000)
+
+        // when
+        val res = prov.createFile(filename, content, overwriteIfExisting = true, sudo = true)
+        val size = prov.fileSize(filename, sudo = true)
+        val actualContent = prov.fileContentLargeFile(filename, chunkSize = 40000, sudo = true)
+
+        // then
+        assertTrue(res.success)
+        assertEquals(content, actualContent)
+        assertEquals(1400000, size)
     }
 }

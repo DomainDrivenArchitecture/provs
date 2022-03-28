@@ -4,6 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
 import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.getLocalFileContent
 import java.io.File
+import java.util.*
 
 
 /**
@@ -109,7 +110,7 @@ fun Prov.createFile(
         val chunkedTest = text.chunked(maxBlockSize)
         for (chunk in chunkedTest) {
             // todo: consider usage of function addTextToFile
-            cmd(
+            cmdNoLog(
                 "printf '%s' " + chunk
                     .escapeAndEncloseByDoubleQuoteForShell() + " | $withSudo tee -a $fullyQualifiedFilename > /dev/null"
             )
@@ -145,28 +146,71 @@ fun Prov.deleteFile(file: String, path: String? = null, sudo: Boolean = false): 
 
 
 fun Prov.fileContainsText(file: String, content: String, sudo: Boolean = false): Boolean {
-    // todo consider grep e.g. for content without newlines
-    //        return cmdNoEval(prefixWithSudo("grep -- '${content.escapeSingleQuote()}' $file", sudo)).success
-    val fileContent = fileContent(file, sudo = sudo)
-    return if (fileContent == null) {
-        false
+    if (!checkFile(file, sudo)) {
+        return false
+    }
+
+    // use grep for a single line or for a single line enclosed by a newline
+    if (!content.contains("\n") || (content.length >= 3 && !content.drop(1).dropLast(1).contains("\n"))) {
+        return cmdNoEval(prefixWithSudo("grep -- '${content.escapeSingleQuote().trim('\n')}' $file", sudo)).success
     } else {
-        fileContent.contains(content)
+        val fileContent = fileContent(file, sudo = sudo)
+        return fileContent?.contains(content) ?: false
     }
 }
 
 
 fun Prov.fileContent(file: String, sudo: Boolean = false): String? {
-    return cmdNoEval(prefixWithSudo("cat $file", sudo)).out
+    val largeFileSize = 40000
+
+    val size = fileSize(file, sudo)
+    if (size == null || size > largeFileSize) {
+        return fileContentLargeFile(file, sudo)
+    } else {
+        return cmdNoEval(prefixWithSudo("cat $file", sudo)).out
+    }
 }
 
+fun Prov.fileContentLargeFile(file: String, sudo: Boolean = false, chunkSize: Int = 10000): String? {
+    require(chunkSize <= 40000) { "Chunk size must be < 40000" }
+    val maxSizeLargeFileContent = 10000000  // 10 MB
+    val size = fileSize(file, sudo)
+    if (size != null && size > maxSizeLargeFileContent) {
+        throw IllegalArgumentException("Cannot retrieve file content of files larger than: $maxSizeLargeFileContent bytes")
+    }
 
-fun Prov.addTextToFile(
-    text: String,
-    file: String,
-    doNotAddIfExisting: Boolean = true,
-    sudo: Boolean = false
-): ProvResult = addTextToFile(text, File(file), doNotAddIfExisting, sudo)
+    var offset = 0
+
+    var resultString: String? = null
+    do {
+        // todo : file paths starting with ~/ are not yet supported
+        val chunkResult =
+            cmdNoEval(prefixWithSudo("dd if=\"$file\" iflag=skip_bytes,count_bytes,fullblock bs=\"$chunkSize\" skip=\"$offset\" count=\"$chunkSize\" status=none | base64", sudo))
+
+        // check first chunk
+        if (resultString == null) {
+            if (!chunkResult.success) {
+                return resultString
+            } else {
+                resultString = ""
+            }
+        }
+
+        val b = chunkResult.out?.trim() ?: ""
+        offset += chunkSize
+
+        if (b.isEmpty() || b == "0") {
+            break
+        }
+
+        // Use MimeDecoder to ignore newlines (\n)
+        val decodedBytes: ByteArray = Base64.getMimeDecoder().decode( b )
+        val dec = String(decodedBytes)
+        resultString += dec
+    } while (true)
+
+    return resultString
+}
 
 
 fun Prov.addTextToFile(
@@ -303,8 +347,8 @@ fun Prov.userHome(): String {
 /**
  * Returns number of bytes of a file or null if size could not be determined
  */
-fun Prov.fileSize(filename: String): Int? {
-    val result = cmd("wc -c < $filename")
+fun Prov.fileSize(filename: String, sudo: Boolean = false): Int? {
+    val result = cmdNoEval("wc -c < $filename", sudo = sudo)
     return result.out?.trim()?.toIntOrNull()
 }
 
