@@ -1,10 +1,9 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.utils
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.core.docker
 import org.domaindrivenarchitecture.provs.framework.core.echoCommandForText
+import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
-import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -56,9 +55,10 @@ internal class UtilsKtTest {
     }
 
     @Test
+    @ContainerTest
     fun echoCommandForText_in_ubuntu_container() {
         // given
-        val prov = docker()
+        val prov = defaultTestContainer()
 
         // when
         val testMultiLineString = """
