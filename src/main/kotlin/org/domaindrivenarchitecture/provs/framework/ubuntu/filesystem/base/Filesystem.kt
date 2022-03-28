@@ -183,9 +183,10 @@ fun Prov.fileContentLargeFile(file: String, sudo: Boolean = false, chunkSize: In
 
     var resultString: String? = null
     do {
-        // todo : file paths starting with ~/ are not yet supported
+        // file paths starting with ~/ are not yet supported
+        val fileCleaned = if (file.length >= 2 && file.take(2) == "~/") file.substring(2) else file
         val chunkResult =
-            cmdNoEval(prefixWithSudo("dd if=\"$file\" iflag=skip_bytes,count_bytes,fullblock bs=\"$chunkSize\" skip=\"$offset\" count=\"$chunkSize\" status=none | base64", sudo))
+            cmdNoEval(prefixWithSudo("dd if=\"$fileCleaned\" iflag=skip_bytes,count_bytes,fullblock bs=\"$chunkSize\" skip=\"$offset\" count=\"$chunkSize\" status=none | base64", sudo))
 
         // check first chunk
         if (resultString == null) {
