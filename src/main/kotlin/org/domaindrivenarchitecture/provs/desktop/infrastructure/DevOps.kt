@@ -48,9 +48,8 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
             cmd("echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | sudo tee /etc/apt/sources.list.d/kubernetes.list")
 
             // kubectl and bash completion
-            cmd("sudo apt-get update")
             aptInstall("kubectl")
-            addTextToFile("\nkubectl completion bash\n", "/etc/bash_completion.d/kubernetes", sudo = true)
+            cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
             createDir(".bashrc.d")
             createFileFromResource(kubeConfigFile, "kubectl.sh", resourcePath)
         } else {
