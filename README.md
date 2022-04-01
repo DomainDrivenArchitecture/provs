@@ -5,11 +5,12 @@
 
 ## Purpose
 
-provs provides cli-based tooling for provisioning desktop // server
+provs provides cli-based tooling for provisioning desktop or server resp. perform system checks.
 * provs-desktop minimal - provides a minimal setup (e.g. swappiness / randomutils) e.g. for setup on a VirtualBox  
 * provs-desktop office - provides enhancements like zim / gopass / fakturama
 * provs-desktop ide - provides development environments for java / kotlin / python / clojure / terraform
 * provs-server k3s - provides a production ready & k3s setup with dualstack option
+* provs-syspec - verifies a system according to the provided system spec config file
 
 In general provs combines
 * being able to use the power of shell commands
@@ -47,23 +48,41 @@ under development - we are working hard on setting up our environments using pro
 **options** 
 * `-p` for interactive password question
 
-### Examples
-#### Provision a basic desktop workplace locally
+
+#### Provision a desktop
 
 ```bash
-provs-desktop.jar basic local`
+provs-desktop.jar basic local
+# or an office desktop remote:
+provs-desktop.jar office myuser@myhost.com -p
 ```
 
-#### Provision an office desktop workplace remotely
-
-```bash
-provs-desktop.jar office myuser@myhost.com -p`
-```
-
-You'll be prompted for the password of the remote user due to option `-p`.
+In the last case you'll be prompted for the password of the remote user due to option `-p`.
 
 ### Provision k3s
 
 ```bash
-provs-server.jar k3s myuser@myhost.com 
+provs-server.jar k3s local
+# or remote: 
+provs-server.jar k3s myuser@myhost.com    # using ssh-authentication - alternatively use option -p for password authentication
+```
+
+### Performing a system check
+
+```bash
+provs-syspec.jar local 
+# or remote:
+provs-syspec.jar myuser@myhost.com
+```
+
+The default config-file for the system check is `syspec-config.yaml`, you can specify a different file with option `-c <config-file>`.
+
+## Get help
+
+To get help you can make use of the `-h` option:
+
+```bash
+provs-desktop.jar -h
+provs-server.jar -h
+provs-syspec.jar -h
 ```
