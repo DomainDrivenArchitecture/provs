@@ -19,7 +19,7 @@ internal class VerificationKtTest {
     @ContainerTest
     fun test_verify_folder_existing() {
         // given
-        val dir = "/home/testuser/testdir"
+        val dir = "/home/testuser/testdir4spec"
         val prov = defaultTestContainer()
         prov.createDirs(dir)
 
@@ -41,7 +41,7 @@ internal class VerificationKtTest {
     @ContainerTest
     fun test_verify_folder_nonexisting() {
         // given
-        val dir = "/home/testuser/testdir2"
+        val dir = "/home/testuser/testdirnonexisting"
         val prov = defaultTestContainer()
 
         // when
@@ -62,7 +62,7 @@ internal class VerificationKtTest {
     @ContainerTest
     fun test_verify_file_existing() {
         // given
-        val file = "/home/testuser/testfile"
+        val file = "/home/testuser/testfile4spec"
         val prov = defaultTestContainer()
         prov.createFile(file,"testcontent")
 
