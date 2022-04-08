@@ -1,15 +1,59 @@
 package org.domaindrivenarchitecture.provs.syspec.infrastructure
 
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
+import org.domaindrivenarchitecture.provs.syspec.domain.FolderSpec
 import org.domaindrivenarchitecture.provs.syspec.domain.SocketSpec
-import org.domaindrivenarchitecture.provs.syspec.domain.SpecConfig
+import org.domaindrivenarchitecture.provs.syspec.domain.SyspecConfig
+import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.testLocal
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 internal class VerificationKtTest {
 
+    @ContainerTest
+    fun test_verify_folder_existing() {
+        // given
+        val dir = "/home/testuser/testdir"
+        val prov = defaultTestContainer()
+            prov.createDirs(dir)
+
+        // when
+        val res = defaultTestContainer().task {
+            verify(FolderSpec(dir))
+            ProvResult(true) // dummy
+        }
+
+        // then
+        assertTrue(res.success)
+    }
+
+    @ContainerTest
+    fun test_verify_folder_nonexisting() {
+        // given
+        val dir = "/home/testuser/testdir2"
+        val prov = defaultTestContainer()
+
+        // when
+        val res = defaultTestContainer().task {
+            verify(FolderSpec(dir))
+            ProvResult(true) // dummy
+        }
+
+        // then
+        assertFalse(res.success)
+    }
+
     @Test
     fun test_verify_empty_SpecConfig() {
-        assert(testLocal().verifySpecConfig(SpecConfig()).success)
+        assert(testLocal().verifySpecConfig(SyspecConfig()).success)
     }
 
     @Test

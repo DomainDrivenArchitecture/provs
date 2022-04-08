@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.syspec.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 import org.domaindrivenarchitecture.provs.syspec.domain.*
@@ -10,12 +11,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-fun Prov.verifySpecConfig(conf: SpecConfig) = task {
+fun Prov.verifySpecConfig(conf: SyspecConfig) = task {
     // required to guarantee that at least one result can be provided
     val dummySuccess = ProvResult(true)
 
     conf.command?.let { task("CommandSpecs") { for (spec in conf.command) verify(spec); dummySuccess } }
     conf.file?.let { task("FileSpecs") { for (spec in conf.file) verify(spec); dummySuccess } }
+    conf.folder?.let { task("FolderSpecs") { for (spec in conf.folder) verify(spec); dummySuccess } }
     conf.host?.let { task("HostSpecs") { for (spec in conf.host) verify(spec); dummySuccess } }
     conf.`package`?.let { task("PackageSpecs") { for (spec in conf.`package`) verify(spec); dummySuccess } }
     conf.netcat?.let { task("NetcatSpecs") { for (spec in conf.netcat) verify(spec); dummySuccess } }
@@ -47,6 +49,11 @@ fun Prov.verify(cmd: CommandSpec) {
 fun Prov.verify(file: FileSpec) {
     val actualExists = checkFile(file.name)
     verify(actualExists == file.exists, "File [${file.name}] does ${actualExists.falseToNot()}exist.")
+}
+
+fun Prov.verify(folder: FolderSpec) {
+    val actualExists = checkDir(folder.path)
+    verify(actualExists == folder.exists, "Folder [${folder.path}] does ${actualExists.falseToNot()}exist.")
 }
 
 fun Prov.verify(hostspec: HostSpec) {

@@ -3,16 +3,16 @@ package org.domaindrivenarchitecture.provs.syspec.domain
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SpecConfig(
+data class SyspecConfig(
     val command: List<CommandSpec>? = null,
     val file: List<FileSpec>? = null,
+    val folder: List<FolderSpec>? = null,
     val host: List<HostSpec>? = null,
     val `package`: List<PackageSpec>? = null,
     val netcat: List<NetcatSpec>? = null,
     val socket: List<SocketSpec>? = null,
     val certificate: List<CertificateFileSpec>? = null,
 )
-
 
 /**
  * Checks that a command executes successfully and
@@ -23,6 +23,9 @@ data class CommandSpec(val command: String, val out: String? = null)
 
 @Serializable
 data class FileSpec(val name: String, val exists: Boolean = true)
+
+@Serializable
+data class FolderSpec(val path: String, val exists: Boolean = true)
 
 @Serializable
 data class HostSpec(val url: String, val expirationDays: Long? = null)
