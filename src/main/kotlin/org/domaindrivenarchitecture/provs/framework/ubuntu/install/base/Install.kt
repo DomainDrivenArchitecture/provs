@@ -10,20 +10,29 @@ private var aptInit = false
  * Installs package(s) by using package manager "apt".
  *
  * @param packages the packages to be installed, packages must be separated by space if there are more than one
+ * @param ignoreAlreadyInstalled if true, then for an already installed package no action will be taken,
+ * if "ignoreAlreadyInstalled" is false, then installation is always attempted, which normally results in an upgrade if package wa already installed
  */
-fun Prov.aptInstall(packages: String): ProvResult = task {
-    if (!aptInit) {
-        cmd("sudo apt-get update")
-        cmd("sudo apt-get install -qy apt-utils")
-        aptInit = true
-    }
-
+fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): ProvResult = task {
     val packageList = packages.split(" ")
-    for (packg in packageList) {
-        // see https://superuser.com/questions/164553/automatically-answer-yes-when-using-apt-get-install
-        cmd("sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy $packg")
+    val allInstalled: Boolean = packageList.map { isPackageInstalled(it) }.fold(true, { a, b -> a && b })
+    if (!allInstalled) {
+        if (!isPackageInstalled(packages)) {
+            if (!aptInit) {
+                cmd("sudo apt-get update")
+                cmd("sudo apt-get install -qy apt-utils")
+                aptInit = true
+            }
+        }
+
+        for (packg in packageList) {
+            // see https://superuser.com/questions/164553/automatically-answer-yes-when-using-apt-get-install
+            cmd("sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy $packg")
+        }
+        ProvResult(true) // dummy
+    } else {
+        ProvResult(true, out = "All packages are already installed. [$packages]")
     }
-    ProvResult(true) // dummy
 }
 
 

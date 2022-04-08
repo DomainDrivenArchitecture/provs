@@ -86,6 +86,39 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
         )
 
     }
+
+    task("install k8sConnect") {
+        val k8sConnectFile = "/usr/local/bin/k8s-connect.sh"
+        createFileFromResource(
+            k8sConnectFile,
+            "k8s-connect.sh",
+            resourcePath,
+            "555",
+            sudo = true
+        )
+    }
+
+    task("install k3sCreateContext") {
+        val k3sContextFile = "/usr/local/bin/k3s-create-context.sh"
+        createFileFromResource(
+            k3sContextFile,
+            "k3s-create-context.sh",
+            resourcePath,
+            "555",
+            sudo = true
+        )
+    }
+
+    task("install k3sConnect") {
+        val k3sConnectFile = "/usr/local/bin/k3s-connect.sh"
+        createFileFromResource(
+            k3sConnectFile,
+            "k3s-connect.sh",
+            resourcePath,
+            "555",
+            sudo = true
+        )
+    }
 }
 
 fun Prov.installTerraform(): ProvResult = task {
