@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.install.base
 
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -20,6 +21,20 @@ internal class InstallKtTest {
 
         // then
         assertTrue(res.success)
+    }
+
+    @ContainerTest
+    @Test
+    fun aptInstall_ignores_packages_already_installed() {
+        // given
+        val a = defaultTestContainer()
+
+        // when
+        val res = a.aptInstall("sed grep")
+
+        // then
+        assertTrue(res.success)
+        assertEquals("All packages are already installed. [sed grep]", res.out)
     }
 
     @ContainerTest
