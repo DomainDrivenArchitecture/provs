@@ -2,13 +2,13 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.keys
 
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
-import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.junit.jupiter.api.Test
 
 internal class ProvisionKeysTest {
 
     @Test
-    @ContainerTest
+    @NonCi
     fun provisionKeys() {
         // given
         val a = defaultTestContainer()
