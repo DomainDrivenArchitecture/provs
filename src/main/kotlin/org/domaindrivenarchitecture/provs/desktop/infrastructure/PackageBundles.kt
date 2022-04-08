@@ -37,3 +37,5 @@ val DRAWING_TOOLS = "inkscape dia"
 val CLOJURE_TOOLS = "leiningen"
 
 val PASSWORD_TOOLS = "pwgen"
+
+val SCREEN_TOOLS = "scrcpy"

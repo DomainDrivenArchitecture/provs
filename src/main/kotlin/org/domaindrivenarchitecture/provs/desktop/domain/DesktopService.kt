@@ -48,6 +48,7 @@ fun Prov.provisionWorkplace(
     aptInstall(KEY_MANAGEMENT)
     aptInstall(VERSION_MANAGEMENT)
     aptInstall(NETWORK_TOOLS)
+    aptInstall(SCREEN_TOOLS)
 
     provisionKeys(gpg, ssh)
     provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
