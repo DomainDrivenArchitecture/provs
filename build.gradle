@@ -148,15 +148,17 @@ task uberjarSyspec(type: Jar) {
     }
     archiveFileName = "provs-syspec.jar"
 }
+def projectRoot = rootProject.projectDir
+
 
 // copy jar to /usr/local/bin and make it executable
 // Remark: to be able to use it you must have jarwrapper installed (sudo apt install jarwrapper)
 task installlocally {
     dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
     doLast {
-        exec { commandLine("sh", "-c", "sudo cp ~/repo/dda/provs/build/libs/provs-server.jar /usr/local/bin/") }
-        exec { commandLine("sh", "-c", "sudo cp ~/repo/dda/provs/build/libs/provs-desktop.jar /usr/local/bin/") }
-        exec { commandLine("sh", "-c", "sudo cp ~/repo/dda/provs/build/libs/provs-syspec.jar /usr/local/bin/") }
+        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-server.jar /usr/local/bin/") }
+        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-desktop.jar /usr/local/bin/") }
+        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-syspec.jar /usr/local/bin/") }
         exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-server.jar") }
         exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-desktop.jar") }
         exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-syspec.jar") }
