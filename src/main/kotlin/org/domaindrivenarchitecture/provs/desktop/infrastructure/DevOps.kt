@@ -7,6 +7,8 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
+private const val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure"
+
 fun Prov.installDevOps() = task {
     installTerraform()
     installKubectlAndTools()
@@ -36,7 +38,6 @@ fun Prov.installYq(
 }
 
 fun Prov.installKubectlAndTools(): ProvResult = task {
-    val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure"
 
     task("installKubectl") {
         val kubeConfigFile = ".bashrc.d/kubectl.sh"
@@ -57,6 +58,11 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
             ProvResult(true, out = "Kubectl already installed")
         }
     }
+
+    installDevopsScripts()
+}
+
+fun Prov.installDevopsScripts() {
 
     task("install ssh helper") {
         createFileFromResource(
@@ -120,7 +126,6 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
         )
     }
 }
-
 fun Prov.installTerraform(): ProvResult = task {
     val dir = "/usr/lib/tfenv/"
 
