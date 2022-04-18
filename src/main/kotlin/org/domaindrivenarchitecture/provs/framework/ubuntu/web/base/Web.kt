@@ -22,13 +22,13 @@ fun Prov.downloadFromURL(
     followRedirect: Boolean = true,
     sha256sum: String? = null,
     overwrite: Boolean = false
-): ProvResult = task {
+): ProvResult = taskWithResult {
 
     val finalFilename: String = filename ?:  url.substringAfterLast("/")
     val fqFilename: String = (path?.normalizePath() ?: "") + finalFilename
 
     if (!overwrite && checkFile(fqFilename, sudo = sudo)) {
-        return@task ProvResult(true, out = "File $fqFilename already exists.")
+        return@taskWithResult ProvResult(true, out = "File $fqFilename already exists.")
     }
 
     aptInstall("curl")

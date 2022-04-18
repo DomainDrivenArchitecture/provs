@@ -67,11 +67,19 @@ open class Prov protected constructor(
     private var runInContainerWithName: String? = null
 
     /**
-     * Defines a task with a custom name instead of the name of the calling function.
-     * Returns success if all subtasks finished with success (same as requireAll).
+     * A task is the base execution unit in provs. In the results overview it is represented by one line resp. result (of either success or failure).
+     * Returns success if no sub-tasks are called or if all subtasks finish with success.
      */
-    fun task(name: String? = null, a: Prov.() -> ProvResult): ProvResult {
-        return handle(ResultMode.ALL, name) { a() }
+    fun task(name: String? = null, taskLambda: Prov.() -> Unit): ProvResult {
+        return handle(ResultMode.ALL, name) { taskLambda(); ProvResult(true) }
+    }
+
+    /**
+     * Same as task but the provided lambda is explicitly required to provide a ProvResult to be returned.
+     * The returned result is included in the evaluation.
+     */
+    fun taskWithResult(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
+        return handle(ResultMode.ALL, name) { taskLambda() }
     }
 
     /**
@@ -84,7 +92,7 @@ open class Prov protected constructor(
     }
 
     /**
-     * defines a task, which returns success if the the last subtasks or last value returns success
+     * defines a task, which returns the returned result, the results of sub-tasks are not considered
      */
     fun requireLast(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.LAST) { a() }
@@ -100,7 +108,7 @@ open class Prov protected constructor(
     /**
      * defines a task, which returns success if all subtasks finished with success
      */
-    @Suppress("unused")
+    @Deprecated("Use function task instead", replaceWith = ReplaceWith("task()"))
     fun requireAll(a: Prov.() -> ProvResult): ProvResult {
         return handle(ResultMode.ALL) { a() }
     }
@@ -218,7 +226,7 @@ open class Prov protected constructor(
      * Adds a ProvResult to the overall success evaluation.
      * Intended for use in methods which do not automatically add results.
      */
-    fun addResultToEval(result: ProvResult) = task {
+    fun addResultToEval(result: ProvResult) = taskWithResult {
         result
     }
 
@@ -227,7 +235,7 @@ open class Prov protected constructor(
      * Multi-line commands within the script are not supported.
      * Empty lines and comments (all text behind # in a line) are supported, i.e. they are ignored.
      */
-    fun sh(script: String, dir: String? = null, sudo: Boolean = false) = task {
+    fun sh(script: String, dir: String? = null, sudo: Boolean = false) = taskWithResult {
         val lines = script.trimIndent().replace("\\\n", "").replace("\r\n", "\n").split("\n")
         val linesWithoutComments = lines.stream().map { it.split("#")[0] }
         val linesNonEmpty = linesWithoutComments.filter { it.trim().isNotEmpty() }

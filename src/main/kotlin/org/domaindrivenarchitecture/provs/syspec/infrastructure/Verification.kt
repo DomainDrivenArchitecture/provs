@@ -149,7 +149,7 @@ private fun <T> Prov.verify(success: Boolean, message: String, expected: T? = nu
     val actualText = expected?.let { " | Actual value [$actual]" } ?: ""
     val msg = ": $message $expectedText$actualText"
 
-    return task("Verification") {
+    return taskWithResult("Verification") {
         ProvResult(
             success,
             cmd = if (success) msg else null,

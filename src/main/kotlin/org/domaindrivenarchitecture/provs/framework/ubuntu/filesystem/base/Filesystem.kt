@@ -90,7 +90,7 @@ fun Prov.createFile(
     posixFilePermission: String? = null,
     sudo: Boolean = false,
     overwriteIfExisting: Boolean = true
-): ProvResult = task {
+): ProvResult = taskWithResult {
     val maxBlockSize = 50000
     val withSudo = if (sudo) "sudo " else ""
 
@@ -98,7 +98,7 @@ fun Prov.createFile(
         ensureValidPosixFilePermission(posixFilePermission)
     }
     if (!overwriteIfExisting && checkFile(fullyQualifiedFilename, sudo)) {
-        return@task ProvResult(true, "File $fullyQualifiedFilename already existing.")
+        return@taskWithResult ProvResult(true, "File $fullyQualifiedFilename already existing.")
     }
 
     val modeOption = posixFilePermission?.let { "-m $it" } ?: ""
@@ -220,10 +220,10 @@ fun Prov.addTextToFile(
     doNotAddIfExisting: Boolean = true,
     sudo: Boolean = false
 ): ProvResult =
-    task {
+    taskWithResult {
         val fileContainsText = fileContainsText(file.path, text, sudo = sudo)
         if (fileContainsText && doNotAddIfExisting) {
-            return@task ProvResult(true, out = "Text already in file")
+            return@taskWithResult ProvResult(true, out = "Text already in file")
         }
         cmd(
             "printf '%s' " + text

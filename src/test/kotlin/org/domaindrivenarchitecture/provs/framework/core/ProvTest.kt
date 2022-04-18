@@ -489,7 +489,7 @@ internal class ProvTest {
             addResultToEval(ProvResult(true))
         }
 
-        fun Prov.outer() = task {
+        fun Prov.outer() = taskWithResult {
             inner()
             ProvResult(false)
         }
@@ -504,11 +504,11 @@ internal class ProvTest {
     @Test
     fun task_with_failing_subtask_and_successful_result_fails() {
         // given
-        fun Prov.inner() = task {
+        fun Prov.inner() = taskWithResult {
             ProvResult(false)
         }
 
-        fun Prov.outer() = task {
+        fun Prov.outer() = taskWithResult {
             inner()
             ProvResult(true)
         }
@@ -527,7 +527,7 @@ internal class ProvTest {
             addResultToEval(ProvResult(false))
         }
 
-        fun Prov.outer() = task {
+        fun Prov.outer() = taskWithResult {
             inner()
             ProvResult(true)
         }

@@ -29,7 +29,7 @@ internal class TaskFunctionsKtTest {
     }
 
     var count2 = 3
-    fun Prov.thirdTimeSuccess() = task {
+    fun Prov.thirdTimeSuccess() = taskWithResult {
         if (count2 <= 1) {
             count2 = 3
             ProvResult(true, out = "1")

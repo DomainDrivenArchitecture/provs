@@ -23,7 +23,7 @@ class UbuntuProv internal constructor(
         }
     }
 
-    override fun cmd(cmd: String, dir: String?, sudo: Boolean): ProvResult = task {
+    override fun cmd(cmd: String, dir: String?, sudo: Boolean): ProvResult = taskWithResult {
         exec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
     }
 

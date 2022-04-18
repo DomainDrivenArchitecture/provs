@@ -17,11 +17,11 @@ fun Prov.gitClone(
     targetPath: String = "",
     pullIfExisting: Boolean = true,
     targetFolderName: String? = null
-): ProvResult = task {
+): ProvResult = taskWithResult {
     // if specified, use targetFolderName as basename or otherwise retrieve basename from repoSource
     val basename = targetFolderName ?: cmdNoEval("basename $repoSource .git").out?.trim()
     // return err if basename could not be retrieved from repoSource
-    ?: return@task ProvResult(false, err = "$repoSource is not a valid git repository source path.")
+    ?: return@taskWithResult ProvResult(false, err = "$repoSource is not a valid git repository source path.")
 
     val pathWithBasename = targetPath.normalizePath() + basename
     if (checkDir(pathWithBasename + "/.git/")) {

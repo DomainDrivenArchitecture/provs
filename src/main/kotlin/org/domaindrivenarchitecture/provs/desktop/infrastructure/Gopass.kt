@@ -12,13 +12,13 @@ fun Prov.installGopass(
     version: String = "1.12.7",
     enforceVersion: Boolean = false,
     sha256sum: String = "0824d5110ff1e68bff1ba10c1be63acb67cb1ad8e3bccddd6b6fc989608beca8" // checksum for sha256sum version 8.30 (e.g. ubuntu 20.04)
-) = task {
+) = taskWithResult {
 
     if (isPackageInstalled("gopass") && !enforceVersion) {
-        return@task ProvResult(true)
+        return@taskWithResult ProvResult(true)
     }
     if (checkGopassVersion(version)) {
-        return@task ProvResult(true, out = "Version $version of gopass is already installed.")
+        return@taskWithResult ProvResult(true, out = "Version $version of gopass is already installed.")
     }
 
     val path = "tmp"
@@ -41,17 +41,17 @@ fun Prov.installGopass(
 }
 
 
-fun Prov.configureGopass(gopassRootFolder: String? = null) = task {
+fun Prov.configureGopass(gopassRootFolder: String? = null) = taskWithResult() {
     val configFile = ".config/gopass/config.yml"
     val defaultRootFolder = userHome() + ".password-store"
     val rootFolder = gopassRootFolder ?: defaultRootFolder
 
     if (checkFile(configFile)) {
-        return@task ProvResult(true, out = "Gopass already configured in file $configFile")
+        return@taskWithResult ProvResult(true, out = "Gopass already configured in file $configFile")
     }
 
     if ((gopassRootFolder != null) && (!gopassRootFolder.startsWith("/"))) {
-        return@task ProvResult(false, err = "Gopass cannot be initialized with a relative path or path starting with ~")
+        return@taskWithResult ProvResult(false, err = "Gopass cannot be initialized with a relative path or path starting with ~")
     }
     // use default
     createDir(rootFolder)

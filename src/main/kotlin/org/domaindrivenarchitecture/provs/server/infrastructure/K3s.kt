@@ -51,9 +51,9 @@ fun Prov.deprovisionK3sInfra() = task {
 }
 
 
-fun Prov.installK3s(k3sConfig: K3sConfig) = task {
+fun Prov.installK3s(k3sConfig: K3sConfig) = taskWithResult {
     if (testConfigExists()) {
-        return@task ProvResult(true, out = "K3s config is already in place, so skip (re)provisioning.")
+        return@taskWithResult ProvResult(true, out = "K3s config is already in place, so skip (re)provisioning.")
     }
 
     createDirs(k8sCredentialsDir, sudo = true)

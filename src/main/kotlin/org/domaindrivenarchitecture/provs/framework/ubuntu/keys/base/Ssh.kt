@@ -38,9 +38,9 @@ fun Prov.isHostKnown(hostOrIp: String) : Boolean {
  * Either add the specified rsaFingerprints or - if null - add automatically retrieved keys.
  * Note: adding keys automatically is vulnerable to a man-in-the-middle attack, thus considered insecure and not recommended.
  */
-fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String>?) = task {
+fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String>?) = taskWithResult {
     if (isHostKnown(host)) {
-        return@task ProvResult(true, out = "Host already known")
+        return@taskWithResult ProvResult(true, out = "Host already known")
     }
     if (!checkFile(KNOWN_HOSTS_FILE)) {
         createDir(".ssh")
@@ -53,7 +53,7 @@ fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String>?) = ta
         // logic based on https://serverfault.com/questions/447028/non-interactive-git-clone-ssh-fingerprint-prompt
         val actualKeys = findSshKeys(host)
         if (actualKeys == null || actualKeys.size == 0) {
-            return@task ProvResult(false, out = "No valid keys found for host: $host")
+            return@taskWithResult ProvResult(false, out = "No valid keys found for host: $host")
         }
         val actualFingerprints = getFingerprintsForKeys(actualKeys)
         for (fingerprintToBeAdded in fingerprintsOfKeysToBeAdded) {
@@ -67,7 +67,7 @@ fun Prov.trustHost(host: String, fingerprintsOfKeysToBeAdded: Set<String>?) = ta
                 }
             }
             if (indexOfKeyFound == -1) {
-                return@task ProvResult(
+                return@taskWithResult ProvResult(
                     false,
                     err = "Fingerprint ($fingerprintToBeAdded) could not be found in actual fingerprints: $actualFingerprints"
                 )

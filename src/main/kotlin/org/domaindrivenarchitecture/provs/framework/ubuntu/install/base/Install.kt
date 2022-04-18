@@ -13,7 +13,7 @@ private var aptInit = false
  * @param ignoreAlreadyInstalled if true, then for an already installed package no action will be taken,
  * if "ignoreAlreadyInstalled" is false, then installation is always attempted, which normally results in an upgrade if package wa already installed
  */
-fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): ProvResult = task {
+fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): ProvResult = taskWithResult {
     val packageList = packages.split(" ")
     val allInstalled: Boolean = packageList.map { isPackageInstalled(it) }.fold(true, { a, b -> a && b })
     if (!allInstalled) {

@@ -5,14 +5,14 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
-fun Prov.installVirtualBoxGuestAdditions() = task {
+fun Prov.installVirtualBoxGuestAdditions() = taskWithResult {
     // if running in a VirtualBox vm
     if (!chk("lspci | grep VirtualBox")) {
-        return@task ProvResult(true, "Not running in a VirtualBox")
+        return@taskWithResult ProvResult(true, "Not running in a VirtualBox")
     }
 
     if (chk("VBoxService --version")) {
-        return@task ProvResult(true, "VBoxService already installed")
+        return@taskWithResult ProvResult(true, "VBoxService already installed")
     }
 
     // install guest additions
