@@ -5,7 +5,7 @@
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="tags" />
-    <option name="VM_PARAMETERS" value="-DexcludeTags=&quot;containertest&quot;" />
+    <option name="VM_PARAMETERS" />
     <tag value="!containertest" />
     <method v="2">
       <option name="Make" enabled="true" />

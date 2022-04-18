@@ -36,7 +36,7 @@ internal class ProvisionUserKtTest {
         )
 
         // then
-        assert(res.success)
+        assertTrue(res.success)
     }
 
     @Test

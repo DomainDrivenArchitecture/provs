@@ -126,9 +126,9 @@ internal class VerificationKtTest {
         val res3 = testLocal().verifySocketSpec(SocketSpec("sshd", 22, running = false), out).success
 
         // then
-        assert(res.success)
-        assert(!res2)
-        assert(!res3)
+        assertTrue(res.success)
+        assertFalse(res2)
+        assertFalse(res3)
     }
 
 }

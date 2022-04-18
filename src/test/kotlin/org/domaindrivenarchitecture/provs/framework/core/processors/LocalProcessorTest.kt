@@ -4,8 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.escapeAndEncloseByDoubleQuoteForShell
 import org.domaindrivenarchitecture.provs.framework.core.escapeProcentForPrintf
 import org.domaindrivenarchitecture.provs.framework.core.escapeSingleQuoteForShell
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 
@@ -21,8 +20,8 @@ internal class LocalProcessorTest {
         val res = prov.cmd("printf '${text.replace("%", "%%").escapeSingleQuoteForShell()}'")
 
         // then
-        assert(res.success)
-        assert(res.out == text)
+        assertTrue(res.success)
+        assertTrue(res.out == text)
     }
 
 
@@ -52,7 +51,7 @@ internal class LocalProcessorTest {
         val res = prov.cmdNoLog("echo $osSpecificText")
 
         // then
-        assert(res.success)
+        assertTrue(res.success)
         assertEquals( text + System.lineSeparator(), res.out)
 
         // todo add check that cmd was not logged
@@ -68,8 +67,8 @@ internal class LocalProcessorTest {
         val res = prov.cmd("iamanunknowncmd")
 
         // then
-        assert(!res.success)
-        assert(res.out.isNullOrEmpty())
-        assert(!res.err.isNullOrEmpty())
+        assertFalse(res.success)
+        assertTrue(res.out.isNullOrEmpty())
+        assertFalse(res.err.isNullOrEmpty())
     }
 }

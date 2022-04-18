@@ -15,11 +15,11 @@ import java.io.PrintStream
 
 internal class ProvTest {
 
-    private fun Prov.task_returningFalse() = task {
+    private fun Prov.task_returningFalse() = taskWithResult {
         ProvResult(false)
     }
 
-    private fun Prov.task_returningTrue() = task {
+    private fun Prov.task_returningTrue() = taskWithResult {
         ProvResult(true)
     }
 
@@ -30,7 +30,7 @@ internal class ProvTest {
         val res = Prov.newInstance(name = "testing").cmd("echo --testing--").success
 
         // then
-        assert(res)
+        assertTrue(res)
     }
 
     @Test
@@ -49,7 +49,7 @@ internal class ProvTest {
         val res = Prov.newInstance(name = "testing").sh(script).success
 
         // then
-        assert(res)
+        assertTrue(res)
     }
 
     @Test
@@ -70,7 +70,7 @@ internal class ProvTest {
         val res = Prov.newInstance(name = "provs_test").sh(script, "/root", true).success
 
         // then
-        assert(res)
+        assertTrue(res)
     }
 
     @Test
@@ -86,7 +86,7 @@ internal class ProvTest {
         val res = testLocal().tst_task().success
 
         // then
-        assert(res)
+        assertTrue(res)
     }
 
     @Test
@@ -101,7 +101,7 @@ internal class ProvTest {
         val res = testLocal().tst_task().success
 
         // then
-        assert(res)
+        assertTrue(res)
     }
 
     @Test
@@ -116,7 +116,7 @@ internal class ProvTest {
         val res = testLocal().tst_task().success
 
         // then
-        assert(!res)
+        assertFalse(res)
     }
 
     @Test
@@ -131,7 +131,7 @@ internal class ProvTest {
         val res = testLocal().tst_task_all_true_mode_ALL().success
 
         // then
-        assert(res)
+        assertTrue(res)
     }
 
     // given
@@ -147,7 +147,7 @@ internal class ProvTest {
         val res = testLocal().tst_task_one_false_mode_ALL().success
 
         // then
-        assert(!res)
+        assertFalse(res)
     }
 
     // given
@@ -169,7 +169,7 @@ internal class ProvTest {
         val res = testLocal().tst_task_one_false_mode_ALL_nested().success
 
         // then
-        assert(!res)
+        assertFalse(res)
     }
 
     @Test
@@ -189,7 +189,7 @@ internal class ProvTest {
         val res = testLocal().tst_task_one_false_mode_ALL().success
 
         // then
-        assert(!res)
+        assertFalse(res)
     }
 
     @Test
@@ -209,7 +209,7 @@ internal class ProvTest {
         val res = testLocal().tst_task_failexit_outer().success
 
         // then
-        assert(!res)
+        assertFalse(res)
     }
 
     @Test
@@ -229,7 +229,7 @@ internal class ProvTest {
         val res = testLocal().tst_task_failexit_outer().success
 
         // then
-        assert(res)
+        assertTrue(res)
     }
 
     @Test
@@ -254,7 +254,7 @@ internal class ProvTest {
         val res = testLocal().tst_nested().success
 
         // then
-        assert(!res)
+        assertFalse(res)
     }
 
 

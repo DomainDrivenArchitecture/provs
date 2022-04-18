@@ -11,8 +11,7 @@ import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.test.testDockerWithSudo
 import org.domaindrivenarchitecture.provs.test.testLocal
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 internal class UbuntuProvTest {
@@ -28,9 +27,9 @@ internal class UbuntuProvTest {
         val res2 = a.cmd("echo abc", dir)
 
         // then
-        assert(res1.success)
-        assert(res2.success)
-        assert(res2.out?.trim() == "abc")
+        assertTrue(res1.success)
+        assertTrue(res2.success)
+        assertTrue(res2.out?.trim() == "abc")
     }
 
     @Test
@@ -43,8 +42,8 @@ internal class UbuntuProvTest {
         val res1 = a.cmd("echo abc", "/root", sudo = true)
 
         // then
-        assert(res1.success)
-        assert(res1.out?.trim() == "abc")
+        assertTrue(res1.success)
+        assertTrue(res1.out?.trim() == "abc")
     }
 
     @Test
@@ -58,9 +57,9 @@ internal class UbuntuProvTest {
         val res2 = a.cmd("echo abc", dir)
 
         // then
-        assert(res1.success)
-        assert(res2.success)
-        assert(res2.out?.trim() == "abc")
+        assertTrue(res1.success)
+        assertTrue(res2.success)
+        assertTrue(res2.out?.trim() == "abc")
     }
 
     @Test
@@ -73,10 +72,10 @@ internal class UbuntuProvTest {
         val res2 = a.exec("/bin/bash", "-c", "echo echoed")
 
         // then
-        assert(res1.success)
-        assert(res1.out?.trim() == "hi")
-        assert(res2.success)
-        assert(res2.out?.trim() == "echoed")
+        assertTrue(res1.success)
+        assertTrue(res1.out?.trim() == "hi")
+        assertTrue(res2.success)
+        assertTrue(res2.out?.trim() == "echoed")
     }
 
     @Test

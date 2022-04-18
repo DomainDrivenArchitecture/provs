@@ -3,6 +3,7 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.keys
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 internal class ProvisionKeysTest {
@@ -20,7 +21,7 @@ internal class ProvisionKeysTest {
         )
 
         // then
-        assert(res.success)
+        assertTrue(res.success)
     }
 }
 
