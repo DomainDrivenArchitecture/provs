@@ -17,11 +17,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
     // retrieve config
     val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
-    if (cmd.submodules == null) {
-        prov.provisionWorkplace(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail)
-    } else {
-        prov.provisionWorkplaceSubmodules(cmd.submodules)
-    }
+    prov.provisionWorkplace(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail)
 }
 
 
@@ -90,9 +86,6 @@ fun Prov.provisionWorkplace(
 
         installRedshift()
         configureRedshift()
-
-        installBinariesProvs()
-        installBinariesC4k()
     }
 
     if (desktopType == DesktopType.IDE) {
@@ -115,26 +108,6 @@ fun Prov.provisionWorkplace(
         installDevOps()
 
         installPython()
-    }
-    ProvResult(true)
-}
-
-
-/**
- * Provisions submodules for a personal workplace.
- *
- * Prerequisites: module must already been installed
- */
-fun Prov.provisionWorkplaceSubmodules(
-    submodules: List<String>
-) = task {
-    if (submodules.contains(DesktopSubmodule.PROVSBINARIES.name.lowercase())) {
-        aptInstall("jarwrapper")
-        installBinariesProvs(true)
-    }
-    if (submodules.contains(DesktopSubmodule.C4KBINARIES.name.lowercase())) {
-        aptInstall("jarwrapper")
-        installBinariesC4k(true)
     }
     ProvResult(true)
 }

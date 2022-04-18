@@ -44,17 +44,10 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
             "c",
             "the filename containing the yaml config",
         )
-        val only by option(
-            ArgType.String,
-            "only",
-            "o",
-            "provisions only parts (currently possible: provsbinaries)",
-        )
 
         override fun execute() {
             configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             parsed = true
-            submodules = only?.split(",")
         }
     }
 
