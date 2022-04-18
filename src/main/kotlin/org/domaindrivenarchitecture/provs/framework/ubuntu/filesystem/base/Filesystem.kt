@@ -55,7 +55,7 @@ fun Prov.createFileFromResourceTemplate(
 ): ProvResult = task {
     createFile(
         fullyQualifiedFilename,
-        getResourceAsText(resourcePath.endingWithFileSeparator() + resourceFilename).resolve(values),
+        getResourceResolved(resourcePath.endingWithFileSeparator() + resourceFilename, values),
         posixFilePermission,
         sudo
     )

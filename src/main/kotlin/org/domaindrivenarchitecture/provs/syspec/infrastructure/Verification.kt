@@ -12,19 +12,14 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 fun Prov.verifySpecConfig(conf: SyspecConfig) = task {
-    // required to guarantee that at least one result can be provided
-    val dummySuccess = ProvResult(true)
-
-    conf.command?.let { task("CommandSpecs") { for (spec in conf.command) verify(spec); dummySuccess } }
-    conf.file?.let { task("FileSpecs") { for (spec in conf.file) verify(spec); dummySuccess } }
-    conf.folder?.let { task("FolderSpecs") { for (spec in conf.folder) verify(spec); dummySuccess } }
-    conf.host?.let { task("HostSpecs") { for (spec in conf.host) verify(spec); dummySuccess } }
-    conf.`package`?.let { task("PackageSpecs") { for (spec in conf.`package`) verify(spec); dummySuccess } }
-    conf.netcat?.let { task("NetcatSpecs") { for (spec in conf.netcat) verify(spec); dummySuccess } }
-    conf.socket?.let { task("SocketSpecs") { for (spec in conf.socket) verify(spec); dummySuccess } }
-    conf.certificate?.let { task("CertificateFileSpecs") { for (spec in conf.certificate) verify(spec); dummySuccess } }
-
-    dummySuccess  // to be sure that at least one result is provided
+    conf.command?.let { task("CommandSpecs") { for (spec in conf.command) verify(spec) } }
+    conf.file?.let { task("FileSpecs") { for (spec in conf.file) verify(spec) } }
+    conf.folder?.let { task("FolderSpecs") { for (spec in conf.folder) verify(spec) } }
+    conf.host?.let { task("HostSpecs") { for (spec in conf.host) verify(spec) } }
+    conf.`package`?.let { task("PackageSpecs") { for (spec in conf.`package`) verify(spec) } }
+    conf.netcat?.let { task("NetcatSpecs") { for (spec in conf.netcat) verify(spec) } }
+    conf.socket?.let { task("SocketSpecs") { for (spec in conf.socket) verify(spec) } }
+    conf.certificate?.let { task("CertificateFileSpecs") { for (spec in conf.certificate) verify(spec) } }
 }
 
 fun Prov.verify(cmd: CommandSpec) {
