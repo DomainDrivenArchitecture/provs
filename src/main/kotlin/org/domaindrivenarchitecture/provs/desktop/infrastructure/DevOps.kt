@@ -14,6 +14,7 @@ fun Prov.installDevOps() = task {
     installKubectlAndTools()
     installYq()
     installAwsCredentials()
+    installDevOpsFolder()
 }
 
 
@@ -169,4 +170,14 @@ fun awsCredentials(id: String, key: String): String {
     aws_access_key_id = $id
     aws_secret_access_key = $key
     """.trimIndent()
+}
+
+fun Prov.installDevOpsFolder(): ProvResult = task {
+
+    val dir = "~/.devops/"
+
+    if (!checkDir(dir)) {
+        createDirs(dir)
+    }
+
 }
