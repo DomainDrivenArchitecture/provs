@@ -1,15 +1,34 @@
 # Information for developers
 
-## Build a provs jar-file yourself
+## Create a provs jar-file
 
 * Clone this repo
 * Build the jar-file by `./gradlew uberjarDesktop`
-* In folder build/libs you'll find the file `provs.jar`
+* In folder build/libs you'll find the file `provs-desktop.jar`
 
-The fatjar is a Java jar-file incl. all required dependencies.
+This uberjar is a Java jar-file including all required dependencies.
 
-### Sequence diagram
+## Call hierarchy
 
 Find below an example of a sequence diagram when provisioning a desktop workplace:
 
 ![img.png](resources/provision-workplace-sequence.diagram.png)
+
+
+## Task
+
+```kotlin
+fun Prov.provisionK8s() = task { /* ... code and subtasks come here ... */ }
+```
+
+Very often you'll see a task definition like this in provs and might wonder ...
+
+### What is a task ?
+
+A task is the **basic execution unit** in provs. When executed, each task produces exactly one result (line) with either success or failure.
+
+The success or failure is computed automatically in the following way:
+* a **task** fails if it calls subtasks and if at least one subtask has failed
+* a **taskWithResult** works the same except that it requires an additional result to be returned which is also included in the success calculation
+* a task defined with **optional** (i.e. `= optional { /* ... */ }` always returns success (even if there are failing subtasks)
+* **requireLast** defines a task which must provide an explicit result and solely this result counts for success calculation
