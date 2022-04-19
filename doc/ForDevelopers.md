@@ -8,20 +8,13 @@
 
 This uberjar is a Java jar-file including all required dependencies.
 
-## Call hierarchy
-
-Find below an example of a sequence diagram when provisioning a desktop workplace:
-
-![img.png](resources/provision-workplace-sequence.diagram.png)
-
-
 ## Task
 
 ```kotlin
 fun Prov.provisionK8s() = task { /* ... code and subtasks come here ... */ }
 ```
 
-Very often you'll see a task definition like this in provs and might wonder ...
+If you're having a deeper look into the provs code, you'll see regularly a task definition like this and might wonder ...
 
 ### What is a task ?
 
@@ -32,3 +25,10 @@ The success or failure is computed automatically in the following way:
 * a **taskWithResult** works the same except that it requires an additional result to be returned which is also included in the success calculation
 * a task defined with **optional** (i.e. `= optional { /* ... */ }` always returns success (even if there are failing subtasks)
 * **requireLast** defines a task which must provide an explicit result and solely this result counts for success calculation
+
+
+## Call hierarchy
+
+Find below an example of a sequence diagram when provisioning a desktop workplace:
+
+![img.png](resources/provision-workplace-sequence.diagram.png)
