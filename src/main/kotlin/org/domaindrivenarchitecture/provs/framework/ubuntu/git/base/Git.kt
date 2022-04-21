@@ -24,6 +24,8 @@ fun Prov.gitClone(
     ?: return@taskWithResult ProvResult(false, err = "$repoSource is not a valid git repository source path.")
 
     val pathWithBasename = targetPath.normalizePath() + basename
+
+    // check if repo is already on target machine
     if (checkDir(pathWithBasename + "/.git/")) {
         if (pullIfExisting) {
             cmd("cd $pathWithBasename && git pull")
@@ -31,6 +33,7 @@ fun Prov.gitClone(
             ProvResult(true, out = "Repo [$pathWithBasename] already exists, but might not be up-to-date.")
         }
     } else {
+        // create targetPath (if not yet existing)
         if (!checkDir(targetPath)) {
             createDirs(targetPath)
         }
