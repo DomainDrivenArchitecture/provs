@@ -18,7 +18,7 @@ import java.net.InetAddress
  */
 internal fun getCallingMethodName(): String? {
     val offsetVal = 1
-    val exclude = arrayOf("task", "task\$default", "taskWithResult\$default", "taskWithResult", "def", "def\$default", "record", "invoke", "invoke0", "handle", "handle\$default", )
+    val exclude = arrayOf("task", "task\$default", "taskWithResult\$default", "taskWithResult", "def", "def\$default", "record", "invoke", "invoke0", "evaluate", "evaluate\$default", )
     // suffixes are also ignored as method names but will be added as suffix in the evaluation results
     val suffixes = arrayOf("optional", "requireAll", "requireLast", "inContainer")
 

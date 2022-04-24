@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 
 
 enum class ProgressType { NONE, DOTS, BASIC, FULL_LOG }
-enum class ResultMode { NONE, LAST, ALL, FAILEXIT }
+enum class ResultMode { OPTIONAL, LAST, ALL, FAILEXIT }
 enum class OS { LINUX }
 
 
@@ -17,8 +17,8 @@ private const val NOT_IMPLEMENTED = "Not implemented"
 
 /**
  * This main class offers methods to execute shell commands.
- * The commands are executed locally, remotely (via ssh) or in a docker container depending on
- * the processor which is passed to the constructor.
+ * The commands are executed by the provided processor,
+ * e.g. a LocalProcessor will execute them locally, a RemoteUbuntuProcessor remotely (via ssh), etc.
  */
 open class Prov protected constructor(
     private val processor: Processor,
@@ -70,16 +70,16 @@ open class Prov protected constructor(
      * A task is the base execution unit in provs. In the results overview it is represented by one line resp. result (of either success or failure).
      * Returns success if no sub-tasks are called or if all subtasks finish with success.
      */
-    fun task(name: String? = null, taskLambda: Prov.() -> Unit): ProvResult {
-        return handle(ResultMode.ALL, name) { taskLambda(); ProvResult(true) }
+    fun task(name: String? = null, task: Prov.() -> Unit): ProvResult {
+        return evaluate(ResultMode.ALL, name) { task(); ProvResult(true) }
     }
 
     /**
      * Same as task but the provided lambda is explicitly required to provide a ProvResult to be returned.
      * The returned result is included in the evaluation.
      */
-    fun taskWithResult(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
-        return handle(ResultMode.ALL, name) { taskLambda() }
+    fun taskWithResult(name: String? = null, task: Prov.() -> ProvResult): ProvResult {
+        return evaluate(ResultMode.ALL, name) { task() }
     }
 
     /**
@@ -88,21 +88,21 @@ open class Prov protected constructor(
      */
     @Deprecated("Use function task instead", replaceWith = ReplaceWith("task()"))
     fun def(a: Prov.() -> ProvResult): ProvResult {
-        return handle(ResultMode.ALL) { a() }
+        return evaluate(ResultMode.ALL) { a() }
     }
 
     /**
      * defines a task, which returns the returned result, the results of sub-tasks are not considered
      */
     fun requireLast(a: Prov.() -> ProvResult): ProvResult {
-        return handle(ResultMode.LAST) { a() }
+        return evaluate(ResultMode.LAST) { a() }
     }
 
     /**
      * defines a task, which always returns success
      */
     fun optional(a: Prov.() -> ProvResult): ProvResult {
-        return handle(ResultMode.NONE) { a() }
+        return evaluate(ResultMode.OPTIONAL) { a() }
     }
 
     /**
@@ -110,14 +110,14 @@ open class Prov protected constructor(
      */
     @Deprecated("Use function task instead", replaceWith = ReplaceWith("task()"))
     fun requireAll(a: Prov.() -> ProvResult): ProvResult {
-        return handle(ResultMode.ALL) { a() }
+        return evaluate(ResultMode.ALL) { a() }
     }
 
     /**
      * defines a task, which exits the overall execution on failure
      */
     fun exitOnFailure(a: Prov.() -> ProvResult): ProvResult {
-        return handle(ResultMode.FAILEXIT) { a() }
+        return evaluate(ResultMode.FAILEXIT) { a() }
     }
 
     /**
@@ -125,7 +125,7 @@ open class Prov protected constructor(
      */
     fun taskInContainer(containerName: String, task: Prov.() -> ProvResult): ProvResult {
         runInContainerWithName = containerName
-        val res = handle(ResultMode.ALL) { task() }
+        val res = evaluate(ResultMode.ALL) { task() }
         runInContainerWithName = null
         return res
     }
@@ -251,9 +251,10 @@ open class Prov protected constructor(
     }
 
     /**
-     * Provides result handling, e.g. gather results for result summary
+     * Provides task evaluation, i.e. computes a ProvResult based on the provided resultMode,
+     * on the returned ProvResult from the task as well as on the results from executed subtasks (if there are).
      */
-    private fun handle(mode: ResultMode, name: String? = null, a: Prov.() -> ProvResult): ProvResult {
+    private fun evaluate(resultMode: ResultMode, name: String? = null, task: Prov.() -> ProvResult): ProvResult {
 
         // init
         if (level == 0) {
@@ -273,11 +274,11 @@ open class Prov protected constructor(
 
         level++
 
-        // call the actual function
-        val sublevelResult = if (!exit) {
+        // call the actual task lambda
+        val resultOfTaskLambda = if (!exit) {
             progress(internalResult)
             @Suppress("UNUSED_EXPRESSION") // false positive
-            a()
+            task()
         } else {
             ProvResult(false, out = "Exiting due to failure and mode FAILEXIT")
         }
@@ -287,25 +288,25 @@ open class Prov protected constructor(
         // post-handling
         // determine result
         val returnValue =
-            if (mode == ResultMode.LAST) {
+            if (resultMode == ResultMode.LAST) {
                 if (internalResultIsLeaf(resultIndex) || taskName == "cmd" || taskName?.replace(" (requireLast)", "") == "repeatTaskUntilSuccess") {
                     // for a leaf (task with mo subtask) or tasks "cmd" resp. "repeatUntilTrue" provide also out and err of original results
                     // because results of cmd and leafs are not included in the reporting
                     // and the caller of repeatUntilTrue might need to see the complete result (incl. out and err) and not only success value
-                    sublevelResult.copy()
+                    resultOfTaskLambda.copy()
                 } else {
                     // just pass success value, no other data of the original result
-                    ProvResult(sublevelResult.success)
+                    ProvResult(resultOfTaskLambda.success)
                 }
-            } else if (mode == ResultMode.ALL) {
+            } else if (resultMode == ResultMode.ALL) {
                 // leaf
-                if (internalResultIsLeaf(resultIndex)) sublevelResult.copy()
+                if (internalResultIsLeaf(resultIndex)) resultOfTaskLambda.copy()
                 // evaluate subcalls' results
-                else ProvResult((cumulativeSuccessSublevel(resultIndex) ?: false) && sublevelResult.success)
-            } else if (mode == ResultMode.NONE) {
+                else ProvResult((cumulativeSuccessSublevel(resultIndex) ?: false) && resultOfTaskLambda.success)
+            } else if (resultMode == ResultMode.OPTIONAL) {
                 ProvResult(true)
-            } else if (mode == ResultMode.FAILEXIT) {
-                return if (sublevelResult.success) {
+            } else if (resultMode == ResultMode.FAILEXIT) {
+                return if (resultOfTaskLambda.success) {
                     ProvResult(true)
                 } else {
                     exit = true
