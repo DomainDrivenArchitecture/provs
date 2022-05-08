@@ -30,10 +30,8 @@ enum class SecretSourceType() {
 
 
 @Serializable
-@Suppress("unused")  // for use in other projects
 class SecretSupplier(private val source: SecretSourceType, val parameter: String) {
     fun secret(): Secret {
         return source.secret(parameter)
     }
 }
-

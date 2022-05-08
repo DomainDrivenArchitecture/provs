@@ -13,11 +13,12 @@ import java.io.File
 
 // -----------------------------------  directories  --------------------------------
 
-private const val k3sResourceDir = "org/domaindrivenarchitecture/provs/server/infrastructure/k3s/"
+const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
 
-private const val k8sCredentialsDir = "/etc/kubernetes/"
 private const val k3sAutomatedManifestsDir = "/var/lib/rancher/k3s/server/manifests/"
-private const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
+private const val k8sCredentialsDir = "/etc/kubernetes/"
+
+private const val k3sResourceDir = "org/domaindrivenarchitecture/provs/server/infrastructure/k3s/"
 
 // -----------------------------------  files  --------------------------------
 
@@ -146,7 +147,11 @@ fun Prov.provisionK3sApplication(applicationFileName: ApplicationFileName) = tas
 }
 
 
-// ============================  private functions  =============================
+// ============================  private and internal functions  =============================
+
+internal fun Prov.applyK3sFile(file: File) = task {
+    cmd("kubectl apply -f ${file.path}", sudo = true)
+}
 
 private fun Prov.createK3sFileFromResource(
     file: File,
@@ -190,10 +195,6 @@ private fun Prov.createK3sFileFromResourceTemplate(
         posixFilePermission,
         sudo = true
     )
-}
-
-private fun Prov.applyK3sFile(file: File) = task {
-    cmd("kubectl apply -f ${file.path}", sudo = true)
 }
 
 private fun File.templateName(): String {
