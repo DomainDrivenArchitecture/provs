@@ -1,0 +1,18 @@
+fqdn: statistics.test.meissa-gmbh.de
+node:
+  ipv4: 162.55.164.138
+  ipv6: 2a01:4f8:c010:672f::1
+certmanager:
+  email: admin@meissa-gmbh.de
+  letsencryptEndpoint: prod
+echo: true
+reprovision: true
+
+
+grafana:
+  user: "654321"   # username for the grafana data source
+  password:
+    source: "GOPASS"           # PLAIN, GOPASS or PROMPT
+    parameter: "path/to/key"   # password of the user or api key
+  cluster: "myclustername"          # the cluster name of your choice
+
