@@ -5,10 +5,13 @@ import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 
-class K3sCliCommand (
+class K3sCliCommand(
     serverType: ServerType,
     target: TargetCliCommand,
     configFileName: ConfigFileName?,
-    val applicationFileName: ApplicationFileName?) :
-    ServerCliCommand(serverType, target, configFileName) {
-}
+    val applicationFileName: ApplicationFileName?,
+    val submodules: List<String>? = null
+) :
+    ServerCliCommand(
+        serverType, target, configFileName
+    )

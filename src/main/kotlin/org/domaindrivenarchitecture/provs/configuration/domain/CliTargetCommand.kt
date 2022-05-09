@@ -9,7 +9,7 @@ private const val USER_HOST_DELIMITER = "@"
 private const val USER_PW_DELIMITER = ":"
 
 
-class TargetCliCommand(
+data class TargetCliCommand(
     val target: String,
     val passwordInteractive: Boolean = false
 ) {

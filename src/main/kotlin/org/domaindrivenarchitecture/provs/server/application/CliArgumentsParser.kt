@@ -9,6 +9,7 @@ import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ServerSubmodule
 
 class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
@@ -32,7 +33,8 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
                     passwordInteractive
                 ),
                 module.configFileName,
-                module.applicationFileName
+                module.applicationFileName,
+                module.submodules
             )
             else -> return ServerCliCommand(
                 ServerType.valueOf(module.name.uppercase()),
@@ -49,6 +51,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         var parsed: Boolean = false
         var configFileName: ConfigFileName? = null
         var applicationFileName: ApplicationFileName? = null
+        var submodules: List<String>? = null
     }
 
     class K3s : ServerSubcommand("k3s", "the k3s module") {
@@ -64,10 +67,17 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
             "a",
             "the filename containing the yaml a application deployment"
         )
+        val only by option(
+            ArgType.Choice<ServerSubmodule>(),
+            "only",
+            "o",
+            "provisions only parts ",
+        )
 
         override fun execute() {
             super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             super.applicationFileName = cliApplicationFileName?.let { ApplicationFileName(it) }
+            super.submodules = if (only != null) listOf(only!!.name.lowercase()) else null
             super.parsed = true
         }
     }

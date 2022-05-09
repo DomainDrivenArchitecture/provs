@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
+import com.charleskorn.kaml.MissingRequiredPropertyException
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.framework.core.readFromFile
 import org.domaindrivenarchitecture.provs.framework.core.toYaml
@@ -18,7 +19,11 @@ fun findK8sGrafanaConfig(fileName: ConfigFileName? = null): GrafanaAgentConfig? 
 
     // create a default config
     return if (File(filePath).exists()) {
-        readFromFile(filePath).yamlToType<GrafanaAgentConfigHolder>().grafana
+        try {
+            readFromFile(filePath).yamlToType<GrafanaAgentConfigHolder>().grafana
+        } catch (e: MissingRequiredPropertyException) {
+            null
+        }
     } else {
         null
     }
