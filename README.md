@@ -114,7 +114,7 @@ provs-server.jar -h
 provs-syspec.jar -h
 ```
 
-Or gt help for subcommands e.g.
+Or to get help for subcommands e.g.
 
 ```bash
 provs-desktop.jar ide -h
