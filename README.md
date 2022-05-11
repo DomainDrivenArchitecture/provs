@@ -73,8 +73,11 @@ fqdn: "myhostname.com"
 node:
   ipv4: "192.168.56.123"   # ip address
 echo: true                 # for demo reasons only - deploy an echo app 
+```
 
-# To add a grafana agent to your k3s installation add the following
+To add a grafana agent to your k3s installation add the following to the config:
+  
+```yaml
 grafana:
   user: "myusername"   # username for the grafana data source 
   password:
@@ -82,6 +85,13 @@ grafana:
     parameter: "mypassword"   # the password or api key for the grafana data source user 
   cluster: "mycluster"        # a cluster name of your choice  
 ```
+
+To provision the grafana agent only to an existing k8s system, ensure that the config (as above) is available and execute:
+
+```bash
+provs-server.jar k3s myuser@myhost.com -o grafana
+```
+
 
 
 ### Performing a system check
