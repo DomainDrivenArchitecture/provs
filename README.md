@@ -96,13 +96,13 @@ provs-server.jar k3s myuser@myhost.com -o grafana
 
 ### Performing a system check
 
+The default config-file for the system check is `syspec-config.yaml`, you can specify a different file with option `-c <config-file>`.
+
 ```bash
 provs-syspec.jar local 
 # or remote:
 provs-syspec.jar myuser@myhost.com
 ```
-
-The default config-file for the system check is `syspec-config.yaml`, you can specify a different file with option `-c <config-file>`.
 
 ## Get help
 
@@ -112,4 +112,11 @@ To get help you can make use of the `-h` option:
 provs-desktop.jar -h
 provs-server.jar -h
 provs-syspec.jar -h
+```
+
+Or gt help for subcommands e.g.
+
+```bash
+provs-desktop.jar ide -h
+provs-server.jar k3s -h
 ```
