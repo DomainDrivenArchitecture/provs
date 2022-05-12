@@ -9,7 +9,7 @@ internal class PythonKtTest {
     @ExtensiveContainerTest
     fun installPython() {
         // when
-        val res = defaultTestContainer().installPython()
+        val res = defaultTestContainer().provisionPython()
 
         // then
         assertTrue(res.success)

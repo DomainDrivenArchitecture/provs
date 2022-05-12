@@ -107,7 +107,7 @@ fun Prov.provisionWorkplace(
 
         installDevOps()
 
-        installPython()
+        provisionPython()
     }
     ProvResult(true)
 }

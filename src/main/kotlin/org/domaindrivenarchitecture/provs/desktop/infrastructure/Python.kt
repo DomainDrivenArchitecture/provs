@@ -5,9 +5,9 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 
 
-fun Prov.installPython() = task {
+fun Prov.provisionPython() = task {
     installPython3()
-    installVenv()
+    configureVenv()
     installPybuilder()
     installRestClient()
     installJupyterlab()
@@ -17,10 +17,11 @@ fun Prov.installPython3(): ProvResult = task {
     aptInstall("python3.8-venv python3-pip")
 }
 
-fun Prov.installVenv(): ProvResult = task {
-    val venvHome = "~/.python/meissa"
+fun Prov.configureVenv(): ProvResult = task {
+    val venvHome = "~/.venv/meissa"
     cmd("python3 -m venv " + venvHome)
     cmd("source " + venvHome + "/bin/activate")
+    cmd("ln -s " + venvHome + "/bin/activate ~/.bashrc.d/venv.sh")
     cmd("pip3 install pip --upgrade")
 }
 
