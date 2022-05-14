@@ -1,9 +1,6 @@
 package org.domaindrivenarchitecture.provs.framework.core.platforms
 
-import org.domaindrivenarchitecture.provs.framework.core.ProgressType
-import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.core.escapeAndEncloseByDoubleQuoteForShell
+import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.processors.LocalProcessor
 import org.domaindrivenarchitecture.provs.framework.core.processors.Processor
 
@@ -52,9 +49,13 @@ class UbuntuProv internal constructor(
 
 private fun commandWithDirAndSudo(cmd: String, dir: String?, sudo: Boolean): String {
     val cmdWithDir = if (dir == null) cmd else "cd $dir && $cmd"
-    return if (sudo) cmdWithDir.sudoize() else cmdWithDir
+    return if (sudo) cmdWithDir.sudoizeCommand() else cmdWithDir
 }
 
-private fun String.sudoize(): String {
-    return "sudo " + SHELL + " -c " + this.escapeAndEncloseByDoubleQuoteForShell()
+/**
+ * Returns a command encapsulated in a shell command and executed with sudo.
+ * For simple cases consider using sudo as prefix if the command instead.
+ */
+internal fun String.sudoizeCommand(): String {
+    return "sudo -E " + SHELL + " -c " + this.escapeAndEncloseByDoubleQuoteForShell()
 }

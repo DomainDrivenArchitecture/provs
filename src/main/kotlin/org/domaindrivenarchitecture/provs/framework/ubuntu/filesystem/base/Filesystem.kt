@@ -1,8 +1,7 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base
 
-import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
 import org.domaindrivenarchitecture.provs.framework.core.*
-import org.domaindrivenarchitecture.provs.framework.core.getLocalFileContent
+import org.domaindrivenarchitecture.provs.framework.core.platforms.sudoizeCommand
 import java.io.File
 import java.util.*
 
@@ -89,10 +88,17 @@ fun Prov.createFile(
     text: String?,
     posixFilePermission: String? = null,
     sudo: Boolean = false,
-    overwriteIfExisting: Boolean = true
+    overwriteIfExisting: Boolean = true,
+    createDirIfMissing: Boolean = true,
 ): ProvResult = taskWithResult {
     val maxBlockSize = 50000
     val withSudo = if (sudo) "sudo " else ""
+    val file = File(fullyQualifiedFilename)
+    val dir = file.parent?.toString()
+
+    if (dir != null && dir != "" && createDirIfMissing && !checkDir(dir, sudo = sudo)) {
+        createDirs(dir, sudo = sudo)
+    }
 
     posixFilePermission?.let {
         ensureValidPosixFilePermission(posixFilePermission)
@@ -357,17 +363,6 @@ fun Prov.fileSize(filename: String, sudo: Boolean = false): Int? {
 private fun ensureValidPosixFilePermission(posixFilePermission: String) {
     if (!Regex("^[0-7]{3}$").matches(posixFilePermission)) throw IllegalArgumentException("Wrong file permission ($posixFilePermission), permission must consist of 3 digits as e.g. 664")
 }
-
-
-/**
- * Returns a command encapsulated in a shell command and executed with sudo.
- * For simple cases consider sudo as prefix instead.
- * @see prefixWithSudo
- */
-private fun String.sudoizeCommand(): String {
-    return "sudo " + SHELL + " -c " + this.escapeAndEncloseByDoubleQuoteForShell()
-}
-
 
 /**
  * Returns path with a trailing fileSeparator if path not empty

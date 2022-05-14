@@ -23,7 +23,7 @@ internal class FilesystemKtTest {
         prov.createDir("tmp")
 
         // when
-        val filename = "tmp/testfile9"
+        val filename = "tmp/provstestfile123"
         val res2 = prov.createFile(filename, testtext)
         val textFromFile = prov.fileContent(filename)
         prov.deleteFile(filename)
@@ -35,7 +35,7 @@ internal class FilesystemKtTest {
 
     @Test
     @ContainerTest
-    fun createFile_in_container() {
+    fun createFile_successfully() {
         // given
         val prov = defaultTestContainer()
         val filename = "testfile8"
@@ -49,6 +49,50 @@ internal class FilesystemKtTest {
         assertTrue(res2.success)
         assertEquals(testtext, prov.fileContent(filename))
         assertEquals(testtext, prov.fileContent("sudo$filename"))
+    }
+
+    @Test
+    @ContainerTest
+    fun createFile_with_dir_successfully() {
+        // given
+        val prov = defaultTestContainer()
+        val filename = "dir1/dir2/testfile-with-dir"
+
+        // when
+        val res1 = prov.createFile(filename, testtext)
+        val res2 = prov.createFile("sudo$filename", testtext, sudo = true)
+        // check idempotence
+        val res1b = prov.createFile(filename, testtext)
+        val res2b = prov.createFile("sudo$filename", testtext, sudo = true)
+
+        // then
+        assertTrue(res1.success)
+        assertTrue(prov.checkDir("dir1/dir2"))
+        assertTrue(res1b.success)
+
+        assertTrue(res2.success)
+        assertTrue(prov.checkDir("sudodir1/dir2", sudo = true))
+        assertTrue(res2b.success)
+        assertEquals(testtext, prov.fileContent(filename))
+        assertEquals(testtext, prov.fileContent("sudo$filename"))
+    }
+
+    @Test
+    @ContainerTest
+    fun createFile_with_dir_fails_if_createDirIfMissing_is_false() {
+        // given
+        val prov = defaultTestContainer()
+        val filename = "dirDoesNotExist/dir2/testfile-with-dir"
+
+        // when
+        val res = prov.createFile(filename, testtext, createDirIfMissing = false)
+        val res2 = prov.createFile("sudo$filename", testtext, sudo = true, createDirIfMissing = false)
+
+        // then
+        assertFalse(res.success)
+        assertFalse(res2.success)
+        assertFalse(prov.checkDir("dirDoesNotExist"))
+        assertFalse(prov.checkDir("sudodirDoesNotExist", sudo = true))
     }
 
     @Test

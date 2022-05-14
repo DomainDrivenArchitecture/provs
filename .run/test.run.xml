@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="test" type="JUnit" factoryName="JUnit">
+  <configuration default="false" name="testquick" type="JUnit" factoryName="JUnit">
     <module name="provs.test" />
     <option name="PACKAGE_NAME" value="org" />
     <option name="MAIN_CLASS_NAME" value="" />
