@@ -2,7 +2,9 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createSymlink
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import java.io.File
 
 
 fun Prov.provisionPython() = task {
@@ -21,7 +23,7 @@ fun Prov.configureVenv(): ProvResult = task {
     val venvHome = "~/.venv/meissa"
     cmd("python3 -m venv " + venvHome)
     cmd("source " + venvHome + "/bin/activate")
-    cmd("ln -s " + venvHome + "/bin/activate ~/.bashrc.d/venv.sh")
+    createSymlink(File(venvHome + "/bin/activate"), File("~/.bashrc.d/venv.sh"))
     cmd("pip3 install pip --upgrade")
 }
 

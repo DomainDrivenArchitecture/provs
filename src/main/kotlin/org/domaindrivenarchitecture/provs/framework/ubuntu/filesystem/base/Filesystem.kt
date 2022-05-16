@@ -94,10 +94,9 @@ fun Prov.createFile(
     val maxBlockSize = 50000
     val withSudo = if (sudo) "sudo " else ""
     val file = File(fullyQualifiedFilename)
-    val dir = file.parent?.toString()
 
-    if (dir != null && dir != "" && createDirIfMissing && !checkDir(dir, sudo = sudo)) {
-        createDirs(dir, sudo = sudo)
+    if (createDirIfMissing) {
+        createParentDir(file, sudo)
     }
 
     posixFilePermission?.let {
@@ -336,6 +335,29 @@ fun Prov.deleteDir(dir: String, path: String, sudo: Boolean = false): ProvResult
 }
 
 
+// =============================  link operations  ==========================
+
+/**
+ * Creates and validates a symlink.
+ */
+fun Prov.createSymlink(
+    source: File,
+    target: File,
+    sudo: Boolean = false,
+    overwriteIfExisting: Boolean = true,
+    createTargetDirIfMissing: Boolean = true,
+): ProvResult = task {
+    if (createTargetDirIfMissing) {
+        createParentDir(target, sudo)
+    }
+    val overwriteFlag = if (overwriteIfExisting) "f" else ""
+    cmd("ln -s$overwriteFlag $source $target", sudo = sudo)
+    // ensure link works
+    taskWithResult("validate link") {
+        ProvResult(checkFile(target.toString(), sudo = sudo))
+    }
+}
+
 // --------------------- various functions ----------------------
 fun Prov.userHome(): String {
     val user = cmd("whoami").out?.trim()
@@ -350,6 +372,17 @@ fun Prov.userHome(): String {
     }
 }
 
+
+/**
+ * Creates the parent-dir (parent path) of the specified file if parent-dir id not yet existing
+ */
+internal fun Prov.createParentDir(file: File, sudo: Boolean = false) = task {
+    val dir = file.parent?.toString()
+
+    if (dir != null && dir != "" && !checkDir(dir, sudo = sudo)) {
+        createDirs(dir, sudo = sudo)
+    }
+}
 
 /**
  * Returns number of bytes of a file or null if size could not be determined

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 internal class PythonKtTest {
 
     @ExtensiveContainerTest
-    fun installPython() {
+    fun test_provisionPython() {
         // when
         val res = defaultTestContainer().provisionPython()
 

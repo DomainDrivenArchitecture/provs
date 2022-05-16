@@ -7,11 +7,9 @@ import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
 
 internal class BashKtTest {
 
-    @Test
     @ContainerTest
     fun configureBashForUser() {
         // when

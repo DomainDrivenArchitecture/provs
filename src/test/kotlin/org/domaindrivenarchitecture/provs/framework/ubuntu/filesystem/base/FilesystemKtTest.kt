@@ -33,7 +33,6 @@ internal class FilesystemKtTest {
         assertEquals(testtext, textFromFile)
     }
 
-    @Test
     @ContainerTest
     fun createFile_successfully() {
         // given
@@ -51,7 +50,6 @@ internal class FilesystemKtTest {
         assertEquals(testtext, prov.fileContent("sudo$filename"))
     }
 
-    @Test
     @ContainerTest
     fun createFile_with_dir_successfully() {
         // given
@@ -77,7 +75,6 @@ internal class FilesystemKtTest {
         assertEquals(testtext, prov.fileContent("sudo$filename"))
     }
 
-    @Test
     @ContainerTest
     fun createFile_with_dir_fails_if_createDirIfMissing_is_false() {
         // given
@@ -95,7 +92,6 @@ internal class FilesystemKtTest {
         assertFalse(prov.checkDir("sudodirDoesNotExist", sudo = true))
     }
 
-    @Test
     @ContainerTest
     fun create_large_file_in_container() {
         // given
@@ -113,7 +109,6 @@ internal class FilesystemKtTest {
         // assertEquals(testtext, prov.fileContent(filename))
     }
 
-    @Test
     @ContainerTest
     fun create_and_delete_file() {
         // given
@@ -141,7 +136,6 @@ internal class FilesystemKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun create_and_delete_file_with_sudo() {
         // given
@@ -174,7 +168,6 @@ internal class FilesystemKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun create_and_delete_dir() {
         // given
@@ -204,7 +197,6 @@ internal class FilesystemKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun create_and_delete_dir_with_sudo() {
         // given
@@ -240,7 +232,6 @@ internal class FilesystemKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun replaceTextInFile() {
         // given
@@ -261,7 +252,6 @@ internal class FilesystemKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun replaceTextInFileRegex() {
         // given
@@ -282,7 +272,6 @@ internal class FilesystemKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun insertTextInFile() {
         // given
@@ -302,7 +291,6 @@ internal class FilesystemKtTest {
         assertTrue(res4.success)
     }
 
-    @Test
     @ContainerTest
     fun copyFileFromLocal_successfully() {
         // given
@@ -316,7 +304,6 @@ internal class FilesystemKtTest {
         assertEquals("resource text\n", content)
     }
 
-    @Test
     @ContainerTest
     fun fileContainsText() {
         // given
@@ -346,7 +333,6 @@ internal class FilesystemKtTest {
         assertTrue(res10)
     }
 
-    @Test
     @ContainerTest
     fun fileContainsText_with_sudo() {
         // given
@@ -403,5 +389,88 @@ internal class FilesystemKtTest {
         assertTrue(res.success)
         assertEquals(content, actualContent)
         assertEquals(1400000, size)
+    }
+
+    @ContainerTest
+    fun test_createParentDir() {
+        // given
+        val prov = defaultTestContainer()
+        val filename = "parent_dir/test/file"
+
+        // when
+        val res = prov.createParentDir(File(filename))
+        val dirExists = prov.checkDir("parent_dir/test")
+        val res2 = prov.createParentDir(File(filename))  // test idempotence
+        val dirExists2 = prov.checkDir("parent_dir/test")
+
+        // then
+        assertTrue(res.success)
+        assertTrue(dirExists)
+        assertTrue(res2.success)
+        assertTrue(dirExists2)
+
+    }
+
+    @ContainerTest
+    fun test_createLink_without_dir() {
+        // given
+        val prov = defaultTestContainer()
+        val source = File("testlinksource")
+        val target = File("testlinktarget")
+        prov.createFile(source.toString(), "textinlinkfile")
+
+        // when
+        val res = prov.createSymlink(source, target)
+        val res2 = prov.createSymlink(source, target)   // test idempotence
+        val linkExists = prov.checkFile(target.name)
+        val content = prov.fileContent(target.name)
+
+        // then
+        assertTrue(res.success)
+        assertTrue(res2.success)
+        assertTrue(linkExists)
+        assertEquals("textinlinkfile", content)
+    }
+
+    @ContainerTest
+    fun test_createLink_with_dirs() {
+        // given
+        val prov = defaultTestContainer()
+        val source = File("~/linksourcedir/testlinksource2")
+        val target = File("linkdir1/linkdir2/testlinktarget2")
+        prov.createFile(source.toString(), "textinlinkfile2")
+
+        // when
+        val res = prov.createSymlink(source, target)
+        val res2 = prov.createSymlink(source, target)   // test idempotence
+        val linkExists = prov.checkFile(target.toString())
+        val content = prov.fileContent(target.toString())
+
+        // then
+        assertTrue(res.success)
+        assertTrue(res2.success)
+        assertTrue(linkExists)
+        assertEquals("textinlinkfile2", content)
+    }
+
+    @ContainerTest
+    fun test_createLink_with_dirs_and_sudo() {
+        // given
+        val prov = defaultTestContainer()
+        val source = File("/linksourcedirsudo/linksourcefilesudo")
+        val target = File("/linkdir1sudo/linkdir2sudo/linksudo")
+        prov.createFile(source.toString(), "textinlinkfilesudo", sudo = true)
+
+        // when
+        val res = prov.createSymlink(source, target, sudo = true)
+        val res2 = prov.createSymlink(source, target, sudo = true)   // test idempotence
+        val linkExists = prov.checkFile(target.toString(), sudo = true)
+        val content = prov.fileContent(target.toString(), sudo = true)
+
+        // then
+        assertTrue(res.success)
+        assertTrue(res2.success)
+        assertTrue(linkExists)
+        assertEquals("textinlinkfilesudo", content)
     }
 }
