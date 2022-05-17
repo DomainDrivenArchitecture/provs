@@ -341,20 +341,20 @@ fun Prov.deleteDir(dir: String, path: String, sudo: Boolean = false): ProvResult
  * Creates and validates a symlink.
  */
 fun Prov.createSymlink(
-    source: File,
-    target: File,
+    originalFile: File,
+    link: File,
     sudo: Boolean = false,
     overwriteIfExisting: Boolean = true,
-    createTargetDirIfMissing: Boolean = true,
+    createLinkDirIfMissing: Boolean = true,
 ): ProvResult = task {
-    if (createTargetDirIfMissing) {
-        createParentDir(target, sudo)
+    if (createLinkDirIfMissing) {
+        createParentDir(link, sudo)
     }
     val overwriteFlag = if (overwriteIfExisting) "f" else ""
-    cmd("ln -s$overwriteFlag $source $target", sudo = sudo)
+    cmd("ln -s$overwriteFlag $originalFile $link", sudo = sudo)
     // ensure link works
     taskWithResult("validate link") {
-        ProvResult(checkFile(target.toString(), sudo = sudo))
+        ProvResult(checkFile(link.toString(), sudo = sudo))
     }
 }
 

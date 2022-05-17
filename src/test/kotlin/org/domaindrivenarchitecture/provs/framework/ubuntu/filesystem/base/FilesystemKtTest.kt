@@ -415,8 +415,8 @@ internal class FilesystemKtTest {
     fun test_createLink_without_dir() {
         // given
         val prov = defaultTestContainer()
-        val source = File("testlinksource")
-        val target = File("testlinktarget")
+        val source = File("testoriginalfile")
+        val target = File("testlink")
         prov.createFile(source.toString(), "textinlinkfile")
 
         // when
@@ -436,8 +436,8 @@ internal class FilesystemKtTest {
     fun test_createLink_with_dirs() {
         // given
         val prov = defaultTestContainer()
-        val source = File("~/linksourcedir/testlinksource2")
-        val target = File("linkdir1/linkdir2/testlinktarget2")
+        val source = File("~/linkoriginalfiledir/testoriginalfile2")
+        val target = File("linkdir1/linkdir2/testlink2")
         prov.createFile(source.toString(), "textinlinkfile2")
 
         // when
@@ -457,8 +457,8 @@ internal class FilesystemKtTest {
     fun test_createLink_with_dirs_and_sudo() {
         // given
         val prov = defaultTestContainer()
-        val source = File("/linksourcedirsudo/linksourcefilesudo")
-        val target = File("/linkdir1sudo/linkdir2sudo/linksudo")
+        val source = File("~/linkoriginalfiledirsudo/testoriginalfilesudo")
+        val target = File("linkdir1sudo/linkdir2sudo/testlinksudo")
         prov.createFile(source.toString(), "textinlinkfilesudo", sudo = true)
 
         // when
