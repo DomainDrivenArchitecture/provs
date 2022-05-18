@@ -5,5 +5,5 @@ import org.domaindrivenarchitecture.provs.server.infrastructure.provisionGrafana
 
 
 fun Prov.provisionGrafanaAgent(configResolved: GrafanaAgentConfigResolved) =
-    provisionGrafanaAgentForK8s(configResolved.user, configResolved.password, configResolved.cluster)
+    provisionGrafanaAgentForK8s(configResolved.user, configResolved.password, configResolved.cluster, configResolved.url)
 

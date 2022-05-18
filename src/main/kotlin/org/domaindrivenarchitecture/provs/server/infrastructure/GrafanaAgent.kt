@@ -11,7 +11,7 @@ import java.io.File
 private const val grafanaResourceDir = "org/domaindrivenarchitecture/provs/server/infrastructure/grafana/"
 
 
-fun Prov.provisionGrafanaAgentForK8s(user: String, password: Secret, clusterName: String) = task {
+fun Prov.provisionGrafanaAgentForK8s(user: String, password: Secret, clusterName: String, url: String) = task {
     val namespace = "monitoring"
 
     // Create namespace if not yet existing
@@ -35,6 +35,7 @@ fun Prov.provisionGrafanaAgentForK8s(user: String, password: Secret, clusterName
             "USERNAME" to user,
             "APIKEY" to password.plain(),
             "CLUSTERNAME" to clusterName,
+            "URL" to url,
         )
     )
     cmd("export NAMESPACE=$namespace && kubectl apply -n \$NAMESPACE -f grafana-agent-config-map.yaml", k3sManualManifestsDir)

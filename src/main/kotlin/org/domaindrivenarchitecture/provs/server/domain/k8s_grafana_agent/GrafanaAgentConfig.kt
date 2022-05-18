@@ -8,7 +8,8 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSupplier
 data class GrafanaAgentConfig(
     val user: String,
     val password: SecretSupplier,
-    val cluster: String
+    val cluster: String,
+    val url: String
 ) {
     fun resolveSecret(): GrafanaAgentConfigResolved = GrafanaAgentConfigResolved(this)
 }
@@ -17,6 +18,7 @@ data class GrafanaAgentConfigResolved(val configUnresolved: GrafanaAgentConfig) 
     val user: String = configUnresolved.user
     val password: Secret = configUnresolved.password.secret()
     val cluster: String = configUnresolved.cluster
+    val url: String = configUnresolved.url
 }
 
 @Serializable

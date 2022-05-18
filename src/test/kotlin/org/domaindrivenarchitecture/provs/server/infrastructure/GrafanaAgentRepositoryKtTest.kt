@@ -19,7 +19,8 @@ internal class GrafanaAgentRepositoryKtTest {
             GrafanaAgentConfig(
                 user = "654321",
                 password = SecretSupplier(SecretSourceType.GOPASS, "path/to/key"),
-                cluster = "myclustername"
+                cluster = "myclustername",
+                url = "https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push"
             ), config
         )
     }

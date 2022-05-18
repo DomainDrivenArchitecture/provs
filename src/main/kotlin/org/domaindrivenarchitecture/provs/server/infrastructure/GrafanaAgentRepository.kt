@@ -17,12 +17,11 @@ private const val DEFAULT_CONFIG_FILE = "server-config.yaml"
 fun findK8sGrafanaConfig(fileName: ConfigFileName? = null): GrafanaAgentConfig? {
     val filePath = fileName?.fileName ?: DEFAULT_CONFIG_FILE
 
-    // create a default config
     return if (File(filePath).exists()) {
         try {
             readFromFile(filePath).yamlToType<GrafanaAgentConfigHolder>().grafana
         } catch (e: MissingRequiredPropertyException) {
-            null
+            if (e.message.contains("Property 'grafana'")) null else throw e
         }
     } else {
         null

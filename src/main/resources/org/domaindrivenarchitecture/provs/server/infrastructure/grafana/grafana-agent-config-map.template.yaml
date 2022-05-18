@@ -16,7 +16,7 @@ data:
       configs:
       - name: integrations
         remote_write:
-        - url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
+        - url: $URL
           basic_auth:
             username: $USERNAME
             password: $APIKEY
@@ -90,7 +90,7 @@ data:
         
     integrations:
       prometheus_remote_write:
-      - url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
+      - url: $URL
         basic_auth:
           username: $USERNAME
           password: $APIKEY
