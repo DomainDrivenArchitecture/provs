@@ -1,3 +1,4 @@
+# from https://github.com/k3s-io/k3s/blob/master/manifests/traefik.yaml
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -5,7 +6,7 @@ metadata:
   name: traefik-crd
   namespace: kube-system
 spec:
-  chart: https://%{KUBERNETES_API}%/static/charts/traefik-crd-10.14.100.tgz
+  chart: https://%{KUBERNETES_API}%/static/charts/traefik-crd-10.19.300.tgz
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -13,15 +14,10 @@ metadata:
   name: traefik
   namespace: kube-system
 spec:
-  chart: https://%{KUBERNETES_API}%/static/charts/traefik-10.14.100.tgz
+  chart: https://%{KUBERNETES_API}%/static/charts/traefik-10.19.300.tgz
   set:
-    global.systemDefaultRegistry: ""
+    global.systemDefaultRegistry: "%{SYSTEM_DEFAULT_REGISTRY_RAW}%"
   valuesContent: |-
-    service:
-      spec:
-        type: LoadBalancer
-        externalTrafficPolicy: Local
-        ipFamilyPolicy: RequireDualStack
     rbac:
       enabled: true
     ports:
@@ -38,7 +34,7 @@ spec:
     priorityClassName: "system-cluster-critical"
     image:
       name: "rancher/mirrored-library-traefik"
-      tag: "2.6.1"
+      tag: "2.6.2"
     tolerations:
     - key: "CriticalAddonsOnly"
       operator: "Exists"
@@ -48,3 +44,5 @@ spec:
     - key: "node-role.kubernetes.io/master"
       operator: "Exists"
       effect: "NoSchedule"
+    service:
+      ipFamilyPolicy: "PreferDualStack"
