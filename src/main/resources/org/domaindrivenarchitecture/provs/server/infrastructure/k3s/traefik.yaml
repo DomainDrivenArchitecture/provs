@@ -16,7 +16,7 @@ metadata:
 spec:
   chart: https://%{KUBERNETES_API}%/static/charts/traefik-10.19.300.tgz
   set:
-    global.systemDefaultRegistry: "%{SYSTEM_DEFAULT_REGISTRY_RAW}%"
+    global.systemDefaultRegistry: ""
   valuesContent: |-
     rbac:
       enabled: true
