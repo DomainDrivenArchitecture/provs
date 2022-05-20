@@ -82,7 +82,7 @@ fun Prov.installK3s(k3sConfig: K3sConfig) = taskWithResult {
 
     createK3sFileFromResourceTemplate(k3sConfigFile, k3sConfigMap, alternativeResourceTemplate = File(k3sConfigResourceFileName))
     createK3sFileFromResource(k3sInstallScript, posixFilePermission = "755")
-    cmd("INSTALL_K3S_CHANNEL=latest k3s-install.sh")
+    cmd("INSTALL_K3S_VERSION=v1.23.6+k3s1 k3s-install.sh")
 
     // metallb
     applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-namespace.yaml"))
