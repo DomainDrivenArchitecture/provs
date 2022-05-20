@@ -63,14 +63,10 @@ fun Prov.aptInstallFromPpa(launchPadUser: String, ppaName: String, packageName: 
 
 
 /**
- * Checks if a program is installed
- *
- * @param packageName to check
- * @return true if program is installed
+ * Returns true if a package is installed else false
  */
-@Suppress("unused") // used externally
 fun Prov.isPackageInstalled(packageName: String): Boolean {
-    return chk("timeout 2 dpkg -l $packageName")
+    return chk("dpkg -s $packageName")
 }
 
 
