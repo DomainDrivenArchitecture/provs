@@ -1,4 +1,4 @@
-# from https://github.com/k3s-io/k3s/blob/master/manifests/traefik.yaml
+# based on https://github.com/k3s-io/k3s/blob/master/manifests/traefik.yaml
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -46,3 +46,6 @@ spec:
       effect: "NoSchedule"
     service:
       ipFamilyPolicy: "PreferDualStack"
+      spec:
+        type: LoadBalancer
+        externalTrafficPolicy: Local
