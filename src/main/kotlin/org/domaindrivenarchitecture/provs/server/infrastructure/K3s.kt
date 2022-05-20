@@ -11,8 +11,11 @@ import org.domaindrivenarchitecture.provs.server.domain.k3s.FileMode
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 import java.io.File
 
-// -----------------------------------  directories  --------------------------------
+// -----------------------------------  versions  --------------------------------
 
+const val K3S_VERSION = "v1.23.6+k3s1"
+
+// -----------------------------------  directories  --------------------------------
 const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
 
 private const val k3sAutomatedManifestsDir = "/var/lib/rancher/k3s/server/manifests/"
@@ -52,60 +55,62 @@ fun Prov.deprovisionK3sInfra() = task {
 }
 
 
-fun Prov.installK3s(k3sConfig: K3sConfig) = taskWithResult {
-    if (testConfigExists()) {
-        return@taskWithResult ProvResult(true, out = "K3s config is already in place, so skip (re)provisioning.")
+fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
+    return taskWithResult {
+        if (testConfigExists()) {
+            return@taskWithResult ProvResult(true, out = "K3s config is already in place, so skip (re)provisioning.")
+        }
+
+        createDirs(k8sCredentialsDir, sudo = true)
+        createDirs(k3sAutomatedManifestsDir, sudo = true)
+        createDirs(k3sManualManifestsDir, sudo = true)
+        createDirs("/var/pvc1", sudo = true)
+        createDirs("/var/pvc2", sudo = true)
+
+        var k3sConfigMap: Map<String, String> = mapOf(
+            "loopback_ipv4" to k3sConfig.loopback.ipv4,
+            "node_ipv4" to k3sConfig.node.ipv4,
+            "tls_name" to k3sConfig.fqdn
+        )
+        var k3sConfigResourceFileName = "config"
+        var metallbConfigResourceFileName = "metallb-config"
+        if (k3sConfig.isDualStack()) {
+            k3sConfigResourceFileName += ".dual.template.yaml"
+            metallbConfigResourceFileName += ".dual.template.yaml"
+            k3sConfigMap = k3sConfigMap.plus("node_ipv6" to k3sConfig.node.ipv6!!)
+                .plus("loopback_ipv6" to k3sConfig.loopback.ipv6!!)
+        } else {
+            k3sConfigResourceFileName += ".ipv4.template.yaml"
+            metallbConfigResourceFileName += ".ipv4.template.yaml"
+        }
+
+        createK3sFileFromResourceTemplate(k3sConfigFile, k3sConfigMap, alternativeResourceTemplate = File(k3sConfigResourceFileName))
+        createK3sFileFromResource(k3sInstallScript, posixFilePermission = "755")
+        cmd("INSTALL_K3S_VERSION=$K3S_VERSION k3s-install.sh")
+
+        // metallb
+        applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-namespace.yaml"))
+        applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-0.10.2-manifest.yaml"))
+        applyK3sFileFromResourceTemplate(
+            File(k3sManualManifestsDir, "metallb-config.yaml"),
+            k3sConfigMap,
+            alternativeResourceName = File(metallbConfigResourceFileName)
+        )
+
+        // traefik
+        if (k3sConfig.isDualStack()) {
+            // see https://github.com/k3s-io/k3s/discussions/5003
+            createK3sFileFromResource(k3sTraefikWorkaround)
+            applyK3sFile(k3sTraefikWorkaround)
+        } else {
+            ProvResult(true)
+        }
+
+        applyK3sFileFromResource(localPathProvisionerConfig)
+        cmd("kubectl set env deployment -n kube-system local-path-provisioner DEPLOY_DATE=\"$(date)\"")
+
+        cmd("ln -sf $k3sKubeConfig " + k8sCredentialsDir + "admin.conf", sudo = true)
     }
-
-    createDirs(k8sCredentialsDir, sudo = true)
-    createDirs(k3sAutomatedManifestsDir, sudo = true)
-    createDirs(k3sManualManifestsDir, sudo = true)
-    createDirs("/var/pvc1", sudo = true)
-    createDirs("/var/pvc2", sudo = true)
-
-    var k3sConfigMap: Map<String, String> = mapOf(
-        "loopback_ipv4" to k3sConfig.loopback.ipv4,
-        "node_ipv4" to k3sConfig.node.ipv4,
-        "tls_name" to k3sConfig.fqdn
-    )
-    var k3sConfigResourceFileName = "config"
-    var metallbConfigResourceFileName = "metallb-config"
-    if (k3sConfig.isDualStack()) {
-        k3sConfigResourceFileName += ".dual.template.yaml"
-        metallbConfigResourceFileName += ".dual.template.yaml"
-        k3sConfigMap = k3sConfigMap.plus("node_ipv6" to k3sConfig.node.ipv6!!)
-            .plus("loopback_ipv6" to k3sConfig.loopback.ipv6!!)
-    } else {
-        k3sConfigResourceFileName += ".ipv4.template.yaml"
-        metallbConfigResourceFileName += ".ipv4.template.yaml"
-    }
-
-    createK3sFileFromResourceTemplate(k3sConfigFile, k3sConfigMap, alternativeResourceTemplate = File(k3sConfigResourceFileName))
-    createK3sFileFromResource(k3sInstallScript, posixFilePermission = "755")
-    cmd("INSTALL_K3S_VERSION=v1.23.6+k3s1 k3s-install.sh")
-
-    // metallb
-    applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-namespace.yaml"))
-    applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-0.10.2-manifest.yaml"))
-    applyK3sFileFromResourceTemplate(
-        File(k3sManualManifestsDir, "metallb-config.yaml"),
-        k3sConfigMap,
-        alternativeResourceName = File(metallbConfigResourceFileName)
-    )
-
-    // traefik
-    if (k3sConfig.isDualStack()) {
-        // see https://github.com/k3s-io/k3s/discussions/5003
-        createK3sFileFromResource(k3sTraefikWorkaround)
-        applyK3sFile(k3sTraefikWorkaround)
-    } else {
-        ProvResult(true)
-    }
-
-    applyK3sFileFromResource(localPathProvisionerConfig)
-    cmd("kubectl set env deployment -n kube-system local-path-provisioner DEPLOY_DATE=\"$(date)\"")
-
-    cmd("ln -sf $k3sKubeConfig " + k8sCredentialsDir + "admin.conf", sudo = true)
 }
 
 fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
