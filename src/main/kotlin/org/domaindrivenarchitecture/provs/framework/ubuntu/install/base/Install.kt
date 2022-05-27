@@ -13,6 +13,7 @@ private var aptInit = false
  * @param ignoreAlreadyInstalled if true, then for an already installed package no action will be taken,
  * if "ignoreAlreadyInstalled" is false, then installation is always attempted, which normally results in an upgrade if package wa already installed
  */
+@Suppress("UNUSED_PARAMETER")  // ignoreAlreadyInstalled is added for external usage
 fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): ProvResult = taskWithResult {
     val packageList = packages.split(" ")
     val allInstalled: Boolean = packageList.map { isPackageInstalled(it) }.fold(true, { a, b -> a && b })
@@ -41,6 +42,7 @@ fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): P
  *
  * @param packages the packages to be installed, packages must be separated by space if there are more than one
  */
+@Suppress("unused")   // api - for external usage
 fun Prov.snapInstall(packages: String, classic: Boolean = false): ProvResult = task {
     val packageList = packages.split(" ")
     for (pkg in packageList) {
