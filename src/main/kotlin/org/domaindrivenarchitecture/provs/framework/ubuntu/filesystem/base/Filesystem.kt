@@ -96,7 +96,7 @@ fun Prov.createFile(
     val file = File(fullyQualifiedFilename)
 
     if (createDirIfMissing) {
-        createParentDir(file, sudo)
+        createParentDirs(file, sudo)
     }
 
     posixFilePermission?.let {
@@ -324,8 +324,10 @@ fun Prov.createDirs(
 
 
 fun Prov.deleteDir(dir: String, path: String, sudo: Boolean = false): ProvResult {
-    if ("" == path)
+    // parameter "path" must not be empty in order to prevent accidental deletion of a directory in the wrong path
+    if ("" == path) {
         throw RuntimeException("In deleteDir: path must not be empty.")
+    }
     val cmd = "cd $path && rmdir $dir"
     return if (!sudo) {
         cmd(cmd)
@@ -348,7 +350,7 @@ fun Prov.createSymlink(
     createLinkDirIfMissing: Boolean = true,
 ): ProvResult = task {
     if (createLinkDirIfMissing) {
-        createParentDir(link, sudo)
+        createParentDirs(link, sudo)
     }
     val overwriteFlag = if (overwriteIfExisting) "f" else ""
     cmd("ln -s$overwriteFlag $originalFile $link", sudo = sudo)
@@ -376,11 +378,17 @@ fun Prov.userHome(): String {
 /**
  * Creates the parent-dir (parent path) of the specified file if parent-dir id not yet existing
  */
-internal fun Prov.createParentDir(file: File, sudo: Boolean = false) = task {
+internal fun Prov.createParentDirs(file: File, sudo: Boolean = false) {
+    // This method is not defined itself as a Prov task as its main purpose is to check if the parent dir needs to be created,
+    // and this check needs neither to be included in the overall result nor being listed in the results report.
+    // But if directories need to be created, the creation itself is placed within the task "createParentDirs"
+    // in order to be included in the results.
     val dir = file.parent?.toString()
 
     if (dir != null && dir != "" && !checkDir(dir, sudo = sudo)) {
-        createDirs(dir, sudo = sudo)
+        task("createParentDirs") {
+            createDirs(dir, sudo = sudo)
+        }
     }
 }
 

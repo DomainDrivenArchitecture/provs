@@ -396,19 +396,40 @@ internal class FilesystemKtTest {
         // given
         val prov = defaultTestContainer()
         val filename = "parent_dir/test/file"
+        prov.deleteDir("test", "parent_dir")
+        prov.deleteDir("parent_dir", "~/")
 
         // when
-        val res = prov.createParentDir(File(filename))
+        prov.createParentDirs(File(filename))
         val dirExists = prov.checkDir("parent_dir/test")
-        val res2 = prov.createParentDir(File(filename))  // test idempotence
+        prov.createParentDirs(File(filename))  // test idempotence
         val dirExists2 = prov.checkDir("parent_dir/test")
 
         // then
-        assertTrue(res.success)
         assertTrue(dirExists)
-        assertTrue(res2.success)
         assertTrue(dirExists2)
 
+    }
+
+    @ContainerTest
+    fun test_createParentDir_with_sudo() {
+        // given
+        val prov = defaultTestContainer()
+        val filename = "/parent_dir_sudo/test_sudo/file"
+
+        prov.deleteDir("test_sudo", "/parent_dir_sudo", sudo = true)
+        prov.deleteDir("parent_dir_sudo", "/", sudo = true)
+
+        // when
+        prov.task { createParentDirs(File(filename), sudo = true) }
+        val dirExists = prov.checkDir("/parent_dir_sudo/test_sudo", sudo = true)
+        // test idempotence
+        prov.task { createParentDirs(File(filename), sudo = true) }   // include in task in order to output a result summary
+        val dirExists2 = prov.checkDir("/parent_dir_sudo/test_sudo", sudo = true)
+
+        // then
+        assertTrue(dirExists)
+        assertTrue(dirExists2)
     }
 
     @ContainerTest
