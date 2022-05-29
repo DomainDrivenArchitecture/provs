@@ -219,6 +219,10 @@ fun Prov.fileContentLargeFile(file: String, sudo: Boolean = false, chunkSize: In
 }
 
 
+/**
+ * Appends text at the end of the specified file. Creates the file if not yet existing.
+ * If doNotAddIfExisting is true, then the text is not added (again) if already contained somewhere in the file.
+ */
 fun Prov.addTextToFile(
     text: String,
     file: File,

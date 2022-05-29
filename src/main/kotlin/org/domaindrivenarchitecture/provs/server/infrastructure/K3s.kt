@@ -110,6 +110,8 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
         cmd("kubectl set env deployment -n kube-system local-path-provisioner DEPLOY_DATE=\"$(date)\"")
 
         cmd("ln -sf $k3sKubeConfig " + k8sCredentialsDir + "admin.conf", sudo = true)
+
+        configureShellAliases()
     }
 }
 
@@ -204,4 +206,8 @@ private fun Prov.createK3sFileFromResourceTemplate(
 
 private fun File.templateName(): String {
     return this.name.replace(".yaml", ".template.yaml")
+}
+
+internal fun Prov.configureShellAliases() = task {
+    addTextToFile( "\nalias k=kubectl\n", File(".bash_aliases",))
 }

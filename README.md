@@ -72,7 +72,7 @@ For the remote server please configure a config file (default file name: server-
 fqdn: "myhostname.com"
 node:
   ipv4: "192.168.56.123"   # ip address
-echo: true                 # for demo reasons only - deploy an echo app 
+echo: true                 # for demo reasons only - deploys an echo app 
 ```
 
 To add a grafana agent to your k3s installation add the following to the config:

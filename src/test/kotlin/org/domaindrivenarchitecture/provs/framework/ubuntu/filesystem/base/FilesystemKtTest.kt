@@ -494,4 +494,61 @@ internal class FilesystemKtTest {
         assertTrue(linkExists)
         assertEquals("textinlinkfilesudo", content)
     }
+
+    @ContainerTest
+    fun test_addTextToFile() {
+        // given
+        val prov = defaultTestContainer()
+        val file = "testfile_with_added_text"
+        val text1 = "added text"
+        val text2 = "\nadded text2\n"
+        prov.deleteFile(file)
+
+        // when
+        val res = prov.addTextToFile(text1, File(file))     // add text to non-existing file
+        val containsText = prov.fileContainsText(file, text1)
+        val res2 = prov.addTextToFile(text1, File(file))     // test idempotence
+        val fileContent2 = prov.fileContent(file)
+
+        val res3 = prov.addTextToFile(text2, File(file))     // add second text
+        val containsText3 = prov.fileContainsText(file, text1)
+        val res4 = prov.addTextToFile(text1, File(file))     // test idempotence
+        val fileContent4 = prov.fileContent(file)
+
+        // then
+        assertTrue(res.success)
+        assertTrue(containsText)
+        assertTrue(res2.success)
+        assertEquals(text1, fileContent2)
+
+        assertTrue(res3.success)
+        assertTrue(containsText3)
+        assertTrue(res4.success)
+        assertEquals(text1 + text2, fileContent4)
+    }
+    @ContainerTest
+    fun test_addTextToFile_with_doNotAddIfExisting_false() {
+        // given
+        val prov = defaultTestContainer()
+        val file = "testfile_with_added_text_2"
+        val text1 = "added text1"
+        val text2 = "\nadded text2\n"
+        prov.deleteFile(file)
+
+        // when
+        val res = prov.addTextToFile(text1, File(file), doNotAddIfExisting = false)     // add text to non-existing file
+        val res2 = prov.addTextToFile(text1, File(file), doNotAddIfExisting = false)     // add again
+
+        val res3 = prov.addTextToFile(text2, File(file), doNotAddIfExisting = false)     // add second text
+        val res4 = prov.addTextToFile(text1, File(file), doNotAddIfExisting = false)     // add first text again
+        val fileContent = prov.fileContent(file)
+
+        // then
+        assertTrue(res.success)
+        assertTrue(res2.success)
+
+        assertTrue(res3.success)
+        assertTrue(res4.success)
+        assertEquals(text1 + text1 + text2 + text1, fileContent)
+    }
 }
