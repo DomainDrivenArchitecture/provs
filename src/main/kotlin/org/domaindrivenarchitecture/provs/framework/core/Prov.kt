@@ -374,14 +374,23 @@ open class Prov protected constructor(
                 successPerLevel.add(successOfCurrentLevel)
             }
 
-            val successOfLevelAbove = if (currentLevel == 0) successOfCurrentLevel else successPerLevel[currentLevel - 1]
-            println(result.toString().escapeControlChars().formattedAsResultLine(successOfLevelAbove))
+            // check success levels above; if a level above succeeded then a failure in this level will be considered optional (i.e. marked yellow instead of red)
+            val successOfLevelsAbove = levelsAboveContainsSuccess(successPerLevel, currentLevel)
+            println(result.toString().escapeControlChars().formattedAsResultLine(successOfLevelsAbove))
         }
         if (internalResults.size > 1) {
             println("----------------------------------------------------------------------------------------------------- ")
             println("Overall " + internalResults[0].toString().take(10).formattedAsResultLine())
         }
         println("============================================ SUMMARY END ============================================ " + newline())
+    }
+
+    private fun levelsAboveContainsSuccess(successPerLevel: ArrayList<Boolean>, currentLevel: Int): Boolean {
+        var success = false
+        for (i in 0..currentLevel - 1) {
+            success = success || successPerLevel[i]
+        }
+        return success
     }
 
     private fun String.formattedAsResultLine(showFailedInYellow: Boolean = false): String {

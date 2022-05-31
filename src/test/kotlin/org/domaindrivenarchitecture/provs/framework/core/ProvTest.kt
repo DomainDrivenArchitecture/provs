@@ -355,7 +355,7 @@ internal class ProvTest {
 
     @Test
     @NonCi
-    fun prov_prints_correct_output_for_failure_that_is_not_taken_into_account() {
+    fun prov_marks_failed_output_yellow_if_optional() {
 
         // given
         setRootLoggingLevel(Level.OFF)
@@ -369,11 +369,14 @@ internal class ProvTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE).requireLast {
-            checkPrereq_evaluateToFailure()
-            task("returns success") {
-                ProvResult(true)
-            }
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE).task("taskA") {
+                    optional {
+                        taskWithResult("taskB") {
+                            taskWithResult("taskC") {
+                                ProvResult(false)
+                            }
+                        }
+                    }
         }
 
         // then
@@ -384,9 +387,10 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
-                    ">  \u001B[92mSuccess\u001B[0m -- prov_prints_correct_output_for_failure_that_is_not_taken_into_account (requireLast) \n" +
-                    "--->  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
-                    "--->  \u001B[92mSuccess\u001B[0m -- returns success \n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- taskA \n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- prov_marks_failed_output_yellow_if_optional (optional) \n" +
+                    "------>  \u001B[93mFAILED\u001B[0m  -- taskB \n" +
+                    "--------->  \u001B[93mFAILED\u001B[0m  -- taskC \n" +
                     "----------------------------------------------------------------------------------------------------- \n" +
                     "Overall >  \u001B[92mSuccess\u001B[0m\n" +
                     "============================================ SUMMARY END ============================================ \n" +
