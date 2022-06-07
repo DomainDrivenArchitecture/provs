@@ -2,11 +2,15 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.web.base
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.normalizePath
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import java.net.Inet4Address
+import java.net.Inet6Address
+import java.net.InetAddress
+import java.net.UnknownHostException
 
 
 /**
@@ -53,4 +57,27 @@ fun Prov.downloadFromURL(
     } else {
         ProvResult(true, out = "No sha256sum check requested.")
     }
+}
+
+
+/**
+ * Returns the ip for the given hostname if found else null
+ */
+fun Prov.findIpForHostname(hostname: String): String? {
+    val ipText = cmd("dig +short $hostname").out?.trim()
+
+    // check if ipText is valid
+    return try {
+        val ip: Any = InetAddress.getByName(ipText ?: "")
+        return if (ip is Inet4Address || ip is Inet6Address) ipText else null
+    } catch (exception: UnknownHostException) {
+        null
+    }
+}
+
+/**
+ * Returns the ip for the given hostname if found else throws a RuntimeExeption
+ */
+fun Prov.getIpForHostname(hostname: String): String {
+    return findIpForHostname(hostname) ?: throw RuntimeException("Could not resolve ip for: $hostname")
 }

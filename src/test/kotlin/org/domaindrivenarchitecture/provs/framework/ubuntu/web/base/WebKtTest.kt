@@ -1,8 +1,9 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.web.base
 
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContent
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.*
@@ -56,18 +57,59 @@ internal class WebKtTest {
     @Test
     fun downloadFromURL_local_file_with_incorrect_checksum() {
         // given
-        val a = defaultTestContainer()
+        val prov = defaultTestContainer()
         val srcFile = "file3.txt"
         val targetFile = "file3b.txt"
-        a.createFile("/tmp/" + srcFile, "hello")
+        prov.createFile("/tmp/" + srcFile, "hello")
 
         // when
-        val res = a.downloadFromURL("file:///tmp/" + srcFile, targetFile, "tmp", sha256sum = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824WRONG", overwrite = true)
+        val res = prov.downloadFromURL("file:///tmp/" + srcFile, targetFile, "tmp", sha256sum = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824WRONG", overwrite = true)
 
         // then
-        val res2 = a.checkFile("tmp/$targetFile")
+        val res2 = prov.checkFile("tmp/$targetFile")
 
         assertFalse(res.success)
         assertFalse(res2)
+    }
+
+    @ContainerTest
+    fun findIpForHostname_finds_ip() {
+        // given
+        val prov = defaultTestContainer()
+        prov.aptInstall("dnsutils")
+
+        // when
+        val ip = prov.findIpForHostname("localhost")
+
+        // then
+        assertEquals("127.0.0.1", ip)
+    }
+
+    @ContainerTest
+    fun findIpForHostname_returns_null_if_ip_not_found() {
+        // given
+        val prov = defaultTestContainer()
+        prov.aptInstall("dnsutils")
+
+        // when
+        val ip = prov.findIpForHostname("hostwhichisnotexisting")
+
+        // then
+        assertEquals(null, ip)
+    }
+
+    @Test
+    fun getIpForHostname_throws_exception_if_ip_not_found() {
+        // given
+        val prov = defaultTestContainer()
+        prov.aptInstall("dnsutils")
+
+        val exception = org.junit.jupiter.api.assertThrows<RuntimeException> {
+            // when
+            prov.getIpForHostname("hostwhichisnotexisting")
+        }
+
+        // then
+        assertEquals("Could not resolve ip for: hostwhichisnotexisting", exception.message)
     }
 }
