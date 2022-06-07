@@ -68,7 +68,7 @@ fun Prov.findIpForHostname(hostname: String): String? {
 
     // check if ipText is valid
     return try {
-        val ip: Any = InetAddress.getByName(ipText ?: "")
+        val ip = InetAddress.getByName(ipText ?: "")
         return if (ip is Inet4Address || ip is Inet6Address) ipText else null
     } catch (exception: UnknownHostException) {
         null
