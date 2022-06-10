@@ -15,9 +15,15 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
 
 fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
+    val submodules = cmd.submodules
     // retrieve config
     val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
-    prov.provisionWorkplace(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail)
+
+    if (submodules == null) {
+        prov.provisionWorkplace(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail)
+    } else {
+        prov.provisionDesktopSubmodules(submodules)
+    }
 }
 
 
@@ -110,4 +116,13 @@ fun Prov.provisionWorkplace(
         provisionPython()
     }
     ProvResult(true)
+}
+
+private fun Prov.provisionDesktopSubmodules(
+    submodules: List<String>,
+) = task {
+
+    if (submodules.contains(DesktopSubmodule.TEAMS.name.lowercase())) {
+        installMsTeams()
+    }
 }

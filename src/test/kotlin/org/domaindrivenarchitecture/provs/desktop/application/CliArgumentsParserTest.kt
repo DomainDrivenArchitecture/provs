@@ -14,4 +14,13 @@ internal class CliArgumentsParserTest {
         assertEquals(null, cli.configFile)
         assertEquals(true, cli.target.isValidLocalhost())
     }
+
+    @Test
+    fun parse_cliCommand_with_only_submodule_teams_and_local_target() {
+        val cli = CliArgumentsParser("test").parseCommand(args = arrayOf("ide", "local", "-o", "teams"))
+
+        assertTrue(cli.isValid())
+        assertEquals(true, cli.target.isValidLocalhost())
+        assertEquals(true, cli.submodules?.contains("teams"))
+    }
 }

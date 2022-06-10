@@ -6,6 +6,7 @@ import org.domaindrivenarchitecture.provs.configuration.application.CliTargetPar
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.desktop.domain.DesktopCliCommand
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopSubmodule
 import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
 
 
@@ -44,10 +45,17 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
             "c",
             "the filename containing the yaml config",
         )
+        val only by option(
+            ArgType.Choice<DesktopSubmodule>(),
+            "only",
+            "o",
+            "provisions only parts ",
+        )
 
         override fun execute() {
             configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             parsed = true
+            submodules = if (only != null) listOf(only!!.name.lowercase()) else null
         }
     }
 
