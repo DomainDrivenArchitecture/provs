@@ -78,7 +78,6 @@ internal class UbuntuProvTest {
         assertTrue(res2.out?.trim() == "echoed")
     }
 
-    @Test
     @ContainerTest
     @NonCi
     fun test_user_cannot_sudo_without_password() {

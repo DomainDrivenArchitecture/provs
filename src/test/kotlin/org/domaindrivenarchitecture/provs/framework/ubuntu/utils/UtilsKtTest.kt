@@ -13,7 +13,6 @@ internal class UtilsKtTest {
     val a = Prov.defaultInstance()
 
     @ContainerTest
-    @Test
     fun printToShell_escapes_String_successfully() {
         // when
         val testString = "test if newline \n and apostrophe's ' \" and special chars $ !§$%[]\\ äöüß \$variable and tabs     \t are handled correctly"
@@ -54,7 +53,6 @@ internal class UtilsKtTest {
         assertEquals(testMultiLineString(), resMl)
     }
 
-    @Test
     @ContainerTest
     fun echoCommandForText_in_ubuntu_container() {
         // given

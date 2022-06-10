@@ -5,11 +5,9 @@ import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
 
 internal class ContainerProcessorTest {
 
-    @Test
     @ContainerTest
     fun cmd_works_with_echo() {
 
@@ -26,7 +24,6 @@ internal class ContainerProcessorTest {
     }
 
 
-    @Test
     @ContainerTest
     fun cmdNoLog_works_with_echo() {
         // given

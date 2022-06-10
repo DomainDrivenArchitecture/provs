@@ -5,13 +5,11 @@ import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.Test
 
 
 internal class InstallKtTest {
 
     @ContainerTest
-    @Test
     fun aptInstall_installsPackage() {
         // given
         val a = defaultTestContainer()
@@ -24,7 +22,6 @@ internal class InstallKtTest {
     }
 
     @ContainerTest
-    @Test
     fun aptInstall_ignores_packages_already_installed() {
         // given
         val a = defaultTestContainer()
@@ -38,7 +35,6 @@ internal class InstallKtTest {
     }
 
     @ContainerTest
-    @Test
     @Disabled  // run manually if needed;
     // todo: replace zim by a smaller repo
     fun aptInstallFromPpa_installsPackage() {

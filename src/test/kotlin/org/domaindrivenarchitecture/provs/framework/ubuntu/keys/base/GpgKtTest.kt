@@ -9,11 +9,9 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.privateGPGSnakeo
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.publicGPGSnakeoilKey
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
 
 internal class GpgKtTest {
 
-    @Test
     @ContainerTest
     fun gpgFingerprint_returnsCorrectFingerprint() {
         // given
@@ -29,7 +27,6 @@ internal class GpgKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun configureGpgKeys() {
         // given
@@ -43,7 +40,6 @@ internal class GpgKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun configureGpgKeysTrusted() {
         // given
@@ -59,7 +55,6 @@ internal class GpgKtTest {
     }
 
 
-    @Test
     @ContainerTest
     fun configureGpgKeysIsIdempotent() {
         // given

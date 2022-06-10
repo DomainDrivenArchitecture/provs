@@ -8,11 +8,9 @@ import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.domaindrivenarchitecture.provs.test.testLocal
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 
 internal class UbuntuHostDockerKtTest {
 
-    @Test
     @NonCi
     @ContainerTest
     fun runAndCheckAndExitContainer() {

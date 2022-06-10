@@ -10,11 +10,9 @@ import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.Test
 
 internal class K3dKtTest {
 
-    @Test
     @Disabled // remove line and execute manually as this test may take several minutes
     @ContainerTest
     @NonCi

@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Assertions.assertFalse
 internal class GopassKtTest {
 
     @ContainerTest
-    @Test
     fun test_configureGopass_fails_with_path_starting_with_tilde() {
         // when
         val res = defaultTestContainer().task {

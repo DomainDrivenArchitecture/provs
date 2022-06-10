@@ -6,13 +6,10 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.privateSSHSnakeo
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.publicSSHSnakeoilKey
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertTrue
 
 internal class SshKtTest {
 
-    @Test
     @ContainerTest
     fun configureSshKeys() {
         // given

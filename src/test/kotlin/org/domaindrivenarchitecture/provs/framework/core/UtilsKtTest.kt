@@ -20,7 +20,6 @@ internal class UtilsKtTest {
         assertEquals("test_getCallingMethodName", s)
     }
 
-    @Test
     @ContainerTest
     fun runCmdInContainer() {
         // when

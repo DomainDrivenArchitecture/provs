@@ -1,7 +1,5 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.user
 
-import org.domaindrivenarchitecture.provs.test.defaultTestContainer
-import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContent
@@ -11,15 +9,15 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.configureUs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.createUser
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.userExists
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.userIsInGroupSudo
+import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
 
 
 internal class ProvisionUserKtTest {
 
-    @Test
     @ExtensiveContainerTest
     fun configureUser() {
         // given
@@ -39,7 +37,6 @@ internal class ProvisionUserKtTest {
         assertTrue(res.success)
     }
 
-    @Test
     @ContainerTest
     fun createUser() {
         // given
@@ -60,7 +57,6 @@ internal class ProvisionUserKtTest {
         assertEquals("newdummykey", a.fileContent("/home/$newUser/.ssh/authorized_keys", sudo = true))
     }
 
-    @Test
     @ContainerTest
     fun createUserWithSudo() {
         // given

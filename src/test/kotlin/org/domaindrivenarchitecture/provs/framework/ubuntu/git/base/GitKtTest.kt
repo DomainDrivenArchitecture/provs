@@ -7,12 +7,10 @@ import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
 
 
 internal class GitKtTest {
 
-    @Test
     @ContainerTest
     fun trustGitServers(){
         // given
@@ -31,7 +29,6 @@ internal class GitKtTest {
         assertTrue(a.isHostKnown("gitlab.com"), "gitlab.com does not seem to be a known host")
     }
 
-    @Test
     @ExtensiveContainerTest
     fun gitClone() {
         // given

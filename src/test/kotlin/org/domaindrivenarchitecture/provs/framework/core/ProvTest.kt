@@ -33,7 +33,6 @@ internal class ProvTest {
         assertTrue(res)
     }
 
-    @Test
     @ContainerTest
     fun sh() {
         // given
@@ -52,7 +51,6 @@ internal class ProvTest {
         assertTrue(res)
     }
 
-    @Test
     @ContainerTest
     @NonCi
     fun sh_with_dir_and_sudo() {
