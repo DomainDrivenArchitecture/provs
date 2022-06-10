@@ -6,9 +6,11 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 /**
  * ATTENTION: Download URL might be only valid for a limited time and thus might not be working.
+ * Download from: https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html
  */
 fun Prov.installCitrixWorkspaceApp() = task {
-    downloadFromURL("https://downloads.citrix.com/20976/linuxx64-22.5.0.16.tar.gz?__gda__=exp=1654847726~acl=/*~hmac=be248338ecd7c7de50950ff7825fc0a80577fef7d3610988c64391cff8eaca16", "xitrix.tar.gz", "/tmp")
-    createDir("xitrix", "/tmp")
-    cmd("tar -xf xitrix.tar.gz -C /tmp/xitrix")
+    downloadFromURL("https://downloads.citrix.com/20976/linuxx64-22.5.0.16.tar.gz?__gda__=exp=1654847726~acl=/*~hmac=be248338ecd7c7de50950ff7825fc0a80577fef7d3610988c64391cff8eaca16", "citrix.tar.gz", "/tmp")
+    createDir("citrix", "/tmp")
+    cmd("tar -xf citrix.tar.gz -C /tmp/citrix")
+    // Run /tmp/citrix/setupwfc
 }
