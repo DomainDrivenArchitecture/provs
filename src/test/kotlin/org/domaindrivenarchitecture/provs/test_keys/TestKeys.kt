@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.framework.extensions.test_keys
+package org.domaindrivenarchitecture.provs.test_keys
 
 
 fun publicGPGSnakeoilKey(): String {
@@ -129,10 +129,13 @@ i+XV3Dazj3nq/DxUB0neLU/r1afAEiqZAkI=
 -----END PGP PRIVATE KEY BLOCK-----""".trimIndent()
 }
 
+
+@Suppress("unused")
 fun publicSSHSnakeoilKey(): String {
     return """ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOtQOq8a/Z7SdZVPrh+Icaq5rr+Qg1TZP4IPuRoFgfujUztQ2dy5DfTEbabJ0qHyo+PKwBDQorVohrW7CwvCEVQQh2NLuGgnukBN2ut5Lam7a/fZBoMjAyTvD4bXyEsUr/Bl5CLoBDkKM0elUxsc19ndzSofnDWeGyQjJIWlkNkVk/ybErAnIHVE+D+g3UxwA+emd7BF72RPqdVN39Eu4ntnxYzX0eepc8rkpFolVn6+Ai4CYHE4FaJ7bJ9WGPbwLuDl0pw/Cp3ps17cB+JlQfJ2spOq0tTVk+GcdGnt+mq0WaOnvVeQsGJ2O1HpY3VqQd1AsC2UOyHhAQ00pw7Pi9 snake@oil.com"""
 }
 
+@Suppress("unused")
 fun privateSSHSnakeoilKey(): String {
     return """
         -----BEGIN RSA PRIVATE KEY-----

@@ -1,17 +1,11 @@
-package org.domaindrivenarchitecture.provs.framework.extensions.workplace.base
+package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
-import org.domaindrivenarchitecture.provs.desktop.infrastructure.configureGopassBridgeJsonApi
-import org.domaindrivenarchitecture.provs.desktop.infrastructure.downloadGopassBridge
-import org.domaindrivenarchitecture.provs.desktop.infrastructure.installGopass
-import org.domaindrivenarchitecture.provs.desktop.infrastructure.installGopassBridgeJsonApi
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.docker.exitAndRmContainer
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
-import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.privateGPGSnakeoilKey
-import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.publicGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.configureGpgKeys
@@ -19,6 +13,8 @@ import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi
+import org.domaindrivenarchitecture.provs.test_keys.privateGPGSnakeoilKey
+import org.domaindrivenarchitecture.provs.test_keys.publicGPGSnakeoilKey
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled

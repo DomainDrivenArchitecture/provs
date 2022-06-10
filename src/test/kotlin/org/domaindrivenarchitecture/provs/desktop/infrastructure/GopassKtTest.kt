@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.framework.extensions.workplace.base
+package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.remote
@@ -12,10 +12,9 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.privateGPGSnakeoilKey
-import org.domaindrivenarchitecture.provs.framework.extensions.test_keys.publicGPGSnakeoilKey
+import org.domaindrivenarchitecture.provs.test_keys.privateGPGSnakeoilKey
+import org.domaindrivenarchitecture.provs.test_keys.publicGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
-import org.domaindrivenarchitecture.provs.desktop.infrastructure.*
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertFalse
 

@@ -1,7 +1,5 @@
-package org.domaindrivenarchitecture.provs.framework.extensions.workplace
+package org.domaindrivenarchitecture.provs.desktop.domain
 
-import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
-import org.domaindrivenarchitecture.provs.desktop.domain.provisionWorkplace
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest

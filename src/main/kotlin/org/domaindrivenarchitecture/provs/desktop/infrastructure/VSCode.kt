@@ -25,7 +25,7 @@ fun Prov.installVSC(vararg options: String) = task {
         installExtensionsCodium(pythonExtensions)
     }
 
-    provisionAdditionalTools()
+    provisionAdditionalToolsForVSCode()
 }
 
 
@@ -84,7 +84,7 @@ private fun Prov.installExtensionsCodium(extensions: List<String>) = optional {
 }
 
 
-internal fun Prov.provisionAdditionalTools() = task {
+internal fun Prov.provisionAdditionalToolsForVSCode() = task {
     // Joker
     val version = "0.18.0"
     cmd("curl -Lo joker-${version}-linux-amd64.zip https://github.com/candid82/joker/releases/download/v${version}/joker-${version}-linux-amd64.zip")
