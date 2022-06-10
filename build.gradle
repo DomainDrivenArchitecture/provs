@@ -156,6 +156,7 @@ def projectRoot = rootProject.projectDir
 task installlocally {
     dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
     doLast {
+        exec { commandLine("sh", "-c", "sudo apt-get update & sudo apt-get install jarwrapper") }
         exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-server.jar /usr/local/bin/") }
         exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-desktop.jar /usr/local/bin/") }
         exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-syspec.jar /usr/local/bin/") }
