@@ -7,10 +7,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.creat
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.normalizePath
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import java.net.Inet4Address
-import java.net.Inet6Address
-import java.net.InetAddress
-import java.net.UnknownHostException
+import java.util.regex.Pattern
 
 
 /**
@@ -28,7 +25,7 @@ fun Prov.downloadFromURL(
     overwrite: Boolean = false
 ): ProvResult = taskWithResult {
 
-    val finalFilename: String = filename ?:  url.substringAfterLast("/")
+    val finalFilename: String = filename ?: url.substringAfterLast("/")
     val fqFilename: String = (path?.normalizePath() ?: "") + finalFilename
 
     if (!overwrite && checkFile(fqFilename, sudo = sudo)) {
@@ -64,15 +61,10 @@ fun Prov.downloadFromURL(
  * Returns the ip for the given hostname if found else null
  */
 fun Prov.findIpForHostname(hostname: String): String? {
-    val ipText = cmd("dig +short $hostname").out?.trim()
+    val ipText = cmd("dig +short $hostname").out?.trim() ?: ""
 
     // check if ipText is valid
-    return try {
-        val ip = InetAddress.getByName(ipText ?: "")
-        return if (ip is Inet4Address || ip is Inet6Address) ipText else null
-    } catch (exception: UnknownHostException) {
-        null
-    }
+    return if (isIp4(ipText) || isIp6(ipText)) ipText else null
 }
 
 /**
@@ -80,4 +72,25 @@ fun Prov.findIpForHostname(hostname: String): String? {
  */
 fun Prov.getIpForHostname(hostname: String): String {
     return findIpForHostname(hostname) ?: throw RuntimeException("Could not resolve ip for: $hostname")
+}
+
+
+internal fun isIp4(ip: String): Boolean {
+    val IPV4_PATTERN = "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!\$)|\$)){4}\$"
+
+    val pattern = Pattern.compile(IPV4_PATTERN)
+    val matcher = pattern.matcher(ip)
+    return matcher.matches()
+}
+
+internal fun isIp6(ip: String): Boolean {
+    val IPV6_PATTERN = "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}" +
+            "|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}" +
+            "|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)" +
+            "|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]" +
+            "|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))"
+
+    val pattern = Pattern.compile(IPV6_PATTERN)
+    val matcher = pattern.matcher(ip)
+    return matcher.matches()
 }
