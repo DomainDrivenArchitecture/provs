@@ -9,14 +9,6 @@ import java.util.*
 /**
  * Returns true if the given file exists.
  */
-@Deprecated("Use checkFile", replaceWith = ReplaceWith("checkFile(file)"))
-fun Prov.fileExists(file: String, sudo: Boolean = false): Boolean {
-    return cmdNoEval(prefixWithSudo("test -e " + file, sudo)).success
-}
-
-/**
- * Returns true if the given file exists.
- */
 fun Prov.checkFile(file: String, sudo: Boolean = false): Boolean {
     return cmdNoEval(prefixWithSudo("test -e " + file, sudo)).success
 }
@@ -282,14 +274,6 @@ fun Prov.insertTextInFile(file: String, textBehindWhichToInsert: Regex, textToIn
 // =============================  folder operations  ==========================
 
 fun Prov.checkDir(dir: String, path: String? = null, sudo: Boolean = false): Boolean {
-    val effectivePath = if (path != null) path else
-        (if (dir.startsWith(File.separator)) File.separator else "~" + File.separator)
-    val cmd = "cd $effectivePath && test -d $dir"
-    return cmdNoEval(if (sudo) cmd.sudoizeCommand() else cmd).success
-}
-
-@Deprecated("Use checkDir instead.", replaceWith = ReplaceWith("checkDir(dir)"))
-fun Prov.dirExists(dir: String, path: String? = null, sudo: Boolean = false): Boolean {
     val effectivePath = if (path != null) path else
         (if (dir.startsWith(File.separator)) File.separator else "~" + File.separator)
     val cmd = "cd $effectivePath && test -d $dir"

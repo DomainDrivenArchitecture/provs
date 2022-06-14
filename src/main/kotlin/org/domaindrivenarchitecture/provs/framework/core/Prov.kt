@@ -83,15 +83,6 @@ open class Prov protected constructor(
     }
 
     /**
-     * defines a task with default success behavior, i.e. returns success if all subtasks finished with success.
-     * Same as requireAll.
-     */
-    @Deprecated("Use function task instead", replaceWith = ReplaceWith("task()"))
-    fun def(a: Prov.() -> ProvResult): ProvResult {
-        return evaluate(ResultMode.ALL) { a() }
-    }
-
-    /**
      * defines a task, which returns the returned result, the results of sub-tasks are not considered
      */
     fun requireLast(a: Prov.() -> ProvResult): ProvResult {
@@ -103,14 +94,6 @@ open class Prov protected constructor(
      */
     fun optional(a: Prov.() -> ProvResult): ProvResult {
         return evaluate(ResultMode.OPTIONAL) { a() }
-    }
-
-    /**
-     * defines a task, which returns success if all subtasks finished with success
-     */
-    @Deprecated("Use function task instead", replaceWith = ReplaceWith("task()"))
-    fun requireAll(a: Prov.() -> ProvResult): ProvResult {
-        return evaluate(ResultMode.ALL) { a() }
     }
 
     /**
