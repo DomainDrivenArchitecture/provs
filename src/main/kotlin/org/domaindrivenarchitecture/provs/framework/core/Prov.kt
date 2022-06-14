@@ -60,11 +60,13 @@ open class Prov protected constructor(
         }
     }
 
-    private val internalResults = arrayListOf<ResultLine>()
     private var level = 0
     private var previousLevel = 0
     private var exit = false
     private var runInContainerWithName: String? = null
+
+    private val internalResults = arrayListOf<ResultLine>()
+    private val infoTexts = arrayListOf<String>()
 
     /**
      * A task is the base execution unit in provs. In the results overview it is represented by one line resp. result (of either success or failure).
@@ -233,6 +235,12 @@ open class Prov protected constructor(
         ProvResult(success)
     }
 
+    fun addInfoText(text: String) {
+        infoTexts.add(text)
+    }
+
+    // =====================================  private functions  ==================================
+
     /**
      * Provides task evaluation, i.e. computes a ProvResult based on the provided resultMode,
      * on the returned ProvResult from the task as well as on the results from executed subtasks (if there are).
@@ -365,6 +373,7 @@ open class Prov protected constructor(
             println("----------------------------------------------------------------------------------------------------- ")
             println("Overall " + internalResults[0].toString().take(10).formattedAsResultLine())
         }
+        printInfoTexts()
         println("============================================ SUMMARY END ============================================ " + newline())
     }
 
@@ -409,6 +418,15 @@ open class Prov protected constructor(
     private fun endProgress() {
         if ((progressType == ProgressType.DOTS) || (progressType == ProgressType.BASIC)) {
             println("---------- Processing completed ----------")
+        }
+    }
+
+    private fun printInfoTexts() {
+        if (infoTexts.isNotEmpty()) {
+            println("----------------------------------------------------------------------------------------------------- ")
+            for (text in infoTexts) {
+                println(text)
+            }
         }
     }
 

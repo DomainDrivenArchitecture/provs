@@ -368,13 +368,13 @@ internal class ProvTest {
 
         // when
         Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE).task("taskA") {
-                    optional {
-                        taskWithResult("taskB") {
-                            taskWithResult("taskC") {
-                                ProvResult(false)
-                            }
-                        }
+            optional {
+                taskWithResult("taskB") {
+                    taskWithResult("taskC") {
+                        ProvResult(false)
                     }
+                }
+            }
         }
 
         // then
@@ -588,6 +588,47 @@ internal class ProvTest {
 
         // then
         assertEquals(true, res.success)
+    }
+
+    @Test
+    fun infoText_is_printed_correctly() {
+        // given
+        setRootLoggingLevel(Level.OFF)
+
+        val outContent = ByteArrayOutputStream()
+        val errContent = ByteArrayOutputStream()
+        val originalOut = System.out
+        val originalErr = System.err
+
+        System.setOut(PrintStream(outContent))
+        System.setErr(PrintStream(errContent))
+
+        val prov = Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
+
+            // when
+        prov.task {
+            addInfoText("Text1")
+            addInfoText("Text2\nwith newline")
+        }
+
+        // then
+        System.setOut(originalOut)
+        System.setErr(originalErr)
+
+        println(outContent.toString())
+
+        val expectedOutput =
+            "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- infoText_is_printed_correctly \n" +
+                    "----------------------------------------------------------------------------------------------------- \n" +
+                    "Text1\n" +
+                    "Text2\n" +
+                    "with newline\n" +
+                    "============================================ SUMMARY END ============================================ \n" +
+                    "\n"
+
+        assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
+
     }
 
 }
