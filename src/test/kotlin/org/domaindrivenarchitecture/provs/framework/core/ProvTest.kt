@@ -301,7 +301,7 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
                     "--->  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
@@ -309,9 +309,9 @@ internal class ProvTest {
                     "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
-                    "----------------------------------------------------------------------------------------------------- \n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[92mSuccess\u001B[0m\n" +
-                    "============================================ SUMMARY END ============================================ \n" +
+                    "============================================ SUMMARY END ===========================================\n" +
                     "\n"
 
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
@@ -343,9 +343,9 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[91mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
-                    "============================================ SUMMARY END ============================================ \n" +
+                    "============================================ SUMMARY END ===========================================\n" +
                     "\n"
 
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
@@ -384,14 +384,14 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- taskA \n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- prov_marks_failed_output_yellow_if_optional (optional) \n" +
                     "------>  \u001B[93mFAILED\u001B[0m  -- taskB \n" +
                     "--------->  \u001B[93mFAILED\u001B[0m  -- taskC \n" +
-                    "----------------------------------------------------------------------------------------------------- \n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[92mSuccess\u001B[0m\n" +
-                    "============================================ SUMMARY END ============================================ \n" +
+                    "============================================ SUMMARY END ===========================================\n" +
                     "\n"
 
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
@@ -454,12 +454,12 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance) ============================================== \n" +
+            "============================================== SUMMARY (test instance) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- TaskB \n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- taskC \n" +
-                    "----------------------------------------------------------------------------------------------------- \n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[92mSuccess\u001B[0m\n" +
-                    "============================================ SUMMARY END ============================================ \n" +
+                    "============================================ SUMMARY END ===========================================\n" +
                     "\n"
 
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
@@ -618,13 +618,13 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance with no progress info) ============================================== \n" +
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- infoText_is_printed_correctly \n" +
-                    "----------------------------------------------------------------------------------------------------- \n" +
+                    "+++++++++++++++++++++++++++++++++++  \u001B[94mAdditional information\u001B[0m  +++++++++++++++++++++++++++++++++++++++\n" +
                     "Text1\n" +
                     "Text2\n" +
                     "with newline\n" +
-                    "============================================ SUMMARY END ============================================ \n" +
+                    "============================================ SUMMARY END ===========================================\n" +
                     "\n"
 
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))

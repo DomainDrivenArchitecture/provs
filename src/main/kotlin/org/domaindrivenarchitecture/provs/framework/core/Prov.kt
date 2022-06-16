@@ -345,13 +345,14 @@ open class Prov protected constructor(
     private val ANSI_BRIGHT_RED = "\u001B[91m"
     private val ANSI_BRIGHT_YELLOW = "\u001B[93m"
     private val ANSI_BRIGHT_GREEN = "\u001B[92m"
+    private val ANSI_BRIGHT_BLUE = "\u001B[94m"
     private val ANSI_GRAY = "\u001B[90m"
 
     private fun printResults() {
         println(
             "============================================== SUMMARY " +
                     (if (instanceName != null) "(" + instanceName + ") " else "") +
-                    "============================================== "
+                    "============================================="
         )
         val successPerLevel = arrayListOf<Boolean>()
         for (result in internalResults) {
@@ -370,11 +371,11 @@ open class Prov protected constructor(
             println(result.toString().escapeControlChars().formattedAsResultLine(successOfLevelsAbove))
         }
         if (internalResults.size > 1) {
-            println("----------------------------------------------------------------------------------------------------- ")
+            println("----------------------------------------------------------------------------------------------------")
             println("Overall " + internalResults[0].toString().take(10).formattedAsResultLine())
         }
         printInfoTexts()
-        println("============================================ SUMMARY END ============================================ " + newline())
+        println("============================================ SUMMARY END ===========================================" + newline())
     }
 
     private fun levelsAboveContainsSuccess(successPerLevel: ArrayList<Boolean>, currentLevel: Int): Boolean {
@@ -423,7 +424,7 @@ open class Prov protected constructor(
 
     private fun printInfoTexts() {
         if (infoTexts.isNotEmpty()) {
-            println("----------------------------------------------------------------------------------------------------- ")
+            println("+++++++++++++++++++++++++++++++++++  ${ANSI_BRIGHT_BLUE}Additional information$ANSI_RESET  +++++++++++++++++++++++++++++++++++++++")
             for (text in infoTexts) {
                 println(text)
             }
