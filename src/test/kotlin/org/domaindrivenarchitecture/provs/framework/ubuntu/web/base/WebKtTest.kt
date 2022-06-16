@@ -115,7 +115,7 @@ internal class WebKtTest {
     }
 
     @Test
-    fun isIp4_recognizes_Ip_correctly() {
+    fun isIp4_recognizes_ip_correctly() {
         // when
         val res1 = isIp4("123.123.123.123")
         val res2 = isIp4("123.abc.123.123")
@@ -128,7 +128,7 @@ internal class WebKtTest {
     }
 
     @Test
-    fun isIp6_recognizes_Ip_correctly() {
+    fun isIp6_recognizes_ip_correctly() {
         // when
         val res1 = isIp6("2001:db8:3333:4444:5555:6666:7777:8888")
         val res2 = isIp6("2001:db8:3333:4444:CCCC:DDDD:EEEE:FFFF")

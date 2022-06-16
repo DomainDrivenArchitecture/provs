@@ -5,16 +5,16 @@ import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 
-internal class ProvisionWorkplaceKtTest {
+internal class DesktopServiceKtTest {
 
     @ExtensiveContainerTest
-    fun provisionWorkplace() {
+    fun provisionDesktop() {
         // given
-        val a = defaultTestContainer()
+        val prov = defaultTestContainer()
 
         // when
-        // in order to test WorkplaceType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
-        val res = a.provisionWorkplace(
+        // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
+        val res = prov.provisionDesktop(
             DesktopType.BASIC,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
@@ -26,14 +26,14 @@ internal class ProvisionWorkplaceKtTest {
 
 
     @ExtensiveContainerTest
-    fun provisionWorkplaceFromConfigFile() {
+    fun provisionDesktopFromConfigFile() {
         // given
-        val a = defaultTestContainer()
+        val prov = defaultTestContainer()
 
         // when
-        // in order to test WorkplaceType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
-        val config = getConfig("src/test/resources/WorkplaceConfigExample.json")
-        val res = a.provisionWorkplace(
+        // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
+        val config = getConfig("src/test/resources/desktop-config-example.json")
+        val res = prov.provisionDesktop(
             DesktopType.BASIC,
             config.ssh?.keyPair(),
             config.gpg?.keyPair(),

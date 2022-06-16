@@ -28,7 +28,7 @@ internal class GrafanaAgentRepositoryKtTest {
     @Test
     fun findK8sGrafanaConfig_returns_null_if_no_grafan_data_available() {
         // when
-        val config = findK8sGrafanaConfig(ConfigFileName("src/test/resources/k3sServerConfig.yaml"))
+        val config = findK8sGrafanaConfig(ConfigFileName("src/test/resources/k3s-server-config.yaml"))
 
         // then
         assertEquals(null, config)

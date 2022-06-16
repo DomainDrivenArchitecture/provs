@@ -17,7 +17,7 @@ internal class K3sConfigRepositoryTest {
     @Test
     fun getConfig_successful() {
         // when
-        val config = getK3sConfig(ConfigFileName("src/test/resources/k3sServerConfig.yaml"))
+        val config = getK3sConfig(ConfigFileName("src/test/resources/k3s-server-config.yaml"))
 
         // then
         assertEquals(
@@ -38,7 +38,7 @@ internal class K3sConfigRepositoryTest {
     @Test
     fun getConfig_fails_due_to_missing_property() {
         val exception = assertThrows<SerializationException> {
-            getK3sConfig(ConfigFileName("src/test/resources/InvalidWorkplaceConfig.yaml"))
+            getK3sConfig(ConfigFileName("src/test/resources/invalid-desktop-config.yaml"))
         }
         assertEquals("Fields [fqdn, node] are required for type with serial name 'org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig', but they were missing", exception.message)
     }

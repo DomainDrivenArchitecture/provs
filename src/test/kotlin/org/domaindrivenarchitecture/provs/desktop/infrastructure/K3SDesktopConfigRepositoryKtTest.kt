@@ -14,7 +14,7 @@ internal class K3SDesktopConfigRepositoryKtTest {
     @Test
     fun getConfig_successful() {
         // when
-        val config = getConfig("src/test/resources/TestWorkplaceConfig.yaml")
+        val config = getConfig("src/test/resources/test-desktop-config.yaml")
 
         // then
         assertEquals("username", config.gitUserName)
@@ -32,7 +32,7 @@ internal class K3SDesktopConfigRepositoryKtTest {
     @Test
     fun getConfig_fails_due_to_invalidProperty() {
         val exception = assertThrows<InvalidPropertyValueException> {
-            getConfig("src/test/resources/InvalidWorkplaceConfig.yaml")
+            getConfig("src/test/resources/invalid-desktop-config.yaml")
         }
         assertEquals("Value for 'sourceType' is invalid: Value 'xxx' is not a valid option, permitted choices are: FILE, GOPASS, PASS, PLAIN, PROMPT", exception.message)
     }

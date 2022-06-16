@@ -8,7 +8,7 @@ import java.io.FileWriter
 
 
 /**
- * Returns WorkplaceConfig; data for config is read from specified file.
+ * Returns DesktopConfig; data for config is read from specified file.
  * Throws exceptions FileNotFoundException, SerializationException if file is not found resp. cannot be parsed.
  */
 internal fun getConfig(filename: String = "desktop-config.yaml"): DesktopConfig = readFromFile(filename).yamlToType()

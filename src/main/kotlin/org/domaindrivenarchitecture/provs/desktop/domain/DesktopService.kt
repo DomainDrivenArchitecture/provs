@@ -20,7 +20,7 @@ fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
     val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
 
     if (submodules == null) {
-        prov.provisionWorkplace(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail)
+        prov.provisionDesktop(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail)
     } else {
         prov.provisionDesktopSubmodules(submodules)
     }
@@ -28,14 +28,14 @@ fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
 
 
 /**
- * Provisions software and configurations for a personal workplace.
+ * Provisions software and configurations for a personal desktop.
  * Offers the possibility to choose between different types.
  * Type OFFICE installs office-related software like Thunderbird, LibreOffice, and much more.
  * Type IDE provides additional software for a development environment, such as Visual Studio Code, IntelliJ, etc.
  *
  * Prerequisites: user must be able to sudo without entering the password
  */
-fun Prov.provisionWorkplace(
+fun Prov.provisionDesktop(
     desktopType: DesktopType = DesktopType.BASIC,
     ssh: KeyPair? = null,
     gpg: KeyPair? = null,
@@ -44,7 +44,7 @@ fun Prov.provisionWorkplace(
 ) = task {
 
     if (!currentUserCanSudo()) {
-        throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionWorkplace")
+        throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionDesktop")
     }
 
     aptInstall(KEY_MANAGEMENT)
