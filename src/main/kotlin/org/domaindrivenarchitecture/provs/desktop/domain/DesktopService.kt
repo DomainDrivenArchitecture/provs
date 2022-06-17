@@ -43,6 +43,8 @@ fun Prov.provisionDesktop(
     gitEmail: String? = null,
 ) = task {
 
+    DesktopType.valueOf(desktopType.name) // throws exception when desktopType.name is unknown
+
     if (!currentUserCanSudo()) {
         throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionDesktop")
     }

@@ -17,13 +17,10 @@ open class DesktopType(val name: String) {
         @JvmStatic
         protected val values = listOf(BASIC, OFFICE, IDE)
 
-        fun valueOf(value: String): DesktopType {
-            return valueOf(value, values)
-        }
-        fun valueOf(value: String, v: List<DesktopType>): DesktopType {
-            for (t in v) {
-                if (value.uppercase().equals(t.name)) {
-                    return t
+        fun valueOf(value: String, valueList: List<DesktopType> = values): DesktopType {
+            for (type in valueList) {
+                if (value.uppercase().equals(type.name)) {
+                    return type
                 }
             }
             throw RuntimeException("No DesktopType found for value: $value")
