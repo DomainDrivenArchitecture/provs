@@ -1,0 +1,5 @@
+package:
+  - name: "firefox"
+  - name: "thunderbird"
+  - name: "ssh"
+  - name: "git"

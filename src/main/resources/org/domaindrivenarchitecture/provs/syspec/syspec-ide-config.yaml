@@ -1,0 +1,14 @@
+package:
+  - name: "firefox"
+  - name: "thunderbird"
+  - name: "ssh"
+  - name: "git"
+  - name: "leiningen"
+
+command:
+  # terraform, python, etc
+  - command: "tfenv -h"
+  - command: "python3 --version"
+  - command: "pip3 --version"
+  - command: "terraform --version"
+    out: "1.0.8"

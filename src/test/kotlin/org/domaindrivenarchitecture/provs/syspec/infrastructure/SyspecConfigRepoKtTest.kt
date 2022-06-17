@@ -21,7 +21,7 @@ internal class SyspecConfigRepoKtTest {
     @Test
     fun findSpecConfigFromResource_success() {
         // when
-        val res =findSpecConfigFromResource("syspec-config.yaml")
+        val res = findSpecConfigFromResource("syspec-config.yaml")
 
         // then
         assertEquals(listOf(CommandSpec("echo just_for_test", "just_for_test")), res.getOrNull()?.command)
