@@ -15,7 +15,7 @@ internal fun findSpecConfigFromFile(file: ConfigFileName? = null): Result<Syspec
     val filePath = file?.fileName ?: DEFAULT_CONFIG_FILE
     if ((filePath == DEFAULT_CONFIG_FILE) && !File(filePath).exists()) {
         // use default ide config
-        findSpecConfigFromResource("syspec/syspec-ide-config.yaml")
+        return findSpecConfigFromResource("org/domaindrivenarchitecture/provs/syspec/syspec-ide-config.yaml")
     }
     readFromFile(filePath).yamlToType()
 }
