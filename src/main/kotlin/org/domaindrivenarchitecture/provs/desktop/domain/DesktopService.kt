@@ -79,7 +79,7 @@ fun Prov.provisionDesktop(
 
         aptInstall(BROWSER)
         aptInstall(EMAIL_CLIENT)
-        aptInstall(MESSENGER)
+        installDeltaChat()
         aptInstall(OFFICE_SUITE)
         aptInstall(CLIP_TOOLS)
 

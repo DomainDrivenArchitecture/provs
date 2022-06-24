@@ -45,6 +45,23 @@ internal class DesktopServiceKtTest {
         assertTrue(res.success)
     }
 
+    @ExtensiveContainerTest
+    fun provisionIDEDesktop() {
+        // given
+        val prov = defaultTestContainer()
+
+        // when
+        // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
+        val res = prov.provisionDesktop(
+            DesktopType.IDE,
+            gitUserName = "testuser",
+            gitEmail = "testuser@test.org",
+        )
+
+        // then
+        assertTrue(res.success)
+    }
+
 
     @ExtensiveContainerTest
     fun provisionDesktopFromConfigFile() {

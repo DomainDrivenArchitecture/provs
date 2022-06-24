@@ -12,8 +12,6 @@ val BROWSER = "firefox chromium-browser"
 
 val EMAIL_CLIENT = "thunderbird"
 
-val MESSENGER = "deltachat-desktop"
-
 val OFFICE_SUITE =  "libreoffice"
 
 val CLIP_TOOLS = "xclip"
