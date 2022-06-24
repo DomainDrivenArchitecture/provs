@@ -79,6 +79,7 @@ fun Prov.provisionDesktop(
 
         aptInstall(BROWSER)
         aptInstall(EMAIL_CLIENT)
+        aptInstall(MESSENGER)
         aptInstall(OFFICE_SUITE)
         aptInstall(CLIP_TOOLS)
 
