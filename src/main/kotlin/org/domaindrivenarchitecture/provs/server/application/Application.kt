@@ -4,6 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3s
+import org.domaindrivenarchitecture.provs.server.infrastructure.provisionServerCliConvenience
 import kotlin.system.exitProcess
 
 
