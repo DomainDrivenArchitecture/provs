@@ -20,13 +20,19 @@ fun Prov.provisionK3s(cli: K3sCliCommand) = task {
         provisionMeissaDesktopSubmodules(cli.submodules, grafanaConfigResolved)
     }
 
+    provisionServerCliConvenience()
 }
 
 /**
  * Installs a k3s server.
  */
-fun Prov.provisionK3s(k3sConfig: K3sConfig, grafanaConfigResolved: GrafanaAgentConfigResolved? = null, applicationFileName: ApplicationFileName? = null) = task {
+fun Prov.provisionK3s(
+    k3sConfig: K3sConfig,
+    grafanaConfigResolved: GrafanaAgentConfigResolved? = null,
+    applicationFileName: ApplicationFileName? = null) = task {
+
     provisionNetwork(k3sConfig)
+
     if (k3sConfig.reprovision && testConfigExists()) {
         deprovisionK3sInfra()
     }
@@ -50,7 +56,10 @@ fun Prov.provisionK3s(k3sConfig: K3sConfig, grafanaConfigResolved: GrafanaAgentC
     }
 }
 
-private fun Prov.provisionMeissaDesktopSubmodules(submodules: List<String>, grafanaConfigResolved: GrafanaAgentConfigResolved?) = task {
+private fun Prov.provisionMeissaDesktopSubmodules(
+    submodules: List<String>,
+    grafanaConfigResolved: GrafanaAgentConfigResolved?) = task {
+
     if (submodules.contains(ServerSubmodule.GRAFANA.name.lowercase())) {
         if (grafanaConfigResolved == null) {
             println("ERROR: Could not find grafana config.")
