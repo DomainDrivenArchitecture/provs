@@ -43,21 +43,82 @@ fun Prov.provisionDesktop(
     gitEmail: String? = null,
 ) = task {
 
+    // TODO: jem - 2022-06-30: why?? We got already a typed var!
     DesktopType.valueOf(desktopType.name) // throws exception when desktopType.name is unknown
 
+    validatePrecondition()
+    provisionBaseDesktop(gpg, ssh, gitUserName, gitEmail)
+
+    if (desktopType == DesktopType.OFFICE || desktopType == DesktopType.IDE) {
+        provisionOfficeDesktop()
+    }
+    if (desktopType == DesktopType.IDE) {
+        provisionIdeDesktop()
+    }
+    ProvResult(true)
+}
+
+private fun Prov.validatePrecondition() {
     if (!currentUserCanSudo()) {
         throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionDesktop")
     }
+}
 
+private fun Prov.provisionIdeDesktop() {
+    aptInstall(JAVA)
+    aptInstall(OPEN_VPM)
+    aptInstall(OPENCONNECT)
+    aptInstall(VPNC)
+    installDocker()
+
+    // IDEs
+    installVSC("python", "clojure")
+    aptInstall(CLOJURE_TOOLS)
+    installShadowCljs()
+    installIntelliJ()
+    installDevOps()
+    provisionPython()
+}
+
+private fun Prov.provisionOfficeDesktop() {
+    aptInstall(ZIP_UTILS)
+    aptInstall(BROWSER)
+    aptInstall(EMAIL_CLIENT)
+    installDeltaChat()
+    aptInstall(OFFICE_SUITE)
+    aptInstall(CLIP_TOOLS)
+    installZimWiki()
+    installGopass()
+    aptInstallFromPpa("nextcloud-devs", "client", "nextcloud-client")
+
+    optional {
+        aptInstall(DRAWING_TOOLS)
+    }
+
+    aptInstall(SPELLCHECKING_DE)
+}
+
+private fun Prov.provisionBaseDesktop(
+    gpg: KeyPair?,
+    ssh: KeyPair?,
+    gitUserName: String?,
+    gitEmail: String?
+) {
     aptInstall(KEY_MANAGEMENT)
     aptInstall(VERSION_MANAGEMENT)
     aptInstall(NETWORK_TOOLS)
     aptInstall(SCREEN_TOOLS)
+    aptInstall(KEY_MANAGEMENT_GUI)
+    aptInstall(PASSWORD_TOOLS)
+    aptInstall(OS_ANALYSIS)
+    aptInstall(BASH_UTILS)
 
     provisionKeys(gpg, ssh)
     provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
 
     installVirtualBoxGuestAdditions()
+    installRedshift()
+    configureRedshift()
 
     aptPurge(
         "remove-power-management xfce4-power-manager " +
@@ -67,58 +128,7 @@ fun Prov.provisionDesktop(
     aptPurge("popularity-contest")
 
     configureNoSwappiness()
-
     configureBash()
-
-    if (desktopType == DesktopType.OFFICE || desktopType == DesktopType.IDE) {
-        aptInstall(KEY_MANAGEMENT_GUI)
-        aptInstall(BASH_UTILS)
-        aptInstall(OS_ANALYSIS)
-        aptInstall(ZIP_UTILS)
-        aptInstall(PASSWORD_TOOLS)
-
-        aptInstall(BROWSER)
-        aptInstall(EMAIL_CLIENT)
-        installDeltaChat()
-        aptInstall(OFFICE_SUITE)
-        aptInstall(CLIP_TOOLS)
-
-        installZimWiki()
-        installGopass()
-        aptInstallFromPpa("nextcloud-devs", "client", "nextcloud-client")
-
-        optional {
-            aptInstall(DRAWING_TOOLS)
-        }
-
-        aptInstall(SPELLCHECKING_DE)
-
-        installRedshift()
-        configureRedshift()
-    }
-
-    if (desktopType == DesktopType.IDE) {
-
-        aptInstall(JAVA)
-
-        aptInstall(OPEN_VPM)
-        aptInstall(OPENCONNECT)
-        aptInstall(VPNC)
-
-        installDocker()
-
-        // IDEs
-        installVSC("python", "clojure")
-        aptInstall(CLOJURE_TOOLS)
-        installShadowCljs()
-
-        installIntelliJ()
-
-        installDevOps()
-
-        provisionPython()
-    }
-    ProvResult(true)
 }
 
 private fun Prov.provisionDesktopSubmodules(
