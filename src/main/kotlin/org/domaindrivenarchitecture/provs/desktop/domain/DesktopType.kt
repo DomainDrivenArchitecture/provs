@@ -17,7 +17,7 @@ open class DesktopType(val name: String) {
         @JvmStatic
         protected val values = listOf(BASIC, OFFICE, IDE)
 
-        fun valueOf(value: String, valueList: List<DesktopType> = values): DesktopType {
+        fun returnIfExists(value: String, valueList: List<DesktopType> = values): DesktopType {
             for (type in valueList) {
                 if (value.uppercase().equals(type.name)) {
                     return type
