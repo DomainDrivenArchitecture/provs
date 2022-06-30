@@ -80,7 +80,7 @@ internal fun gopassConfig(gopassRoot: String): String {
         autoclip: true
         autoimport: true
         cliptimeout: 45
-        exportkeys: false
+        exportkeys: true
         nocolor: false
         nopager: false
         notifications: true
