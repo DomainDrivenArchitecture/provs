@@ -20,12 +20,14 @@ fun Prov.provisionK3s(cli: K3sCliCommand) = task {
         provisionMeissaDesktopSubmodules(cli.submodules, grafanaConfigResolved)
     }
 
+    // TODO: jem - 2022-06-30: das hier ist auf der falschen Ebene - gehört doch eher in die methode unten
     provisionServerCliConvenience()
 }
 
 /**
  * Installs a k3s server.
  */
+// TODO: jem - 2022-06-30: die überladenen methoden sind schwierig - lieber unterschiedlich benennen
 fun Prov.provisionK3s(
     k3sConfig: K3sConfig,
     grafanaConfigResolved: GrafanaAgentConfigResolved? = null,
@@ -56,6 +58,7 @@ fun Prov.provisionK3s(
     }
 }
 
+// TODO: jem - 2022-06-30: warum heisst diese methode meissa?
 private fun Prov.provisionMeissaDesktopSubmodules(
     submodules: List<String>,
     grafanaConfigResolved: GrafanaAgentConfigResolved?) = task {
