@@ -15,15 +15,11 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
 
 fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
-    val submodules = cmd.submodules
+
     // retrieve config
     val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
 
-    if (submodules == null) {
-        prov.provisionDesktop(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail)
-    } else {
-        prov.provisionDesktopSubmodules(submodules)
-    }
+    prov.provisionDesktopImpl(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail, cmd.submodules)
 }
 
 
@@ -35,107 +31,113 @@ fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
  *
  * Prerequisites: user must be able to sudo without entering the password
  */
-fun Prov.provisionDesktop(
+fun Prov.provisionDesktopImpl(
     desktopType: DesktopType = DesktopType.BASIC,
     ssh: KeyPair? = null,
     gpg: KeyPair? = null,
     gitUserName: String? = null,
     gitEmail: String? = null,
+    submodules: List<String>?
 ) = task {
 
     // TODO: jem - 2022-06-30: why?? We got already a typed var!
     DesktopType.valueOf(desktopType.name) // throws exception when desktopType.name is unknown
 
     validatePrecondition()
-    provisionBaseDesktop(gpg, ssh, gitUserName, gitEmail)
+    provisionBaseDesktop(gpg, ssh, gitUserName, gitEmail, submodules)
 
     if (desktopType == DesktopType.OFFICE || desktopType == DesktopType.IDE) {
-        provisionOfficeDesktop()
+        provisionOfficeDesktop(submodules)
     }
     if (desktopType == DesktopType.IDE) {
-        provisionIdeDesktop()
+        provisionIdeDesktop(submodules)
     }
     ProvResult(true)
 }
 
-private fun Prov.validatePrecondition() {
+fun Prov.validatePrecondition() {
     if (!currentUserCanSudo()) {
         throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionDesktop")
     }
 }
 
-private fun Prov.provisionIdeDesktop() {
-    aptInstall(JAVA)
-    aptInstall(OPEN_VPM)
-    aptInstall(OPENCONNECT)
-    aptInstall(VPNC)
-    installDocker()
+fun Prov.provisionIdeDesktop(submodules: List<String>?) {
+    if (submodules != null) {
+        aptInstall(JAVA)
+        aptInstall(OPEN_VPM)
+        aptInstall(OPENCONNECT)
+        aptInstall(VPNC)
+        installDocker()
 
-    // IDEs
-    installVSC("python", "clojure")
-    aptInstall(CLOJURE_TOOLS)
-    installShadowCljs()
-    installIntelliJ()
-    installDevOps()
-    provisionPython()
+        // IDEs
+        installVSC("python", "clojure")
+        aptInstall(CLOJURE_TOOLS)
+        installShadowCljs()
+        installIntelliJ()
+        installDevOps()
+        provisionPython()
+    }
 }
 
-private fun Prov.provisionOfficeDesktop() {
-    aptInstall(ZIP_UTILS)
-    aptInstall(BROWSER)
-    aptInstall(EMAIL_CLIENT)
-    installDeltaChat()
-    aptInstall(OFFICE_SUITE)
-    aptInstall(CLIP_TOOLS)
-    installZimWiki()
-    installGopass()
-    aptInstallFromPpa("nextcloud-devs", "client", "nextcloud-client")
-
-    optional {
-        aptInstall(DRAWING_TOOLS)
+fun Prov.provisionMSDesktop(submodules: List<String>?) {
+    if (submodules?.contains(DesktopSubmodule.TEAMS.name.lowercase()) == true) {
+        installMsTeams()
+    } else {
     }
+}
 
-    aptInstall(SPELLCHECKING_DE)
+fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
+    if (submodules != null) {
+        aptInstall(ZIP_UTILS)
+        aptInstall(BROWSER)
+        aptInstall(EMAIL_CLIENT)
+        installDeltaChat()
+        aptInstall(OFFICE_SUITE)
+        aptInstall(CLIP_TOOLS)
+        installZimWiki()
+        installGopass()
+        aptInstallFromPpa("nextcloud-devs", "client", "nextcloud-client")
+
+        optional {
+            aptInstall(DRAWING_TOOLS)
+        }
+
+        aptInstall(SPELLCHECKING_DE)
+    }
 }
 
 private fun Prov.provisionBaseDesktop(
     gpg: KeyPair?,
     ssh: KeyPair?,
     gitUserName: String?,
-    gitEmail: String?
+    gitEmail: String?,
+    submodules: List<String>?
 ) {
-    aptInstall(KEY_MANAGEMENT)
-    aptInstall(VERSION_MANAGEMENT)
-    aptInstall(NETWORK_TOOLS)
-    aptInstall(SCREEN_TOOLS)
-    aptInstall(KEY_MANAGEMENT_GUI)
-    aptInstall(PASSWORD_TOOLS)
-    aptInstall(OS_ANALYSIS)
-    aptInstall(BASH_UTILS)
+    if (submodules != null) {
+        aptInstall(KEY_MANAGEMENT)
+        aptInstall(VERSION_MANAGEMENT)
+        aptInstall(NETWORK_TOOLS)
+        aptInstall(SCREEN_TOOLS)
+        aptInstall(KEY_MANAGEMENT_GUI)
+        aptInstall(PASSWORD_TOOLS)
+        aptInstall(OS_ANALYSIS)
+        aptInstall(BASH_UTILS)
 
-    provisionKeys(gpg, ssh)
-    provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
+        provisionKeys(gpg, ssh)
+        provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
 
-    installVirtualBoxGuestAdditions()
-    installRedshift()
-    configureRedshift()
+        installVirtualBoxGuestAdditions()
+        installRedshift()
+        configureRedshift()
 
-    aptPurge(
-        "remove-power-management xfce4-power-manager " +
-                "xfce4-power-manager-plugins xfce4-power-manager-data"
-    )
-    aptPurge("abiword gnumeric")
-    aptPurge("popularity-contest")
+        aptPurge(
+            "remove-power-management xfce4-power-manager " +
+                    "xfce4-power-manager-plugins xfce4-power-manager-data"
+        )
+        aptPurge("abiword gnumeric")
+        aptPurge("popularity-contest")
 
-    configureNoSwappiness()
-    configureBash()
-}
-
-private fun Prov.provisionDesktopSubmodules(
-    submodules: List<String>,
-) = task {
-
-    if (submodules.contains(DesktopSubmodule.TEAMS.name.lowercase())) {
-        installMsTeams()
+        configureNoSwappiness()
+        configureBash()
     }
 }
