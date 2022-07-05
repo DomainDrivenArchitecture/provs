@@ -40,6 +40,7 @@ fun Prov.provisionDesktopImpl(
     submodules: List<String>?
 ) = task {
 
+    // TODO: why??
     DesktopType.returnIfExists(desktopType.name) // throws exception when desktopType.name is unknown
 
     validatePrecondition()
