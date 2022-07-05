@@ -17,10 +17,11 @@ internal class DesktopServiceKtTest {
 
         // when
         val exception = assertThrows<RuntimeException> {
-            prov.provisionDesktop(
+            prov.provisionDesktopImpl(
                 DesktopType("iamunkown"),
                 gitUserName = "testuser",
                 gitEmail = "testuser@test.org",
+                submodules = null
             )
         }
 
@@ -35,10 +36,11 @@ internal class DesktopServiceKtTest {
 
         // when
         // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
-        val res = prov.provisionDesktop(
+        val res = prov.provisionDesktopImpl(
             DesktopType.BASIC,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
+            submodules = null
         )
 
         // then
@@ -52,10 +54,11 @@ internal class DesktopServiceKtTest {
 
         // when
         // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
-        val res = prov.provisionDesktop(
+        val res = prov.provisionDesktopImpl(
             DesktopType.IDE,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
+            submodules = null
         )
 
         // then
@@ -71,12 +74,13 @@ internal class DesktopServiceKtTest {
         // when
         // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
         val config = getConfig("src/test/resources/desktop-config-example.json")
-        val res = prov.provisionDesktop(
+        val res = prov.provisionDesktopImpl(
             DesktopType.BASIC,
             config.ssh?.keyPair(),
             config.gpg?.keyPair(),
             config.gitUserName,
             config.gitEmail,
+            submodules = null
         )
 
         // then
