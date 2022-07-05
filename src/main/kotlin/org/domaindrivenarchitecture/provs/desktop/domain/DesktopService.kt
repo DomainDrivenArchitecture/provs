@@ -40,8 +40,7 @@ fun Prov.provisionDesktopImpl(
     submodules: List<String>?
 ) = task {
 
-    // TODO: jem - 2022-06-30: why?? We got already a typed var!
-    DesktopType.valueOf(desktopType.name) // throws exception when desktopType.name is unknown
+    DesktopType.returnIfExists(desktopType.name) // throws exception when desktopType.name is unknown
 
     validatePrecondition()
     provisionBaseDesktop(gpg, ssh, gitUserName, gitEmail, submodules)
