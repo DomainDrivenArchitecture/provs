@@ -16,7 +16,7 @@ fun Prov.provisionPython() = task {
 }
 
 fun Prov.installPython3(): ProvResult = task {
-    aptInstall("python3.8-venv python3-pip")
+    aptInstall("python3-venv python3-pip")
 }
 
 fun Prov.configureVenv(): ProvResult = task {
