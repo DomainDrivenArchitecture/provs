@@ -1,0 +1,39 @@
+@startuml
+
+package application {
+  class desktopApplication
+
+}
+
+package ui {
+  class ProgressPrinter {
+    print(Progress)
+  }
+  class FinalResultPrinter {
+    print(ResultLine)
+  }
+}
+application ..> ui
+ui ..> domain
+
+package domain {
+  class model
+  class ResultLine {
+    provResult
+    level
+  }
+  class ProvResult
+  interface Repository
+}
+application ..> domain
+
+package infrastructure {
+  class RepositoryImpl
+  class Prov {
+    registerProgressObserver
+  }
+}
+Repository ..> infrastructure
+
+using ..> used
+@enduml

@@ -1,0 +1,35 @@
+@startuml
+autonumber
+
+Application -> Prov: create
+
+activate Prov
+Application -> DesktopService.kt: provisionDesktop(prov, ...)
+DesktopService.kt -> Install.kt: aptInstall(prov, lambda=cmd "apt install", ..)
+Install.kt -> Prov: taskWithResult
+
+activate Prov
+Prov -> Prov: evaluate
+
+activate Prov
+Prov -> Prov: initProgress (bei level 0)
+Prov -> Prov: progress
+
+activate Prov
+Prov -> Prov: lambda
+
+activate Prov
+Prov -> Processor: exec
+deactivate Prov
+
+Prov <-- Prov: ProvResult
+deactivate Prov
+
+Prov -> Prov: endProgress (bei level 0)
+Prov -> Prov: printResults (bei level 0)
+
+deactivate Prov
+deactivate Prov
+Install.kt <-- Prov: ProvResult
+
+@enduml
