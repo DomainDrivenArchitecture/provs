@@ -26,7 +26,7 @@ function main() {
 
 if [ $# -gt 0 ]
 then
-  main $1
+  main $1 $2
 else
   usage
   exit -1

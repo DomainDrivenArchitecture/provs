@@ -45,7 +45,7 @@ Application ..> Domain
 
 package infrastructure {
     class Repository
-    class Provs {
+    class Prov {
 
         create<type>(): create a new item - might also have a parameter like: skipIfExisting
         delete<type>(): delete an item - might also have a parameter like: failIfNotExisting
