@@ -112,6 +112,8 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
         cmd("ln -sf $k3sKubeConfig " + k8sCredentialsDir + "admin.conf", sudo = true)
 
         configureShellAliases()
+
+        configureSsh()
     }
 }
 
