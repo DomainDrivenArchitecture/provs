@@ -72,16 +72,16 @@ open class Prov protected constructor(
      * A task is the base execution unit in provs. In the results overview it is represented by one line resp. result (of either success or failure).
      * Returns success if no sub-tasks are called or if all subtasks finish with success.
      */
-    fun task(name: String? = null, task: Prov.() -> Unit): ProvResult {
-        return evaluate(ResultMode.ALL, name) { task(); ProvResult(true) }
+    fun task(name: String? = null, taskLambda: Prov.() -> Unit): ProvResult {
+        return evaluate(ResultMode.ALL, name) { taskLambda(); ProvResult(true) }
     }
 
     /**
      * Same as task but the provided lambda is explicitly required to provide a ProvResult to be returned.
      * The returned result is included in the evaluation.
      */
-    fun taskWithResult(name: String? = null, task: Prov.() -> ProvResult): ProvResult {
-        return evaluate(ResultMode.ALL, name) { task() }
+    fun taskWithResult(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
+        return evaluate(ResultMode.ALL, name) { taskLambda() }
     }
 
     /**
@@ -108,9 +108,9 @@ open class Prov protected constructor(
     /**
      * Runs the provided task in the specified (running) container
      */
-    fun taskInContainer(containerName: String, task: Prov.() -> ProvResult): ProvResult {
+    fun taskInContainer(containerName: String, taskLambda: Prov.() -> ProvResult): ProvResult {
         runInContainerWithName = containerName
-        val res = evaluate(ResultMode.ALL) { task() }
+        val res = evaluate(ResultMode.ALL) { taskLambda() }
         runInContainerWithName = null
         return res
     }
@@ -245,7 +245,7 @@ open class Prov protected constructor(
      * Provides task evaluation, i.e. computes a ProvResult based on the provided resultMode,
      * on the returned ProvResult from the task as well as on the results from executed subtasks (if there are).
      */
-    private fun evaluate(resultMode: ResultMode, name: String? = null, task: Prov.() -> ProvResult): ProvResult {
+    private fun evaluate(resultMode: ResultMode, name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
 
         // init
         if (level == 0) {
@@ -269,7 +269,7 @@ open class Prov protected constructor(
         val resultOfTaskLambda = if (!exit) {
             progress(internalResult)
             @Suppress("UNUSED_EXPRESSION") // false positive
-            task()
+            taskLambda()
         } else {
             ProvResult(false, out = "Exiting due to failure and mode FAILEXIT")
         }
