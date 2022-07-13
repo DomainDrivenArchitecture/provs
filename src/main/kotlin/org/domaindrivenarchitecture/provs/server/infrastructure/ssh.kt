@@ -25,7 +25,7 @@ fun Prov.isSshdHardeningConfigExisting(): Boolean {
 }
 
 fun Prov.configureSsh() = task {
-    if(isSshdConfigExisting() && isSshConfigExisting() && isSshdHardeningConfigExisting() && isPackageInstalled(packageNameSshServer)) {
+    if(isSshdConfigExisting() && isSshConfigExisting() && !isSshdHardeningConfigExisting() && isPackageInstalled(packageNameSshServer)) {
         createFileFromResource(
             pathSshConfig,
             "ssh_config",
