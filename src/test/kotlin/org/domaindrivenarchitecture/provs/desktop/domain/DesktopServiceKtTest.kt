@@ -10,25 +10,6 @@ import org.junit.jupiter.api.assertThrows
 
 internal class DesktopServiceKtTest {
 
-    @ContainerTest
-    fun provisionDesktop_fails_for_unknown_DesktopType() {
-        // given
-        val prov = defaultTestContainer()
-
-        // when
-        val exception = assertThrows<RuntimeException> {
-            prov.provisionDesktopImpl(
-                DesktopType("iamunkown"),
-                gitUserName = "testuser",
-                gitEmail = "testuser@test.org",
-                submodules = null
-            )
-        }
-
-        // then
-        assertEquals("No DesktopType found for value: iamunkown", exception.message)
-    }
-
     @ExtensiveContainerTest
     fun provisionDesktop() {
         // given
@@ -36,7 +17,7 @@ internal class DesktopServiceKtTest {
 
         // when
         // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
-        val res = prov.provisionDesktopImpl(
+        val res = prov.provisionDesktop(
             DesktopType.BASIC,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
@@ -54,7 +35,7 @@ internal class DesktopServiceKtTest {
 
         // when
         // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
-        val res = prov.provisionDesktopImpl(
+        val res = prov.provisionDesktop(
             DesktopType.IDE,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
@@ -74,7 +55,7 @@ internal class DesktopServiceKtTest {
         // when
         // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
         val config = getConfig("src/test/resources/desktop-config-example.json")
-        val res = prov.provisionDesktopImpl(
+        val res = prov.provisionDesktop(
             DesktopType.BASIC,
             config.ssh?.keyPair(),
             config.gpg?.keyPair(),

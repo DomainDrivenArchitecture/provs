@@ -46,8 +46,8 @@ internal class ApplicationKtTest {
             mockkStatic(::getConfig)
             every { getConfig("testconfig.yaml") } returns testConfig
 
-            mockkStatic(Prov::provisionDesktopImpl)
-            every { any<Prov>().provisionDesktopImpl(any(), any(), any(), any(), any(),any()) } returns ProvResult(
+            mockkStatic(Prov::provisionDesktop)
+            every { any<Prov>().provisionDesktop(any(), any(), any(), any(), any(),any()) } returns ProvResult(
                 true,
                 cmd = "mocked command"
             )
@@ -64,7 +64,7 @@ internal class ApplicationKtTest {
             unmockkStatic(::local)
             unmockkStatic(::remote)
             unmockkStatic(::getConfig)
-            unmockkStatic(Prov::provisionDesktopImpl)
+            unmockkStatic(Prov::provisionDesktop)
             unmockkStatic(::retrievePassword)
         }
     }
@@ -78,7 +78,7 @@ internal class ApplicationKtTest {
         // then
         verify { remote("host123.xyz", "user123", Secret("sec"), any()) }
         verify {
-            any<Prov>().provisionDesktopImpl(
+            any<Prov>().provisionDesktop(
                 DesktopType.BASIC,
                 null,
                 null,
@@ -113,7 +113,7 @@ internal class ApplicationKtTest {
             "Error: File\u001B[31m idontexist.yaml \u001B[0m was not found.Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m idontexist.yaml \u001B[0m and change the content according to your needs."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
-        verify(exactly = 0) { any<Prov>().provisionDesktopImpl(any(), any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -140,6 +140,6 @@ internal class ApplicationKtTest {
             "Error: File \"src/test/resources/invalid-desktop-config.yaml\" has an invalid format and or invalid data."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
-        verify(exactly = 0) { any<Prov>().provisionDesktopImpl(any(), any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any(), any()) }
     }
 }

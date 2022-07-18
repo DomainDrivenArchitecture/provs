@@ -13,13 +13,12 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
-
-fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
+internal fun provisionDesktopCmd(prov: Prov, cmd: DesktopCliCommand) {
 
     // retrieve config
     val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
 
-    prov.provisionDesktopImpl(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail, cmd.submodules)
+    prov.provisionDesktop(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail, cmd.submodules)
 }
 
 
@@ -31,7 +30,7 @@ fun provisionDesktop(prov: Prov, cmd: DesktopCliCommand) {
  *
  * Prerequisites: user must be able to sudo without entering the password
  */
-fun Prov.provisionDesktopImpl(
+internal fun Prov.provisionDesktop(
     desktopType: DesktopType = DesktopType.BASIC,
     ssh: KeyPair? = null,
     gpg: KeyPair? = null,
@@ -39,9 +38,6 @@ fun Prov.provisionDesktopImpl(
     gitEmail: String? = null,
     submodules: List<String>?
 ) = task {
-
-    // TODO: why??
-    DesktopType.returnIfExists(desktopType.name) // throws exception when desktopType.name is unknown
 
     validatePrecondition()
     provisionBaseDesktop(gpg, ssh, gitUserName, gitEmail, submodules)
@@ -63,19 +59,21 @@ fun Prov.validatePrecondition() {
 
 fun Prov.provisionIdeDesktop(submodules: List<String>?) {
     if (submodules != null) {
-        aptInstall(JAVA)
         aptInstall(OPEN_VPM)
         aptInstall(OPENCONNECT)
         aptInstall(VPNC)
+
+        // DevEnvs
         installDocker()
+        aptInstall(JAVA)
+        aptInstall(CLOJURE_TOOLS)
+        installShadowCljs()
+        installDevOps()
+        provisionPython()
 
         // IDEs
         installVSC("python", "clojure")
-        aptInstall(CLOJURE_TOOLS)
-        installShadowCljs()
         installIntelliJ()
-        installDevOps()
-        provisionPython()
     }
 }
 
@@ -93,9 +91,7 @@ fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
         aptInstall(EMAIL_CLIENT)
         installDeltaChat()
         aptInstall(OFFICE_SUITE)
-        aptInstall(CLIP_TOOLS)
         installZimWiki()
-        installGopass()
         aptInstallFromPpa("nextcloud-devs", "client", "nextcloud-client")
 
         optional {
@@ -106,7 +102,7 @@ fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
     }
 }
 
-private fun Prov.provisionBaseDesktop(
+fun Prov.provisionBaseDesktop(
     gpg: KeyPair?,
     ssh: KeyPair?,
     gitUserName: String?,
@@ -122,14 +118,7 @@ private fun Prov.provisionBaseDesktop(
         aptInstall(PASSWORD_TOOLS)
         aptInstall(OS_ANALYSIS)
         aptInstall(BASH_UTILS)
-
-        provisionKeys(gpg, ssh)
-        provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
-
-        installVirtualBoxGuestAdditions()
-        installRedshift()
-        configureRedshift()
-
+        aptInstall(CLIP_TOOLS)
         aptPurge(
             "remove-power-management xfce4-power-manager " +
                     "xfce4-power-manager-plugins xfce4-power-manager-data"
@@ -137,7 +126,14 @@ private fun Prov.provisionBaseDesktop(
         aptPurge("abiword gnumeric")
         aptPurge("popularity-contest")
 
+        provisionKeys(gpg, ssh)
+        provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
+
+        installGopass()
+        installRedshift()
+        configureRedshift()
         configureNoSwappiness()
         configureBash()
+        installVirtualBoxGuestAdditions()
     }
 }
