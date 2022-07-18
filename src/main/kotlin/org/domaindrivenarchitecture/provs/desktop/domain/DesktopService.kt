@@ -58,7 +58,7 @@ fun Prov.validatePrecondition() {
 }
 
 fun Prov.provisionIdeDesktop(submodules: List<String>?) {
-    if (submodules != null) {
+    if (submodules == null) {
         aptInstall(OPEN_VPM)
         aptInstall(OPENCONNECT)
         aptInstall(VPNC)
@@ -78,14 +78,15 @@ fun Prov.provisionIdeDesktop(submodules: List<String>?) {
 }
 
 fun Prov.provisionMSDesktop(submodules: List<String>?) {
-    if (submodules?.contains(DesktopSubmodule.TEAMS.name.lowercase()) == true) {
+    if (submodules == null) {
         installMsTeams()
-    } else {
+    } else if (submodules?.contains(DesktopSubmodule.TEAMS.name.lowercase()) == true) {
+        installMsTeams()
     }
 }
 
 fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
-    if (submodules != null) {
+    if (submodules == null) {
         aptInstall(ZIP_UTILS)
         aptInstall(BROWSER)
         aptInstall(EMAIL_CLIENT)
@@ -109,7 +110,7 @@ fun Prov.provisionBaseDesktop(
     gitEmail: String?,
     submodules: List<String>?
 ) {
-    if (submodules != null) {
+    if (submodules == null) {
         aptInstall(KEY_MANAGEMENT)
         aptInstall(VERSION_MANAGEMENT)
         aptInstall(NETWORK_TOOLS)
