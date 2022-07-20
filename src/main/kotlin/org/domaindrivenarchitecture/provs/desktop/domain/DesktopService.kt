@@ -40,7 +40,7 @@ internal fun Prov.provisionDesktop(
 ) = task {
 
     validatePrecondition()
-    provisionBaseDesktop(gpg, ssh, gitUserName, gitEmail, submodules)
+    provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail, submodules)
 
     if (desktopType == DesktopType.OFFICE || desktopType == DesktopType.IDE) {
         provisionOfficeDesktop(submodules)
@@ -77,10 +77,11 @@ fun Prov.provisionIdeDesktop(submodules: List<String>?) {
     }
 }
 
+@Suppress("unused")
 fun Prov.provisionMSDesktop(submodules: List<String>?) {
     if (submodules == null) {
         installMsTeams()
-    } else if (submodules?.contains(DesktopSubmodule.TEAMS.name.lowercase()) == true) {
+    } else if (submodules.contains(DesktopSubmodule.TEAMS.name.lowercase())) {
         installMsTeams()
     }
 }
@@ -103,7 +104,7 @@ fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
     }
 }
 
-fun Prov.provisionBaseDesktop(
+fun Prov.provisionBasicDesktop(
     gpg: KeyPair?,
     ssh: KeyPair?,
     gitUserName: String?,
