@@ -5,7 +5,6 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstallFromPpa
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptPurge
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
@@ -94,7 +93,7 @@ fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
         installDeltaChat()
         aptInstall(OFFICE_SUITE)
         installZimWiki()
-        aptInstallFromPpa("nextcloud-devs", "client", "nextcloud-client")
+        installNextcloudClient()
 
         optional {
             aptInstall(DRAWING_TOOLS)
