@@ -9,5 +9,5 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - ${node_ipv4}/32
+      - ${node_ipv4}/29
       - ${node_ipv6}/128
