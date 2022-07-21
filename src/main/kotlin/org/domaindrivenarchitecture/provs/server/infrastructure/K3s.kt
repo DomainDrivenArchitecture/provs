@@ -29,7 +29,7 @@ private val k3sInstallScript = File( "/usr/local/bin/k3s-install.sh")
 private val k3sConfigFile = File( "/etc/rancher/k3s/config.yaml")
 private val k3sKubeConfig = File("/etc/rancher/k3s/k3s.yaml")
 
-private val k3sTraefikWorkaround = File(k3sManualManifestsDir, "traefik.template.yaml")
+private val k3sTraefikWorkaround = File(k3sManualManifestsDir, "traefik.yaml")
 private val certManagerDeployment = File(k3sManualManifestsDir, "cert-manager.yaml")
 
 private val certManagerIssuer = File(k3sManualManifestsDir, "le-issuer.yaml")

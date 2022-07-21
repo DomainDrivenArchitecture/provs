@@ -46,7 +46,10 @@ spec:
       effect: "NoSchedule"
     service:
       ipFamilyPolicy: "PreferDualStack"
-      loadBalancerIP: ${node_ipv4}
+      metadata:
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "${node_ipv4}, ${node_ipv6}"
       spec:
         type: LoadBalancer
         externalTrafficPolicy: Local
+        
