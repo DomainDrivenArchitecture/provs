@@ -29,7 +29,7 @@ private val k3sInstallScript = File( "/usr/local/bin/k3s-install.sh")
 private val k3sConfigFile = File( "/etc/rancher/k3s/config.yaml")
 private val k3sKubeConfig = File("/etc/rancher/k3s/k3s.yaml")
 
-private val k3sTraefikWorkaround = File(k3sManualManifestsDir, "traefik.yaml")
+private val k3sTraefikWorkaround = File(k3sManualManifestsDir, "traefik.template.yaml")
 private val certManagerDeployment = File(k3sManualManifestsDir, "cert-manager.yaml")
 
 private val certManagerIssuer = File(k3sManualManifestsDir, "le-issuer.yaml")
@@ -100,8 +100,7 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
         // traefik
         if (k3sConfig.isDualStack()) {
             // see https://github.com/k3s-io/k3s/discussions/5003
-            createK3sFileFromResource(k3sTraefikWorkaround)
-            applyK3sFile(k3sTraefikWorkaround)
+            applyK3sFileFromResourceTemplate(k3sTraefikWorkaround, k3sConfigMap)
         } else {
             ProvResult(true)
         }

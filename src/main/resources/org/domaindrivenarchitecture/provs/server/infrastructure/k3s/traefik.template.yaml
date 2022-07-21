@@ -46,6 +46,7 @@ spec:
       effect: "NoSchedule"
     service:
       ipFamilyPolicy: "PreferDualStack"
+      loadBalancerIP: ${node_ipv4}
       spec:
         type: LoadBalancer
         externalTrafficPolicy: Local
