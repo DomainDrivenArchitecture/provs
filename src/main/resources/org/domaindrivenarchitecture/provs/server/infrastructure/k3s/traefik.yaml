@@ -45,11 +45,10 @@ spec:
       operator: "Exists"
       effect: "NoSchedule"
     service:
-      ipFamilyPolicy: "PreferDualStack"
-      metadata:
-        annotations:
-          metallb.universe.tf/allow-shared-ip: "repo-server-svc"
+      ipFamilyPolicy: "PreferDualStack"      
+      annotations: 
+        metallb.universe.tf/allow-shared-ip: "repo-server-svc"
       spec:
         type: LoadBalancer
-        externalTrafficPolicy: Local
+        externalTrafficPolicy: Cluster
         
