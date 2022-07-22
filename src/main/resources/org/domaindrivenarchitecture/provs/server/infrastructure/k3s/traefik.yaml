@@ -48,7 +48,7 @@ spec:
       ipFamilyPolicy: "PreferDualStack"
       metadata:
         annotations:
-          metallb.universe.tf/loadBalancerIPs: "${node_ipv4}, ${node_ipv6}"
+          metallb.universe.tf/allow-shared-ip: "repo-server-svc"
       spec:
         type: LoadBalancer
         externalTrafficPolicy: Local

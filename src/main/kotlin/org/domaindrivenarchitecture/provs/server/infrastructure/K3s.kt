@@ -100,7 +100,7 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
         // traefik
         if (k3sConfig.isDualStack()) {
             // see https://github.com/k3s-io/k3s/discussions/5003
-            applyK3sFileFromResourceTemplate(k3sTraefikWorkaround, k3sConfigMap)
+            applyK3sFileFromResource(k3sTraefikWorkaround)
         } else {
             ProvResult(true)
         }
