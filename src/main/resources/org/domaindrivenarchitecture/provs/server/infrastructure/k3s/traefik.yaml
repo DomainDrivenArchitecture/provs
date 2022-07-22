@@ -47,7 +47,7 @@ spec:
     service:
       ipFamilyPolicy: "PreferDualStack"      
       annotations: 
-        metallb.universe.tf/allow-shared-ip: "repo-server-svc"
+        metallb.universe.tf/allow-shared-ip: "shared-ip-service-group"
       spec:
         type: LoadBalancer
         externalTrafficPolicy: Cluster
