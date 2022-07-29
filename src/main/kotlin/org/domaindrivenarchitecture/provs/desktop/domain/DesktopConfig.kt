@@ -5,10 +5,9 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-class DesktopConfig(
+data class DesktopConfig(
     val ssh: KeyPairSource? = null,
     val gpg: KeyPairSource? = null,
     val gitUserName: String? = null,
     val gitEmail: String? = null,
 )
-

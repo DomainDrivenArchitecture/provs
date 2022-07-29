@@ -30,6 +30,7 @@ private val k3sConfigFile = File( "/etc/rancher/k3s/config.yaml")
 private val k3sKubeConfig = File("/etc/rancher/k3s/k3s.yaml")
 
 private val k3sTraefikWorkaround = File(k3sManualManifestsDir, "traefik.yaml")
+private val k3sMiddleWareHttpsRedirect = File(k3sManualManifestsDir, "middleware.yaml")
 private val certManagerDeployment = File(k3sManualManifestsDir, "cert-manager.yaml")
 
 private val certManagerIssuer = File(k3sManualManifestsDir, "le-issuer.yaml")
@@ -103,6 +104,10 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
             applyK3sFileFromResource(k3sTraefikWorkaround)
         } else {
             ProvResult(true)
+        }
+
+        repeatTaskUntilSuccess(6, 20) {
+            applyK3sFileFromResource(k3sMiddleWareHttpsRedirect)
         }
 
         applyK3sFileFromResource(localPathProvisionerConfig)

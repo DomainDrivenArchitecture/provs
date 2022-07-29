@@ -37,7 +37,6 @@ internal fun Prov.provisionDesktop(
     gitEmail: String? = null,
     submodules: List<String>?
 ) = task {
-
     validatePrecondition()
     provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail, submodules)
 
