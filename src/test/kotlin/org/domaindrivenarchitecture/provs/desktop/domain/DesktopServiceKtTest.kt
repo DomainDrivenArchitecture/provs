@@ -1,12 +1,12 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
+import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
-import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 
 internal class DesktopServiceKtTest {
 
@@ -28,13 +28,20 @@ internal class DesktopServiceKtTest {
         assertTrue(res.success)
     }
 
-    @ExtensiveContainerTest
+    @Test
+    @Disabled
+    // Run this test manually after having updated the ip and user in the test and commented out the @Disabled tag.
+    // Does not run in a container, as DesktopType IDE includes several packages which need X-Windows.
+    // Notes:
+    // * to run this test, it must be possible to connect from the local to the remote machine by ssh with key authentication
+    // * this test takes about 10 minutes
     fun provisionIDEDesktop() {
         // given
-        val prov = defaultTestContainer()
+        val ip = "192.168.56.143"
+        val user = "root"
+        val prov = remote(ip, user)
 
         // when
-        // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
         val res = prov.provisionDesktop(
             DesktopType.IDE,
             gitUserName = "testuser",
