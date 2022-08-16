@@ -11,11 +11,17 @@ fun Prov.provisionK3s(cli: K3sCliCommand) = task {
 
     val grafanaConfigResolved: GrafanaAgentConfigResolved? = findK8sGrafanaConfig(cli.configFileName)?.resolveSecret()
 
-    if (cli.submodules == null) {
+    if (cli.submodules == null && !cli.reprovision) {
         // full k3s
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
         provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
-    } else {
+    }
+    else if (cli.reprovision) {
+        deprovisionK3sInfra()
+        val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
+        provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
+    }
+    else {
         // submodules only
         provisionGrafanaSanitized(cli.submodules, grafanaConfigResolved)
     }
@@ -57,10 +63,10 @@ fun Prov.provisionK3sWorker(
 }
 
 private fun Prov.provisionGrafanaSanitized(
-    submodules: List<String>,
+    submodules: List<String>?,
     grafanaConfigResolved: GrafanaAgentConfigResolved?) = task {
 
-    if (submodules.contains(ServerSubmodule.GRAFANA.name.lowercase())) {
+    if (submodules!!.contains(ServerSubmodule.GRAFANA.name.lowercase())) {
         if (grafanaConfigResolved == null) {
             println("ERROR: Could not find grafana config.")
             exitProcess(7)
