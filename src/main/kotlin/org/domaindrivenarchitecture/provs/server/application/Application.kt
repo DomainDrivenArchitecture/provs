@@ -19,9 +19,15 @@ fun main(args: Array<String>) {
 
     val checkedArgs = if (args.isEmpty()) arrayOf("-h") else args
 
+    // validate subcommand
+    if (!ServerType.values().any {it.name.lowercase() == args[0]}) {
+        println("Unknown serverType. Currently only k3s is accepted.")
+        exitProcess(1)
+    }
+
     val cmd = CliArgumentsParser("provs-server.jar subcommand target").parseCommand(checkedArgs)
 
-    // input validation
+    // validate parsed arguments
     if (!cmd.isValidTarget()) {
         println("Remote or localhost not valid, please try -h for help.")
         exitProcess(1)
