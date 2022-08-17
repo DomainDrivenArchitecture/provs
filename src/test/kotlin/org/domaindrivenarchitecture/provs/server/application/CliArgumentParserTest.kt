@@ -19,8 +19,9 @@ internal class CliArgumentParserTest {
         val result = parser.parseCommand(args = arrayOf("k3s", "local", "-c", "config.yaml"))
 
         // then
-        assertTrue(result.isValid())
-        assertEquals(ServerType.K3S, result.serverType)
+        assertTrue(result.isValidServerType())
+        assertTrue(result.isValidTarget())
+        assertTrue(result.isValidConfigFileName())
     }
 
     @Test
@@ -32,8 +33,9 @@ internal class CliArgumentParserTest {
         val result: K3sCliCommand = parser.parseCommand(args = arrayOf("k3s", "local", "-o", "grafana")) as K3sCliCommand
 
         // then
-        assertTrue(result.isValid())
-        assertEquals(ServerType.K3S, result.serverType)
+        assertTrue(result.isValidServerType())
+        assertTrue(result.isValidTarget())
+        assertTrue(result.isValidConfigFileName())
         assertEquals(listOf("grafana"), result.submodules)
         assertEquals(TargetCliCommand("local"), result.target)
     }
@@ -47,8 +49,8 @@ internal class CliArgumentParserTest {
         val result: K3sCliCommand = parser.parseCommand(args = arrayOf("k3s", "user@host.com", "-a", "app.yaml")) as K3sCliCommand
 
         // then
-        assertTrue(result.isValid())
-        assertEquals(ServerType.K3S, result.serverType)
+        assertTrue(result.isValidTarget())
+        assertTrue(result.isValidServerType())
         assertEquals(ApplicationFileName("app.yaml"), result.applicationFileName)
         assertEquals(TargetCliCommand("user@host.com"), result.target)
     }
