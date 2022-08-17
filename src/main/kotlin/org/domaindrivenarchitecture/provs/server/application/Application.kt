@@ -34,12 +34,11 @@ fun main(args: Array<String>) {
         println("Application file not found. Please check if path is correct.")
         exitProcess(1)
     }
-
-    val prov = createProvInstance(cmd.target)
-
     if (!cmd.isValidServerType()) {
         throw RuntimeException("Unknown serverType. Currently only k3s is accepted.")
-    } else {
-        prov.provisionK3s(cmd as K3sCliCommand)
     }
+
+    val prov = createProvInstance(cmd.target)
+    prov.provisionK3s(cmd as K3sCliCommand)
+
 }
