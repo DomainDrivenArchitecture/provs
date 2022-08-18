@@ -16,7 +16,7 @@ fun Prov.provisionK3s(cli: K3sCliCommand) = task {
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
         provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
     }
-    else if (cli.reprovision) {
+    else if (cli.reprovision) { // TODO: Add logic that overrides config, when cmd option is set
         deprovisionK3sInfra()
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
         provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
