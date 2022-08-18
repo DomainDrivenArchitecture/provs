@@ -18,6 +18,7 @@ const val KNOWN_HOSTS_FILE = "~/.ssh/known_hosts"
  */
 fun Prov.configureSshKeys(sshKeys: KeyPair) = task {
 
+    // TODO: put in KeyPair Class, Unit Test, Maybe make sshKeypair class, refactor to infrastructure
     val keyType = sshKeys.publicKey.plain().split(" ")[0]
     val algorithmName = keyType.removePrefix("ssh-")
 

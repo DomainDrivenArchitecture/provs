@@ -22,7 +22,7 @@ internal class SshRSAKtTest {
     }
 }
 
-internal class SshES25519KtTest {
+internal class SshED25519KtTest {
 
     @ContainerTest
     fun configureSshKeys() {
