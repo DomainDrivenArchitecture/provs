@@ -29,7 +29,7 @@ internal class ProvisionUserKtTest {
                 "testuser",
                 "test@mail.com",
                 KeyPairSource(SecretSourceType.PLAIN, publicGPGSnakeoilKey(), privateGPGSnakeoilKey()),
-                KeyPairSource(SecretSourceType.PLAIN, publicSSHSnakeoilKey(), privateSSHSnakeoilKey())
+                KeyPairSource(SecretSourceType.PLAIN, publicSSHRSASnakeoilKey(), privateSSHRSASnakeoilKey())
             )
         )
 

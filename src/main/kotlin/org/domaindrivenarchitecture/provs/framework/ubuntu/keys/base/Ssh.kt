@@ -17,9 +17,13 @@ const val KNOWN_HOSTS_FILE = "~/.ssh/known_hosts"
  * installs ssh keys for active user
  */
 fun Prov.configureSshKeys(sshKeys: KeyPair) = task {
+
+    val keyType = sshKeys.publicKey.plain().split(" ")[0]
+    val algorithmName = keyType.removePrefix("ssh-")
+
     createDir(".ssh", "~/")
-    createSecretFile("~/.ssh/id_rsa.pub", sshKeys.publicKey, "644")
-    createSecretFile("~/.ssh/id_rsa", sshKeys.privateKey, "600")
+    createSecretFile("~/.ssh/id_$algorithmName.pub", sshKeys.publicKey, "644")
+    createSecretFile("~/.ssh/id_$algorithmName", sshKeys.privateKey, "600")
 }
 
 
