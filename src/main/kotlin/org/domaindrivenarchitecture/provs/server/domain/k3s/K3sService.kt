@@ -66,7 +66,7 @@ private fun Prov.provisionGrafanaSanitized(
     submodules: List<String>?,
     grafanaConfigResolved: GrafanaAgentConfigResolved?) = task {
 
-    if (submodules!!.contains(ServerSubmodule.GRAFANA.name.lowercase())) {
+    if (submodules != null && submodules.contains(ServerSubmodule.GRAFANA.name.lowercase())) {
         if (grafanaConfigResolved == null) {
             println("ERROR: Could not find grafana config.")
             exitProcess(7)
