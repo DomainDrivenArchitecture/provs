@@ -11,17 +11,11 @@ fun Prov.provisionK3s(cli: K3sCliCommand) = task {
 
     val grafanaConfigResolved: GrafanaAgentConfigResolved? = findK8sGrafanaConfig(cli.configFileName)?.resolveSecret()
 
-    if (cli.submodules == null && !cli.reprovision) {
+    if (cli.submodules == null) {
         // full k3s
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
         provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
-    }
-    else if (cli.reprovision) {
-        deprovisionK3sInfra()
-        val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
-        provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
-    }
-    else {
+    } else {
         // submodules only
         provisionGrafanaSanitized(cli.submodules, grafanaConfigResolved)
     }
