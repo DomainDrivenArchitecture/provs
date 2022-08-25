@@ -27,6 +27,7 @@ fun main(args: Array<String>) {
 
     val cmd = CliArgumentsParser("provs-server.jar subcommand target").parseCommand(checkedArgs)
 
+    // ToDo: exitProcess makes testing harder, find another solution
     // validate parsed arguments
     if (!cmd.isValidTarget()) {
         println("Remote or localhost not valid, please try -h for help.")
