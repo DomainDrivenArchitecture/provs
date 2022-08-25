@@ -9,7 +9,24 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceTy
 import kotlinx.serialization.Serializable
 
 
-open class KeyPair(val publicKey: Secret, val privateKey: Secret)
+open class KeyPair(val publicKey: Secret, val privateKey: Secret) {
+
+    val keyType =
+        if (publicKey.plain().split('\n')[0].contains("PGP")) {
+            "PGP"
+        } else {
+            publicKey.plain().split(" ")[0]
+        }
+
+    val sshAlgorithmName =
+        if (keyType == "PGP") {
+            "PGP"
+        } else if (keyType.contains("ssh")) {
+            keyType.removePrefix("ssh-")
+        } else {
+            "unknownKeyType"
+        }
+}
 
 
 @Serializable

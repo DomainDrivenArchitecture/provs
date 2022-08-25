@@ -18,13 +18,11 @@ const val KNOWN_HOSTS_FILE = "~/.ssh/known_hosts"
  */
 fun Prov.configureSshKeys(sshKeys: KeyPair) = task {
 
-    // TODO: put in KeyPair Class, Unit Test, Maybe make sshKeypair class, refactor to infrastructure
-    val keyType = sshKeys.publicKey.plain().split(" ")[0]
-    val algorithmName = keyType.removePrefix("ssh-")
+    // TODO: Unit Test, Maybe make sshKeypair class, refactor to infrastructure
 
     createDir(".ssh", "~/")
-    createSecretFile("~/.ssh/id_$algorithmName.pub", sshKeys.publicKey, "644")
-    createSecretFile("~/.ssh/id_$algorithmName", sshKeys.privateKey, "600")
+    createSecretFile("~/.ssh/id_${sshKeys.sshAlgorithmName}.pub", sshKeys.publicKey, "644")
+    createSecretFile("~/.ssh/id_${sshKeys.sshAlgorithmName}", sshKeys.privateKey, "600")
 }
 
 
