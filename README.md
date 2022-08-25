@@ -49,7 +49,9 @@ After having installed `provs-desktop.jar` (see prerequisites) execute:
 
 **target** can be: 
 * `local`
-* `user123:mypassword@myhost.com` - general format is: <user[:password]@host> - 
+* remote, e.g. `user123:mypassword@myhost.com` - general format is: <user[:password]@host> - 
+  * be sure to have openssh-server installed 
+  * add your preferred public key to known_hosts on the target machine
   * if password is omitted, then ssh-keys will be used for authentication
   * if password is omitted but option `-p` is provided, then the password will be prompted interactively 
 
@@ -75,7 +77,8 @@ provs-server.jar k3s local
 provs-server.jar k3s myuser@myhost.com    # using ssh-authentication - alternatively use option -p for password authentication
 ```
 
-For the remote server please configure a config file (default file name: server-config.yaml)
+For the remote server please configure a config file (default file name: server-config.yaml).
+It has to be in the same folder where you execute the provs-server.jar command.
 ```yaml
 fqdn: "myhostname.com"
 node:
