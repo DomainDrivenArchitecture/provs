@@ -12,7 +12,6 @@ class K3sCliCommand(
     configFileName: ConfigFileName?,
     val applicationFileName: ApplicationFileName?,
     val submodules: List<String>? = null,
-    val reprovision: Reprovision = false
 ) : ServerCliCommand(
     serverType,
     target,

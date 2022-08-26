@@ -35,7 +35,6 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
                 module.configFileName,
                 module.applicationFileName,
                 module.submodules,
-                module.reprovision
             )
             else -> return ServerCliCommand(
                 ServerType.valueOf(module.name.uppercase()),
@@ -53,7 +52,6 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         var configFileName: ConfigFileName? = null
         var applicationFileName: ApplicationFileName? = null
         var submodules: List<String>? = null
-        var reprovision: Boolean = false
     }
 
     class K3s : ServerSubcommand("k3s", "the k3s module") {
@@ -75,17 +73,10 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
             "o",
             "provisions only parts ",
         )
-        val cliReprovision by option(
-            ArgType.Boolean,
-            "reprovision",
-            "r",
-            "redo provisioning, deletes old config first"
-        )
         override fun execute() {
             super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             super.applicationFileName = cliApplicationFileName?.let { ApplicationFileName(it) }
             super.submodules = if (only != null) listOf(only!!.name.lowercase()) else null
-            super.reprovision = cliReprovision == true
             super.parsed = true
         }
     }
