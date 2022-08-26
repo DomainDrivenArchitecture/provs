@@ -18,10 +18,5 @@ class K3sCliCommand(
     target,
     configFileName
 ) {
-    fun isValidApplicationFileName(): Boolean {
-        if (applicationFileName == null) {
-            return true
-        }
-        return genericFileExistenceCheck(applicationFileName.fileName)
-    }
+
 }
