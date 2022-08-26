@@ -37,10 +37,6 @@ fun main(args: Array<String>) {
         println("Config file not found. Please check if path is correct.")
         exitProcess(1)
     }
-    if (!(cmd as K3sCliCommand).isValidApplicationFileName()) {
-        println("Application file not found. Please check if path is correct.")
-        exitProcess(1)
-    }
     if (!cmd.isValidServerType()) {
         throw RuntimeException("Unknown serverType. Currently only k3s is accepted.")
     }
