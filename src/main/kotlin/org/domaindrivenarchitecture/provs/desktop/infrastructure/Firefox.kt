@@ -1,20 +1,23 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.core.writeToFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.addTextToFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstallFromPpa
 import java.io.File
 
 
-fun Prov.installFirefox(
+/**
+ * Installs non-snap firefox, removing a firefox snap-installation if existing
+ */
+fun Prov.installFirefox() = task {
 
-) = task {
+    // inspired by: https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04
 
-    cmd("snap remove firefox", sudo = true)
+    if (chk("snap list | grep firefox")) {
+        cmd("snap remove firefox", sudo = true)
+    }
     aptInstall("software-properties-common")
-    cmd("sudo add-apt-repository -y ppa:mozillateam/ppa")
+    cmd("add-apt-repository -y ppa:mozillateam/ppa", sudo = true)
 
     addTextToFile(
         "\nPackage: *\n" +
