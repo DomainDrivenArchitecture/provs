@@ -1,7 +1,6 @@
 package org.domaindrivenarchitecture.provs.server.application
 
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
-import org.domaindrivenarchitecture.provs.server.domain.ServerType
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,7 +20,6 @@ internal class CliArgumentParserTest {
         // then
         assertTrue(result.isValidServerType())
         assertTrue(result.isValidTarget())
-        assertTrue(result.isValidConfigFileName())
     }
 
     @Test
@@ -35,7 +33,6 @@ internal class CliArgumentParserTest {
         // then
         assertTrue(result.isValidServerType())
         assertTrue(result.isValidTarget())
-        assertTrue(result.isValidConfigFileName())
         assertEquals(listOf("grafana"), result.submodules)
         assertEquals(TargetCliCommand("local"), result.target)
     }
