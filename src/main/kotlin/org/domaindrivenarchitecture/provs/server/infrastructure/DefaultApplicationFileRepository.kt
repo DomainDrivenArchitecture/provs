@@ -5,10 +5,10 @@ import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileRepos
 
 class DefaultApplicationFileRepository : ApplicationFileRepository {
 
-    override fun exists(applicationFileName: ApplicationFileName?) {
+    override fun assertExists(applicationFileName: ApplicationFileName?) {
         if (applicationFileName != null) {
             if (!genericFileExistenceCheck(applicationFileName.fullqualified())) {
-                throw RuntimeException("Application file not found. Please check if path is correct.")
+                throw RuntimeException("Application file ${applicationFileName.fileName} not found. Please check if path is correct.")
             }
         }
     }

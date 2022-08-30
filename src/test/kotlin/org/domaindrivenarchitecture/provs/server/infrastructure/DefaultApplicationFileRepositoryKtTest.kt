@@ -6,12 +6,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.io.File
-import java.nio.file.Paths
 
 internal class DefaultApplicationFileRepositoryKtTest {
 
     @Test
-    fun existsThrowsRuntimeException() {
+    fun assertExistsThrowsRuntimeException() {
         //when
         val invalidFileName: ApplicationFileName = ApplicationFileName("iDontExist")
         val repo: ApplicationFileRepository = DefaultApplicationFileRepository()
@@ -19,15 +18,15 @@ internal class DefaultApplicationFileRepositoryKtTest {
         // then
         val exception = assertThrows<RuntimeException>(
             "Should not find the file."
-        ) { repo.exists(invalidFileName) }
+        ) { repo.assertExists(invalidFileName) }
 
         assertEquals(
-            "Application file not found. Please check if path is correct.",
+            "Application file iDontExist not found. Please check if path is correct.",
             exception.message)
     }
 
     @Test
-    fun existsPasses() {
+    fun assertExistsPasses() {
         //when
         val validFileName = "iExist"
         File(validFileName).createNewFile()
@@ -37,7 +36,7 @@ internal class DefaultApplicationFileRepositoryKtTest {
         val repo: ApplicationFileRepository = DefaultApplicationFileRepository()
 
         // then
-        repo.exists(validFile)
+        repo.assertExists(validFile)
 
         File(validFileName).deleteOnExit()
     }
