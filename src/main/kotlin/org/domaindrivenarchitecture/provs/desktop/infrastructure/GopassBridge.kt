@@ -11,7 +11,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 
 fun Prov.downloadGopassBridge() = task {
-    val version = "0.8.0"
+    val version = "0.9.0"
     val filename = "gopass_bridge-${version}-fx.xpi"
     val downloadDir = "${userHome()}Downloads/"
 
@@ -25,10 +25,10 @@ fun Prov.downloadGopassBridge() = task {
 
 fun Prov.installGopassBridgeJsonApi() = task {
     // see https://github.com/gopasspw/gopass-jsonapi
-    val gopassBridgeVersion = "1.11.1"
-    val requiredGopassVersion = "1.12"
-    val filename = "gopass-jsonapi_${gopassBridgeVersion}_linux_amd64.deb"
-    val downloadUrl = "-L https://github.com/gopasspw/gopass-jsonapi/releases/download/v$gopassBridgeVersion/$filename"
+    val gopassJsonApiVersion = "1.14.3"
+    val requiredGopassVersion = "1.14.4"
+    val filename = "gopass-jsonapi_${gopassJsonApiVersion}_linux_amd64.deb"
+    val downloadUrl = "-L https://github.com/gopasspw/gopass-jsonapi/releases/download/v$gopassJsonApiVersion/$filename"
     val downloadDir = "${userHome()}Downloads"
     val installedJsonApiVersion = gopassJsonApiVersion()?.trim()
 
@@ -55,13 +55,13 @@ fun Prov.installGopassBridgeJsonApi() = task {
             )
         }
     } else {
-        if (installedJsonApiVersion.startsWith("gopass-jsonapi version " + gopassBridgeVersion)) {
-            addResultToEval(ProvResult(true, out = "Version $gopassBridgeVersion of gopass-jsonapi is already installed"))
+        if (installedJsonApiVersion.startsWith("gopass-jsonapi version " + gopassJsonApiVersion)) {
+            addResultToEval(ProvResult(true, out = "Version $gopassJsonApiVersion of gopass-jsonapi is already installed"))
         } else {
             addResultToEval(
                 ProvResult(
                     false,
-                    err = "gopass-jsonapi (version $gopassBridgeVersion) cannot be installed as version $installedJsonApiVersion is already installed." +
+                    err = "gopass-jsonapi (version $gopassJsonApiVersion) cannot be installed as version $installedJsonApiVersion is already installed." +
                             " Upgrading gopass-jsonapi is currently not supported by provs."
                 )
             )

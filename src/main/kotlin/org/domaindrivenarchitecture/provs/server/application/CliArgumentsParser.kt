@@ -34,7 +34,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
                 ),
                 module.configFileName,
                 module.applicationFileName,
-                module.submodules,
+                module.submodules
             )
             else -> return ServerCliCommand(
                 ServerType.valueOf(module.name.uppercase()),
@@ -73,6 +73,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
             "o",
             "provisions only parts ",
         )
+
         override fun execute() {
             super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             super.applicationFileName = cliApplicationFileName?.let { ApplicationFileName(it) }

@@ -4,9 +4,8 @@ package org.domaindrivenarchitecture.provs.desktop.domain
 /**
  * Provides desktop types. For each type a different set of software and packages is installed, see README.md.
  */
-open class DesktopType(val name: String) {
-
-    // A regular class is used rather than enum class in order to allow extending DesktopType by subclassing.
+// Uses a regular class instead of an enum class in order to allow subclasses which can add new DesktopTypes
+open class DesktopType protected constructor(val name: String) {
 
     companion object {
 
@@ -17,7 +16,11 @@ open class DesktopType(val name: String) {
         @JvmStatic
         protected val values = listOf(BASIC, OFFICE, IDE)
 
-        fun returnIfExists(value: String, valueList: List<DesktopType> = values): DesktopType {
+        @JvmStatic
+        fun valueOf(value: String): DesktopType = valueOf(value, values)
+
+        @JvmStatic
+        protected fun valueOf(value: String, valueList: List<DesktopType>): DesktopType {
             for (type in valueList) {
                 if (value.uppercase().equals(type.name)) {
                     return type
@@ -31,4 +34,3 @@ open class DesktopType(val name: String) {
         return name
     }
 }
-

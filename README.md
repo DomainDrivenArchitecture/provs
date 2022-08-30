@@ -5,17 +5,12 @@
 
 ## Purpose
 
-provs provides cli-based tooling for provisioning desktop or server resp. perform system checks.
-* provs-desktop minimal - provides a minimal setup (e.g. swappiness / randomutils) e.g. for setup on a VirtualBox  
-* provs-desktop office - provides enhancements like zim / gopass / fakturama
-* provs-desktop ide - provides development environments for java / kotlin / python / clojure / terraform
-* provs-server k3s - provides a production ready & k3s setup with dualstack option
-* provs-syspec - verifies a system according to the provided system spec config file
+provs provides cli-based tools for 
+* provisioning a desktop (various kinds) 
+* provisioning a k3s server
+* performing system checks
 
-In general provs combines
-* being able to use the power of shell commands
-* a clear and detailed result summary of the built-in execution handling (incl. failure handling and reporting)
-* the convenience and robustness of a modern programming language
+Tasks can be run locally or remotely.
 
 ## Status
 
@@ -26,11 +21,24 @@ under development - we are working hard on setting up our environments using pro
 
 * A **Java Virtual machine** (JVM) is required.
 * Install `jarwrapper` (e.g. `sudo apt install jarwrapper`)
-* Download the latest `provs-desktop.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
-* Make the jar-file executable by `chmod +x provs-desktop.jar`
-* For server functionality (e.g. k3s) download the latest `provs-server.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
+* Then either download the binaries or build them yourself
 
-### provs-desktop
+#### Download the binaries
+
+* Download the latest `provs-desktop.jar`,`provs-server.jar` and/or `provs-syspec.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
+  * Preferably into `/usr/local/bin` or any other folder where executables can be found by the system 
+* Make the jar-file executable e.g. by `chmod +x provs-desktop.jar`
+
+#### Build the binaries
+
+Instead of downloading the binaries you can build them yourself
+
+* Clone this repository
+* In the repository's root folder execute: `./gradlew install`. This will install the binaries in `/usr/local/bin`
+
+### Provision a desktop
+
+After having installed `provs-desktop.jar` (see prerequisites) execute:
 
 `provs-desktop.jar <type> <target> [<options>]`
 
@@ -41,7 +49,9 @@ under development - we are working hard on setting up our environments using pro
 
 **target** can be: 
 * `local`
-* `user123:mypassword@myhost.com` - general format is: <user[:password]@host> - 
+* remote, e.g. `user123:mypassword@myhost.com` - general format is: <user[:password]@host> - 
+  * be sure to have openssh-server installed 
+  * add your preferred public key to known_hosts on the target machine
   * if password is omitted, then ssh-keys will be used for authentication
   * if password is omitted but option `-p` is provided, then the password will be prompted interactively 
 
@@ -49,7 +59,7 @@ under development - we are working hard on setting up our environments using pro
 * `-p` for interactive password question
 
 
-#### Provision a desktop
+#### Example
 
 ```bash
 provs-desktop.jar basic local
@@ -57,9 +67,9 @@ provs-desktop.jar basic local
 provs-desktop.jar office myuser@myhost.com -p
 ```
 
-In the last case you'll be prompted for the password of the remote user due to option `-p`.
+In the second case you'll be prompted for the password of the remote user due to option `-p`.
 
-### Provision k3s
+### Provision a k3s Server
 
 ```bash
 provs-server.jar k3s local
@@ -67,7 +77,8 @@ provs-server.jar k3s local
 provs-server.jar k3s myuser@myhost.com    # using ssh-authentication - alternatively use option -p for password authentication
 ```
 
-For the remote server please configure a config file (default file name: server-config.yaml)
+For the remote server please configure a config file (default file name: server-config.yaml).
+It has to be in the same folder where you execute the provs-server.jar command.
 ```yaml
 fqdn: "myhostname.com"
 node:
@@ -94,14 +105,14 @@ provs-server.jar k3s myuser@myhost.com -o grafana
 
 
 
-### Performing a system check
+### Perform a system check
 
 The default config-file for the system check is `syspec-config.yaml`, you can specify a different file with option `-c <config-file>`.
 
 ```bash
 provs-syspec.jar local 
-# or remote:
-provs-syspec.jar myuser@myhost.com
+# or remote with a custom config filename
+provs-syspec.jar myuser@myhost.com -c my-syspec-config.yaml
 ```
 
 ## Get help

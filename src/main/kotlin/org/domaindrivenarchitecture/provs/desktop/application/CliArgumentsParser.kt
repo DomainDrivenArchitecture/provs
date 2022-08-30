@@ -24,7 +24,7 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
         val module = modules.first { it.parsed }
 
         return DesktopCliCommand(
-            DesktopType.returnIfExists(module.name.uppercase()),
+            DesktopType.valueOf(module.name.uppercase()),
             TargetCliCommand(
                 target,
                 passwordInteractive
