@@ -7,6 +7,19 @@ import java.util.*
 
 
 /**
+ * Returns true if the given file exists in the LOCAL file system.
+ */
+fun checkLocalFile(fileName: String): Boolean {
+    if (fileName.isEmpty()) {
+        return false
+    } else if ((!File(fileName).exists())) {
+        return false
+    }
+    return true
+}
+
+
+/**
  * Returns true if the given file exists.
  */
 fun Prov.checkFile(file: String, sudo: Boolean = false): Boolean {
