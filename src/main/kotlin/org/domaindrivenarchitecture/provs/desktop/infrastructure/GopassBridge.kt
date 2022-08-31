@@ -2,12 +2,14 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.addTextToFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
+import java.io.File
 
 
 fun Prov.downloadGopassBridge() = task {
@@ -69,12 +71,27 @@ fun Prov.installGopassBridgeJsonApi() = task {
     }
 }
 
+fun Prov.enableGopassWrapperShForFirefox() = task {
+
+    val appArmorFile = File("/etc/apparmor.d/usr.bin.firefox")
+
+    if (appArmorFile.exists()) {
+        addTextToFile(
+            "owner @{HOME}/.config/gopass/gopass_wrapper.sh ux",
+            appArmorFile,
+            sudo = true
+        )
+    }
+
+    cmd("systemctl reload apparmor", sudo = true)
+}
 fun Prov.configureGopassBridgeJsonApi() = task {
     if (isPackageInstalled("gopass-jsonapi")) {
         // configure for firefox and choose default for each:
         // "Install for all users? [y/N/q]",
         // "In which path should gopass_wrapper.sh be installed? [/home/testuser/.config/gopass]"
         // "Wrapper Script for gopass_wrapper.sh ..."
+        enableGopassWrapperShForFirefox()
         cmd("printf \"\\n\\n\\n\" | gopass-jsonapi configure --browser firefox")
     } else {
         ProvResult(
