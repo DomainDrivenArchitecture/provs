@@ -2,10 +2,7 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.addTextToFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
@@ -19,10 +16,10 @@ fun Prov.downloadGopassBridge() = task {
 
     createDirs(downloadDir)
     downloadFromURL(
-        "-L https://addons.mozilla.org/firefox/downloads/file/3630534/" + filename,
+        "-L https://addons.mozilla.org/firefox/downloads/file/3630534/$filename",
         downloadDir + filename
     )
-    // needs manual install with: firefox Downloads/gopass_bridge-0.8.0-fx.xpi
+    // needs manual installation with: firefox Downloads/gopass_bridge-0.8.0-fx.xpi
 }
 
 fun Prov.installGopassBridgeJsonApi() = task {
@@ -40,7 +37,7 @@ fun Prov.installGopassBridgeJsonApi() = task {
                 aptInstall("git gnupg2")   // required dependencies
                 createDir(downloadDir)
                 downloadFromURL(downloadUrl, filename, downloadDir)
-                cmd("dpkg -i " + downloadDir + "/" + filename, sudo = true)
+                cmd("dpkg -i $downloadDir/$filename", sudo = true)
             } else {
                 ProvResult(
                     false,
@@ -57,7 +54,7 @@ fun Prov.installGopassBridgeJsonApi() = task {
             )
         }
     } else {
-        if (installedJsonApiVersion.startsWith("gopass-jsonapi version " + gopassJsonApiVersion)) {
+        if (installedJsonApiVersion.startsWith("gopass-jsonapi version $gopassJsonApiVersion")) {
             addResultToEval(ProvResult(true, out = "Version $gopassJsonApiVersion of gopass-jsonapi is already installed"))
         } else {
             addResultToEval(
@@ -85,6 +82,7 @@ fun Prov.enableGopassWrapperShForFirefox() = task {
 
     cmd("systemctl reload apparmor", sudo = true)
 }
+
 fun Prov.configureGopassBridgeJsonApi() = task {
     if (isPackageInstalled("gopass-jsonapi")) {
         // configure for firefox and choose default for each:
