@@ -27,7 +27,7 @@ fun Prov.downloadGopassBridge() = task {
 
 fun Prov.installGopassBridgeJsonApi() = task {
     // see https://github.com/gopasspw/gopass-jsonapi
-    val gopassJsonApiVersion = "1.14.3"
+    val gopassJsonApiVersion = "1.11.1"
     val requiredGopassVersion = "1.14.4"
     val filename = "gopass-jsonapi_${gopassJsonApiVersion}_linux_amd64.deb"
     val downloadUrl = "-L https://github.com/gopasspw/gopass-jsonapi/releases/download/v$gopassJsonApiVersion/$filename"
