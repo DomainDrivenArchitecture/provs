@@ -70,12 +70,12 @@ fun Prov.installGopassBridgeJsonApi() = task {
 
 fun Prov.enableGopassWrapperShForFirefox() = task {
 
-    val appArmorFile = File("/etc/apparmor.d/usr.bin.firefox")
+    val appArmorFile = "/etc/apparmor.d/usr.bin.firefox"
 
-    if (appArmorFile.exists()) {
+    if (checkFile(appArmorFile)) {
         addTextToFile(
-            "owner @{HOME}/.config/gopass/gopass_wrapper.sh ux",
-            appArmorFile,
+            "\nowner @{HOME}/.config/gopass/gopass_wrapper.sh ux\n",
+            File(appArmorFile),
             sudo = true
         )
     }
