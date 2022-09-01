@@ -74,7 +74,7 @@ fun Prov.enableGopassWrapperShForFirefox() = task {
 
     if (checkFile(appArmorFile)) {
         addTextToFile(
-            "\nowner @{HOME}/.config/gopass/gopass_wrapper.sh ux\n",
+            "\nowner @{HOME}/.config/gopass/gopass_wrapper.sh Ux\n",
             File(appArmorFile),
             sudo = true
         )
