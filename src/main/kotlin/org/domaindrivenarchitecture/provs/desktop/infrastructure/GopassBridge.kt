@@ -68,7 +68,7 @@ fun Prov.installGopassBridgeJsonApi() = task {
     }
 }
 
-fun Prov.enableGopassWrapperShForFirefox() = task {
+fun Prov.configureGopassWrapperShForFirefox() = task {
 
     val appArmorFile = "/etc/apparmor.d/usr.bin.firefox"
 
@@ -89,7 +89,7 @@ fun Prov.configureGopassBridgeJsonApi() = task {
         // "Install for all users? [y/N/q]",
         // "In which path should gopass_wrapper.sh be installed? [/home/testuser/.config/gopass]"
         // "Wrapper Script for gopass_wrapper.sh ..."
-        enableGopassWrapperShForFirefox()
+        configureGopassWrapperShForFirefox()
         cmd("printf \"\\n\\n\\n\" | gopass-jsonapi configure --browser firefox")
     } else {
         ProvResult(
