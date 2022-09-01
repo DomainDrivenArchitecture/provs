@@ -127,7 +127,7 @@ fun Prov.verify(s3ObjectSpec: S3ObjectSpec) {
 
         verify(
             actualAge <= expectedAge,
-            "Age is $actualAge (expected: < $maxAge) for latest file with prefix \"$prefix\" " +
+            "Age is ${actualAge.toHours()} h (expected: <= $maxAge) for latest file with prefix \"$prefix\" " +
                     "---  modified date: $lastModified - size: ${(latestObject.size)} B - key: ${latestObject.key}"
         )
     }
