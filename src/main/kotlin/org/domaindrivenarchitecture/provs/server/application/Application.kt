@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
     val checkedArgs = if (args.isEmpty()) arrayOf("-h") else args
 
     // validate subcommand
-    if (!ServerType.values().any {it.name.lowercase() == args[0]}) {
+    if (!checkedArgs.contains("-h") && !ServerType.values().any {it.name.lowercase() == checkedArgs[0]}) {
         println("Unknown serverType. Currently only k3s is accepted.")
         exitProcess(1)
     }

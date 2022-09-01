@@ -54,7 +54,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         var submodules: List<String>? = null
     }
 
-    class K3s : ServerSubcommand("k3s", "the k3s module") {
+    class K3s : ServerSubcommand("k3s", "the k3s module, 'provs-server.jar k3s --help' for more info") {
         val cliConfigFileName by option(
             ArgType.String,
             "config-file",
@@ -82,7 +82,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         }
     }
 
-    class K3d : ServerSubcommand("k3d", "the k3s module") {
+    class K3d : ServerSubcommand("k3d", "the k3d module, 'provs-server.jar k3d --help' for more info") {
         override fun execute() {
             TODO("Not yet implemented")
         }
