@@ -129,6 +129,7 @@ fun Prov.provisionBasicDesktop(
         provisionKeys(gpg, ssh)
         provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
 
+        installFirefox()
         installGopass()
         installRedshift()
         configureRedshift()
