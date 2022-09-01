@@ -12,6 +12,7 @@ data class SyspecConfig(
     val netcat: List<NetcatSpec>? = null,
     val socket: List<SocketSpec>? = null,
     val certificate: List<CertificateFileSpec>? = null,
+    val s3: List<S3ObjectSpec>? = null,
 )
 
 /**
@@ -47,3 +48,11 @@ data class SocketSpec(
 
 @Serializable
 data class CertificateFileSpec(val name: String, val expirationDays: Long)
+
+/**
+ * ATTENTION: usage of this spec for non-public s3 buckets requires the correct setup of an aws credential file "~/.aws/credentials"
+ * For more information, see: https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/setup.html
+ */
+@Serializable
+data class S3ObjectSpec(val bucket: String, val prefix: String, val age: Long)
+

@@ -229,7 +229,7 @@ open class Prov protected constructor(
 
         for (cmd in linesNonEmpty) {
             if (success) {
-                success = success && cmd(cmd, dir, sudo).success
+                success = cmd(cmd, dir, sudo).success
             }
         }
         ProvResult(success)
@@ -351,7 +351,7 @@ open class Prov protected constructor(
     private fun printResults() {
         println(
             "============================================== SUMMARY " +
-                    (if (instanceName != null) "(" + instanceName + ") " else "") +
+                    (if (instanceName != null) "($instanceName) " else "") +
                     "============================================="
         )
         val successPerLevel = arrayListOf<Boolean>()
