@@ -11,8 +11,8 @@ internal class DefaultApplicationFileRepositoryKtTest {
 
     @Test
     fun assertExistsThrowsRuntimeException() {
-        //when
-        val invalidFileName: ApplicationFileName = ApplicationFileName("iDontExist")
+        // when
+        val invalidFileName = ApplicationFileName("iDontExist")
         val repo: ApplicationFileRepository = DefaultApplicationFileRepository()
 
         // then
@@ -27,17 +27,15 @@ internal class DefaultApplicationFileRepositoryKtTest {
 
     @Test
     fun assertExistsPasses() {
-        //when
-        val validFileName = "iExist"
-        File(validFileName).createNewFile()
+        // given
+        val validFileName = "src/test/resources/existing_file"
 
-        val validFile: ApplicationFileName =
-        ApplicationFileName(File(validFileName).absolutePath)
+        // when
+        val validFile = ApplicationFileName(File(validFileName).path)
         val repo: ApplicationFileRepository = DefaultApplicationFileRepository()
-
-        // then
         repo.assertExists(validFile)
 
-        File(validFileName).deleteOnExit()
+        // then
+        // no exception is thrown
     }
 }

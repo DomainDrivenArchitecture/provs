@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = "1.6.10"
+    ext.kotlin_version = "1.7.0"
     ext.CI_PROJECT_ID = System.env.CI_PROJECT_ID
 
     repositories { mavenCentral() }
@@ -79,6 +79,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
     implementation("com.hierynomus:sshj:0.32.0")
+
+    implementation("aws.sdk.kotlin:s3:0.17.1-beta")
 
     testFixturesApi("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testFixturesApi('io.mockk:mockk:1.12.3')
