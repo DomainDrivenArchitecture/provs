@@ -40,11 +40,14 @@ internal fun Prov.provisionDesktop(
     validatePrecondition()
     provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail, submodules)
 
-    if (desktopType == DesktopType.OFFICE || desktopType == DesktopType.IDE) {
+    if (desktopType == DesktopType.OFFICE) {
         provisionOfficeDesktop(submodules)
+        verifyOfficeSetup()
     }
     if (desktopType == DesktopType.IDE) {
+        provisionOfficeDesktop(submodules)
         provisionIdeDesktop(submodules)
+        verifyIdeSetup()
     }
     ProvResult(true)
 }
@@ -72,6 +75,8 @@ fun Prov.provisionIdeDesktop(submodules: List<String>?) {
         // IDEs
         installVSC("python", "clojure")
         installIntelliJ()
+    } else if (submodules.contains(DesktopSubmodule.VERIFY.name.lowercase())) {
+        verifyIdeSetup()
     }
 }
 
@@ -99,6 +104,8 @@ fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
         }
 
         aptInstall(SPELLCHECKING_DE)
+    } else if (submodules.contains(DesktopSubmodule.VERIFY.name.lowercase())) {
+        verifyOfficeSetup()
     }
 }
 
@@ -136,5 +143,7 @@ fun Prov.provisionBasicDesktop(
         configureNoSwappiness()
         configureBash()
         installVirtualBoxGuestAdditions()
+    } else if (submodules.contains(DesktopSubmodule.FIREFOX.name.lowercase())) {
+        installFirefox()
     }
 }
