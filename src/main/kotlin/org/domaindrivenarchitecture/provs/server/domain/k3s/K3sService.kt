@@ -11,17 +11,22 @@ fun Prov.provisionK3s(cli: K3sCliCommand) = task {
 
     val grafanaConfigResolved: GrafanaAgentConfigResolved? = findK8sGrafanaConfig(cli.configFileName)?.resolveSecret()
 
-    if (cli.submodules == null && !cli.reprovision) {
-        // full k3s
+    if (cli.submodules == null ) {
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
-        provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
-    }
-    else if (cli.reprovision) {
-        deprovisionK3sInfra()
-        val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
-        provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
-    }
-    else {
+
+        if (!cli.reprovision && !k3sConfig.reprovision) {
+            // full k3s
+            provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
+        }
+        if (cli.reprovision && testConfigExists()) {
+            deprovisionK3sInfra()
+            provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
+        }
+        if (k3sConfig.reprovision && testConfigExists()) {
+            deprovisionK3sInfra()
+            provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
+        }
+    } else {
         // submodules only
         provisionGrafanaSanitized(cli.submodules, grafanaConfigResolved)
     }
@@ -36,10 +41,6 @@ fun Prov.provisionK3sWorker(
     applicationFileName: ApplicationFileName? = null) = task {
 
     provisionNetwork(k3sConfig)
-
-    if (k3sConfig.reprovision && testConfigExists()) {
-        deprovisionK3sInfra()
-    }
 
     installK3s(k3sConfig)
 
