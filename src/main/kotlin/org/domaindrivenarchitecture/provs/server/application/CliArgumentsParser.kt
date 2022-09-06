@@ -35,7 +35,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
                 module.configFileName,
                 module.applicationFileName,
                 module.submodules,
-                module.reprovision
+                module.reprovision,
             )
             else -> return ServerCliCommand(
                 ServerType.valueOf(module.name.uppercase()),
@@ -79,7 +79,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
             ArgType.Boolean,
             "reprovision",
             "r",
-            "redo provisioning, deletes old config first"
+            "redo provisioning, deletes old config first",
         )
         override fun execute() {
             super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
