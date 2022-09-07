@@ -14,7 +14,7 @@ Tasks can be run locally or remotely.
 
 ## Status
 
-under development - we are working hard on setting up our environments using provs.
+under development - though we already set up a few IDEs and servers with provs. 
 
 ## Try out
 ### Prerequisites
@@ -57,24 +57,28 @@ After having installed `provs-desktop.jar` (see prerequisites) execute:
 
 **options** 
 * `-p` for interactive password question
+* `-o` for only executing one action, e.g.
+  * `-o verify` for verifying your installation
+  * `-o firefox` to install firefox from apt on ubuntu
+  * `-o teams` to install MS-Teams
 
 
 #### Example
 
 ```bash
-provs-desktop.jar basic local
-# or an office desktop remote:
-provs-desktop.jar office myuser@myhost.com -p
+provs-desktop.jar basic local # installs a basic desktop on a local machine
+provs-desktop.jar office myuser@myhost.com -p # installs an office desktop on a remote machine, prompting for password
+provs-desktop.jar ide myuser@myhost.com # installs an ide on a local machine
+provs-desktop.jar ide myuser@myhost.com -o firefox # installs firefox on a remote machine
+provs-desktop.jar ide myuser@myhost.com -o verify # verifies the installation on a remote machine
 ```
-
-In the second case you'll be prompted for the password of the remote user due to option `-p`.
 
 ### Provision a k3s Server
 
 ```bash
-provs-server.jar k3s local
-# or remote: 
-provs-server.jar k3s myuser@myhost.com    # using ssh-authentication - alternatively use option -p for password authentication
+provs-server.jar k3s local # installs a k3s server locally
+provs-server.jar k3s myuser@myhost.com # install remote k3s using ssh-authentication // option -p for password authentication
+provs-server.jar k3s myuser@myhost.com  -c path/to/k3sServerConfig.yaml -a path/to/application.yaml # as above, but define paths to your application and config yamls
 ```
 
 For the remote server please configure a config file (default file name: server-config.yaml).
@@ -103,7 +107,13 @@ To provision the grafana agent only to an existing k8s system, ensure that the c
 provs-server.jar k3s myuser@myhost.com -o grafana
 ```
 
+Reprovisioning the server can easily be done using the -r or --reprovision option.
 
+```bash
+provs-server.jar k3s myuser@myhost.com -c path/to/k3sServerConfig.yaml -a path/to/application.yaml -r # 
+```
+
+Or you can add `reprovision: true` to your k3sServerConfig.yaml. 
 
 ### Perform a system check
 
