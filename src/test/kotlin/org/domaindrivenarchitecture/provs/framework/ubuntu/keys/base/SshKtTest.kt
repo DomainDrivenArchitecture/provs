@@ -14,7 +14,7 @@ internal class SshRSAKtTest {
         val a = defaultTestContainer()
 
         // when
-        val res = a.configureSshKeys(KeyPair(Secret(publicSSHRSASnakeoilKey()), Secret(privateSSHRSASnakeoilKey())))
+        val res = a.configureSshKeys(SshKeyPair(Secret(publicSSHRSASnakeoilKey()), Secret(privateSSHRSASnakeoilKey())))
 
         // then
         assertTrue(res.success)
@@ -30,7 +30,7 @@ internal class SshED25519KtTest {
         val a = defaultTestContainer()
 
         // when
-        val res = a.configureSshKeys(KeyPair(Secret(publicED25519SnakeOilKey()), Secret(privateED25519SnakeOilKey())))
+        val res = a.configureSshKeys(SshKeyPair(Secret(publicED25519SnakeOilKey()), Secret(privateED25519SnakeOilKey())))
 
         // then
         assertTrue(res.success)

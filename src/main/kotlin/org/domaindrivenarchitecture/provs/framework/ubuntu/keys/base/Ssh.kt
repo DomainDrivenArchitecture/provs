@@ -8,15 +8,15 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.creat
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createSecretFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.SshKeyPair
 
 
 const val KNOWN_HOSTS_FILE = "~/.ssh/known_hosts"
 
-
 /**
  * installs ssh keys for active user
  */
-fun Prov.configureSshKeys(sshKeys: KeyPair) = task {
+fun Prov.configureSshKeys(sshKeys: SshKeyPair) = task {
 
     // TODO: Unit Test, Maybe make sshKeypair class, refactor to infrastructure
 

@@ -9,24 +9,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceTy
 import kotlinx.serialization.Serializable
 
 
-open class KeyPair(val publicKey: Secret, val privateKey: Secret) {
-
-    val keyType =
-        if (publicKey.plain().split('\n')[0].contains("PGP")) {
-            "PGP"
-        } else {
-            publicKey.plain().split(" ")[0]
-        }
-
-    val sshAlgorithmName =
-        if (keyType == "PGP") {
-            "PGP"
-        } else if (keyType.contains("ssh")) {
-            keyType.removePrefix("ssh-")
-        } else {
-            "unknownKeyType"
-        }
-}
+open class KeyPair(val publicKey: Secret, val privateKey: Secret)
 
 
 @Serializable
@@ -38,11 +21,19 @@ class KeyPairSource(val sourceType: SecretSourceType, val publicKey: String, val
     }
 }
 
+@Serializable
+class SshKeyPairSource(val sourceType: SecretSourceType, val publicKey: String, val privateKey: String) {
+    fun keyPair() : SshKeyPair {
+        val pub = sourceType.secret(publicKey)
+        val priv = sourceType.secret(privateKey)
+        return SshKeyPair(pub, priv)
+    }
+}
 
 /**
  * provisions gpg and/or ssh keys for the current user
  */
-fun Prov.provisionKeys(gpgKeys: KeyPair? = null, sshKeys: KeyPair? = null) = task {
+fun Prov.provisionKeys(gpgKeys: KeyPair? = null, sshKeys: SshKeyPair? = null) = task {
     gpgKeys?.let { configureGpgKeys(it, true) }
     sshKeys?.let { configureSshKeys(it) }
     ProvResult(true)  // dummy
