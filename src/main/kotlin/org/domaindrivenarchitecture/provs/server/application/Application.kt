@@ -3,7 +3,7 @@ package org.domaindrivenarchitecture.provs.server.application
 import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
-import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3s
+import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3sCommand
 import kotlin.system.exitProcess
 
 
@@ -33,6 +33,6 @@ fun main(args: Array<String>) {
     }
 
     val prov = createProvInstance(cmd.target)
-    prov.provisionK3s(cmd as K3sCliCommand)
+    prov.provisionK3sCommand(cmd as K3sCliCommand)
 
 }

@@ -77,6 +77,8 @@ fun Prov.provisionIdeDesktop(submodules: List<String>?) {
         installIntelliJ()
     } else if (submodules.contains(DesktopSubmodule.VERIFY.name.lowercase())) {
         verifyIdeSetup()
+    } else if (submodules.contains(DesktopSubmodule.FIREFOX.name.lowercase())) {
+        installFirefox()
     }
 }
 
@@ -106,6 +108,8 @@ fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
         aptInstall(SPELLCHECKING_DE)
     } else if (submodules.contains(DesktopSubmodule.VERIFY.name.lowercase())) {
         verifyOfficeSetup()
+    } else if (submodules.contains(DesktopSubmodule.FIREFOX.name.lowercase())) {
+        installFirefox()
     }
 }
 

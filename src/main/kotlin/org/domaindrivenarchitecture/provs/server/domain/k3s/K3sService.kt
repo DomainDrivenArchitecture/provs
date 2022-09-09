@@ -7,37 +7,27 @@ import org.domaindrivenarchitecture.provs.server.infrastructure.*
 import kotlin.system.exitProcess
 
 
-fun Prov.provisionK3s(cli: K3sCliCommand) = task {
+fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
 
     val grafanaConfigResolved: GrafanaAgentConfigResolved? = findK8sGrafanaConfig(cli.configFileName)?.resolveSecret()
 
     if (cli.submodules == null ) {
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
-        val repo: ApplicationFileRepository = DefaultApplicationFileRepository()
-        repo.assertExists(cli.applicationFileName)
+        DefaultApplicationFileRepository().assertExists(cli.applicationFileName)
 
-        if (!cli.reprovision && !k3sConfig.reprovision) {
-            // full k3s
-            provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
-        }
-        if (cli.reprovision && testConfigExists()) {
+        if (cli.reprovision || k3sConfig.reprovision) {
             deprovisionK3sInfra()
-            provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
         }
-        if (k3sConfig.reprovision && testConfigExists()) {
-            deprovisionK3sInfra()
-            provisionK3sWorker(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
-        }
+        provisionK3s(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
     } else {
-        // submodules only
-        provisionGrafanaSanitized(cli.submodules, grafanaConfigResolved)
+        provisionGrafana(cli.submodules, grafanaConfigResolved)
     }
 }
 
 /**
  * Installs a k3s server.
  */
-fun Prov.provisionK3sWorker(
+fun Prov.provisionK3s(
     k3sConfig: K3sConfig,
     grafanaConfigResolved: GrafanaAgentConfigResolved? = null,
     applicationFileName: ApplicationFileName? = null) = task {
@@ -65,7 +55,7 @@ fun Prov.provisionK3sWorker(
     provisionServerCliConvenience()
 }
 
-private fun Prov.provisionGrafanaSanitized(
+private fun Prov.provisionGrafana(
     submodules: List<String>?,
     grafanaConfigResolved: GrafanaAgentConfigResolved?) = task {
 
