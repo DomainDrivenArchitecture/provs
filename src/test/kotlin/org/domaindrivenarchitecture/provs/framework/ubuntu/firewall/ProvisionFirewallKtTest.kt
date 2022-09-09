@@ -1,4 +1,4 @@
-package org.domaindrivenarchitecture.provs.framework.extensions.server_software.standalone_server.firewall
+package org.domaindrivenarchitecture.provs.framework.ubuntu.firewall
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.docker.dockerProvideImage
