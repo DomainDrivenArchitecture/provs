@@ -1,5 +1,5 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
-enum class DesktopSubmodule {
+enum class DesktopOnlyModule {
     TEAMS, FIREFOX, VERIFY
 }

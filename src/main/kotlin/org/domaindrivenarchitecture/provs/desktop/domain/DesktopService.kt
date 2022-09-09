@@ -17,7 +17,7 @@ internal fun provisionDesktopCmd(prov: Prov, cmd: DesktopCliCommand) {
     // retrieve config
     val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
 
-    prov.provisionDesktop(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail, cmd.submodules)
+    prov.provisionDesktop(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail, cmd.onlyModules)
 }
 
 
@@ -35,18 +35,18 @@ internal fun Prov.provisionDesktop(
     gpg: KeyPair? = null,
     gitUserName: String? = null,
     gitEmail: String? = null,
-    submodules: List<String>?
+    onlyModules: List<String>?
 ) = task {
     validatePrecondition()
-    provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail, submodules)
+    provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail, onlyModules)
 
     if (desktopType == DesktopType.OFFICE) {
-        provisionOfficeDesktop(submodules)
+        provisionOfficeDesktop(onlyModules)
         verifyOfficeSetup()
     }
     if (desktopType == DesktopType.IDE) {
-        provisionOfficeDesktop(submodules)
-        provisionIdeDesktop(submodules)
+        provisionOfficeDesktop(onlyModules)
+        provisionIdeDesktop(onlyModules)
         verifyIdeSetup()
     }
     ProvResult(true)
@@ -58,8 +58,8 @@ fun Prov.validatePrecondition() {
     }
 }
 
-fun Prov.provisionIdeDesktop(submodules: List<String>?) {
-    if (submodules == null) {
+fun Prov.provisionIdeDesktop(onlyModules: List<String>?) {
+    if (onlyModules == null) {
         aptInstall(OPEN_VPM)
         aptInstall(OPENCONNECT)
         aptInstall(VPNC)
@@ -75,24 +75,24 @@ fun Prov.provisionIdeDesktop(submodules: List<String>?) {
         // IDEs
         installVSC("python", "clojure")
         installIntelliJ()
-    } else if (submodules.contains(DesktopSubmodule.VERIFY.name.lowercase())) {
+    } else if (onlyModules.contains(DesktopOnlyModule.VERIFY.name.lowercase())) {
         verifyIdeSetup()
-    } else if (submodules.contains(DesktopSubmodule.FIREFOX.name.lowercase())) {
+    } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
         installFirefox()
     }
 }
 
 @Suppress("unused")
-fun Prov.provisionMSDesktop(submodules: List<String>?) {
-    if (submodules == null) {
+fun Prov.provisionMSDesktop(onlyModules: List<String>?) {
+    if (onlyModules == null) {
         installMsTeams()
-    } else if (submodules.contains(DesktopSubmodule.TEAMS.name.lowercase())) {
+    } else if (onlyModules.contains(DesktopOnlyModule.TEAMS.name.lowercase())) {
         installMsTeams()
     }
 }
 
-fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
-    if (submodules == null) {
+fun Prov.provisionOfficeDesktop(onlyModules: List<String>?) {
+    if (onlyModules == null) {
         aptInstall(ZIP_UTILS)
         aptInstall(BROWSER)
         aptInstall(EMAIL_CLIENT)
@@ -106,9 +106,9 @@ fun Prov.provisionOfficeDesktop(submodules: List<String>?) {
         }
 
         aptInstall(SPELLCHECKING_DE)
-    } else if (submodules.contains(DesktopSubmodule.VERIFY.name.lowercase())) {
+    } else if (onlyModules.contains(DesktopOnlyModule.VERIFY.name.lowercase())) {
         verifyOfficeSetup()
-    } else if (submodules.contains(DesktopSubmodule.FIREFOX.name.lowercase())) {
+    } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
         installFirefox()
     }
 }
@@ -118,9 +118,9 @@ fun Prov.provisionBasicDesktop(
     ssh: KeyPair?,
     gitUserName: String?,
     gitEmail: String?,
-    submodules: List<String>?
+    onlyModules: List<String>?
 ) {
-    if (submodules == null) {
+    if (onlyModules == null) {
         aptInstall(KEY_MANAGEMENT)
         aptInstall(VERSION_MANAGEMENT)
         aptInstall(NETWORK_TOOLS)
@@ -147,7 +147,7 @@ fun Prov.provisionBasicDesktop(
         configureNoSwappiness()
         configureBash()
         installVirtualBoxGuestAdditions()
-    } else if (submodules.contains(DesktopSubmodule.FIREFOX.name.lowercase())) {
+    } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
         installFirefox()
     }
 }

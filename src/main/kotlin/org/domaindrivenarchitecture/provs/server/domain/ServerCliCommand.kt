@@ -12,9 +12,7 @@ open class ServerCliCommand(
     val target: TargetCliCommand,
     val configFileName: ConfigFileName?,)
 {
-    fun isValidServerType(): Boolean {
-        return serverType == ServerType.K3S
-    }
+
     fun isValidTarget(): Boolean {
         return target.isValid()
     }

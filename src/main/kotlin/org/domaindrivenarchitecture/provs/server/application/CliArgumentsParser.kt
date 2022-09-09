@@ -9,7 +9,7 @@ import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
-import org.domaindrivenarchitecture.provs.server.domain.k3s.ServerSubmodule
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ServerOnlyModule
 
 class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
@@ -34,7 +34,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
                 ),
                 module.configFileName,
                 module.applicationFileName,
-                module.submodules,
+                module.onlyModules,
                 module.reprovision,
             )
             else -> return ServerCliCommand(
@@ -52,7 +52,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         var parsed: Boolean = false
         var configFileName: ConfigFileName? = null
         var applicationFileName: ApplicationFileName? = null
-        var submodules: List<String>? = null
+        var onlyModules: List<String>? = null
         var reprovision: Boolean = false
     }
 
@@ -70,7 +70,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
             "the filename containing the yaml a application deployment"
         )
         val only by option(
-            ArgType.Choice<ServerSubmodule>(),
+            ArgType.Choice<ServerOnlyModule>(),
             "only",
             "o",
             "provisions only parts ",
@@ -84,7 +84,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         override fun execute() {
             super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             super.applicationFileName = cliApplicationFileName?.let { ApplicationFileName(it) }
-            super.submodules = if (only != null) listOf(only!!.name.lowercase()) else null
+            super.onlyModules = if (only != null) listOf(only!!.name.lowercase()) else null
             super.reprovision = cliReprovision == true
             super.parsed = true
         }

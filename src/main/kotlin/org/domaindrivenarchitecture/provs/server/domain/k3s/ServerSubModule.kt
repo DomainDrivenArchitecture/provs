@@ -1,5 +1,5 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
-enum class ServerSubmodule {
+enum class ServerOnlyModule {
     GRAFANA
 }

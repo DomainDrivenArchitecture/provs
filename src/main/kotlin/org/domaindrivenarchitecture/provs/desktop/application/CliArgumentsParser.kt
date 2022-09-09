@@ -6,7 +6,7 @@ import org.domaindrivenarchitecture.provs.configuration.application.CliTargetPar
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.desktop.domain.DesktopCliCommand
-import org.domaindrivenarchitecture.provs.desktop.domain.DesktopSubmodule
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopOnlyModule
 import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
 
 
@@ -30,14 +30,14 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
                 passwordInteractive
             ),
             module.configFileName,
-            module.submodules
+            module.onlyModules
         )
     }
 
     abstract class DesktopSubcommand(name: String, description: String) : Subcommand(name, description) {
         var parsed: Boolean = false
         var configFileName: ConfigFileName? = null
-        var submodules: List<String>? = null
+        var onlyModules: List<String>? = null
 
         val cliConfigFileName by option(
             ArgType.String,
@@ -46,7 +46,7 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
             "the filename containing the yaml config",
         )
         val only by option(
-            ArgType.Choice<DesktopSubmodule>(),
+            ArgType.Choice<DesktopOnlyModule>(),
             "only",
             "o",
             "provisions only parts ",
@@ -55,7 +55,7 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
         override fun execute() {
             configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             parsed = true
-            submodules = if (only != null) listOf(only!!.name.lowercase()) else null
+            onlyModules = if (only != null) listOf(only!!.name.lowercase()) else null
         }
     }
 

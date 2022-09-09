@@ -21,7 +21,7 @@ internal class DesktopServiceKtTest {
             DesktopType.BASIC,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
-            submodules = null
+            onlyModules = null
         )
 
         // then
@@ -46,7 +46,7 @@ internal class DesktopServiceKtTest {
             DesktopType.IDE,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
-            submodules = null
+            onlyModules = null
         )
 
         // then
@@ -68,7 +68,7 @@ internal class DesktopServiceKtTest {
             config.gpg?.keyPair(),
             config.gitUserName,
             config.gitEmail,
-            submodules = null
+            onlyModules = null
         )
 
         // then
