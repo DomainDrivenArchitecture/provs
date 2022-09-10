@@ -129,11 +129,11 @@ i+XV3Dazj3nq/DxUB0neLU/r1afAEiqZAkI=
 -----END PGP PRIVATE KEY BLOCK-----""".trimIndent()
 }
 
-fun publicSSHSnakeoilKey(): String {
+fun publicSSHRSASnakeoilKey(): String {
     return """ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOtQOq8a/Z7SdZVPrh+Icaq5rr+Qg1TZP4IPuRoFgfujUztQ2dy5DfTEbabJ0qHyo+PKwBDQorVohrW7CwvCEVQQh2NLuGgnukBN2ut5Lam7a/fZBoMjAyTvD4bXyEsUr/Bl5CLoBDkKM0elUxsc19ndzSofnDWeGyQjJIWlkNkVk/ybErAnIHVE+D+g3UxwA+emd7BF72RPqdVN39Eu4ntnxYzX0eepc8rkpFolVn6+Ai4CYHE4FaJ7bJ9WGPbwLuDl0pw/Cp3ps17cB+JlQfJ2spOq0tTVk+GcdGnt+mq0WaOnvVeQsGJ2O1HpY3VqQd1AsC2UOyHhAQ00pw7Pi9 snake@oil.com"""
 }
 
-fun privateSSHSnakeoilKey(): String {
+fun privateSSHRSASnakeoilKey(): String {
     return """
         -----BEGIN RSA PRIVATE KEY-----
         MIIEowIBAAKCAQEAzrUDqvGv2e0nWVT64fiHGqua6/kINU2T+CD7kaBYH7o1M7UN
@@ -163,4 +163,17 @@ fun privateSSHSnakeoilKey(): String {
         OUxwE8Su4WnoQc7WjkTG0M3FECAu7TEcF9uqdcEsW+4+JMAhE5oo
         -----END RSA PRIVATE KEY-----
     """.trimIndent()
+}
+
+fun publicED25519SnakeOilKey(): String {
+    return """ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGL6JP3FhUZrVIfA9EzcJdlXwq3MHG6+QEFDFeNCxmOE snake@oil.com"""
+}
+fun privateED25519SnakeOilKey(): String {
+    return """-----BEGIN OPENSSH PRIVATE KEY-----
+            b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+            QyNTUxOQAAACBi+iT9xYVGa1SHwPRM3CXZV8KtzBxuvkBBQxXjQsZjhAAAAJBoEaYdaBGm
+            HQAAAAtzc2gtZWQyNTUxOQAAACBi+iT9xYVGa1SHwPRM3CXZV8KtzBxuvkBBQxXjQsZjhA
+            AAAEB6dfLASdiUR6KzQVydw16iXN1ImqoLoe+I24G4K386J2L6JP3FhUZrVIfA9EzcJdlX
+            wq3MHG6+QEFDFeNCxmOEAAAACmVyaWtAbUtJREUBAgM=
+            -----END OPENSSH PRIVATE KEY-----""".trimIndent()
 }

@@ -7,19 +7,18 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.check
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createSecretFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.SshKeyPair
 
 
 const val KNOWN_HOSTS_FILE = "~/.ssh/known_hosts"
 
-
 /**
- * installs ssh keys for active user
+ * Installs ssh keys for active user; ssh filenames depend on the ssh key type, e.g. for public key file: "id_rsa.pub", "id_id_ed25519.pub", etc
  */
-fun Prov.configureSshKeys(sshKeys: KeyPair) = task {
+fun Prov.configureSshKeys(sshKeys: SshKeyPair) = task {
     createDir(".ssh", "~/")
-    createSecretFile("~/.ssh/id_rsa.pub", sshKeys.publicKey, "644")
-    createSecretFile("~/.ssh/id_rsa", sshKeys.privateKey, "600")
+    createSecretFile("~/.ssh/id_${sshKeys.sshAlgorithmName}.pub", sshKeys.publicKey, "644")
+    createSecretFile("~/.ssh/id_${sshKeys.sshAlgorithmName}", sshKeys.privateKey, "600")
 }
 
 

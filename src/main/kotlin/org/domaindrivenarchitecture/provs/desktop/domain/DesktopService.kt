@@ -7,6 +7,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptPurge
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.SshKeyPair
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
@@ -31,7 +32,7 @@ internal fun provisionDesktopCmd(prov: Prov, cmd: DesktopCliCommand) {
  */
 internal fun Prov.provisionDesktop(
     desktopType: DesktopType = DesktopType.BASIC,
-    ssh: KeyPair? = null,
+    ssh: SshKeyPair? = null,
     gpg: KeyPair? = null,
     gitUserName: String? = null,
     gitEmail: String? = null,
@@ -115,7 +116,7 @@ fun Prov.provisionOfficeDesktop(onlyModules: List<String>?) {
 
 fun Prov.provisionBasicDesktop(
     gpg: KeyPair?,
-    ssh: KeyPair?,
+    ssh: SshKeyPair?,
     gitUserName: String?,
     gitEmail: String?,
     onlyModules: List<String>?

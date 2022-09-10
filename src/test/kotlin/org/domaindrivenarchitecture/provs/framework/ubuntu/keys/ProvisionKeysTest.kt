@@ -17,7 +17,7 @@ internal class ProvisionKeysTest {
         // when
         val res = a.provisionKeys(
             KeyPair(Secret(publicGPGSnakeoilKey()), Secret(privateGPGSnakeoilKey())),
-            KeyPair(Secret(publicSSHSnakeoilKey()), Secret(privateSSHSnakeoilKey()))
+            SshKeyPair(Secret(publicSSHRSASnakeoilKey()), Secret(privateSSHRSASnakeoilKey()))
         )
 
         // then
