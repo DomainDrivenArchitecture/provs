@@ -125,6 +125,10 @@ provs-syspec.jar local
 provs-syspec.jar myuser@myhost.com -c my-syspec-config.yaml
 ```
 
+Example output:
+
+![Syspec output example](doc/resources/syspec-output-example.jpg "Syspec output example")
+
 ## Get help
 
 To get help you can make use of the `-h` option:
