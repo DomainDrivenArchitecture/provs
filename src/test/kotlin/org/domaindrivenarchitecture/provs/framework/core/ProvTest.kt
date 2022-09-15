@@ -39,9 +39,8 @@ internal class ProvTest {
         val script = """
             # test some script commands
         
-            ping -c1 nu.nl
+            ping -c1 hetzner.com
             echo something
-            ping -c1 github.com
         """
 
         // when
@@ -58,9 +57,8 @@ internal class ProvTest {
         val script = """
             # test some script commands
         
-            ping -c1 google.com
+            ping -c1 hetzner.com
             echo something
-            ping -c1 github.com
             echo 1 # comment behind command
         """
 

@@ -14,7 +14,7 @@ internal class SyspecConfigRepoKtTest {
 
         // then
         assertEquals(
-            "SyspecConfig(command=[CommandSpec(command=tfenv -h, out=null), CommandSpec(command=python3 --version, out=null), CommandSpec(command=pip3 --version, out=null), CommandSpec(command=terraform --version, out=1.0.8)], file=null, folder=null, host=null, package=[PackageSpec(name=firefox, installed=true), PackageSpec(name=thunderbird, installed=true), PackageSpec(name=ssh, installed=true), PackageSpec(name=git, installed=true), PackageSpec(name=leiningen, installed=true)], netcat=null, socket=null, certificate=null, s3=null)",
+            "SyspecConfig(command=null, file=null, folder=null, host=null, package=[PackageSpec(name=firefox, installed=true), PackageSpec(name=thunderbird, installed=true), PackageSpec(name=ssh, installed=true), PackageSpec(name=git, installed=true)], netcat=null, socket=null, certificate=null, s3=null)",
             res.getOrNull().toString())
     }
 
