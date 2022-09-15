@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.application
 
 import kotlinx.serialization.SerializationException
-import org.domaindrivenarchitecture.provs.desktop.domain.provisionDesktopCmd
+import org.domaindrivenarchitecture.provs.desktop.domain.provisionDesktopCommand
 import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
 import java.io.FileNotFoundException
 import kotlin.system.exitProcess
@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
     val prov = createProvInstance(cmd.target, remoteHostSetSudoWithoutPasswordRequired = true)
 
     try {
-        provisionDesktopCmd(prov, cmd)
+        provisionDesktopCommand(prov, cmd)
     } catch (e: SerializationException) {
         println(
             "Error: File \"${cmd.configFile?.fileName}\" has an invalid format and or invalid data.\n"

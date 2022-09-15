@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.desktop.domain
 
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.*
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.git.provisionGit
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptPurge
@@ -13,12 +12,19 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
-internal fun provisionDesktopCmd(prov: Prov, cmd: DesktopCliCommand) {
+internal fun provisionDesktopCommand(prov: Prov, cmd: DesktopCliCommand) {
 
     // retrieve config
     val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
 
-    prov.provisionDesktop(cmd.type, conf.ssh?.keyPair(), conf.gpg?.keyPair(), conf.gitUserName, conf.gitEmail, cmd.onlyModules)
+    prov.provisionDesktop(
+        cmd.type,
+        conf.ssh?.keyPair(),
+        conf.gpg?.keyPair(),
+        conf.gitUserName,
+        conf.gitEmail,
+        cmd.onlyModules
+    )
 }
 
 
@@ -43,14 +49,19 @@ internal fun Prov.provisionDesktop(
 
     if (desktopType == DesktopType.OFFICE) {
         provisionOfficeDesktop(onlyModules)
-        verifyOfficeSetup()
+        if (onlyModules == null) {
+            verifyOfficeSetup()
+        }
     }
     if (desktopType == DesktopType.IDE) {
-        provisionOfficeDesktop(onlyModules)
-        provisionIdeDesktop(onlyModules)
-        verifyIdeSetup()
+        if (onlyModules == null) {
+            provisionOfficeDesktop()
+            provisionIdeDesktop()
+            verifyIdeSetup()
+        } else {
+            provisionIdeDesktop(onlyModules)
+        }
     }
-    ProvResult(true)
 }
 
 fun Prov.validatePrecondition() {
@@ -59,7 +70,7 @@ fun Prov.validatePrecondition() {
     }
 }
 
-fun Prov.provisionIdeDesktop(onlyModules: List<String>?) {
+fun Prov.provisionIdeDesktop(onlyModules: List<String>? = null) {
     if (onlyModules == null) {
         aptInstall(OPEN_VPM)
         aptInstall(OPENCONNECT)
@@ -83,7 +94,7 @@ fun Prov.provisionIdeDesktop(onlyModules: List<String>?) {
     }
 }
 
-@Suppress("unused")
+@Suppress("unused")  // used in other projects
 fun Prov.provisionMSDesktop(onlyModules: List<String>?) {
     if (onlyModules == null) {
         installMsTeams()
@@ -92,7 +103,7 @@ fun Prov.provisionMSDesktop(onlyModules: List<String>?) {
     }
 }
 
-fun Prov.provisionOfficeDesktop(onlyModules: List<String>?) {
+fun Prov.provisionOfficeDesktop(onlyModules: List<String>? = null) {
     if (onlyModules == null) {
         aptInstall(ZIP_UTILS)
         aptInstall(BROWSER)
@@ -102,6 +113,7 @@ fun Prov.provisionOfficeDesktop(onlyModules: List<String>?) {
         installZimWiki()
         installNextcloudClient()
 
+        // optional as installation of these tools often fail and they are not considered mandatory
         optional {
             aptInstall(DRAWING_TOOLS)
         }
