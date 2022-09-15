@@ -4,10 +4,12 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.syspec.domain.verifySpecFromResource
 
+private const val resourcePath = "org/domaindrivenarchitecture/provs/syspec/"
+
 fun Prov.verifyIdeSetup(): ProvResult = task {
-    verifySpecFromResource("syspec-ide-config.yaml")
+    verifySpecFromResource("${resourcePath}syspec-ide-config.yaml")
 }
 
 fun Prov.verifyOfficeSetup(): ProvResult = task {
-    verifySpecFromResource("syspec-office-config.yaml")
+    verifySpecFromResource("${resourcePath}syspec-office-config.yaml")
 }
