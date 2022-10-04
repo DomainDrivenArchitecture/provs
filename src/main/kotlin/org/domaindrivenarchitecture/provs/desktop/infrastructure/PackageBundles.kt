@@ -4,7 +4,7 @@ val KEY_MANAGEMENT = "ssh gnupg"
 
 val VERSION_MANAGEMENT = "git"
 
-val NETWORK_TOOLS = "curl wget"
+val NETWORK_TOOLS = "curl wget net-tools"
 
 val KEY_MANAGEMENT_GUI = "seahorse"
 
@@ -14,7 +14,7 @@ val EMAIL_CLIENT = "thunderbird"
 
 val OFFICE_SUITE =  "libreoffice"
 
-val CLIP_TOOLS = "xclip"
+val CLIP_TOOLS = "xclip xdotool"
 
 val OS_ANALYSIS = "lsof strace ncdu iptraf htop iotop iftop"
 
@@ -32,7 +32,7 @@ val VPNC = "vpnc network-manager-vpnc network-manager-vpnc-gnome vpnc-scripts"
 
 val JAVA = "openjdk-8-jdk openjdk-11-jdk openjdk-17-jdk jarwrapper"
 
-val DRAWING_TOOLS = "inkscape dia openboard"
+val DRAWING_TOOLS = "inkscape dia openboard graphviz"
 
 val CLOJURE_TOOLS = "leiningen"
 
