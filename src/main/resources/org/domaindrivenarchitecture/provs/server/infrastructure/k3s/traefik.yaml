@@ -31,17 +31,7 @@ spec:
       kubernetesIngress:
         publishedService:
           enabled: true
-    priorityClassName: "system-cluster-critical"
-    entryPoints:
-      web:
-        address: :80
-        http:
-          redirections:
-            entryPoint:
-              to: websecure
-              scheme: https
-      websecure:
-        address: :443          
+    priorityClassName: "system-cluster-critical"         
     image:
       name: "rancher/mirrored-library-traefik"
       tag: "2.6.2"
