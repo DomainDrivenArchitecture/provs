@@ -1,3 +1,6 @@
 package org.domaindrivenarchitecture.provs.configuration.domain
 
-data class ConfigFileName(val fileName: String)
+class ConfigFileName(fileName: String)
+{
+    val fileName = fileName.trim()
+}
