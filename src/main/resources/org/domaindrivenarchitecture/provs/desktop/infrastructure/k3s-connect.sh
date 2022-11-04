@@ -7,8 +7,8 @@ function usage() {
 }
 
 function main() {
-  local cluster_name="${1}"; shift
-  local domain_name="${1:-meissa-gmbh.de}"; shift
+  local cluster_name="${1}";
+  local domain_name="${2:-meissa-gmbh.de}";
 
   /usr/local/bin/k3s-create-context.sh ${cluster_name} ${domain_name}
   kubectl config use-context ${cluster_name}
