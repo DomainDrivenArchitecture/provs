@@ -14,6 +14,6 @@ class GopassSecretSource(path: String) : SecretSource(path) {
     }
     override fun secretNullable(): Secret? {
         val p = Prov.newInstance(name = "GopassSecretSource for $input")
-        return p.getSecret("gopass show -f " + input)
+        return p.getSecret("gopass show -f $input", true)
     }
 }

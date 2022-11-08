@@ -195,11 +195,12 @@ open class Prov protected constructor(
      * Retrieve a secret by executing the given command.
      * Returns the result of the command as secret.
      */
-    fun getSecret(command: String): Secret? {
+    fun getSecret(command: String, removeNewlineSuffix: Boolean = false): Secret? {
         val result = cmdNoLog(command)
         return if (result.success && result.out != null) {
             addResultToEval(ProvResult(true, getCallingMethodName()))
-            Secret(result.out)
+            val plainSecret = if (removeNewlineSuffix && result.out.takeLast(1) == "\n") result.out.dropLast(1) else result.out
+            Secret(plainSecret)
         } else {
             addResultToEval(ProvResult(false, getCallingMethodName(), err = result.err, exception = result.exception))
             null
