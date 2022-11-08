@@ -155,7 +155,10 @@ fun Prov.provisionBasicDesktop(
 
         installFirefox()
         installGopass()
+        installGopassBridgeJsonApi()
+        downloadGopassBridge()
         installRedshift()
+
         configureRedshift()
         configureNoSwappiness()
         configureBash()
