@@ -160,13 +160,13 @@ fun Prov.provisionK3sApplication(applicationFileName: ApplicationFileName) = tas
 }
 
 
-// ============================  private and internal functions  =============================
+// ============================  functions to create k3s files and apply  =============================
 
-internal fun Prov.applyK3sFile(file: File) = task {
+fun Prov.applyK3sFile(file: File) = task {
     cmd("kubectl apply -f ${file.path}", sudo = true)
 }
 
-private fun Prov.createK3sFileFromResource(
+fun Prov.createK3sFileFromResource(
     file: File,
     posixFilePermission: FileMode? = "644"
 ) = task {
@@ -179,12 +179,12 @@ private fun Prov.createK3sFileFromResource(
     )
 }
 
-private fun Prov.applyK3sFileFromResource(file: File, posixFilePermission: String? = "644") = task {
+fun Prov.applyK3sFileFromResource(file: File, posixFilePermission: String? = "644") = task {
     createK3sFileFromResource(file, posixFilePermission)
     applyK3sFile(file)
 }
 
-private fun Prov.applyK3sFileFromResourceTemplate(
+fun Prov.applyK3sFileFromResourceTemplate(
     file: File,
     values: Map<String, String>,
     posixFilePermission: String? = "644",
@@ -194,7 +194,7 @@ private fun Prov.applyK3sFileFromResourceTemplate(
     applyK3sFile(file)
 }
 
-private fun Prov.createK3sFileFromResourceTemplate(
+fun Prov.createK3sFileFromResourceTemplate(
     file: File,
     values: Map<String, String>,
     posixFilePermission: String? = "644",
@@ -215,5 +215,5 @@ private fun File.templateName(): String {
 }
 
 internal fun Prov.configureShellAliases() = task {
-    addTextToFile( "\nalias k=kubectl\n", File(".bash_aliases",))
+    addTextToFile( "\nalias k=\"sudo kubectl\"\n", File(".bash_aliases",))
 }
