@@ -6,6 +6,25 @@ function usage() {
   echo "Requires argument cluster_name and domain_name in server fqdn {cluster_name}.{domain_name}"
 }
 
+function sourceNewContext() {
+  DEFAULT_KUBE_CONTEXTS="$HOME/.kube/config"
+	if test -f "${DEFAULT_KUBE_CONTEXTS}"
+	then
+	  export KUBECONFIG="$DEFAULT_KUBE_CONTEXTS"
+	fi
+
+	# Additional contexts should be in ~/.kube/custom-contexts/
+	CUSTOM_KUBE_CONTEXTS="$HOME/.kube/custom-contexts"
+	mkdir -p "${CUSTOM_KUBE_CONTEXTS}"
+
+	OIFS="$IFS"
+	IFS=$'\n'
+	for contextFile in `find "${CUSTOM_KUBE_CONTEXTS}" -type f -name "*.yml"`
+	do
+	    export KUBECONFIG="$contextFile:$KUBECONFIG"
+	done
+	IFS="$OIFS"
+}
 
 function main() {
     local cluster_name="${1}";
@@ -22,6 +41,7 @@ function main() {
         | del(.preferences) \
         | .users[0].name=\"${cluster_name}\"" - \
     > ~/.kube/custom-contexts/${cluster_name}.yml
+    sourceNewContext
 }
 
 if [ $# -gt 0 ]

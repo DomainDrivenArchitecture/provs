@@ -12,7 +12,10 @@ function main() {
 
   /usr/local/bin/k3s-create-context.sh ${cluster_name} ${domain_name}
   kubectl config use-context ${cluster_name}
-  ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@${cluster_name}.${domain_name} -L 8002:localhost:8002 -L 6443:192.168.5.1:6443
+    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@${cluster_name}.${domain_name} \
+       -L 8002:localhost:8002 \
+       -L 6443:192.168.5.1:6443 \
+       -L 9000:192.168.5.1:9000
 }
 
 if [ $# -gt 0 ]

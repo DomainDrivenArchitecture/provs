@@ -82,29 +82,6 @@ fun Prov.installDevopsScripts() {
         )
     }
 
-    task("install k8sCreateContext") {
-        val k8sContextFile = "/usr/local/bin/k8s-create-context.sh"
-        createFileFromResource(
-            k8sContextFile,
-            "k8s-create-context.sh",
-            resourcePath,
-            "555",
-            sudo = true
-        )
-
-    }
-
-    task("install k8sConnect") {
-        val k8sConnectFile = "/usr/local/bin/k8s-connect.sh"
-        createFileFromResource(
-            k8sConnectFile,
-            "k8s-connect.sh",
-            resourcePath,
-            "555",
-            sudo = true
-        )
-    }
-
     task("install k3sCreateContext") {
         val k3sContextFile = "/usr/local/bin/k3s-create-context.sh"
         createFileFromResource(
