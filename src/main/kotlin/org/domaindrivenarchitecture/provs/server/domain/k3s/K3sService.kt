@@ -15,10 +15,8 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
         DefaultApplicationFileRepository().assertExists(cli.applicationFileName)
 
-        if (cli.reprovision || k3sConfig.reprovision) {
-            deprovisionK3sInfra()
-        }
-        provisionK3s(k3sConfig, grafanaConfigResolved, cli.applicationFileName)
+        val k3sConfigReprovision = k3sConfig.copy(reprovision = cli.reprovision || k3sConfig.reprovision)
+        provisionK3s(k3sConfigReprovision, grafanaConfigResolved, cli.applicationFileName)
     } else {
         provisionGrafana(cli.onlyModules, grafanaConfigResolved)
     }
@@ -31,6 +29,10 @@ fun Prov.provisionK3s(
     k3sConfig: K3sConfig,
     grafanaConfigResolved: GrafanaAgentConfigResolved? = null,
     applicationFileName: ApplicationFileName? = null) = task {
+
+    if (k3sConfig.reprovision) {
+        deprovisionK3sInfra()
+    }
 
     provisionNetwork(k3sConfig)
 
