@@ -6,7 +6,11 @@ metadata:
 data:
   config: |
     address-pools:
-    - name: default
+    - name: public
       protocol: layer2
       addresses:
       - ${node_ipv4}/32
+    - name: private
+      protocol: layer2
+      addresses:
+      - ${loopback_ipv4}/32
