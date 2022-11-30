@@ -1,19 +1,19 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
-import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
-import org.domaindrivenarchitecture.provs.configuration.infrastructure.DefaultConfigFileRepository
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.Assertions.assertEquals
 import java.io.File
 
-internal class DefaultApplicationFileRepositoryKtTest {
+internal class DefaultConfigFileRepositoryKtTest {
 
     @Test
     fun assertExistsThrowsRuntimeException() {
         // when
-        val invalidFileName = ConfigFileName("iDontExist")
-        val repo = DefaultConfigFileRepository()
+        val invalidFileName = ApplicationFileName("iDontExist")
+        val repo: ApplicationFileRepository = DefaultApplicationFileRepository()
 
         // then
         val exception = assertThrows<RuntimeException>(
@@ -21,7 +21,7 @@ internal class DefaultApplicationFileRepositoryKtTest {
         ) { repo.assertExists(invalidFileName) }
 
         assertEquals(
-            "Config file iDontExist not found. Please check if path is correct.",
+            "Application file iDontExist not found. Please check if path is correct.",
             exception.message)
     }
 
@@ -31,8 +31,8 @@ internal class DefaultApplicationFileRepositoryKtTest {
         val validFileName = "src/test/resources/existing_file"
 
         // when
-        val validFile = ConfigFileName(File(validFileName).path)
-        val repo = DefaultConfigFileRepository()
+        val validFile = ApplicationFileName(File(validFileName).path)
+        val repo: ApplicationFileRepository = DefaultApplicationFileRepository()
         repo.assertExists(validFile)
 
         // then
