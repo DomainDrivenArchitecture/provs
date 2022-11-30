@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
+import org.domaindrivenarchitecture.provs.configuration.infrastructure.DefaultConfigFileRepository
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent.GrafanaAgentConfigResolved
 import org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent.provisionGrafanaAgent
@@ -14,6 +15,7 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
     if (cli.onlyModules == null ) {
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
         DefaultApplicationFileRepository().assertExists(cli.applicationFileName)
+        DefaultConfigFileRepository().assertExists(cli.configFileName)
 
         val k3sConfigReprovision = k3sConfig.copy(reprovision = cli.reprovision || k3sConfig.reprovision)
         provisionK3s(k3sConfigReprovision, grafanaConfigResolved, cli.applicationFileName)
