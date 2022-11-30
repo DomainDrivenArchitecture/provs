@@ -55,8 +55,10 @@ fun Prov.provisionK3s(
     if (applicationFileName != null) {
         provisionK3sApplication(applicationFileName)
     }
-    
-    provisionServerCliConvenience()
+
+    if (!k3sConfig.reprovision) {
+        provisionServerCliConvenience()
+    }
 }
 
 private fun Prov.provisionGrafana(
