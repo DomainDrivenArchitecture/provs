@@ -91,7 +91,7 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
 
         // metallb
         applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-namespace.yaml"))
-        applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-0.10.2-manifest.yaml"))
+        applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-0.13.7-native-manifest.yaml"))
         applyK3sFileFromResourceTemplate(
             File(k3sManualManifestsDir, "metallb-config.yaml"),
             k3sConfigMap,
