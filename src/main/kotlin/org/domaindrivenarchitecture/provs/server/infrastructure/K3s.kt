@@ -90,7 +90,6 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
         cmd("INSTALL_K3S_VERSION=$K3S_VERSION k3s-install.sh")
 
         // metallb
-        applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-namespace.yaml"))
         applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-0.13.7-native-manifest.yaml"))
         applyK3sFileFromResourceTemplate(
             File(k3sManualManifestsDir, "metallb-config.yaml"),
