@@ -91,11 +91,14 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
 
         // metallb
         applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-0.13.7-native-manifest.yaml"))
-        applyK3sFileFromResourceTemplate(
-            File(k3sManualManifestsDir, "metallb-config.yaml"),
-            k3sConfigMap,
-            alternativeResourceName = File(metallbConfigResourceFileName)
-        )
+
+        repeatTaskUntilSuccess(6, 10) {
+            applyK3sFileFromResourceTemplate(
+                File(k3sManualManifestsDir, "metallb-config.yaml"),
+                k3sConfigMap,
+                alternativeResourceName = File(metallbConfigResourceFileName)
+            )
+        }
 
         // traefik
         if (k3sConfig.isDualStack()) {
