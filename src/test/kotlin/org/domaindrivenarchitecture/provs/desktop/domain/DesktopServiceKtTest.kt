@@ -1,10 +1,17 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
+import org.domaindrivenarchitecture.provs.framework.core.ProgressType
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.local
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
 import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.defaultTestContainerName
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
+import org.domaindrivenarchitecture.provs.test.testDockerWithSudo
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -14,7 +21,17 @@ internal class DesktopServiceKtTest {
     @ContainerTest
     fun provisionLocalDesktop_fails_if_user_cannot_sudo_without_password() {
         // given
-        val prov =
+        local().cmd( "sudo docker exec -it --user testuser2 provs-test-no-pw /bin/bash" )
+        val prov = Prov.newInstance(
+            ContainerUbuntuHostProcessor(
+                "prov-test-no-pw",
+                startMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE,
+                sudo = true,
+                dockerImage = "ubuntu_plus_user"
+            ),
+            progressType = ProgressType.NONE
+        )
+
 
         // when
         // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
