@@ -3,12 +3,31 @@ package org.domaindrivenarchitecture.provs.desktop.domain
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class DesktopServiceKtTest {
+
+    @ContainerTest
+    fun provisionLocalDesktop_fails_if_user_cannot_sudo_without_password() {
+        // given
+        val prov =
+
+        // when
+        // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
+        val res = prov.provisionDesktop(
+            DesktopType.BASIC,
+            gitUserName = "testuser",
+            gitEmail = "testuser@test.org",
+            onlyModules = null
+        )
+
+        // then
+        assertTrue(res.success)
+    }
 
     @ExtensiveContainerTest
     fun provisionDesktop() {
