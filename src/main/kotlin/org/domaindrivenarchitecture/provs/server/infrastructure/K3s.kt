@@ -100,6 +100,8 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
             )
         }
 
+        applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-l2advertisement.yaml"))
+
         // traefik
         if (k3sConfig.isDualStack()) {
             // see https://github.com/k3s-io/k3s/discussions/5003
