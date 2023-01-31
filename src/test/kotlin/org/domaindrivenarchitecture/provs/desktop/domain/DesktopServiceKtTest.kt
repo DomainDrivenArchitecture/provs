@@ -32,7 +32,7 @@ internal class DesktopServiceKtTest {
             ),
             progressType = ProgressType.NONE
         )
-        prov.deleteFile("/etc/sudoers.de/testuser", sudo = true)   // remove no password required
+        prov.deleteFile("/etc/sudoers.d/testuser", sudo = true)   // remove no password required
 
         // when
         Assertions.assertThrows(Exception::class.java) {
