@@ -3,47 +3,46 @@ package org.domaindrivenarchitecture.provs.desktop.domain
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.ProgressType
 import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
 import org.domaindrivenarchitecture.provs.framework.core.remote
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
-import org.domaindrivenarchitecture.provs.test.defaultTestContainerName
-import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
-import org.domaindrivenarchitecture.provs.test.testDockerWithSudo
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class DesktopServiceKtTest {
 
-    @ContainerTest
+    @ExtensiveContainerTest
     fun provisionLocalDesktop_fails_if_user_cannot_sudo_without_password() {
         // given
-        local().cmd( "sudo docker exec -it --user testuser2 provs-test-no-pw /bin/bash" )
+        val containerName = "prov-test-sudo-no-pw"
+        local().provideContainer(containerName, "ubuntu_plus_user")
         val prov = Prov.newInstance(
             ContainerUbuntuHostProcessor(
-                "prov-test-no-pw",
+                containerName,
                 startMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE,
                 sudo = true,
                 dockerImage = "ubuntu_plus_user"
             ),
             progressType = ProgressType.NONE
         )
-
+        prov.deleteFile("/etc/sudoers.de/testuser", sudo = true)   // remove no password required
 
         // when
-        // in order to test DesktopType.OFFICE: fix installing libreoffice for a fresh container as it hangs the first time but succeeds 2nd time
-        val res = prov.provisionDesktop(
-            DesktopType.BASIC,
-            gitUserName = "testuser",
-            gitEmail = "testuser@test.org",
-            onlyModules = null
-        )
-
-        // then
-        assertTrue(res.success)
+        Assertions.assertThrows(Exception::class.java) {
+            prov.provisionDesktop(
+                DesktopType.BASIC,
+                gitUserName = "testuser",
+                gitEmail = "testuser@test.org",
+                onlyModules = null
+            )
+        }
     }
 
     @ExtensiveContainerTest
