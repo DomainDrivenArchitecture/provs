@@ -47,11 +47,12 @@ fun createProvInstance(
     }
 }
 
-
 private fun createLocalProvInstance(): Prov {
     val prov = local()
+    prov.cmd("sudo -K") // revoke any temporary sudo privileges
     if (!prov.currentUserCanSudo()) {
-        val password = PromptSecretSource("Please enter password to configure sudo without password in the future.").secret()
+        val password = PromptSecretSource("Please enter password to configure sudo without password in the future." +
+                "\nWarning: This will permanently allow your user to use sudo privileges without a password.").secret()
         prov.makeUserSudoerWithNoSudoPasswordRequired(password)
     }
     return prov
