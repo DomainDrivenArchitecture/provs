@@ -29,9 +29,9 @@ fun createProvInstance(
 
         val remoteTarget = targetCommand.remoteTarget()
         if (targetCommand.isValidLocalhost()) {
-            return local()
+            return createLocalProvInstance()
         } else if (targetCommand.isValidRemote() && remoteTarget != null) {
-            return createProvInstanceRemote(
+            return createRemoteProvInstance(
                 remoteTarget.host,
                 remoteTarget.user,
                 remoteTarget.password == null,
@@ -47,7 +47,18 @@ fun createProvInstance(
     }
 }
 
-private fun createProvInstanceRemote(
+
+private fun createLocalProvInstance(): Prov {
+    val prov = local()
+    if (!prov.currentUserCanSudo()) {
+        val password = PromptSecretSource("Please enter password to configure sudo without password in the future.").secret()
+        prov.makeUserSudoerWithNoSudoPasswordRequired(password)
+    }
+    return prov
+}
+
+
+private fun createRemoteProvInstance(
     host: String,
     remoteUser: String,
     sshWithKey: Boolean,
