@@ -93,7 +93,6 @@ private fun createRemoteProvInstance(
 }
 
 
-// todo: consider removal as password can be retrieved by PromptSecretSource
 internal fun retrievePassword(cliCommand: TargetCliCommand): Secret? {
     var password: Secret? = null
     if (cliCommand.isValidRemote() && cliCommand.passwordInteractive) {
