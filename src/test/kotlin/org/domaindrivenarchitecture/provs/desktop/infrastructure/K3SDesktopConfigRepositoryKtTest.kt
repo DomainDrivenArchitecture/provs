@@ -40,7 +40,7 @@ internal class K3SDesktopConfigRepositoryKtTest {
     @Test
     fun getConfig_fails_due_to_missing_file() {
         val exception = assertThrows<FileNotFoundException> {
-            getK3sConfig(ConfigFileName("src/test/resources/Idonotexist.yaml"))
+            getConfig("src/test/resources/Idonotexist.yaml")
         }
         assertEquals(FileNotFoundException::class.java, exception.javaClass)
     }
