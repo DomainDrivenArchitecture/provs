@@ -31,6 +31,10 @@ java {
     }
 }
 
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+}
+
 
 test {
     // set properties for the tests
