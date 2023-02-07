@@ -28,7 +28,7 @@ internal class DefaultConfigFileRepositoryKtTest {
     @Test
     fun assertExistsPasses() {
         // given
-        val validFileName = "src/test/resources/existing_file"
+        val validFileName = "src/test/resources/existing-file"
 
         // when
         val validFile = ApplicationFileName(File(validFileName).path)

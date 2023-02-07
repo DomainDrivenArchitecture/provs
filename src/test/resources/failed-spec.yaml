@@ -1,0 +1,13 @@
+  -- Spec failed --------------------
+    
+    {:jvb-auth-password 1234,
+      ^^^^
+      :jicofo-auth-password ...,
+      :jicofo-component-secret ...}
+    
+    should satisfy
+    
+    bash-env-string?
+    
+    -------------------------
+    Detected 1 error

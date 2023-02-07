@@ -15,6 +15,8 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
     if (cli.onlyModules == null ) {
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
         DefaultApplicationFileRepository().assertExists(cli.applicationFileName)
+        DefaultApplicationFileRepository().assertC4kSpecError(cli.applicationFileName)
+        DefaultApplicationFileRepository().assertC4kJavaException(cli.applicationFileName)
         DefaultConfigFileRepository().assertExists(cli.configFileName)
 
         val k3sConfigReprovision = k3sConfig.copy(reprovision = cli.reprovision || k3sConfig.reprovision)
