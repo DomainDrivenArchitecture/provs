@@ -23,7 +23,7 @@ internal class DefaultConfigFileRepositoryKtTest {
         ) { repo.assertExists(invalidFileName) }
 
         assertEquals(
-            "Application file iDontExist not found. Please check if path is correct.",
+            "Config file not found. Please check if path is correct.",
             exception.message)
     }
 
