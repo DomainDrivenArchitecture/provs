@@ -7,9 +7,11 @@ import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFile
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ServerOnlyModule
+import org.domaindrivenarchitecture.provs.server.infrastructure.DefaultApplicationFileRepository
 
 class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
