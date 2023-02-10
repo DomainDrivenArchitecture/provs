@@ -5,10 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.repeatTaskUntilSuccess
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.server.domain.CertmanagerEndpoint
-import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
-import org.domaindrivenarchitecture.provs.server.domain.k3s.Certmanager
-import org.domaindrivenarchitecture.provs.server.domain.k3s.FileMode
-import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
+import org.domaindrivenarchitecture.provs.server.domain.k3s.*
 import java.io.File
 
 // -----------------------------------  versions  --------------------------------
@@ -154,9 +151,9 @@ fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null) =
     applyK3sFileFromResourceTemplate(k3sEcho, mapOf("fqdn" to fqdn, "issuer_name" to issuer))
 }
 
-fun Prov.provisionK3sApplication(applicationFileName: ApplicationFileName) = task {
+fun Prov.provisionK3sApplication(applicationFile: ApplicationFile) = task {
     copyFileFromLocal(
-        fullyQualifiedLocalFilename = applicationFileName.fullqualified(),
+        fullyQualifiedLocalFilename = applicationFile.id.fullyQualifiedName(),
         fullyQualifiedFilename = k3sManualManifestsDir + "application.yaml",
         posixFilePermission = "644",
         sudo = true
