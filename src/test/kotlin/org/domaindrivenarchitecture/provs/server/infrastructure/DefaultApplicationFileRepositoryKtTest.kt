@@ -2,6 +2,8 @@ package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.infrastructure.DefaultConfigFileRepository
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFile
+import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -12,30 +14,32 @@ internal class DefaultApplicationFileRepositoryKtTest {
     @Test
     fun assertExistsThrowsRuntimeException() {
         // when
-        val invalidFileName = ConfigFileName("iDontExist")
-        val repo = DefaultConfigFileRepository()
+        val invalidFileName = ApplicationFileName("iDontExist")
+        val repo = DefaultApplicationFileRepository(invalidFileName)
 
         // then
         val exception = assertThrows<RuntimeException>(
             "Should not find the file."
-        ) { repo.assertExists(invalidFileName) }
+        ) { repo.getFile() }
 
         assertEquals(
-            "Config file iDontExist not found. Please check if path is correct.",
+            "Application file not found. Please check if path is correct.",
             exception.message)
     }
 
     @Test
-    fun assertExistsPasses() {
-        // given
-        val validFileName = "src/test/resources/existing_file"
-
+    fun assertGetFileThrowsRuntimeException() {
         // when
-        val validFile = ConfigFileName(File(validFileName).path)
-        val repo = DefaultConfigFileRepository()
-        repo.assertExists(validFile)
+        val invalidFileName = ApplicationFileName("src/test/resources/java-exception.yaml")
+        val repo = DefaultApplicationFileRepository(invalidFileName)
 
         // then
-        // no exception is thrown
+        val exception = assertThrows<RuntimeException>(
+            "Should not find the file."
+        ) { repo.getFile() }
+
+        assertEquals(
+            "Application file was invalid.",
+            exception.message)
     }
 }

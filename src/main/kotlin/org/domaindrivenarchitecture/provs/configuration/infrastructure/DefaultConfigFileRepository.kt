@@ -7,7 +7,7 @@ import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileReposit
 class DefaultConfigFileRepository : ConfigFileRepository {
     override fun assertExists(configFileName: ConfigFileName?) {
         if (configFileName != null && !checkLocalFile(configFileName.fullqualified())) {
-            throw RuntimeException("Config file ${configFileName.fileName} not found. Please check if path is correct.")
+            throw RuntimeException("Config file not found. Please check if path is correct.")
         }
     }
 }

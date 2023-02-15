@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 interface ApplicationFileRepository {
-    fun assertExists(applicationFileName: ApplicationFileName?)
+    fun getFile() : ApplicationFile
+
 }
