@@ -5,10 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.creat
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContent
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceType
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.configureUser
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.createUser
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.userExists
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.userIsInGroupSudo
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.*
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
@@ -58,24 +55,24 @@ internal class ProvisionUserKtTest {
     }
 
     @ContainerTest
-    fun createUserWithSudo() {
+    fun createUserWithSudoAndCopiedSshKey() {
         // given
-        val a = defaultTestContainer()
-        val newUser = "testnewsudouser3"
-        a.task {
+        val prov = defaultTestContainer()
+        val newUser = "testnewsudouser4"
+        prov.task {
             createDir(".ssh")
             createFile("~/.ssh/authorized_keys", "newdummykey")
         }
 
         // when
-        val res = a.createUser(newUser, sudo = true, copyAuthorizedSshKeysFromCurrentUser = true)
+        val res = prov.createUser(newUser, userCanSudoWithoutPassword = true, copyAuthorizedSshKeysFromCurrentUser = true)
 
         // then
         assertTrue(res.success)
-        assertTrue(a.userExists(newUser))
-        assertEquals("newdummykey", a.fileContent("/home/$newUser/.ssh/authorized_keys", sudo = true))
+        assertTrue(prov.userExists(newUser))
+        assertEquals("newdummykey", prov.fileContent("/home/$newUser/.ssh/authorized_keys", sudo = true))
 
         // new user can sudo
-        assertTrue(a.cmd("sudo -H -u $newUser bash -c 'sudo echo \"I am \$USER, with uid \$UID\"' ").success)
+        assertTrue(prov.cmd("sudo -H -u $newUser bash -c 'sudo echo \"I am \$USER, with uid \$UID\"' ").success)
     }
 }

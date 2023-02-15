@@ -25,14 +25,14 @@ fun Prov.userExists(userName: String): Boolean {
 fun Prov.createUser(
     userName: String,
     password: Secret? = null,
-    sudo: Boolean = false,
+    userCanSudoWithoutPassword: Boolean = false,
     copyAuthorizedSshKeysFromCurrentUser: Boolean = false
 ): ProvResult = task {
     if (!userExists(userName)) {
         cmd("sudo adduser --gecos \"First Last,RoomNumber,WorkPhone,HomePhone\" --disabled-password --home /home/$userName $userName")
     }
     password?.let { cmdNoLog("sudo echo \"$userName:${password.plain()}\" | sudo chpasswd") } ?: ProvResult(true)
-    if (sudo) {
+    if (userCanSudoWithoutPassword) {
         makeUserSudoerWithNoSudoPasswordRequired(userName)
     }
     val authorizedKeysFile = userHome() + ".ssh/authorized_keys"
