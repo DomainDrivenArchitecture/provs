@@ -131,8 +131,8 @@ fun Prov.userIsInGroupSudo(userName: String): Boolean {
  * Checks if current user can execute sudo commands.
  */
 @Suppress("unused")
-fun Prov.currentUserCanSudo(): Boolean {
-    return chk("timeout 1 sudo -S id")
+fun Prov.currentUserCanSudoWithoutPassword(): Boolean {
+    return chk("timeout 1 sudo -kS id")
 }
 
 /**

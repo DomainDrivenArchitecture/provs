@@ -9,7 +9,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.SshKeyPair
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudo
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
 internal fun provisionDesktopCommand(prov: Prov, cmd: DesktopCliCommand) {
@@ -65,7 +65,7 @@ internal fun Prov.provisionDesktop(
 }
 
 fun Prov.validatePrecondition() {
-    if (!currentUserCanSudo()) {
+    if (!currentUserCanSudoWithoutPassword()) {
         throw Exception("Current user ${whoami()} cannot execute sudo without entering a password! This is necessary to execute provisionDesktop")
     }
 }
