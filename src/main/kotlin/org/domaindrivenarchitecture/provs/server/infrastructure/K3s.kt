@@ -22,8 +22,8 @@ private const val k3sResourceDir = "org/domaindrivenarchitecture/provs/server/in
 
 // -----------------------------------  files  --------------------------------
 
-private val k3sInstallScript = File( "/usr/local/bin/k3s-install.sh")
-private val k3sConfigFile = File( "/etc/rancher/k3s/config.yaml")
+private val k3sInstallScript = File("/usr/local/bin/k3s-install.sh")
+private val k3sConfigFile = File("/etc/rancher/k3s/config.yaml")
 private val k3sKubeConfig = File("/etc/rancher/k3s/k3s.yaml")
 
 private val k3sTraefikWorkaround = File(k3sManualManifestsDir, "traefik.yaml")
@@ -75,14 +75,20 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
         if (k3sConfig.isDualStack()) {
             k3sConfigResourceFileName += ".dual.template.yaml"
             metallbConfigResourceFileName += ".dual.template.yaml"
-            k3sConfigMap = k3sConfigMap.plus("node_ipv6" to k3sConfig.node.ipv6!!)
-                .plus("loopback_ipv6" to k3sConfig.loopback.ipv6!!)
+            require(k3sConfig.node.ipv6 != null && k3sConfig.loopback.ipv6 != null)
+            k3sConfigMap = k3sConfigMap
+                .plus("node_ipv6" to k3sConfig.node.ipv6)
+                .plus("loopback_ipv6" to k3sConfig.loopback.ipv6)
         } else {
             k3sConfigResourceFileName += ".ipv4.template.yaml"
             metallbConfigResourceFileName += ".ipv4.template.yaml"
         }
 
-        createK3sFileFromResourceTemplate(k3sConfigFile, k3sConfigMap, alternativeResourceTemplate = File(k3sConfigResourceFileName))
+        createK3sFileFromResourceTemplate(
+            k3sConfigFile,
+            k3sConfigMap,
+            alternativeResourceTemplate = File(k3sConfigResourceFileName)
+        )
         createK3sFileFromResource(k3sInstallScript, posixFilePermission = "755")
         cmd("INSTALL_K3S_VERSION=$K3S_VERSION k3s-install.sh")
 
@@ -217,5 +223,5 @@ private fun File.templateName(): String {
 }
 
 internal fun Prov.configureShellAliases() = task {
-    addTextToFile( "\nalias k=\"sudo kubectl\"\n", File(".bash_aliases",))
+    addTextToFile("\nalias k=\"sudo kubectl\"\n", File(".bash_aliases"))
 }

@@ -16,11 +16,12 @@ fun Prov.testNetworkExists(): Boolean {
 fun Prov.provisionNetwork(k3sConfig: K3sConfig) = task {
     if(!testNetworkExists()) {
         if(k3sConfig.isDualStack()) {
+            require(k3sConfig.loopback.ipv6 != null)
             createFileFromResourceTemplate(
                 loopbackFile,
                 "99-loopback.dual.template.yaml",
                 resourcePathNetwork,
-                mapOf("loopback_ipv4" to k3sConfig.loopback.ipv4, "loopback_ipv6" to k3sConfig.loopback.ipv6!!),
+                mapOf("loopback_ipv4" to k3sConfig.loopback.ipv4, "loopback_ipv6" to k3sConfig.loopback.ipv6),
                 "644",
                 sudo = true
             )
