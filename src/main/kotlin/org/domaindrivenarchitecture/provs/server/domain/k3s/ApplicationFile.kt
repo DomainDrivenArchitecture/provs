@@ -1,8 +1,5 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
-import org.domaindrivenarchitecture.provs.framework.core.getLocalFileContent
-import java.io.File
-
 data class ApplicationFile(val id: ApplicationFileName, val fileContent: String) {
 
     fun validate() : List<String> {
@@ -13,13 +10,14 @@ data class ApplicationFile(val id: ApplicationFileName, val fileContent: String)
         if(fileContent.isEmpty()) {
             output.add("fileContent is empty.")
         }
-        if (fileContent.contains(specRegex)) {
-            output.add(specRegex.find(fileContent)!!.value)
+        val specMatch = specRegex.find(fileContent)
+        if (specMatch != null) {
+            output.add(specMatch.value)
         }
-        if (fileContent.contains(javaRegex)) {
-            output.add(javaRegex.find(fileContent)!!.value)
+        val javaMatch = javaRegex.find(fileContent)
+        if (javaMatch != null) {
+            output.add(javaMatch.value)
         }
-
         return output
     }
     fun isValid() : Boolean {
