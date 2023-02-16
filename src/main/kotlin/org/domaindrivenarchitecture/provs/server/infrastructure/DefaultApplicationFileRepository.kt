@@ -21,7 +21,10 @@ class DefaultApplicationFileRepository(val applicationFileName: ApplicationFileN
         val applicationFileContents = getLocalFileContent(applicationFileName.fullyQualifiedName())
         val applicationFile = ApplicationFile(applicationFileName, applicationFileContents)
 
-        return if (applicationFile.isValid()) { applicationFile }
-               else { throw RuntimeException("Application file was invalid.") }
+        return if (applicationFile.isValid()) {
+            applicationFile
+        } else {
+            throw RuntimeException("Application file was invalid.")
+        }
     }
 }

@@ -57,7 +57,6 @@ fun Prov.provisionK3s(
         provisionK3sApplication(applicationFile)
     }
 
-
     if (!k3sConfig.reprovision) {
         provisionServerCliConvenience()
     }
