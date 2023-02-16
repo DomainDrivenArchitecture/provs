@@ -5,19 +5,20 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.check
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFile
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileRepository
-import java.io.File
 
-class DefaultApplicationFileRepository(val applicationFileName: ApplicationFileName?) : ApplicationFileRepository {
 
-    private fun assertExists(applicationFileName: String?) {
-        if (applicationFileName != null && !checkLocalFile(applicationFileName)) {
+class DefaultApplicationFileRepository(val applicationFileName: ApplicationFileName) : ApplicationFileRepository {
+
+    private fun assertExists(applicationFileName: String) {
+        if (!checkLocalFile(applicationFileName)) {
             throw RuntimeException("Application file not found. Please check if path is correct.")
         }
     }
-    override fun getFile() : ApplicationFile {
-        assertExists(applicationFileName!!.fullyQualifiedName())
 
-        val applicationFileContents =  getLocalFileContent(applicationFileName.fullyQualifiedName())
+    override fun getFile(): ApplicationFile {
+        assertExists(applicationFileName.fullyQualifiedName())
+
+        val applicationFileContents = getLocalFileContent(applicationFileName.fullyQualifiedName())
         val applicationFile = ApplicationFile(applicationFileName, applicationFileContents)
 
         return if (applicationFile.isValid()) { applicationFile }

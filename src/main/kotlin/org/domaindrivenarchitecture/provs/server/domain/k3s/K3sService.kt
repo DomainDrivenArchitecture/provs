@@ -12,12 +12,12 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
 
     val grafanaConfigResolved: GrafanaAgentConfigResolved? = findK8sGrafanaConfig(cli.configFileName)?.resolveSecret()
 
-    if (cli.onlyModules == null ) {
+    if (cli.onlyModules == null) {
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
         DefaultConfigFileRepository().assertExists(cli.configFileName)
         val k3sConfigReprovision = k3sConfig.copy(reprovision = cli.reprovision || k3sConfig.reprovision)
 
-        val applicationFile = DefaultApplicationFileRepository(cli.applicationFileName).getFile()
+        val applicationFile = cli.applicationFileName?.let { DefaultApplicationFileRepository(cli.applicationFileName).getFile() }
         provisionK3s(k3sConfigReprovision, grafanaConfigResolved, applicationFile)
     } else {
         provisionGrafana(cli.onlyModules, grafanaConfigResolved)
@@ -30,7 +30,8 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
 fun Prov.provisionK3s(
     k3sConfig: K3sConfig,
     grafanaConfigResolved: GrafanaAgentConfigResolved? = null,
-    applicationFile: ApplicationFile? = null) = task {
+    applicationFile: ApplicationFile? = null
+) = task {
 
     if (k3sConfig.reprovision) {
         deprovisionK3sInfra()
@@ -64,7 +65,8 @@ fun Prov.provisionK3s(
 
 private fun Prov.provisionGrafana(
     onlyModules: List<String>?,
-    grafanaConfigResolved: GrafanaAgentConfigResolved?) = task {
+    grafanaConfigResolved: GrafanaAgentConfigResolved?
+) = task {
 
     if (onlyModules != null && onlyModules.contains(ServerOnlyModule.GRAFANA.name.lowercase())) {
         if (grafanaConfigResolved == null) {
