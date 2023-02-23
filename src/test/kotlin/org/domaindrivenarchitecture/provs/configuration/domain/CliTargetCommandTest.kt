@@ -8,6 +8,7 @@ import org.domaindrivenarchitecture.provs.framework.core.cli.retrievePassword
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.PrintOnlyProcessor
 import org.domaindrivenarchitecture.provs.framework.core.remote
+import org.domaindrivenarchitecture.provs.test.tags.NonCi
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -39,6 +40,7 @@ internal class CliTargetCommandKtTest {
 
 
     @Test
+    @NonCi
     fun createProvInstance_local() {
         // given
         val cliCommand = TargetCliCommand("local", false)
