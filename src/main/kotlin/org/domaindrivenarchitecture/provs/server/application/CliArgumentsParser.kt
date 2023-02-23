@@ -1,18 +1,18 @@
 package org.domaindrivenarchitecture.provs.server.application
 
 import kotlinx.cli.ArgType
+import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
 import org.domaindrivenarchitecture.provs.configuration.application.CliTargetParser
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
-import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFile
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ServerOnlyModule
-import org.domaindrivenarchitecture.provs.server.infrastructure.DefaultApplicationFileRepository
 
+@OptIn(ExperimentalCli::class)
 class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
     private val modules: List<ServerSubcommand> = listOf(K3s(), K3d())
@@ -86,7 +86,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         override fun execute() {
             super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             super.applicationFileName = cliApplicationFileName?.let { ApplicationFileName(it) }
-            super.onlyModules = if (only != null) listOf(only!!.name.lowercase()) else null
+            super.onlyModules = only?.let { listOf(it.name.lowercase()) }
             super.reprovision = cliReprovision == true
             super.parsed = true
         }

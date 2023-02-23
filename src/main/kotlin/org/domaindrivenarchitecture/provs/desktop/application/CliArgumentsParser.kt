@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.application
 
 import kotlinx.cli.ArgType
+import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
 import org.domaindrivenarchitecture.provs.configuration.application.CliTargetParser
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
@@ -10,6 +11,7 @@ import org.domaindrivenarchitecture.provs.desktop.domain.DesktopOnlyModule
 import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
 
 
+@OptIn(ExperimentalCli::class)
 open class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
     private val modules: List<DesktopSubcommand> = listOf(Basic(), Office(), Ide())
@@ -55,7 +57,7 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
         override fun execute() {
             configFileName = cliConfigFileName?.let { ConfigFileName(it) }
             parsed = true
-            onlyModules = if (only != null) listOf(only!!.name.lowercase()) else null
+            onlyModules = only?.let { listOf(it.name.lowercase()) }
         }
     }
 
