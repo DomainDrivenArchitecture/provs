@@ -25,12 +25,14 @@ open class CliArgumentsParser(name: String) : CliTargetParser(name) {
 
         val module = modules.first { it.parsed }
 
+        val targetCliCommand = TargetCliCommand(
+            target,
+            passwordInteractive
+        )
+
         return DesktopCliCommand(
             DesktopType.valueOf(module.name.uppercase()),
-            TargetCliCommand(
-                target,
-                passwordInteractive
-            ),
+            targetCliCommand,
             module.configFileName,
             module.onlyModules
         )

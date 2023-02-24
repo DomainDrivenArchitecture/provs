@@ -1,8 +1,20 @@
 package org.domaindrivenarchitecture.provs.configuration.application
 
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+
+
+private fun parseTarget(
+    args: Array<String>
+): TargetCliCommand {
+    val parser = CliTargetParser("provs")
+
+    parser.parse(args)
+
+    return TargetCliCommand(parser.target, parser.passwordInteractive)
+}
 
 internal class CliTargetParserTest {
 
