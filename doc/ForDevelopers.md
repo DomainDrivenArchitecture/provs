@@ -29,6 +29,6 @@ The success or failure is computed automatically in the following way:
 
 ## Call hierarchy
 
-Find below an example of a sequence diagram when provisioning a desktop workplace:
+In the following link you can find an example of a sequence diagram when provisioning a desktop:
 
-![img.png](resources/provision-workplace-sequence.diagram.png)
+[ProvisionDesktopSequence.md](ProvisionDesktopSequence.md)
