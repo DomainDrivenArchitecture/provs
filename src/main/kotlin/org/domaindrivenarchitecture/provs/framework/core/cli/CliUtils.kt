@@ -20,10 +20,7 @@ import kotlin.system.exitProcess
  * If the target is remote and if parameter remoteHostSetSudoWithoutPasswordRequired is set to true,
  * it will enable sudo without password on the remote machine (in case this was not yet enabled).
  */
-fun createProvInstance(
-    targetCommand: TargetCliCommand,
-    remoteHostSetSudoWithoutPasswordRequired: Boolean = false
-): Prov {
+fun createProvInstance(targetCommand: TargetCliCommand): Prov {
     if (targetCommand.isValid()) {
         val password: Secret? = targetCommand.remoteTarget()?.password
 
@@ -35,8 +32,7 @@ fun createProvInstance(
                 remoteTarget.host,
                 remoteTarget.user,
                 remoteTarget.password == null,
-                password,
-                remoteHostSetSudoWithoutPasswordRequired
+                password
             )
         } else {
             throw IllegalArgumentException("Error: neither a valid localHost nor a valid remoteHost was specified! Use option -h for help.")
@@ -50,8 +46,10 @@ fun createProvInstance(
 private fun createLocalProvInstance(): Prov {
     val prov = local()
     if (!prov.currentUserCanSudoWithoutPassword()) {
-        val password = PromptSecretSource("Please enter password to configure sudo without password in the future." +
-                "\nWarning: This will permanently allow your user to use sudo privileges without a password.").secret()
+        val password = PromptSecretSource(
+            "Please enter password to configure sudo without password in the future." +
+                    "\nWarning: This will permanently allow your user to use sudo privileges without a password."
+        ).secret()
         prov.makeUserSudoerWithNoSudoPasswordRequired(password)
     }
     return prov
@@ -62,8 +60,7 @@ private fun createRemoteProvInstance(
     host: String,
     remoteUser: String,
     sshWithKey: Boolean,
-    password: Secret?,
-    remoteHostSetSudoWithoutPasswordRequired: Boolean
+    password: Secret?
 ): Prov {
     val prov =
         if (sshWithKey) {
@@ -76,17 +73,13 @@ private fun createRemoteProvInstance(
         }
 
     if (!prov.currentUserCanSudoWithoutPassword()) {
-        if (remoteHostSetSudoWithoutPasswordRequired) {
-            require(
-                password != null,
-                { "User ${prov.whoami()} not able to sudo on remote machine without password and no password available for the user." })
-            prov.makeUserSudoerWithNoSudoPasswordRequired(password)
+        require(
+            password != null,
+            { "User ${prov.whoami()} not able to sudo on remote machine without password and no password available for the user." })
+        prov.makeUserSudoerWithNoSudoPasswordRequired(password)
 
-            // a new session is required after making the user a sudoer without password
-            return remote(host, remoteUser, password)
-        } else {
-            throw IllegalStateException("User ${prov.whoami()} not able to sudo on remote machine without password and option not set to enable user to sudo without password.")
-        }
+        // a new session is required after making the user a sudoer without password
+        return remote(host, remoteUser, password)
     }
     return prov
 }

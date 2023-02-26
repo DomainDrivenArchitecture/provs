@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
         exitProcess(1)
     }
 
-    val prov = createProvInstance(cmd.target, remoteHostSetSudoWithoutPasswordRequired = true)
+    val prov = createProvInstance(cmd.target)
 
     try {
         provisionDesktopCommand(prov, cmd)
