@@ -13,13 +13,6 @@ class UbuntuProv internal constructor(
     progressType: ProgressType
 ) : Prov(processor, name, progressType) {
 
-    init {
-        val user = cmdNoLog("whoami").out?.trim()
-        if ("root" != user && !cmdNoLog("timeout 1 sudo id").success) {
-            println("IMPORTANT INFO:\nUser $user cannot sudo without entering a password, i.e. some functions may fail!\nIf you need to run functions with sudo, please ensure $user can sudo without password.")
-        }
-    }
-
     override fun cmd(cmd: String, dir: String?, sudo: Boolean): ProvResult = taskWithResult {
         exec(SHELL, "-c", commandWithDirAndSudo(cmd, dir, sudo))
     }
