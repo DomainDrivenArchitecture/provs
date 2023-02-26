@@ -89,7 +89,7 @@ fun Prov.makeUserSudoerWithoutPasswordRequired(
     userName: String,
     password: Secret? = null,
     overwriteFile: Boolean = false
-): ProvResult = task {
+): ProvResult = taskWithResult {
     val userSudoFile = "/etc/sudoers.d/$userName"
     if (!checkFile(userSudoFile) || overwriteFile) {
         val sudoPrefix = if (password == null) "sudo" else "echo ${password.plain()} | sudo -S"
@@ -107,8 +107,7 @@ fun Prov.makeUserSudoerWithoutPasswordRequired(
  * Makes the current (executing) user be able to sudo without password.
  * IMPORTANT: Current user must already by sudoer when calling this function.
  */
-@Suppress("unused") // used externally
-fun Prov.makeUserSudoerWithoutPasswordRequired(password: Secret) = task {
+fun Prov.makeCurrentUserSudoerWithoutPasswordRequired(password: Secret) = taskWithResult {
     val currentUser = whoami()
     if (currentUser != null) {
         makeUserSudoerWithoutPasswordRequired(currentUser, password, overwriteFile = true)
