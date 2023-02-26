@@ -8,7 +8,7 @@ import javax.swing.*
 
 class PasswordPanel : JPanel(FlowLayout()) {
 
-    private val passwordField = JPasswordField(20)
+    private val passwordField = JPasswordField(30)
     private var entered = false
 
     val enteredPassword
