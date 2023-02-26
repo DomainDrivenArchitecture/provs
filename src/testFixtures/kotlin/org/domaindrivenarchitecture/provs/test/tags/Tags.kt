@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 private const val CONTAINER_TEST = "containertest"
 private const val EXTENSIVE_CONTAINER_TEST = "extensivecontainertest"
-private const val CONTAINER_TEST_NON_CI = "containernonci"
+private const val NON_CI = "nonci"
 
 
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
@@ -28,6 +28,7 @@ annotation class ExtensiveContainerTest
 
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
 @Retention
-@Tag(CONTAINER_TEST_NON_CI)
+@Tag(NON_CI)
 @Test
+// For test which do not run in ci pipeline
 annotation class NonCi
