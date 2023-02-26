@@ -4,7 +4,7 @@ import io.mockk.*
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
-import org.domaindrivenarchitecture.provs.framework.core.cli.retrievePassword
+import org.domaindrivenarchitecture.provs.framework.core.cli.getPasswordToConfigureSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.PrintOnlyProcessor
 import org.domaindrivenarchitecture.provs.framework.core.remote
@@ -24,8 +24,8 @@ internal class CliTargetCommandKtTest {
             mockkStatic(::remote)
             every { remote(any(), any(), any(), any()) } returns Prov.newInstance(PrintOnlyProcessor())
 
-            mockkStatic(::retrievePassword)
-            every { retrievePassword(any()) } returns Secret("sec")
+            mockkStatic(::getPasswordToConfigureSudoWithoutPassword)
+            every { getPasswordToConfigureSudoWithoutPassword() } returns Secret("sec")
         }
 
         @AfterAll
@@ -34,7 +34,7 @@ internal class CliTargetCommandKtTest {
             unmockkObject(Prov)
             unmockkStatic(::local)
             unmockkStatic(::remote)
-            unmockkStatic(::retrievePassword)
+            unmockkStatic(::getPasswordToConfigureSudoWithoutPassword)
         }
     }
 

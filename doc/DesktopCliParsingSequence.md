@@ -24,7 +24,6 @@ CliArgumentsParser -> DesktopCliCommand : create(desktopType, cliTargetCmd, ...)
 CliArgumentsParser --> Application: desktopCliCommand
 Application -> DesktopCliCommand : isValid ?
 Application -> CliUtils : createProvInstance
-ProvInstance <- CliUtils : create
 alt target.isValidLocal
 CliUtils -> CliUtils : createLocalProv
 else target.isValidRemote

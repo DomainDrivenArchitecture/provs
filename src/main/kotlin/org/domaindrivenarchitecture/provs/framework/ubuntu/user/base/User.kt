@@ -33,7 +33,7 @@ fun Prov.createUser(
     }
     password?.let { cmdNoLog("sudo echo \"$userName:${password.plain()}\" | sudo chpasswd") } ?: ProvResult(true)
     if (userCanSudoWithoutPassword) {
-        makeUserSudoerWithNoSudoPasswordRequired(userName)
+        makeUserSudoerWithoutPasswordRequired(userName)
     }
     val authorizedKeysFile = userHome() + ".ssh/authorized_keys"
     if (copyAuthorizedSshKeysFromCurrentUser && checkFile(authorizedKeysFile)) {
@@ -85,11 +85,11 @@ fun Prov.deleteUser(userName: String, deleteHomeDir: Boolean = false): ProvResul
  * The current (executing) user must already be a sudoer. If he is a sudoer with password required then
  * his password must be provided.
  */
-fun Prov.makeUserSudoerWithNoSudoPasswordRequired(
+fun Prov.makeUserSudoerWithoutPasswordRequired(
     userName: String,
     password: Secret? = null,
     overwriteFile: Boolean = false
-): ProvResult = task {
+): ProvResult = taskWithResult {
     val userSudoFile = "/etc/sudoers.d/$userName"
     if (!checkFile(userSudoFile) || overwriteFile) {
         val sudoPrefix = if (password == null) "sudo" else "echo ${password.plain()} | sudo -S"
@@ -107,11 +107,10 @@ fun Prov.makeUserSudoerWithNoSudoPasswordRequired(
  * Makes the current (executing) user be able to sudo without password.
  * IMPORTANT: Current user must already by sudoer when calling this function.
  */
-@Suppress("unused") // used externally
-fun Prov.makeUserSudoerWithNoSudoPasswordRequired(password: Secret) = task {
+fun Prov.makeCurrentUserSudoerWithoutPasswordRequired(password: Secret) = taskWithResult {
     val currentUser = whoami()
     if (currentUser != null) {
-        makeUserSudoerWithNoSudoPasswordRequired(currentUser, password, overwriteFile = true)
+        makeUserSudoerWithoutPasswordRequired(currentUser, password, overwriteFile = true)
     } else {
         ProvResult(false, "Current user could not be determined.")
     }
