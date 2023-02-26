@@ -52,8 +52,9 @@ class RemoteProcessor(host: InetAddress, user: String, password: Secret? = null)
             try {
                 ssh.disconnect()
             } finally {
-                log.error("Got exception when initializing ssh (Username, password or ssh-key might be wrong): " + e.message)
-                throw RuntimeException("Error when initializing ssh (Username, password or ssh-key might be wrong) ", e)
+                val errorMag = "Error when initializing ssh (Host, username, password or ssh-key might be wrong) "
+                log.error(errorMag + e.message)
+                throw RuntimeException(errorMag, e)
             }
         }
     }
