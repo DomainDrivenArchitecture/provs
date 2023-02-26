@@ -7,7 +7,7 @@ import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudoWithoutPassword
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.makeUserSudoerWithNoSudoPasswordRequired
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.makeUserSudoerWithoutPasswordRequired
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 import kotlin.system.exitProcess
 
@@ -50,7 +50,7 @@ private fun createLocalProvInstance(): Prov {
             "Please enter password to configure sudo without password in the future." +
                     "\nWarning: This will permanently allow your user to use sudo privileges without a password."
         ).secret()
-        prov.makeUserSudoerWithNoSudoPasswordRequired(password)
+        prov.makeUserSudoerWithoutPasswordRequired(password)
     }
     return prov
 }
@@ -76,7 +76,7 @@ private fun createRemoteProvInstance(
         require(
             password != null,
             { "User ${prov.whoami()} not able to sudo on remote machine without password and no password available for the user." })
-        prov.makeUserSudoerWithNoSudoPasswordRequired(password)
+        prov.makeUserSudoerWithoutPasswordRequired(password)
 
         // a new session is required after making the user a sudoer without password
         return remote(host, remoteUser, password)
