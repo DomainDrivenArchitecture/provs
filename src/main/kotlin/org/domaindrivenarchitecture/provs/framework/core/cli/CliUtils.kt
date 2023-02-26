@@ -85,12 +85,6 @@ private fun createRemoteProvInstance(
 }
 
 
-internal fun retrievePassword(cliCommand: TargetCliCommand): Secret? {
-    var password: Secret? = null
-    if (cliCommand.isValidRemote() && cliCommand.passwordInteractive) {
-        password =
-            PromptSecretSource("Password for user $cliCommand.userName!! on $cliCommand.remoteHost!!").secret()
-
-    }
-    return password
+internal fun getPasswordToConfigureSudoWithoutPassword(): Secret {
+    return PromptSecretSource("password to configure sudo without password.").secret()
 }

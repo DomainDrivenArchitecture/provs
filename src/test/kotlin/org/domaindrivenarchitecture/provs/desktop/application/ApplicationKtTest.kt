@@ -7,7 +7,7 @@ import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.desktop.domain.*
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.*
-import org.domaindrivenarchitecture.provs.framework.core.cli.retrievePassword
+import org.domaindrivenarchitecture.provs.framework.core.cli.getPasswordToConfigureSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
 import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
 import org.junit.jupiter.api.AfterAll
@@ -52,8 +52,8 @@ internal class ApplicationKtTest {
                 cmd = "mocked command"
             )
 
-            mockkStatic(::retrievePassword)
-            every { retrievePassword(any()) } returns Secret("sec")
+            mockkStatic(::getPasswordToConfigureSudoWithoutPassword)
+            every { getPasswordToConfigureSudoWithoutPassword() } returns Secret("sec")
         }
 
         @Suppress("unused") // false positive
@@ -65,7 +65,7 @@ internal class ApplicationKtTest {
             unmockkStatic(::remote)
             unmockkStatic(::getConfig)
             unmockkStatic(Prov::provisionDesktop)
-            unmockkStatic(::retrievePassword)
+            unmockkStatic(::getPasswordToConfigureSudoWithoutPassword)
         }
     }
 
