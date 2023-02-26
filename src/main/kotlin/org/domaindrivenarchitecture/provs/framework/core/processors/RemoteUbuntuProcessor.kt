@@ -38,6 +38,8 @@ class RemoteProcessor(host: InetAddress, user: String, password: Secret? = null)
 
             // Attention: host key is not verified
             ssh.addHostKeyVerifier(PromiscuousVerifier())
+
+            ssh.connectTimeout = 30000   // ms
             ssh.connect(host)
 
             if (password != null) {
