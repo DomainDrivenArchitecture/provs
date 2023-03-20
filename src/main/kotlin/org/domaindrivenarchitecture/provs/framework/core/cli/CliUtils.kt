@@ -6,9 +6,6 @@ import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudoWithoutPassword
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.makeCurrentUserSudoerWithoutPasswordRequired
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 import kotlin.system.exitProcess
 
 
@@ -21,17 +18,10 @@ fun createProvInstance(targetCommand: TargetCliCommand): Prov {
     if (targetCommand.isValid()) {
         val password: Secret? = targetCommand.remoteTarget()?.password
 
-        val remoteTarget = targetCommand.remoteTarget()
-
         return if (targetCommand.isValidLocalhost()) {
-            createLocalProvInstance()
-        } else if (targetCommand.isValidRemote() && remoteTarget != null) {
-            createRemoteProvInstance(
-                remoteTarget.host,
-                remoteTarget.user,
-                remoteTarget.password == null,
-                password
-            )
+            local()
+        } else if (targetCommand.isValidRemote()) {
+            createRemoteProvInstance(targetCommand.remoteTarget(), password)
         } else {
             throw IllegalArgumentException(
                 "Error: neither a valid localHost nor a valid remoteHost was specified! Use option -h for help."
@@ -44,61 +34,20 @@ fun createProvInstance(targetCommand: TargetCliCommand): Prov {
     }
 }
 
-private fun createLocalProvInstance(): Prov {
-    val prov = local()
-    if (!prov.currentUserCanSudoWithoutPassword()) {
-        val passwordNonNull = getPasswordToConfigureSudoWithoutPassword()
 
-        prov.makeCurrentUserSudoerWithoutPasswordRequired(passwordNonNull)
-
-        check(prov.currentUserCanSudoWithoutPassword()) {
-                    "ERROR: User ${prov.whoami()} cannot sudo without enteringa password."
-        }
-    }
-    return prov
-}
-
-
-private fun createRemoteProvInstance(
-    host: String,
-    remoteUser: String,
-    sshWithKey: Boolean,
-    password: Secret?
+internal fun createRemoteProvInstance(
+    target: TargetCliCommand.RemoteTarget?,
+    password: Secret? = null
 ): Prov {
-    val prov =
-        if (sshWithKey) {
-            remote(host, remoteUser)
-        } else {
-            require(password != null) {
-                "No password available for provisioning without ssh keys. " +
-                        "Either specify provisioning by ssh-keys or provide password."
-            }
-            remote(host, remoteUser, password)
-        }
-
-    return if (prov.currentUserCanSudoWithoutPassword()) {
-        prov
+    return if (target != null) {
+        remote(target.host, target.user, target.password ?: password)
     } else {
-
-        val passwordNonNull = password
-            ?: getPasswordToConfigureSudoWithoutPassword()
-
-        val result = prov.makeCurrentUserSudoerWithoutPasswordRequired(passwordNonNull)
-
-        check(result.success) {
-            "Could not make user a sudoer without password required. (Maybe the provided password is incorrect.)"
-        }
-
-        // a new session is required after the user has become a sudoer without password
-        val provWithNewSshClient = remote(host, remoteUser, password)
-
-        check(provWithNewSshClient.currentUserCanSudoWithoutPassword()) {
-            "ERROR: User ${provWithNewSshClient.whoami()} on $host cannot sudo without entering a password."
-        }
-
-        provWithNewSshClient
+        throw IllegalArgumentException(
+            "Error: no valid remote target (host & user) was specified!"
+        )
     }
 }
+
 
 internal fun getPasswordToConfigureSudoWithoutPassword(): Secret {
     return PromptSecretSource("password to configure sudo without password.").secret()
