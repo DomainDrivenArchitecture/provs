@@ -45,10 +45,9 @@ fun Prov.gitClone(
 fun Prov.trustGithub() = task {
     // current fingerprints from https://docs.github.com/en/github/authenticating-to-github/githubs-ssh-key-fingerprints
     val fingerprints = setOf(
-        "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com", // (RSA)
-        // supported beginning September 14, 2021:
+        "SHA256:uNiVztksCsDhcc0u9e8BujQXVUpKZIDTMczCvj3tD2s github.com",  // (RSA)
         "SHA256:p2QAMXNIC1TJYWeIOttrVc98/R1BUFWu3/LiyKgUfQM github.com",  // (ECDSA)
-        "SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU github.com"  // (Ed25519)
+        "SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU github.com"   // (Ed25519)
     )
     trustHost("github.com", fingerprints)
 }
