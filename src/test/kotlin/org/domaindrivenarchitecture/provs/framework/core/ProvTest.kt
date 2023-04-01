@@ -254,12 +254,12 @@ internal class ProvTest {
     }
 
 
-    // given
+    // additional methods to be used in the tests below
     fun Prov.checkPrereq_evaluateToFailure() = requireLast {
         ProvResult(false, err = "This is a test error.")
     }
 
-    fun Prov.methodThatProvidesSomeOutput() = requireLast {
+    fun Prov.testMethodForOutputTest_with_mode_requireLast() = requireLast {
 
         if (!checkPrereq_evaluateToFailure().success) {
             sh(
@@ -271,6 +271,17 @@ internal class ProvTest {
         }
 
         sh("echo -End test-")
+    }
+
+    fun Prov.testMethodForOutputTest_nested_with_failure() = taskWithResult {
+
+        taskWithResult(name = "sub1") {
+            taskWithResult {
+                ProvResult(true)
+            }
+            ProvResult(false, err = "Iamanerrormessage")
+        }
+        cmd("echo -End test-")
     }
 
     @Test
@@ -290,7 +301,7 @@ internal class ProvTest {
 
         // when
         Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
-            .methodThatProvidesSomeOutput()
+            .testMethodForOutputTest_with_mode_requireLast()
 
         // then
         System.setOut(originalOut)
@@ -300,7 +311,7 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
-                    ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_with_mode_requireLast (requireLast) \n" +
                     "--->  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
@@ -317,7 +328,7 @@ internal class ProvTest {
 
     @Test
     @NonCi
-    fun prov_prints_correct_output_for_failure() {
+    fun prov_prints_correct_output_for_nested_calls_with_failure() {
 
         // given
         setRootLoggingLevel(Level.OFF)
@@ -332,7 +343,7 @@ internal class ProvTest {
 
         // when
         Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
-            .checkPrereq_evaluateToFailure()
+            .testMethodForOutputTest_nested_with_failure()
 
         // then
         System.setOut(originalOut)
@@ -342,7 +353,13 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
-                    ">  \u001B[91mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    ">  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_nested_with_failure \n" +
+                    "--->  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_nested_with_failure \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- <<returned result>>  -- Error: Iamanerrormessage\n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
+                    "Overall >  \u001B[91mFAILED\u001B[0m \n" +
                     "============================================ SUMMARY END ===========================================\n" +
                     "\n"
 
@@ -603,7 +620,7 @@ internal class ProvTest {
 
         val prov = Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
 
-            // when
+        // when
         prov.task {
             addInfoText("Text1")
             addInfoText("Text2\nwith newline")

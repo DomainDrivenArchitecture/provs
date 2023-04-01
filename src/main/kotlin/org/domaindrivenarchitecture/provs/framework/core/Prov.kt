@@ -312,6 +312,14 @@ open class Prov protected constructor(
 
         internalResults[resultIndex].provResult = returnValue
 
+        // Add failure result to output if not yet included,
+        // which is the case if the result was not part of another subtask but created and returned by the lambda itself.
+        // Success results do not need to be added here as they don't change the overall success evaluation,
+        // whereas the failure results may have a useful error message, which should be in the output.
+        if (!resultOfTaskLambda.success && (resultOfTaskLambda != internalResults.last().provResult)) {
+            internalResults.add(ResultLine(level + 1, "<<returned result>>", resultOfTaskLambda))
+        }
+
         if (level == 0) {
             endProgress()
             processor.close()
