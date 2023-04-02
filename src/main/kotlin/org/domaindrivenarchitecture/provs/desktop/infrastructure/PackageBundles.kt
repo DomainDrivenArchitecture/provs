@@ -39,3 +39,5 @@ val CLOJURE_TOOLS = "leiningen"
 val PASSWORD_TOOLS = "pwgen"
 
 val SCREEN_TOOLS = "scrcpy"
+
+val COMPARE_TOOLS = "meld"
