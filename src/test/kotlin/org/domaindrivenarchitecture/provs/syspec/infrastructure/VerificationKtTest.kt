@@ -3,10 +3,7 @@ package org.domaindrivenarchitecture.provs.syspec.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.syspec.domain.FileSpec
-import org.domaindrivenarchitecture.provs.syspec.domain.FolderSpec
-import org.domaindrivenarchitecture.provs.syspec.domain.SocketSpec
-import org.domaindrivenarchitecture.provs.syspec.domain.SyspecConfig
+import org.domaindrivenarchitecture.provs.syspec.domain.*
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.testLocal
@@ -129,6 +126,32 @@ internal class VerificationKtTest {
         assertTrue(res.success)
         assertFalse(res2)
         assertFalse(res3)
+    }
+
+    @ContainerTest
+    fun test_verifySpecConfig_succeeds() {
+        // given
+        val dir = "/home/testuser"
+        val prov = defaultTestContainer()
+
+        // when
+        val res = prov.verifySpecConfig(SyspecConfig(folder = listOf(FolderSpec(dir)), command = listOf(CommandSpec("echo bla"))))
+
+        // then
+        assertTrue(res.success)
+    }
+
+    @ContainerTest
+    fun test_verifySpecConfig_fails() {
+        // given
+        val dir = "/home/testuser"
+        val prov = defaultTestContainer()
+
+        // when
+        val res = prov.verifySpecConfig(SyspecConfig(command = listOf(CommandSpec("echoo bla"), CommandSpec("echo bla")), folder = listOf(FolderSpec(dir))))
+
+        // then
+        assertFalse(res.success)
     }
 
 }
