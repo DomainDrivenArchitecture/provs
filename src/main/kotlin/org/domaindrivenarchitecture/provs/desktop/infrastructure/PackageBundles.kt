@@ -8,7 +8,7 @@ val NETWORK_TOOLS = "curl wget net-tools"
 
 val KEY_MANAGEMENT_GUI = "seahorse"
 
-val BROWSER = "firefox chromium-browser"
+val BROWSER = "chromium-browser"     // firefox can be installed by installFirefox
 
 val EMAIL_CLIENT = "thunderbird"
 
