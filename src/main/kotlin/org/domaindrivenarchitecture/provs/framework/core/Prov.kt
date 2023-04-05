@@ -316,6 +316,7 @@ open class Prov protected constructor(
         // which is the case if the result was not part of another subtask but created and returned by the lambda itself.
         // Success results do not need to be added here as they don't change the overall success evaluation,
         // whereas the failure results may have a useful error message, which should be in the output.
+        // Only direct result objects are added, but not result objects that were passed from a subtask as they are already handled in the subtask.
         if (!resultOfTaskLambda.success && (resultIndex < internalResults.size - 1) && (resultOfTaskLambda != internalResults[resultIndex + 1].provResult)) {
             internalResults.add(ResultLine(level + 1, "<<returned result>>", resultOfTaskLambda))
         }
