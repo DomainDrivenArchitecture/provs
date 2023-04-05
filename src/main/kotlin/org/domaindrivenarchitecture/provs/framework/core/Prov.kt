@@ -87,15 +87,15 @@ open class Prov protected constructor(
     /**
      * defines a task, which returns the returned result, the results of sub-tasks are not considered
      */
-    fun requireLast(a: Prov.() -> ProvResult): ProvResult {
-        return evaluate(ResultMode.LAST) { a() }
+    fun requireLast(name: String? = null, a: Prov.() -> ProvResult): ProvResult {
+        return evaluate(ResultMode.LAST, name) { a() }
     }
 
     /**
      * defines a task, which always returns success
      */
-    fun optional(a: Prov.() -> ProvResult): ProvResult {
-        return evaluate(ResultMode.OPTIONAL) { a() }
+    fun optional(name: String? = null, a: Prov.() -> ProvResult): ProvResult {
+        return evaluate(ResultMode.OPTIONAL, name) { a() }
     }
 
     /**
@@ -316,7 +316,7 @@ open class Prov protected constructor(
         // which is the case if the result was not part of another subtask but created and returned by the lambda itself.
         // Success results do not need to be added here as they don't change the overall success evaluation,
         // whereas the failure results may have a useful error message, which should be in the output.
-        if (!resultOfTaskLambda.success && (resultOfTaskLambda != internalResults.last().provResult)) {
+        if (!resultOfTaskLambda.success && (resultIndex < internalResults.size - 1) && (resultOfTaskLambda != internalResults[resultIndex + 1].provResult)) {
             internalResults.add(ResultLine(level + 1, "<<returned result>>", resultOfTaskLambda))
         }
 
@@ -330,8 +330,12 @@ open class Prov protected constructor(
     }
 
 
+    /**
+     * Returns true if the task at the specified index has no subtasks.
+     * I.e. if the task is the last one or if level of the next task is the same or less (which means same level or "higher" in the tree)
+     */
     private fun internalResultIsLeaf(resultIndex: Int): Boolean {
-        return !(resultIndex < internalResults.size - 1 && internalResults[resultIndex + 1].level > internalResults[resultIndex].level)
+        return (resultIndex >= internalResults.size - 1 || internalResults[resultIndex].level >= internalResults[resultIndex + 1].level)
     }
 
 

@@ -646,5 +646,84 @@ internal class ProvTest {
 
     }
 
+    // method to be used in the next test
+    fun Prov.testMethodForOutputTest_with_returned_results() = taskWithResult {
+
+        taskWithResult(name = "sub1") {
+            taskWithResult("sub2a") {
+                ProvResult(true)
+            }
+            taskWithResult("sub2b") {
+                ProvResult(false, err = "error msg A for sub2b should be shown as result of sub2b")
+            }
+            optional("sub2c-optional") {
+                taskWithResult("sub3a-taskWithResult") {
+                    addResultToEval(ProvResult(false, err = "returned-result - error msg B should be once in output - in addResultToEval"))
+                }
+            }
+            requireLast("sub2d-requireLast") {
+                taskWithResult("sub3b-taskWithResult without error message") {
+                    ProvResult(false)  // no error message
+                }
+            }
+            task("sub2e-task") {
+                addResultToEval(ProvResult(true))
+                ProvResult(false, err = "error should NOT be in output as results of task (not taskWithResult) are ignored")
+            }
+            taskWithResult("sub2f-taskWithResult") {
+                ProvResult(false, err = "returned-result - error msg C should be once in output - at the end of sub3taskWithResult ")
+            }
+            ProvResult(false, err = "returned-result - error msg D should be once in output - at the end of sub1 ")
+        }
+    }
+
+    @Test
+    @NonCi
+    fun prov_prints_correct_output_for_returned_results() {
+
+        // given
+        setRootLoggingLevel(Level.OFF)
+
+        val outContent = ByteArrayOutputStream()
+        val errContent = ByteArrayOutputStream()
+        val originalOut = System.out
+        val originalErr = System.err
+
+        System.setOut(PrintStream(outContent))
+        System.setErr(PrintStream(errContent))
+
+        // when
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
+            .testMethodForOutputTest_with_returned_results()
+
+        // then
+        System.setOut(originalOut)
+        System.setErr(originalErr)
+
+        println(outContent.toString())
+
+        val expectedOutput =
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
+                    ">  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_with_returned_results \n" +
+                    "--->  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- sub2a \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2b  -- Error: error msg A for sub2b should be shown as result of sub2b\n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- sub2c-optional \n" +
+                    "--------->  \u001B[93mFAILED\u001B[0m  -- sub3a-taskWithResult \n" +
+                    "------------>  \u001B[93mFAILED\u001B[0m  -- addResultToEval  -- Error: returned-result - error msg B should be once in output - in addResultToEval\n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2d-requireLast \n" +
+                    "--------->  \u001B[91mFAILED\u001B[0m  -- sub3b-taskWithResult without error message \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- sub2e-task \n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- addResultToEval \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2f-taskWithResult  -- Error: returned-result - error msg C should be once in output - at the end of sub3taskWithResult \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- <<returned result>>  -- Error: returned-result - error msg D should be once in output - at the end of sub1 \n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
+                    "Overall >  \u001B[91mFAILED\u001B[0m \n" +
+                    "============================================ SUMMARY END ===========================================\n" +
+                    "\n"
+
+        assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
+    }
+
 }
 

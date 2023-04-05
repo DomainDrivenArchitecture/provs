@@ -20,7 +20,7 @@ internal fun getCallingMethodName(): String? {
     val offsetVal = 1
     val exclude = arrayOf("task", "task\$default", "taskWithResult\$default", "taskWithResult", "def", "def\$default", "record", "invoke", "invoke0", "evaluate", "evaluate\$default", )
     // suffixes are also ignored as method names but will be added as suffix in the evaluation results
-    val suffixes = arrayOf("optional", "requireAll", "requireLast", "inContainer")
+    val suffixes = arrayOf("optional", "optional\$default", "requireAll", "requireLast", "requireLast\$default", "inContainer")
 
     var suffix = ""
     val callingFrame = Thread.currentThread().stackTrace
@@ -30,7 +30,7 @@ internal fun getCallingMethodName(): String? {
             var inc = 0
             while ((method in exclude) or (method in suffixes)) {
                 if (method in suffixes && suffix == "") {
-                    suffix = method
+                    suffix = method.split("$")[0]
                 }
                 inc++
                 method = callingFrame[i + offsetVal + inc].methodName
