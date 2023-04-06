@@ -28,8 +28,9 @@ fun Prov.configureVenv(): ProvResult = task {
 }
 
 fun Prov.installPybuilder(): ProvResult = task {
-    cmd("pip3 install pybuilder ddadevops pypandoc mockito coverage unittest-xml-reporting deprecation python_terraform " +
-            "boto3")
+    cmd("pip3 install pybuilder ddadevops pypandoc mockito coverage unittest-xml-reporting deprecation" +
+            " python_terraform dda_python_terraform boto3 pyyaml ")
+    cmd("pip3 install --upgrade ddadevops")
 }
 
 fun Prov.installRestClient(): ProvResult = task {
