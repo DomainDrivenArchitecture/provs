@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.test
 
 import org.domaindrivenarchitecture.provs.framework.core.ProgressType
 import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.docker.containerRuns
 import org.domaindrivenarchitecture.provs.framework.core.docker.dockerImageExists
 import org.domaindrivenarchitecture.provs.framework.core.docker.dockerProvideImage
 import org.domaindrivenarchitecture.provs.framework.core.docker.dockerimages.UbuntuPlusUser
@@ -15,7 +16,7 @@ const val defaultTestContainerName = "provs_test"
 private lateinit var prov: Prov
 
 fun defaultTestContainer(startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE): Prov {
-    if (!::prov.isInitialized) { prov = initDefaultTestContainer(startMode) }
+    if (!::prov.isInitialized || !testLocal().containerRuns(defaultTestContainerName)) { prov = initDefaultTestContainer(startMode) }
     return prov
 }
 

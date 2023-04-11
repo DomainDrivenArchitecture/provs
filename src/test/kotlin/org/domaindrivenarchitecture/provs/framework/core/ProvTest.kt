@@ -254,12 +254,12 @@ internal class ProvTest {
     }
 
 
-    // given
+    // additional methods to be used in the tests below
     fun Prov.checkPrereq_evaluateToFailure() = requireLast {
         ProvResult(false, err = "This is a test error.")
     }
 
-    fun Prov.methodThatProvidesSomeOutput() = requireLast {
+    fun Prov.testMethodForOutputTest_with_mode_requireLast() = requireLast {
 
         if (!checkPrereq_evaluateToFailure().success) {
             sh(
@@ -271,6 +271,17 @@ internal class ProvTest {
         }
 
         sh("echo -End test-")
+    }
+
+    fun Prov.testMethodForOutputTest_nested_with_failure() = taskWithResult {
+
+        taskWithResult(name = "sub1") {
+            taskWithResult {
+                ProvResult(true)
+            }
+            ProvResult(false, err = "Iamanerrormessage")
+        }
+        cmd("echo -End test-")
     }
 
     @Test
@@ -290,7 +301,7 @@ internal class ProvTest {
 
         // when
         Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
-            .methodThatProvidesSomeOutput()
+            .testMethodForOutputTest_with_mode_requireLast()
 
         // then
         System.setOut(originalOut)
@@ -300,7 +311,7 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
-                    ">  \u001B[92mSuccess\u001B[0m -- methodThatProvidesSomeOutput (requireLast) \n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_with_mode_requireLast (requireLast) \n" +
                     "--->  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
@@ -317,7 +328,7 @@ internal class ProvTest {
 
     @Test
     @NonCi
-    fun prov_prints_correct_output_for_failure() {
+    fun prov_prints_correct_output_for_nested_calls_with_failure() {
 
         // given
         setRootLoggingLevel(Level.OFF)
@@ -332,7 +343,7 @@ internal class ProvTest {
 
         // when
         Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
-            .checkPrereq_evaluateToFailure()
+            .testMethodForOutputTest_nested_with_failure()
 
         // then
         System.setOut(originalOut)
@@ -342,7 +353,13 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
-                    ">  \u001B[91mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    ">  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_nested_with_failure \n" +
+                    "--->  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_nested_with_failure \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- <<returned result>>  -- Error: Iamanerrormessage\n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
+                    "Overall >  \u001B[91mFAILED\u001B[0m \n" +
                     "============================================ SUMMARY END ===========================================\n" +
                     "\n"
 
@@ -603,7 +620,7 @@ internal class ProvTest {
 
         val prov = Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
 
-            // when
+        // when
         prov.task {
             addInfoText("Text1")
             addInfoText("Text2\nwith newline")
@@ -627,6 +644,85 @@ internal class ProvTest {
 
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
 
+    }
+
+    // method to be used in the next test
+    fun Prov.testMethodForOutputTest_with_returned_results() = taskWithResult {
+
+        taskWithResult(name = "sub1") {
+            taskWithResult("sub2a") {
+                ProvResult(true)
+            }
+            taskWithResult("sub2b") {
+                ProvResult(false, err = "error msg A for sub2b should be shown as result of sub2b")
+            }
+            optional("sub2c-optional") {
+                taskWithResult("sub3a-taskWithResult") {
+                    addResultToEval(ProvResult(false, err = "returned-result - error msg B should be once in output - in addResultToEval"))
+                }
+            }
+            requireLast("sub2d-requireLast") {
+                taskWithResult("sub3b-taskWithResult without error message") {
+                    ProvResult(false)  // no error message
+                }
+            }
+            task("sub2e-task") {
+                addResultToEval(ProvResult(true))
+                ProvResult(false, err = "error should NOT be in output as results of task (not taskWithResult) are ignored")
+            }
+            taskWithResult("sub2f-taskWithResult") {
+                ProvResult(false, err = "returned-result - error msg C should be once in output - at the end of sub3taskWithResult ")
+            }
+            ProvResult(false, err = "returned-result - error msg D should be once in output - at the end of sub1 ")
+        }
+    }
+
+    @Test
+    @NonCi
+    fun prov_prints_correct_output_for_returned_results() {
+
+        // given
+        setRootLoggingLevel(Level.OFF)
+
+        val outContent = ByteArrayOutputStream()
+        val errContent = ByteArrayOutputStream()
+        val originalOut = System.out
+        val originalErr = System.err
+
+        System.setOut(PrintStream(outContent))
+        System.setErr(PrintStream(errContent))
+
+        // when
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
+            .testMethodForOutputTest_with_returned_results()
+
+        // then
+        System.setOut(originalOut)
+        System.setErr(originalErr)
+
+        println(outContent.toString())
+
+        val expectedOutput =
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
+                    ">  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_with_returned_results \n" +
+                    "--->  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- sub2a \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2b  -- Error: error msg A for sub2b should be shown as result of sub2b\n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- sub2c-optional \n" +
+                    "--------->  \u001B[93mFAILED\u001B[0m  -- sub3a-taskWithResult \n" +
+                    "------------>  \u001B[93mFAILED\u001B[0m  -- addResultToEval  -- Error: returned-result - error msg B should be once in output - in addResultToEval\n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2d-requireLast \n" +
+                    "--------->  \u001B[91mFAILED\u001B[0m  -- sub3b-taskWithResult without error message \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- sub2e-task \n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- addResultToEval \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2f-taskWithResult  -- Error: returned-result - error msg C should be once in output - at the end of sub3taskWithResult \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- <<returned result>>  -- Error: returned-result - error msg D should be once in output - at the end of sub1 \n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
+                    "Overall >  \u001B[91mFAILED\u001B[0m \n" +
+                    "============================================ SUMMARY END ===========================================\n" +
+                    "\n"
+
+        assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
     }
 
 }

@@ -8,6 +8,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileC
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Disabled
 
 internal class DevOpsKtTest {
 
@@ -33,5 +34,18 @@ internal class DevOpsKtTest {
         assertTrue(
             defaultTestContainer().checkFile("/etc/bash_completion.d/kubernetes", sudo = true)
         )
+    }
+
+    @ExtensiveContainerTest
+    @Disabled("Part of test installKubectlAndTools, but can be tested separately by this test if required")
+    fun installKubectl() {
+        // given
+        val prov = defaultTestContainer()
+
+        // when
+        val res = prov.installKubectl()
+
+        // then
+        assertTrue(res.success)
     }
 }

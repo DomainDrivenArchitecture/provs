@@ -106,19 +106,19 @@ fun Prov.provisionMSDesktop(onlyModules: List<String>?) {
 fun Prov.provisionOfficeDesktop(onlyModules: List<String>? = null) {
     if (onlyModules == null) {
         aptInstall(ZIP_UTILS)
+        aptInstall(SPELLCHECKING_DE)
         aptInstall(BROWSER)
         aptInstall(EMAIL_CLIENT)
         installDeltaChat()
         aptInstall(OFFICE_SUITE)
         installZimWiki()
         installNextcloudClient()
+        aptInstall(COMPARE_TOOLS)
 
         // optional as installation of these tools often fail and they are not considered mandatory
         optional {
             aptInstall(DRAWING_TOOLS)
         }
-
-        aptInstall(SPELLCHECKING_DE)
     } else if (onlyModules.contains(DesktopOnlyModule.VERIFY.name.lowercase())) {
         verifyOfficeSetup()
     } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {

@@ -7,7 +7,9 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
-private const val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure"
+private const val RESOURCE_PATH = "org/domaindrivenarchitecture/provs/desktop/infrastructure"
+private const val KUBE_CONFIG_CONTEXT_SCRIPT = ".bashrc.d/kubectl.sh"
+
 
 fun Prov.installDevOps() = task {
     installTerraform()
@@ -41,20 +43,9 @@ fun Prov.installYq(
 fun Prov.installKubectlAndTools(): ProvResult = task {
 
     task("installKubectl") {
-        val kubeConfigFile = ".bashrc.d/kubectl.sh"
-        if (!checkFile(kubeConfigFile)) {
-            // prerequisites -- see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
-            cmd("sudo apt-get update")
-            aptInstall("apt-transport-https ca-certificates curl")
-            cmd("sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg")
-            cmd("echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | sudo tee /etc/apt/sources.list.d/kubernetes.list")
-
-            // kubectl and bash completion
-            cmd("sudo apt update")
-            aptInstall("kubectl")
-            cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
-            createDir(".bashrc.d")
-            createFileFromResource(kubeConfigFile, "kubectl.sh", resourcePath)
+        if (!checkFile(KUBE_CONFIG_CONTEXT_SCRIPT)) {
+            installKubectl()
+            configureKubectlBashCompletion()
         } else {
             ProvResult(true, out = "Kubectl already installed")
         }
@@ -63,20 +54,45 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
     installDevopsScripts()
 }
 
+fun Prov.installKubectl(): ProvResult = task {
+
+    // see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+    val kubectlVersion = "1.23.0"
+    val tmpDir = "~/tmp"
+
+    // prerequisites -- see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+    cmd("sudo apt-get update")
+    aptInstall("apt-transport-https ca-certificates curl")
+    createDir(tmpDir)
+    downloadFromURL(
+        "https://dl.k8s.io/release/v$kubectlVersion/bin/linux/amd64/kubectl",
+        path = tmpDir,
+        // from https://dl.k8s.io/v1.23.0/bin/linux/amd64/kubectl.sha256
+        sha256sum = "2d0f5ba6faa787878b642c151ccb2c3390ce4c1e6c8e2b59568b3869ba407c4f"
+    )
+    cmd("sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl", dir = tmpDir)
+}
+
+fun Prov.configureKubectlBashCompletion(): ProvResult = task {
+    cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
+    createDir(".bashrc.d")
+    createFileFromResource(KUBE_CONFIG_CONTEXT_SCRIPT, "kubectl.sh", RESOURCE_PATH)
+}
+
 fun Prov.installDevopsScripts() {
 
     task("install ssh helper") {
         createFileFromResource(
             "/usr/local/bin/sshu.sh",
             "sshu.sh",
-            resourcePath,
+            RESOURCE_PATH,
             "555",
             sudo = true
         )
         createFileFromResource(
             "/usr/local/bin/ssht.sh",
             "ssht.sh",
-            resourcePath,
+            RESOURCE_PATH,
             "555",
             sudo = true
         )
@@ -87,7 +103,7 @@ fun Prov.installDevopsScripts() {
         createFileFromResource(
             k3sContextFile,
             "k3s-create-context.sh",
-            resourcePath,
+            RESOURCE_PATH,
             "555",
             sudo = true
         )
@@ -98,12 +114,13 @@ fun Prov.installDevopsScripts() {
         createFileFromResource(
             k3sConnectFile,
             "k3s-connect.sh",
-            resourcePath,
+            RESOURCE_PATH,
             "555",
             sudo = true
         )
     }
 }
+
 fun Prov.installTerraform(): ProvResult = task {
     val dir = "/usr/lib/tfenv/"
 
