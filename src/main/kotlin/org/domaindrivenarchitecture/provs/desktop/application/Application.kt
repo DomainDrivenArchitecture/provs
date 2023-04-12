@@ -19,10 +19,12 @@ fun main(args: Array<String>) {
     }
 
     val prov = createProvInstance(cmd.target)
-    prov.ensureSudoWithoutPassword(cmd.target.remoteTarget()?.password)
 
     try {
-        provisionDesktopCommand(prov, cmd)
+        prov.task {
+            ensureSudoWithoutPassword(cmd.target.remoteTarget()?.password)
+            provisionDesktopCommand(cmd)
+        }
     } catch (e: SerializationException) {
         println(
             "Error: File \"${cmd.configFile?.fileName}\" has an invalid format and or invalid data.\n"
