@@ -3,6 +3,7 @@ package org.domaindrivenarchitecture.provs.configuration.application
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.cli.getPasswordToConfigureSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
@@ -42,8 +43,10 @@ class ProvWithSudoKtTest {
 
         // when
         val canSudo1 = prov.currentUserCanSudoWithoutPassword()
-        prov.ensureSudoWithoutPassword(null)
-        val canSudo2 = prov.currentUserCanSudoWithoutPassword()
+        val provWithSudo = ensureSudoWithoutPassword(
+            prov, TargetCliCommand("local")
+        )
+        val canSudo2 = provWithSudo.currentUserCanSudoWithoutPassword()
 
         // then
         assertFalse(canSudo1)
@@ -55,10 +58,14 @@ class ProvWithSudoKtTest {
     @ExtensiveContainerTest
     fun test_ensureSudoWithoutPassword_remote_Prov() {
 
+//        mockkStatic(::getPasswordToConfigureSudoWithoutPassword)
+//        every { getPasswordToConfigureSudoWithoutPassword() } returns Secret("testuserpw")
+
         // given
         val containerName = "prov-test-sudo-no-pw-ssh"
         val password = Secret("testuserpw")
 
+//        local().provideContainer(containerName, "ubuntu_plus_user", options = "")
         val prov = Prov.newInstance(
             ContainerUbuntuHostProcessor(
                 containerName,
@@ -81,11 +88,15 @@ class ProvWithSudoKtTest {
 
         // when
         val canSudo1 = remoteProvBySsh.currentUserCanSudoWithoutPassword()
-        prov.ensureSudoWithoutPassword(password)
-        val canSudo2 = prov.currentUserCanSudoWithoutPassword()
+        val provWithSudo = ensureSudoWithoutPassword(
+            remoteProvBySsh, TargetCliCommand("testuser:${password.plain()}@$ip")
+        )
+        val canSudo2 = provWithSudo.currentUserCanSudoWithoutPassword()
 
         // then
         assertFalse(canSudo1)
         assertTrue(canSudo2)
+
+//        unmockkStatic(::getPasswordToConfigureSudoWithoutPassword)
     }
 }
