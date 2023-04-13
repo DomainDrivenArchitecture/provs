@@ -1,6 +1,8 @@
 package org.domaindrivenarchitecture.provs.server.application
 
+import org.domaindrivenarchitecture.provs.configuration.application.ensureSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
+import org.domaindrivenarchitecture.provs.framework.core.cli.quit
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
 import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3sCommand
@@ -25,14 +27,16 @@ fun main(args: Array<String>) {
 
     val cmd = CliArgumentsParser("provs-server.jar subcommand target").parseCommand(checkedArgs)
 
-    // ToDo: exitProcess makes testing harder, find another solution
     // validate parsed arguments
     if (!cmd.isValidTarget()) {
         println("Remote or localhost not valid, please try -h for help.")
-        exitProcess(1)
+        quit(1)
     }
 
     val prov = createProvInstance(cmd.target)
-    prov.provisionK3sCommand(cmd as K3sCliCommand)
 
+    prov.session {
+        ensureSudoWithoutPassword(cmd.target.remoteTarget()?.password)
+        provisionK3sCommand(cmd as K3sCliCommand)
+    }
 }
