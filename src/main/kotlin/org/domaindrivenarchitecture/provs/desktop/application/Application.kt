@@ -2,8 +2,11 @@ package org.domaindrivenarchitecture.provs.desktop.application
 
 import kotlinx.serialization.SerializationException
 import org.domaindrivenarchitecture.provs.configuration.application.ensureSudoWithoutPassword
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopConfig
 import org.domaindrivenarchitecture.provs.desktop.domain.provisionDesktopCommand
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
+import org.domaindrivenarchitecture.provs.framework.core.cli.quit
 import java.io.FileNotFoundException
 import kotlin.system.exitProcess
 
@@ -18,22 +21,33 @@ fun main(args: Array<String>) {
         exitProcess(1)
     }
 
+    val config = if (cmd.configFile == null) DesktopConfig() else
+        try {
+            getConfig(cmd.configFile.fileName)
+        } catch (e: SerializationException) {
+            println(
+                "Error: File \"${cmd.configFile.fileName}\" has an invalid format and or invalid data."
+            )
+            null
+        } catch (e: FileNotFoundException) {
+            println(
+                "Error: File\u001b[31m ${cmd.configFile.fileName} \u001b[0m was not found.\n" +
+                        "Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m ${cmd.configFile.fileName} \u001B[0m " +
+                        "and change the content according to your needs."
+            )
+            null
+        }
+
+    if (config == null) {
+        println("No suitable config found.")
+        quit(-1)
+    }
+
     val prov = createProvInstance(cmd.target)
 
-    try {
-        prov.task {
-            ensureSudoWithoutPassword(cmd.target.remoteTarget()?.password)
-            provisionDesktopCommand(cmd)
-        }
-    } catch (e: SerializationException) {
-        println(
-            "Error: File \"${cmd.configFile?.fileName}\" has an invalid format and or invalid data.\n"
-        )
-    } catch (e: FileNotFoundException) {
-        println(
-            "Error: File\u001b[31m ${cmd.configFile?.fileName} \u001b[0m was not found.\n" +
-                    "Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m ${cmd.configFile?.fileName} \u001B[0m " +
-                    "and change the content according to your needs.\n"
-        )
+    prov.session {
+        ensureSudoWithoutPassword(cmd.target.remoteTarget()?.password)
+        provisionDesktopCommand(cmd, config)
     }
 }
+

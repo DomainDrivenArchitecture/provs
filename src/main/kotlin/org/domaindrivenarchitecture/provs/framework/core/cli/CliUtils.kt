@@ -52,3 +52,11 @@ internal fun createRemoteProvInstance(
 internal fun getPasswordToConfigureSudoWithoutPassword(): Secret {
     return PromptSecretSource("password to configure sudo without password.").secret()
 }
+
+
+/**
+ * Wrapper for exitProcess, which allows e.g. mocking for test purposes
+ */
+fun quit(status: Int): Nothing {
+    exitProcess(status)
+}

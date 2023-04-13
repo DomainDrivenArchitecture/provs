@@ -12,11 +12,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
-internal fun Prov.provisionDesktopCommand(cmd: DesktopCliCommand) = task {
-
-    // retrieve config
-    val conf = if (cmd.configFile != null) getConfig(cmd.configFile.fileName) else DesktopConfig()
-
+internal fun Prov.provisionDesktopCommand(cmd: DesktopCliCommand, conf: DesktopConfig) = task {
     provisionDesktop(
         cmd.type,
         conf.ssh?.keyPair(),

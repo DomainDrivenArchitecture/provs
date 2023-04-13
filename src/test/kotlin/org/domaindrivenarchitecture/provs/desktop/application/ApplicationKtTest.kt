@@ -4,16 +4,21 @@ import ch.qos.logback.classic.Level
 import io.mockk.*
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
-import org.domaindrivenarchitecture.provs.desktop.domain.*
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopCliCommand
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopConfig
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopType
+import org.domaindrivenarchitecture.provs.desktop.domain.provisionDesktop
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.getConfig
 import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.cli.getPasswordToConfigureSudoWithoutPassword
+import org.domaindrivenarchitecture.provs.framework.core.cli.quit
 import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
 import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
@@ -91,6 +96,9 @@ internal class ApplicationKtTest {
 
     @Test
     fun prints_error_message_if_config_not_found() {
+        mockkStatic(::quit)
+        every { quit(any()) } throws RuntimeException("mockked")
+
         // given
         setRootLoggingLevel(Level.OFF)
 
@@ -103,21 +111,28 @@ internal class ApplicationKtTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        main(arrayOf("basic", "someuser@remotehost", "-c", "idontexist.yaml"))
+        assertThrows<RuntimeException> {
+            main(arrayOf("basic", "someuser@remotehost", "-c", "idontexist.yaml"))
+        }
 
         // then
         System.setOut(originalOut)
         System.setErr(originalErr)
 
         val expectedOutput =
-            "Error: File\u001B[31m idontexist.yaml \u001B[0m was not found.Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m idontexist.yaml \u001B[0m and change the content according to your needs."
+            "Error: File\u001B[31m idontexist.yaml \u001B[0m was not found.Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m idontexist.yaml \u001B[0m and change the content according to your needs.No suitable config found."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
         verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any(), any()) }
+
+        unmockkStatic(::quit)
     }
 
     @Test
     fun prints_error_message_if_config_not_parsable() {
+        mockkStatic(::quit)
+        every { quit(any()) } throws RuntimeException("mockked")
+
         // given
         setRootLoggingLevel(Level.OFF)
 
@@ -130,16 +145,20 @@ internal class ApplicationKtTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        main(arrayOf("basic", "someuser@remotehost", "-c", "src/test/resources/invalid-desktop-config.yaml"))
+        assertThrows<RuntimeException> {
+            main(arrayOf("basic", "someuser@remotehost", "-c", "src/test/resources/invalid-desktop-config.yaml"))
+        }
 
         // then
         System.setOut(originalOut)
         System.setErr(originalErr)
 
         val expectedOutput =
-            "Error: File \"src/test/resources/invalid-desktop-config.yaml\" has an invalid format and or invalid data."
+            "Error: File \"src/test/resources/invalid-desktop-config.yaml\" has an invalid format and or invalid data.No suitable config found."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
         verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any(), any()) }
+
+        unmockkStatic(::quit)
     }
 }

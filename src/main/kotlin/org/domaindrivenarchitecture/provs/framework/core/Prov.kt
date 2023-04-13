@@ -69,6 +69,17 @@ open class Prov protected constructor(
     private val infoTexts = arrayListOf<String>()
 
     /**
+     * A session is the top-level execution unit in provs. A session can contain tasks.
+     * Returns success if no sub-tasks are called or if all subtasks finish with success.
+     */
+    fun session(taskLambda: Prov.() -> Unit) = task("session") {
+        if (level > 1) {
+            throw IllegalStateException("A session can only be created on the top-level and may not be included in another session or task.")
+        }
+        taskLambda()
+    }
+
+    /**
      * A task is the base execution unit in provs. In the results overview it is represented by one line resp. result (of either success or failure).
      * Returns success if no sub-tasks are called or if all subtasks finish with success.
      */

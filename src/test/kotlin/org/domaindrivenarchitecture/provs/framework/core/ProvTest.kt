@@ -658,7 +658,12 @@ internal class ProvTest {
             }
             optional("sub2c-optional") {
                 taskWithResult("sub3a-taskWithResult") {
-                    addResultToEval(ProvResult(false, err = "returned-result - error msg B should be once in output - in addResultToEval"))
+                    addResultToEval(
+                        ProvResult(
+                            false,
+                            err = "returned-result - error msg B should be once in output - in addResultToEval"
+                        )
+                    )
                 }
             }
             requireLast("sub2d-requireLast") {
@@ -668,10 +673,16 @@ internal class ProvTest {
             }
             task("sub2e-task") {
                 addResultToEval(ProvResult(true))
-                ProvResult(false, err = "error should NOT be in output as results of task (not taskWithResult) are ignored")
+                ProvResult(
+                    false,
+                    err = "error should NOT be in output as results of task (not taskWithResult) are ignored"
+                )
             }
             taskWithResult("sub2f-taskWithResult") {
-                ProvResult(false, err = "returned-result - error msg C should be once in output - at the end of sub3taskWithResult ")
+                ProvResult(
+                    false,
+                    err = "returned-result - error msg C should be once in output - at the end of sub3taskWithResult "
+                )
             }
             ProvResult(false, err = "returned-result - error msg D should be once in output - at the end of sub1 ")
         }
@@ -725,5 +736,25 @@ internal class ProvTest {
         assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
     }
 
-}
+    @Test
+    fun session_on_top_level_succeeds() {
+        // when
+        val result = Prov.newInstance().session { cmd("echo bla") }
+        // then
+        assertTrue(result.success)
+    }
 
+    @Test
+    fun session_not_on_top_level_throws_an_exception() {
+        // when
+        val exception = org.junit.jupiter.api.assertThrows<RuntimeException> {
+            local().session {
+                session {
+                    cmd("echo bla")
+                }
+            }
+        }
+        // then
+        assertEquals("A session can only be created on the top-level and may not be included in another session or task.", exception.message)
+    }
+}
