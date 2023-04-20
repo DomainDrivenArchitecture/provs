@@ -73,7 +73,7 @@ fun Prov.isPackageInstalled(packageName: String): Boolean {
 
 
 /**
- * Removes a package including its configuration and data files
+ * Removes a package including its configuration and data file
  */
 @Suppress("unused") // used externally
 fun Prov.aptPurge(packageName: String): Boolean {

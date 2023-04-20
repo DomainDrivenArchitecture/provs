@@ -1,10 +1,8 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.configureGpgKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
@@ -12,8 +10,6 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.domaindrivenarchitecture.provs.test_keys.privateGPGSnakeoilKey
-import org.domaindrivenarchitecture.provs.test_keys.publicGPGSnakeoilKey
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -36,32 +32,23 @@ internal class GopassKtTest {
     @ExtensiveContainerTest
     fun test_installAndConfigureGopassAndMountStore() {
         // given
-        val a = defaultTestContainer()
+        val prov = defaultTestContainer()
         val gopassRootDir = ".password-store"
-        a.aptInstall("wget git gnupg")
-        a.createDir(gopassRootDir, "~/")
-        a.cmd("git init", "~/$gopassRootDir")
-        val fpr = a.gpgFingerprint(publicGPGSnakeoilKey())
-        println("+++++++++++++++++++++++++++++++++++++ $fpr +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        a.createFile("~/" + gopassRootDir + "/.gpg-id", fpr)
-
-        a.createDir("exampleStoreFolder", "~/")
-        a.createFile("~/exampleStoreFolder/.gpg-id", fpr)
-
-        a.configureGpgKeys(KeyPair(Secret(publicGPGSnakeoilKey()), Secret(privateGPGSnakeoilKey())), true)
 
         // when
-        val res = a.installGopass()
-        val res2 = a.configureGopass(a.userHome() + gopassRootDir)
-        val res3 = a.gopassMountStore("exampleStore", "~/exampleStoreFolder")
+        val res = prov.task("test_installAndConfigureGopassAndMountStore") {
+            installGopass()
+            configureGopass(prov.userHome() + gopassRootDir)
+            gopassInitStoreFolder("~/exampleStoreFolder")
+            gopassMountStore("exampleStore", "~/exampleStoreFolder")
+            prov.cmd("gopass ls")
+        }
 
         // then
-        a.fileContent("~/.config/gopass/config.yml")  // displays the content in the logs
+        prov.fileContent("~/.config/gopass/config.yml")  // displays the content in the logs
         assertTrue(res.success)
-        assertTrue(res2.success)
-        assertTrue(res3.success)
-        assertTrue(a.fileContainsText("~/.config/gopass/config.yml", "/home/testuser/.password-store"))
-        assertTrue(a.fileContainsText("~/.config/gopass/config.yml", "exampleStore"))
+        assertTrue(prov.fileContainsText("~/.config/gopass/config.yml", "/home/testuser/.password-store"))
+        assertTrue(prov.fileContainsText("~/.config/gopass/config.yml", "exampleStore"))
     }
 
     @Test
@@ -74,10 +61,10 @@ internal class GopassKtTest {
         val privateKey = GopassSecretSource("path-to/priv.key").secret()
 
         // given
-        val a = remote(host, user)
+        val prov = remote(host, user)
 
         // when
-        val res = a.task {
+        val res = prov.task {
             configureGpgKeys(
                 KeyPair(
                     pubKey,
@@ -101,3 +88,4 @@ internal class GopassKtTest {
         assertTrue(res.success)
     }
 }
+

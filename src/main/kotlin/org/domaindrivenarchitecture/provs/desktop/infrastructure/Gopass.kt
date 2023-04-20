@@ -2,9 +2,11 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
@@ -34,29 +36,34 @@ fun Prov.installGopass(
     if (result.success) {
         cmd("sudo dpkg -i $path/gopass_${version}_linux_amd64.deb")
         // Cross-check if installation was successful
-        addResultToEval(ProvResult(checkGopassVersion(version)))
+        return@taskWithResult ProvResult(checkGopassVersion(version))
     } else {
-        addResultToEval(ProvResult(false, err = "Gopass could not be installed. " + result.err))
+        return@taskWithResult ProvResult(false, err = "Gopass could not be installed. " + result.err)
     }
 }
 
 
-fun Prov.configureGopass(gopassRootFolder: String? = null) = taskWithResult() {
+fun Prov.configureGopass(gopassRootFolder: String? = null, publicGpgKey: Secret? = null) = taskWithResult {
+
     val configFile = ".config/gopass/config.yml"
-    val defaultRootFolder = userHome() + ".password-store"
-    val rootFolder = gopassRootFolder ?: defaultRootFolder
 
     if (checkFile(configFile)) {
         return@taskWithResult ProvResult(true, out = "Gopass already configured in file $configFile")
     }
 
     if ((gopassRootFolder != null) && (!gopassRootFolder.startsWith("/"))) {
-        return@taskWithResult ProvResult(false, err = "Gopass cannot be initialized with a relative path or path starting with ~")
+        return@taskWithResult ProvResult(false, err = "Gopass cannot be initialized with a relative path or path starting with ~ ($gopassRootFolder)")
     }
-    // use default
-    createDir(rootFolder)
+
+    val defaultRootFolder = userHome() + ".password-store"
+    val gopassRoot = gopassRootFolder ?: defaultRootFolder
+
+    // initialize root store
+    val fingerprint = publicGpgKey?.let { gpgFingerprint(it.plain()) }
+    gopassInitStoreFolder(gopassRoot, fingerprint)
+
     createDirs(".config/gopass")
-    createFile(configFile, gopassConfig(rootFolder))
+    createFile(configFile, gopassConfig(gopassRoot))
 
     // auto-completion
     configureBashForUser()
@@ -69,9 +76,8 @@ fun Prov.gopassMountStore(storeName: String, path: String) = task {
 }
 
 
-@Suppress("unused")
-fun Prov.gopassInitStore(storeName: String, indexOfRecepientKey: Int = 0) = task {
-    cmd("printf \"$indexOfRecepientKey\\n\" | gopass init --store=$storeName")
+fun Prov.gopassInitStoreFolder(path: String, gpgFingerprint: String? = null ) = task {
+    createFile("$path/.gpg-id", gpgFingerprint ?: "_replace_this_by_a_fingerprint_of_a_public_gpg_key_")
 }
 
 

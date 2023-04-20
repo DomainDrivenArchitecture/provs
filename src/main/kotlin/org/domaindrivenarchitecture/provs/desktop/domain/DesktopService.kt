@@ -151,11 +151,13 @@ fun Prov.provisionBasicDesktop(
 
         installFirefox()
         installGopass()
+        configureGopass(publicGpgKey = gpg?.publicKey)
         installGopassBridgeJsonApi()
         downloadGopassBridge()
-        installRedshift()
 
+        installRedshift()
         configureRedshift()
+
         configureNoSwappiness()
         configureBash()
         installVirtualBoxGuestAdditions()
