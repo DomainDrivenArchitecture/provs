@@ -13,9 +13,12 @@ fun Prov.installFirefox() = task {
 
     // inspired by: https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04
 
-    if (chk("snap list | grep firefox")) {
-        cmd("snap remove firefox", sudo = true)
+    task("remove snap firefox") {
+        if (chk("snap list | grep firefox")) {
+            cmd("snap remove firefox", sudo = true)
+        }
     }
+
     aptInstall("software-properties-common")
     cmd("add-apt-repository -y ppa:mozillateam/ppa", sudo = true)
 
