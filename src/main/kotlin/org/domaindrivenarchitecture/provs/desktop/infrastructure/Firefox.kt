@@ -19,6 +19,7 @@ fun Prov.installFirefox() = task {
     aptInstall("software-properties-common")
     cmd("add-apt-repository -y ppa:mozillateam/ppa", sudo = true)
 
+    // set prio in order to use ppa-firefox above snap
     addTextToFile(
         "\nPackage: *\n" +
                 "Pin: release o=LP-PPA-mozillateam\n" +
