@@ -38,4 +38,5 @@ fun Prov.installFirefox() = task {
     )
 
     aptInstall("firefox")
+    cmd("apt upgrade -y firefox", sudo = true)
 }

@@ -9,13 +9,15 @@ internal class FirefoxKtTest {
 
     @ExtensiveContainerTest
     fun installFirefox() {
-        // when
-        val res = defaultTestContainer().installFirefox()
+        defaultTestContainer().session {
+            // when
+            val res = installFirefox()
 
-        // then
-        assertTrue(res.success)
+            // then
+            assertTrue(res.success)
 
-        val ffIsInstalled = defaultTestContainer().isPackageInstalled("firefox")
-        assertTrue(ffIsInstalled)
+            val ffIsInstalled = isPackageInstalled("firefox")
+            assertTrue(ffIsInstalled)
+        }
     }
 }
