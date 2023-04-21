@@ -73,6 +73,14 @@ fun Prov.isPackageInstalled(packageName: String): Boolean {
 
 
 /**
+ * Returns true if a package is installed else false
+ */
+fun Prov.checkPackageInstalled(packageName: String): ProvResult = taskWithResult {
+    cmd("dpkg -s $packageName")
+}
+
+
+/**
  * Removes a package including its configuration and data file
  */
 @Suppress("unused") // used externally
