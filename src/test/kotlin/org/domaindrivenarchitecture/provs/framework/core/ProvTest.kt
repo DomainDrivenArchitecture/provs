@@ -301,7 +301,9 @@ internal class ProvTest {
 
         // when
         Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
-            .testMethodForOutputTest_with_mode_requireLast()
+            .session {
+                testMethodForOutputTest_with_mode_requireLast()
+            }
 
         // then
         System.setOut(originalOut)
@@ -311,13 +313,14 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
-                    ">  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_with_mode_requireLast (requireLast) \n" +
-                    "--->  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
-                    "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
-                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
-                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
-                    "--->  \u001B[92mSuccess\u001B[0m -- sh \n" +
-                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- session \n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_with_mode_requireLast (requireLast) \n" +
+                    "------>  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- sh \n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- sh \n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
                     "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[92mSuccess\u001B[0m\n" +
                     "============================================ SUMMARY END ===========================================\n" +
@@ -342,8 +345,9 @@ internal class ProvTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
-            .testMethodForOutputTest_nested_with_failure()
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE).session {
+            testMethodForOutputTest_nested_with_failure()
+        }
 
         // then
         System.setOut(originalOut)
@@ -353,11 +357,12 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
-                    ">  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_nested_with_failure \n" +
-                    "--->  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
-                    "------>  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_nested_with_failure \n" +
-                    "------>  \u001B[91mFAILED\u001B[0m  -- <<returned result>>  -- Error: Iamanerrormessage\n" +
-                    "--->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
+                    ">  \u001B[91mFAILED\u001B[0m  -- session \n" +
+                    "--->  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_nested_with_failure \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_nested_with_failure \n" +
+                    "--------->  \u001B[91mFAILED\u001B[0m  -- <<returned result>>  -- Error: Iamanerrormessage\n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
                     "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[91mFAILED\u001B[0m \n" +
                     "============================================ SUMMARY END ===========================================\n" +
@@ -399,7 +404,8 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
+            "WARNING: method task should not be used at top-level, use method <session> instead.\n" +
+                    "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- taskA \n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- prov_marks_failed_output_yellow_if_optional (optional) \n" +
                     "------>  \u001B[93mFAILED\u001B[0m  -- taskB \n" +
@@ -469,7 +475,8 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance) =============================================\n" +
+            "WARNING: method task should not be used at top-level, use method <session> instead.\n" +
+                    "============================================== SUMMARY (test instance) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- TaskB \n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- taskC \n" +
                     "----------------------------------------------------------------------------------------------------\n" +
@@ -621,9 +628,10 @@ internal class ProvTest {
         val prov = Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
 
         // when
-        prov.task {
+        prov.session {
             addInfoText("Text1")
             addInfoText("Text2\nwith newline")
+            ProvResult(true)
         }
 
         // then
@@ -634,7 +642,7 @@ internal class ProvTest {
 
         val expectedOutput =
             "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
-                    ">  \u001B[92mSuccess\u001B[0m -- infoText_is_printed_correctly \n" +
+                    ">  \u001B[92mSuccess\u001B[0m -- session \n" +
                     "+++++++++++++++++++++++++++++++++++  \u001B[94mAdditional information\u001B[0m  +++++++++++++++++++++++++++++++++++++++\n" +
                     "Text1\n" +
                     "Text2\n" +
@@ -714,7 +722,8 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
+            "WARNING: method taskWithResult should not be used at top-level, use method <session> instead.\n" +
+                    "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_with_returned_results \n" +
                     "--->  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- sub2a \n" +
@@ -755,6 +764,57 @@ internal class ProvTest {
             }
         }
         // then
-        assertEquals("A session can only be created on the top-level and may not be included in another session or task.", exception.message)
+        assertEquals(
+            "A session can only be created on the top-level and may not be included in another session or task.",
+            exception.message
+        )
+    }
+
+    // method for task_warning_for_task_on_top_level_is_in_output
+    // must be declared outside test task_warning_for_task_on_top_level_is_in_output in order to avoid strange naming in result output
+    fun Prov.tst_task() = task {
+        task_returningTrue()
+        task_returningFalse()
+    }
+
+    @Test
+    fun task_warning_for_task_on_top_level_is_in_output() {
+        // given
+        setRootLoggingLevel(Level.OFF)
+
+        val outContent = ByteArrayOutputStream()
+        val errContent = ByteArrayOutputStream()
+        val originalOut = System.out
+        val originalErr = System.err
+
+        System.setOut(PrintStream(outContent))
+        System.setErr(PrintStream(errContent))
+
+        // when
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
+            .tst_task().success
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
+            .tst_task().success   // test that also second run gets warning
+
+        // then
+        System.setOut(originalOut)
+        System.setErr(originalErr)
+
+        println(outContent.toString())
+
+        val expectedOutputOneRun =
+            "WARNING: method task should not be used at top-level, use method <session> instead.\n" +
+                    "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
+                    ">  \u001B[91mFAILED\u001B[0m  -- tst_task \n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- task_returningTrue \n" +
+                    "--->  \u001B[91mFAILED\u001B[0m  -- task_returningFalse \n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
+                    "Overall >  \u001B[91mFAILED\u001B[0m \n" +
+                    "============================================ SUMMARY END ===========================================\n" +
+                    "\n"
+
+        val expectedOutputDoubleRun = expectedOutputOneRun + expectedOutputOneRun
+
+        assertEquals(expectedOutputDoubleRun, outContent.toString().replace("\r", ""))
     }
 }

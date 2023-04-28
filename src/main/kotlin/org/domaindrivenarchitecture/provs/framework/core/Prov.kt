@@ -72,11 +72,11 @@ open class Prov protected constructor(
      * A session is the top-level execution unit in provs. A session can contain tasks.
      * Returns success if no sub-tasks are called or if all subtasks finish with success.
      */
-    fun session(taskLambda: Prov.() -> Unit) = task("session") {
-        if (level > 1) {
+    fun session(taskLambda: Prov.() -> ProvResult): ProvResult {
+        if (level > 0) {
             throw IllegalStateException("A session can only be created on the top-level and may not be included in another session or task.")
         }
-        taskLambda()
+        return evaluate(ResultMode.ALL, "session") { taskLambda() }
     }
 
     /**
@@ -84,6 +84,7 @@ open class Prov protected constructor(
      * Returns success if no sub-tasks are called or if all subtasks finish with success.
      */
     fun task(name: String? = null, taskLambda: Prov.() -> Unit): ProvResult {
+        printDeprecationWarningIfLevel0("task")
         return evaluate(ResultMode.ALL, name) { taskLambda(); ProvResult(true) }
     }
 
@@ -92,6 +93,7 @@ open class Prov protected constructor(
      * The returned result is included in the evaluation.
      */
     fun taskWithResult(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
+        printDeprecationWarningIfLevel0("taskWithResult")
         return evaluate(ResultMode.ALL, name) { taskLambda() }
     }
 
@@ -99,6 +101,7 @@ open class Prov protected constructor(
      * defines a task, which returns the returned result, the results of sub-tasks are not considered
      */
     fun requireLast(name: String? = null, a: Prov.() -> ProvResult): ProvResult {
+        printDeprecationWarningIfLevel0("requireLast")
         return evaluate(ResultMode.LAST, name) { a() }
     }
 
@@ -106,6 +109,7 @@ open class Prov protected constructor(
      * defines a task, which always returns success
      */
     fun optional(name: String? = null, a: Prov.() -> ProvResult): ProvResult {
+        printDeprecationWarningIfLevel0("optional")
         return evaluate(ResultMode.OPTIONAL, name) { a() }
     }
 
@@ -113,6 +117,7 @@ open class Prov protected constructor(
      * defines a task, which exits the overall execution on failure
      */
     fun exitOnFailure(a: Prov.() -> ProvResult): ProvResult {
+        printDeprecationWarningIfLevel0("exitOnFailure")
         return evaluate(ResultMode.FAILEXIT) { a() }
     }
 
@@ -120,6 +125,7 @@ open class Prov protected constructor(
      * Runs the provided task in the specified (running) container
      */
     fun taskInContainer(containerName: String, taskLambda: Prov.() -> ProvResult): ProvResult {
+        printDeprecationWarningIfLevel0("taskInContainer")
         runInContainerWithName = containerName
         val res = evaluate(ResultMode.ALL) { taskLambda() }
         runInContainerWithName = null
@@ -456,6 +462,11 @@ open class Prov protected constructor(
         }
     }
 
+    fun printDeprecationWarningIfLevel0(methodName: String) {
+        if (level == 0) {
+            println("WARNING: method $methodName should not be used at top-level, use method <session> instead.")
+        }
+    }
 }
 
 
