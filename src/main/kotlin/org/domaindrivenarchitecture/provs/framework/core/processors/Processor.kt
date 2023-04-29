@@ -2,10 +2,13 @@ package org.domaindrivenarchitecture.provs.framework.core.processors
 
 
 interface Processor {
+    fun open() {
+        // no action needed for most processors; otherwise, overwrite this method in the implementing class
+    }
     fun exec(vararg args: String): ProcessResult
     fun execNoLog(vararg args: String): ProcessResult
     fun close() {
-        // no action needed for most processors; if action is needed when closing, this method must be overwritten in the subclass
+        // no action needed for most processors; otherwise, overwrite this method in the implementing class
     }
 }
 

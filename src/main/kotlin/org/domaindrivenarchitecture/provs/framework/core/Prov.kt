@@ -271,6 +271,8 @@ open class Prov protected constructor(
             previousLevel = -1
             exit = false
             initProgress()
+
+            processor.open()
         }
 
         // pre-handling

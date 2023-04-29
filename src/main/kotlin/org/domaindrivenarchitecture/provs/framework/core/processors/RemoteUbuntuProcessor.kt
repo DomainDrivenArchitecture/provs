@@ -21,17 +21,20 @@ import java.util.concurrent.TimeUnit
  * Executes task on a remote machine.
  * Attention: host key is currently not being verified
  */
-class RemoteProcessor(host: InetAddress, user: String, password: Secret? = null) : Processor {
+class RemoteProcessor(val host: InetAddress, val user: String, val password: Secret? = null) : Processor {
 
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")
         private val log = LoggerFactory.getLogger(javaClass.enclosingClass)
     }
 
-    private val ssh = SSHClient()
+    private var ssh = SSHClient()
 
-    init {
+    override fun open() {
         try {
+            // always create a new instance as old one might be closed
+            ssh = SSHClient()
+
             log.info("Connecting to $host with user: $user with " + if (password != null) "password" else "ssh-key")
 
             ssh.loadKnownHosts()
