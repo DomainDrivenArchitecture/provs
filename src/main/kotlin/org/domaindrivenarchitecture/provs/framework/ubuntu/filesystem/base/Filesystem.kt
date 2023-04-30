@@ -251,7 +251,7 @@ fun Prov.replaceTextInFile(file: String, oldText: String, replacement: String) =
 }
 
 
-fun Prov.replaceTextInFile(file: String, oldText: Regex, replacement: String) = task {
+fun Prov.replaceTextInFile(file: String, oldText: Regex, replacement: String) = taskWithResult {
     // todo: only use sudo for root or if owner different from current
     val content = fileContent(file, true)
     if (content != null) {

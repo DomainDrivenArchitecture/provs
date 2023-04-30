@@ -6,7 +6,6 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
-import java.io.File
 
 
 fun Prov.downloadGopassBridge() = task {
@@ -22,10 +21,10 @@ fun Prov.downloadGopassBridge() = task {
     // needs manual installation with: firefox Downloads/gopass_bridge-0.8.0-fx.xpi
 }
 
-fun Prov.installGopassBridgeJsonApi() = task {
+fun Prov.installGopassJsonApi() = taskWithResult {
     // see https://github.com/gopasspw/gopass-jsonapi
     val gopassJsonApiVersion = "1.11.1"
-    val requiredGopassVersion = "1.14.4"
+    val requiredGopassVersion = "1.12.7"
     val filename = "gopass-jsonapi_${gopassJsonApiVersion}_linux_amd64.deb"
     val downloadUrl = "-L https://github.com/gopasspw/gopass-jsonapi/releases/download/v$gopassJsonApiVersion/$filename"
     val downloadDir = "${userHome()}Downloads"
@@ -46,51 +45,56 @@ fun Prov.installGopassBridgeJsonApi() = task {
                 )
             }
         } else {
-            addResultToEval(
-                ProvResult(
-                    false,
-                    "gopass not initialized correctly. You can initialize gopass with: \"gopass init\""
-                )
+            ProvResult(
+                false,
+                "gopass not initialized correctly. You can initialize gopass with: \"gopass init\""
             )
         }
     } else {
         if (installedJsonApiVersion.startsWith("gopass-jsonapi version $gopassJsonApiVersion")) {
-            addResultToEval(ProvResult(true, out = "Version $gopassJsonApiVersion of gopass-jsonapi is already installed"))
+            ProvResult(true, out = "Version $gopassJsonApiVersion of gopass-jsonapi is already installed")
         } else {
-            addResultToEval(
-                ProvResult(
-                    false,
-                    err = "gopass-jsonapi (version $gopassJsonApiVersion) cannot be installed as version $installedJsonApiVersion is already installed." +
-                            " Upgrading gopass-jsonapi is currently not supported by provs."
-                )
+            ProvResult(
+                false,
+                err = "gopass-jsonapi (version $gopassJsonApiVersion) cannot be installed as version $installedJsonApiVersion is already installed." +
+                        " Upgrading gopass-jsonapi is currently not supported by provs."
             )
         }
     }
 }
 
-fun Prov.configureGopassWrapperShForFirefox() = task {
+/**
+ * Configures apparmor to allow firefox to access to gopass_wrapper.sh in avoid
+ * the error "An unexpected error occurred - Is your browser correctly set up for gopass? ..."
+ * when trying to use gopass bridge.
+ * This error appears in spite of having already set up gopass-jsonapi correctly.
+ */
+fun Prov.configureApparmorForGopassWrapperShForFirefox() = task {
 
     val appArmorFile = "/etc/apparmor.d/usr.bin.firefox"
+    val gopassAccessPermission = "owner @{HOME}/.config/gopass/gopass_wrapper.sh Ux,"
+    val insertAfterText = "# per-user firefox configuration\n"
 
-    if (checkFile(appArmorFile)) {
-        addTextToFile(
-            "\nowner @{HOME}/.config/gopass/gopass_wrapper.sh Ux\n",
-            File(appArmorFile),
-            sudo = true
+    if (checkFile(appArmorFile) && !fileContainsText(appArmorFile, gopassAccessPermission, true)) {
+        replaceTextInFile(
+            appArmorFile, insertAfterText, "$insertAfterText  $gopassAccessPermission\n"
         )
+        cmd("systemctl reload apparmor", sudo = true)
     }
-
-    cmd("systemctl reload apparmor", sudo = true)
 }
 
-fun Prov.configureGopassBridgeJsonApi() = task {
+fun Prov.configureGopassJsonApi() = taskWithResult {
     if (isPackageInstalled("gopass-jsonapi")) {
-        // configure for firefox and choose default for each:
-        // "Install for all users? [y/N/q]",
-        // "In which path should gopass_wrapper.sh be installed? [/home/testuser/.config/gopass]"
-        // "Wrapper Script for gopass_wrapper.sh ..."
-        configureGopassWrapperShForFirefox()
+        // configures gopass-jsonapi for firefox and chooses default for each:
+        // * "Install for all users? [y/N/q]",
+        // * "In which path should gopass_wrapper.sh be installed? [/home/<user>/.config/gopass]"
+        // * "Wrapper Script for gopass_wrapper.sh ..."
+        //
+        // I.e. creates file "gopass_wrapper.sh" in "/home/<user>/.config/gopass" as well as
+        // the manifest file "/home/<user>/.mozilla/native-messaging-hosts/com.justwatch.gopass.json"
         cmd("printf \"\\n\\n\\n\" | gopass-jsonapi configure --browser firefox")
+
+        configureApparmorForGopassWrapperShForFirefox()
     } else {
         ProvResult(
             false,

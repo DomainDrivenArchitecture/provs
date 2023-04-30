@@ -51,8 +51,8 @@ internal class GopassBridgeKtTest {
 
         // when
         val res = prov.task {
-            installGopassBridgeJsonApi()
-            configureGopassBridgeJsonApi()
+            installGopassJsonApi()
+            configureGopassJsonApi()
         }
 
         // then
@@ -79,8 +79,8 @@ internal class GopassBridgeKtTest {
 
         // when
         val res = prov.task {
-            installGopassBridgeJsonApi()
-            configureGopassBridgeJsonApi()
+            installGopassJsonApi()
+            configureGopassJsonApi()
         }
 
         // then
@@ -107,8 +107,8 @@ internal class GopassBridgeKtTest {
 
         // when
         val res = prov.task {
-            installGopassBridgeJsonApi()
-            configureGopassBridgeJsonApi()
+            installGopassJsonApi()
+            configureGopassJsonApi()
         }
 
         // then

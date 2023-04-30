@@ -80,8 +80,8 @@ internal class GopassKtTest {
                 cmd("printf \"\\ntest\\ntest@test.org\\n\" | gopass init " + gpgFingerprint(pubKey.plain())) // gopass init in default location with gpg-key-fingerprint of given key
             }
             downloadGopassBridge()
-            installGopassBridgeJsonApi()
-            configureGopassBridgeJsonApi()
+            installGopassJsonApi()
+            configureGopassJsonApi()
         }
 
         // then
