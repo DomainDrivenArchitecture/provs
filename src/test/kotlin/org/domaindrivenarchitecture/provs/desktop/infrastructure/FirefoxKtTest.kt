@@ -47,6 +47,6 @@ internal class FirefoxKtTest {
         // then
         assertTrue(result.success)
         println("Firefox: $firefoxVersion")
-        assertTrue(firefoxVersion.contains("ubuntu") && !firefoxVersion.contains("snap"))
+        assertTrue(firefoxVersion.contains("build") && !firefoxVersion.contains("snap"))
     }
 }
