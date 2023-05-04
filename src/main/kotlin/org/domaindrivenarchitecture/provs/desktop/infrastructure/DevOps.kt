@@ -131,8 +131,8 @@ fun Prov.installTerraform(): ProvResult = task {
         cmd("ln -s " + dir + "bin/* /usr/local/bin", sudo = true)
     }
     cmd("tfenv install", sudo = true)
-    cmd("tfenv install latest:^1.0.8", sudo = true)
-    cmd("tfenv use latest:^1.0.8", sudo = true)
+    cmd("tfenv install latest:^1.4.6", sudo = true)
+    cmd("tfenv use latest:^1.4.6", sudo = true)
 }
 
 

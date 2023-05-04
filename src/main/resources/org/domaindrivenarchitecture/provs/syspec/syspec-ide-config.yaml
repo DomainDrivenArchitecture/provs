@@ -11,4 +11,4 @@ command:
   - command: "python3 --version"
   - command: "pip3 --version"
   - command: "terraform --version"
-    out: "1.0.8"
+    out: "1.4.6"
