@@ -11,7 +11,7 @@ import java.io.FileWriter
  * Returns DesktopConfig; data for config is read from specified file.
  * Throws exceptions FileNotFoundException, SerializationException if file is not found resp. cannot be parsed.
  */
-fun getConfig(filename: String = "desktop-config.yaml"): DesktopConfig = readFromFile(filename).yamlToType()
+fun getConfig(filename: String): DesktopConfig = readFromFile(filename).yamlToType()
 
 
 @Suppress("unused")
