@@ -61,7 +61,9 @@ fun Prov.installKubectl(): ProvResult = task {
     val tmpDir = "~/tmp"
 
     // prerequisites -- see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
-    cmd("sudo apt-get update")
+    optional {
+        cmd("sudo apt-get update")
+    }
     aptInstall("apt-transport-https ca-certificates curl")
     createDir(tmpDir)
     downloadFromURL(
