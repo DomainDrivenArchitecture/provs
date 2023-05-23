@@ -7,9 +7,8 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackag
 
 
 fun Prov.installVSC(vararg options: String) = task {
-    val clojureExtensions =
-        arrayListOf("betterthantomorrow.calva", "DavidAnson.vscode-markdownlint")
-    val pythonExtensions = arrayListOf("ms-python.python")
+    val clojureExtensions = listOf("betterthantomorrow.calva", "DavidAnson.vscode-markdownlint")
+    val pythonExtensions = listOf("ms-python.python")
 
     prerequisitesVSCinstall()
 
