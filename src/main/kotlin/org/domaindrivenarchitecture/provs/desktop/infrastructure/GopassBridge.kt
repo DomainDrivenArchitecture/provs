@@ -21,10 +21,12 @@ fun Prov.downloadGopassBridge() = task {
     // needs manual installation with: firefox Downloads/gopass_bridge-0.8.0-fx.xpi
 }
 
-fun Prov.installGopassJsonApi() = taskWithResult {
+fun Prov.installGopassJsonApi(
+    sha256sum: String = "ec9976e39a468428ae2eb1e2e0b9ceccba7f60d66b8097e2425b0c07f4fed108"
+) = taskWithResult {
     // see https://github.com/gopasspw/gopass-jsonapi
-    val gopassJsonApiVersion = "1.11.1"
-    val requiredGopassVersion = "1.12.7"
+    val gopassJsonApiVersion = "1.15.5"
+    val requiredGopassVersion = "1.15.5"
     val filename = "gopass-jsonapi_${gopassJsonApiVersion}_linux_amd64.deb"
     val downloadUrl = "-L https://github.com/gopasspw/gopass-jsonapi/releases/download/v$gopassJsonApiVersion/$filename"
     val downloadDir = "${userHome()}Downloads"
@@ -35,7 +37,7 @@ fun Prov.installGopassJsonApi() = taskWithResult {
             if (checkGopassVersion(requiredGopassVersion)) {
                 aptInstall("git gnupg2")   // required dependencies
                 createDir(downloadDir)
-                downloadFromURL(downloadUrl, filename, downloadDir)
+                downloadFromURL(downloadUrl, filename, downloadDir, sha256sum = sha256sum)
                 cmd("dpkg -i $downloadDir/$filename", sudo = true)
             } else {
                 ProvResult(
