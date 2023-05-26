@@ -11,9 +11,9 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 
 fun Prov.installGopass(
-    version: String = "1.15.5",
+    version: String = "1.12.7",
     enforceVersion: Boolean = false,
-    sha256sum: String = "23ec10015c2643f22cb305859eb36d671094d463d2eb1798cc675e7bb06f4b39"
+    sha256sum: String = "0824d5110ff1e68bff1ba10c1be63acb67cb1ad8e3bccddd6b6fc989608beca8" // checksum for sha256sum version 8.30 (e.g. ubuntu 20.04)
 ) = taskWithResult {
 
     if (isPackageInstalled("gopass") && !enforceVersion) {
@@ -45,7 +45,7 @@ fun Prov.installGopass(
 
 fun Prov.configureGopass(gopassRootFolder: String? = null, publicGpgKey: Secret? = null) = taskWithResult {
 
-    val configFile = ".config/gopass/config"
+    val configFile = ".config/gopass/config.yml"
 
     if (checkFile(configFile)) {
         return@taskWithResult ProvResult(true, out = "Gopass already configured in file $configFile")
