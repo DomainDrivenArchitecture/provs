@@ -404,8 +404,7 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "WARNING: method task should not be used at top-level, use method <session> instead.\n" +
-                    "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- taskA \n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- prov_marks_failed_output_yellow_if_optional (optional) \n" +
                     "------>  \u001B[93mFAILED\u001B[0m  -- taskB \n" +
@@ -475,8 +474,7 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "WARNING: method task should not be used at top-level, use method <session> instead.\n" +
-                    "============================================== SUMMARY (test instance) =============================================\n" +
+            "============================================== SUMMARY (test instance) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- TaskB \n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- taskC \n" +
                     "----------------------------------------------------------------------------------------------------\n" +
@@ -722,8 +720,7 @@ internal class ProvTest {
         println(outContent.toString())
 
         val expectedOutput =
-            "WARNING: method taskWithResult should not be used at top-level, use method <session> instead.\n" +
-                    "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_with_returned_results \n" +
                     "--->  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- sub2a \n" +
@@ -791,9 +788,9 @@ internal class ProvTest {
         System.setErr(PrintStream(errContent))
 
         // when
-        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.BASIC)
             .tst_task().success
-        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE)
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.BASIC)
             .tst_task().success   // test that also second run gets warning
 
         // then
@@ -804,6 +801,11 @@ internal class ProvTest {
 
         val expectedOutputOneRun =
             "WARNING: method task should not be used at top-level, use method <session> instead.\n" +
+                    "---------- Processing started ----------\n" +
+                    ">  \u001B[90mexecuting...\u001B[0m -- tst_task\n" +
+                    "--->  \u001B[90mexecuting...\u001B[0m -- task_returningTrue\n" +
+                    "--->  \u001B[90mexecuting...\u001B[0m -- task_returningFalse\n" +
+                    "---------- Processing completed ----------\n" +
                     "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[91mFAILED\u001B[0m  -- tst_task \n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- task_returningTrue \n" +
