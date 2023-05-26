@@ -465,7 +465,7 @@ open class Prov protected constructor(
     }
 
     fun printDeprecationWarningIfLevel0(methodName: String) {
-        if (level == 0) {
+        if (level == 0 && progressType != ProgressType.NONE) {
             println("WARNING: method $methodName should not be used at top-level, use method <session> instead.")
         }
     }
