@@ -7,8 +7,8 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackag
 
 
 fun Prov.installVSC(vararg options: String) = task {
-    val clojureExtensions = listOf("betterthantomorrow.calva", "DavidAnson.vscode-markdownlint")
-    val pythonExtensions = listOf("ms-python.python")
+    val clojureExtensions = setOf("betterthantomorrow.calva", "DavidAnson.vscode-markdownlint")
+    val pythonExtensions = setOf("ms-python.python")
 
     prerequisitesVSCinstall()
 
@@ -62,7 +62,7 @@ private fun Prov.installVSCodiumPackage() = task {
 }
 
 
-private fun Prov.installExtensionsCode(extensions: List<String>) = optional {
+private fun Prov.installExtensionsCode(extensions: Set<String>) = optional {
     var res = ProvResult(true)
     for (ext in extensions) {
         res = cmd("code --install-extension $ext")
@@ -71,7 +71,7 @@ private fun Prov.installExtensionsCode(extensions: List<String>) = optional {
     // Settings can be found at $HOME/.config/Code/User/settings.json
 }
 
-private fun Prov.installExtensionsCodium(extensions: List<String>) = optional {
+private fun Prov.installExtensionsCodium(extensions: Set<String>) = optional {
     var res = ProvResult(true)
     for (ext in extensions) {
         res = cmd("codium --install-extension $ext")

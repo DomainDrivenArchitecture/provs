@@ -11,9 +11,9 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 
 fun Prov.installGopass(
-    version: String = "1.12.7",
+    version: String = "1.15.5",
     enforceVersion: Boolean = false,
-    sha256sum: String = "0824d5110ff1e68bff1ba10c1be63acb67cb1ad8e3bccddd6b6fc989608beca8" // checksum for sha256sum version 8.30 (e.g. ubuntu 20.04)
+    sha256sum: String = "23ec10015c2643f22cb305859eb36d671094d463d2eb1798cc675e7bb06f4b39"
 ) = taskWithResult {
 
     if (isPackageInstalled("gopass") && !enforceVersion) {
@@ -45,14 +45,14 @@ fun Prov.installGopass(
 
 fun Prov.configureGopass(gopassRootFolder: String? = null, publicGpgKey: Secret? = null) = taskWithResult {
 
-    val configFile = ".config/gopass/config.yml"
-
-    if (checkFile(configFile)) {
-        return@taskWithResult ProvResult(true, out = "Gopass already configured in file $configFile")
-    }
+    val configFile = ".config/gopass/config"
 
     if ((gopassRootFolder != null) && (!gopassRootFolder.startsWith("/"))) {
         return@taskWithResult ProvResult(false, err = "Gopass cannot be initialized with a relative path or path starting with ~ ($gopassRootFolder)")
+    }
+
+    if(!fileContainsText(configFile,"share/gopass/stores/root")){
+        return@taskWithResult ProvResult(true, out = "Gopass already configured in file $configFile")
     }
 
     val defaultRootFolder = userHome() + ".password-store"
@@ -83,18 +83,21 @@ fun Prov.gopassInitStoreFolder(path: String, gpgFingerprint: String? = null ) = 
 
 internal fun gopassConfig(gopassRoot: String): String {
     return """
-        autoclip: true
-        autoimport: true
-        cliptimeout: 45
-        exportkeys: true
-        nocolor: false
-        nopager: false
-        notifications: true
-        parsing: true
-        path: $gopassRoot
-        safecontent: false
-        mounts: {}
-    """.trimIndent() + "\n"
+    [core]
+	    parsing = true
+	    exportkeys = true
+	    autoclip = true
+	    showsafecontent = false
+	    nopager = false
+        cliptimeout = 45
+        notifications = true
+        autoimport = true
+    [age]
+	    usekeychain = false
+    [mounts]
+	    path = $gopassRoot
+    """
+    .trimIndent() + "\n"
 }
 
 

@@ -21,7 +21,7 @@ internal class GopassKtTest {
     fun test_configureGopass_fails_with_path_starting_with_tilde() {
         // when
         val res = defaultTestContainer().task {
-            deleteFile(".config/gopass/config.yml")
+            deleteFile(".config/gopass/config")
             configureGopass("~/somedir")
         }
 
@@ -45,10 +45,10 @@ internal class GopassKtTest {
         }
 
         // then
-        prov.fileContent("~/.config/gopass/config.yml")  // displays the content in the logs
+        prov.fileContent("~/.config/gopass/config")  // displays the content in the logs
         assertTrue(res.success)
-        assertTrue(prov.fileContainsText("~/.config/gopass/config.yml", "/home/testuser/.password-store"))
-        assertTrue(prov.fileContainsText("~/.config/gopass/config.yml", "exampleStore"))
+        assertTrue(prov.fileContainsText("~/.config/gopass/config", "/home/testuser/.password-store"))
+        assertTrue(prov.fileContainsText("~/.config/gopass/config", "exampleStore"))
     }
 
     @Test
