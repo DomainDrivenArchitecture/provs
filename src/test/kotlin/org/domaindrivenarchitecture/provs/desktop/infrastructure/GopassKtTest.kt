@@ -41,6 +41,7 @@ internal class GopassKtTest {
             configureGopass(prov.userHome() + gopassRootDir)
             gopassInitStoreFolder("~/exampleStoreFolder")
             gopassMountStore("exampleStore", "~/exampleStoreFolder")
+            gopassMountStore("exampleStore", "~/exampleStoreFolder")  // check that mounting twice gives no error
             prov.cmd("gopass ls")
         }
 

@@ -71,8 +71,13 @@ fun Prov.configureGopass(gopassRootFolder: String? = null, publicGpgKey: Secret?
 }
 
 
-fun Prov.gopassMountStore(storeName: String, path: String) = task {
-    cmd("gopass mounts add $storeName $path")
+fun Prov.gopassMountStore(storeName: String, path: String) = taskWithResult {
+    val mounts = cmdNoEval("gopass mounts").out ?: return@taskWithResult ProvResult(false, err = "could not determin gopass mounts")
+    if (mounts.contains(storeName)) {
+        ProvResult(true, out = "Store $storeName already mounted.")
+    } else {
+        cmd("gopass mounts add $storeName $path")
+    }
 }
 
 
