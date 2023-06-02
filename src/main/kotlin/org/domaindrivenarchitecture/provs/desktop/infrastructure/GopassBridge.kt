@@ -9,8 +9,8 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 
 fun Prov.downloadGopassBridge() = task {
-    val version = "0.9.0"
-    val filename = "gopass_bridge-${version}-fx.xpi"
+    // Attention: when changing the version, you also need to change the number after /file/ in the download url below
+    val filename = "gopass_bridge-0.9.0-fx.xpi"
     val downloadDir = "${userHome()}Downloads/"
 
     createDirs(downloadDir)
@@ -18,7 +18,7 @@ fun Prov.downloadGopassBridge() = task {
         "-L https://addons.mozilla.org/firefox/downloads/file/3630534/$filename",
         downloadDir + filename
     )
-    // needs manual installation with: firefox Downloads/gopass_bridge-0.8.0-fx.xpi
+    // needs manual installation with: firefox Downloads/gopass_bridge-0.X.0-fx.xpi
 }
 
 fun Prov.installGopassJsonApi() = taskWithResult {
