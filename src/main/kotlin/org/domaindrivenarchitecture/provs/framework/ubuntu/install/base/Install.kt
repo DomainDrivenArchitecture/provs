@@ -20,7 +20,10 @@ fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): P
     if (!allInstalled) {
         if (!isPackageInstalled(packages)) {
             if (!aptInit) {
-                cmd("sudo apt-get update")
+                optional {
+                    // may fail for some packages, but this should in general not be an issue
+                    cmd("sudo apt-get update")
+                }
                 cmd("sudo apt-get install -qy apt-utils")
                 aptInit = true
             }
