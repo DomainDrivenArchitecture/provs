@@ -83,6 +83,9 @@ fun Prov.gopassMountStore(storeName: String, path: String) = taskWithResult {
 
 fun Prov.gopassInitStoreFolder(path: String, gpgFingerprint: String? = null ) = task {
     createFile("$path/.gpg-id", gpgFingerprint ?: "_replace_this_by_a_fingerprint_of_a_public_gpg_key_")
+    if (!checkDir(".git", path)) {
+        cmd("git init", path)
+    }
 }
 
 

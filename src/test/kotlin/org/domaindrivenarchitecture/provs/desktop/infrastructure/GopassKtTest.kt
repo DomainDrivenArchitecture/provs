@@ -40,9 +40,11 @@ internal class GopassKtTest {
             installGopass()
             configureGopass(prov.userHome() + gopassRootDir)
             gopassInitStoreFolder("~/exampleStoreFolder")
+            gopassInitStoreFolder("~/exampleStoreFolder")  // check idem-potency
             gopassMountStore("exampleStore", "~/exampleStoreFolder")
-            gopassMountStore("exampleStore", "~/exampleStoreFolder")  // check that mounting twice gives no error
+            gopassMountStore("exampleStore", "~/exampleStoreFolder")  // check idem-potency
             prov.cmd("gopass ls")
+            prov.cmd("gopass sync")
         }
 
         // then
@@ -50,6 +52,7 @@ internal class GopassKtTest {
         assertTrue(res.success)
         assertTrue(prov.fileContainsText("~/.config/gopass/config", "/home/testuser/.password-store"))
         assertTrue(prov.fileContainsText("~/.config/gopass/config", "exampleStore"))
+        assertTrue(prov.checkDir(".git", gopassRootDir))
     }
 
     @Test
