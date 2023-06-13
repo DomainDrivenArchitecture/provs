@@ -2,23 +2,23 @@ buildscript {
     ext.kotlin_version = "1.7.0"
     ext.CI_PROJECT_ID = System.env.CI_PROJECT_ID
 
-    repositories { mavenCentral() }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+    repositories {
+        mavenCentral()
     }
 }
 
-apply plugin: "org.jetbrains.kotlin.jvm"
-apply plugin: "java-library"
-apply plugin: "java-test-fixtures"
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
+    id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_version"
+    id "java"
+    id "java-test-fixtures"
+}
+
 apply plugin: "maven-publish"
-apply plugin: "kotlinx-serialization"
 
 
 group = "org.domaindrivenarchitecture.provs"
-version = "0.22.3-SNAPSHOT"
+version = "0.22.4-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -178,28 +178,40 @@ task sourceJar(type: Jar, dependsOn: classes) {
 }
 
 
+// publish to repo.prod.meissa.de with task "publishLibraryPublicationToMeissaRepository" -- (using pattern "publishLibraryPublicationTo<MAVEN REPOSITORY NAME>Repository")
 publishing {
     publications {
         library(MavenPublication) {
+            groupId 'org.domaindrivenarchitecture'
+            artifactId 'provs'
             from components.java
         }
     }
+
     repositories {
-        if (System.getenv("CI_JOB_TOKEN") != null) {
-            // see https://docs.gitlab.com/ee/user/packages/maven_repository/index.html
-            maven {
-                url "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/maven"
-                name "GitLab"
-                credentials(HttpHeaderCredentials) {
-                    name = "Job-Token"
-                    value = System.getenv("CI_JOB_TOKEN")
-                }
-                authentication {
-                    header(HttpHeaderAuthentication)
+        maven {
+            name = "meissa"
+            url = uri("https://repo.prod.meissa.de/api/packages/meissa/maven")
+
+            credentials(HttpHeaderCredentials) {
+                name = "Authorization"
+                if (System.getenv("CI_JOB_TOKEN") != null) {
+                    value = "token " + System.getenv("meissa_repo_token")
+                } else {
+                    // use project-property (define e.g. in "~/.gradle/gradle.properties") when not running in ci
+                    // you can create a token in gitea "Profile and Settings ... > Settings > Applications", Token Name, Select scopes (write:package) > "Generate Token"
+                    if (!project.hasProperty("meissa_repo_token")) {
+                        // if meissa_repo_token is missing, provide a dummy in order to avoid error "Could not get unknown property 'meissa_repo_token' for Credentials [header: Authorization]" for other gradle tasks
+                        ext.meissa_repo_token = "meissa_repo_token not provided in file \".gradle/gradle.properties\""
+                        println "Error: meissa_repo_token not found"
+                    }
+                    value = "token $meissa_repo_token"
                 }
             }
-        } else {
-            mavenLocal()
+
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
         }
     }
 }
