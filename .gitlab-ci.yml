@@ -145,7 +145,7 @@ release:
       - 'build/libs/sha512sum.lst'
   script:
     # release to repo.meissa
-    - ./release/create-release-in-repo.sh
+    - chmod +x ./release/create-release-in-repo.sh && /bin/bash ./release/create-release-in-repo.sh
     # release to gitlab
     - apk --no-cache add curl
     - |
