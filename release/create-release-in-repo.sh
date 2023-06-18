@@ -26,9 +26,6 @@ fi
 
 cd build/libs/ || { echo "Error: cd not possible"; exit 7; }
 
-find . -type f -exec sha256sum {} \; | sort > sha256sum.lst
-find . -type f -exec sha512sum {} \; | sort > sha512sum.lst
-
 curl -X 'POST' "${release_url}/${release_id}/assets" -H 'accept: application/json' -H "Authorization: token ${token}" -H 'Content-Type: multipart/form-data' -F 'attachment=@provs-desktop.jar;type=application/x-java-archive'
 curl -X 'POST' "${release_url}/${release_id}/assets" -H 'accept: application/json' -H "Authorization: token ${token}" -H 'Content-Type: multipart/form-data' -F 'attachment=@provs-server.jar;type=application/x-java-archive'
 curl -X 'POST' "${release_url}/${release_id}/assets" -H 'accept: application/json' -H "Authorization: token ${token}" -H 'Content-Type: multipart/form-data' -F 'attachment=@provs-syspec.jar;type=application/x-java-archive'
