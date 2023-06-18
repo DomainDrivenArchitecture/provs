@@ -18,7 +18,7 @@ apply plugin: "maven-publish"
 
 
 group = "org.domaindrivenarchitecture.provs"
-version = "release-0.22.12"
+version = "release-0.22.13"
 
 repositories {
     mavenCentral()
@@ -244,8 +244,8 @@ tasks.register('createReleaseAndUploadAssets') {
         def releaseApiUrl = "https://repo.prod.meissa.de/api/v1/repos/meissa/provs/releases"
         exec { commandLine("sh", "-c", "find build/libs/ -type f -exec sha256sum {} \\; | sort > build/libs/sha256sum.lst") }
         exec { commandLine("sh", "-c", "find build/libs/ -type f -exec sha512sum {} \\; | sort > build/libs/sha512sum.lst") }
-        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@/usr/local/bin/provs-desktop.jar;type=application/x-java-archive'") }
-        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@/usr/local/bin/provs-server.jar;type=application/x-java-archive'") }
+        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/provs-desktop.jar;type=application/x-java-archive'") }
+        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/provs-server.jar;type=application/x-java-archive'") }
         exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/provs-syspec.jar;type=application/x-java-archive'") }
         exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/sha256sum.lst;type=text/plain'") }
         exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/sha512sum.lst;type=text/plain'") }
