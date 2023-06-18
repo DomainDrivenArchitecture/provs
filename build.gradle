@@ -18,7 +18,7 @@ apply plugin: "maven-publish"
 
 
 group = "org.domaindrivenarchitecture.provs"
-version = "0.22.4-SNAPSHOT"
+version = "0.22.5-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -196,16 +196,16 @@ publishing {
             credentials(HttpHeaderCredentials) {
                 name = "Authorization"
                 if (System.getenv("CI_JOB_TOKEN") != null) {
-                    value = "token " + System.getenv("meissa_repo_token")
+                    value = "token " + System.getenv("RELEASE_TOKEN")
                 } else {
                     // use project-property (define e.g. in "~/.gradle/gradle.properties") when not running in ci
                     // you can create a token in gitea "Profile and Settings ... > Settings > Applications", Token Name, Select scopes (write:package) > "Generate Token"
-                    if (!project.hasProperty("meissa_repo_token")) {
-                        // if meissa_repo_token is missing, provide a dummy in order to avoid error "Could not get unknown property 'meissa_repo_token' for Credentials [header: Authorization]" for other gradle tasks
-                        ext.meissa_repo_token = "meissa_repo_token not provided in file \".gradle/gradle.properties\""
-                        println "Error: meissa_repo_token not found"
+                    if (!project.hasProperty("RELEASE_TOKEN")) {
+                        // if RELEASE_TOKEN is missing, provide a dummy in order to avoid error "Could not get unknown property 'RELEASE_TOKEN' for Credentials [header: Authorization]" for other gradle tasks
+                        ext.RELEASE_TOKEN = "RELEASE_TOKEN not provided in file \".gradle/gradle.properties\""
+                        println "Error: RELEASE_TOKEN not found"
                     }
-                    value = "token $meissa_repo_token"
+                    value = "token $RELEASE_TOKEN"
                 }
             }
 
