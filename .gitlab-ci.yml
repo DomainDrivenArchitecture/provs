@@ -144,6 +144,9 @@ release:
       - 'build/libs/sha256sum.lst'
       - 'build/libs/sha512sum.lst'
   script:
+    # release to repo.meissa
+    - ./release/create-release-in-repo.sh
+    # release to gitlab
     - apk --no-cache add curl
     - |
       release-cli create --name "Release $CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG \
