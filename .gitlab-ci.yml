@@ -5,6 +5,7 @@ stages:
   - test
   - package
   - publish
+  - release
 
 before_script:
   - echo "---------- Start CI ----------"
@@ -124,14 +125,14 @@ publish-released-lib:
     - if: $CI_COMMIT_TAG =~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
   script:
     - ./gradlew -x assemble -x test jar
-    - ./gradlew -x assemble -x test publish
+    - ./gradlew -x assemble -x test publishLibraryPublicationToMeissaRepository
   artifacts:
     paths:
       - build/libs/*.jar
 
 release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
-  stage: publish
+  stage: release
   rules:
     - if: $CI_PIPELINE_SOURCE != "push"
       when: never
@@ -145,7 +146,7 @@ release:
       - 'build/libs/sha512sum.lst'
   script:
     # release to repo.meissa
-    - chmod +x ./release/create-release-in-repo.sh && /bin/bash ./release/create-release-in-repo.sh
+    - chmod +x ./release/create-release-in-repo.sh && sh ./release/create-release-in-repo.sh
     # release to gitlab
     - apk --no-cache add curl
     - |
