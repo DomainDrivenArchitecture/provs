@@ -18,7 +18,7 @@ apply plugin: "maven-publish"
 
 
 group = "org.domaindrivenarchitecture.provs"
-version = "release-0.22.10"
+version = "release-0.22.11"
 
 repositories {
     mavenCentral()
@@ -213,5 +213,41 @@ publishing {
                 header(HttpHeaderAuthentication)
             }
         }
+    }
+}
+
+
+tasks.register('createReleaseAndUploadAssets') {
+    dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
+    doLast {
+
+        def token = project.properties.get("RELEASE_TOKEN") ?: System.getenv("RELEASE_TOKEN")
+        if (token == null) {
+            throw new GradleException('No token found.')
+        }
+
+        def output1 = new ByteArrayOutputStream()
+        exec {
+            standardOutput = output1
+            def TAG = project.version
+            commandLine("sh", "-c", "curl -X 'POST' 'https://repo.prod.meissa.de/api/v1/repos/meissa/provs/releases' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{ \"body\": \"Provides jar-files for release $TAG\\nAttention: The \\\"Source Code\\\"-files below are not up-to-date!\", \"tag_name\": \"$TAG\" }' -H \"Authorization: token $token\"")
+        }
+
+        def matches = output1 =~ /\{"id":(\d+?),/
+        if (!matches) {
+            throw new GradleException('id of release could not be parsed in: ' + output1)
+        }
+
+        def releaseId = matches.group(1)
+        println "Release=$releaseId"
+
+        def releaseApiUrl = "https://repo.prod.meissa.de/api/v1/repos/meissa/provs/releases"
+        exec { commandLine("sh", "-c", "find build/libs/ -type f -exec sha256sum {} \\; | sort > build/libs/sha256sum.lst") }
+        exec { commandLine("sh", "-c", "find build/libs/ -type f -exec sha512sum {} \\; | sort > build/libs/sha512sum.lst") }
+        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@/usr/local/bin/provs-desktop.jar;type=application/x-java-archive'") }
+        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@/usr/local/bin/provs-server.jar;type=application/x-java-archive'") }
+        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/provs-syspec.jar;type=application/x-java-archive'") }
+        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/sha256sum.lst;type=text/plain'") }
+        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/sha512sum.lst;type=text/plain'") }
     }
 }
