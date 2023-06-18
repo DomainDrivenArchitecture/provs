@@ -78,6 +78,8 @@ release:
       when: never
     - if: $CI_COMMIT_TAG =~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
   script:
+    - apt-get update
+    - apt-get -yqq install curl
     - ./gradlew createReleaseAndUploadAssets
 
 
