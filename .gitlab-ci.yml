@@ -61,9 +61,6 @@ test:
 
 package:
   stage: package
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "push"
-      when: never
   script:
     - ./gradlew -x assemble -x test jar
     - ./gradlew -x assemble -x test -x jar uberjarDesktop
@@ -75,6 +72,7 @@ package:
   artifacts:
     paths:
       - build/libs/*.jar
+      - build/libs/*.lst
 
 
 publish-maven-package-to-gitlab:
