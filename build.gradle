@@ -183,18 +183,29 @@ publishing {
 
     repositories {
         maven {
+            name = "gitlab"
+            url = "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                name = "Job-Token"
+                value = System.getenv("CI_JOB_TOKEN")
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+        maven {
             name = "meissa"
             url = uri("https://repo.prod.meissa.de/api/packages/meissa/maven")
 
             credentials(HttpHeaderCredentials) {
                 name = "Authorization"
                 if (System.getenv("CI_JOB_TOKEN") != null) {
-                    def tok = System.getenv("RELEASE_TOKEN")
-                    if (tok == null) {
+                    def tokenFromEnv = System.getenv("RELEASE_TOKEN")
+                    if (tokenFromEnv == null) {
                         println "Error: RELEASE_TOKEN not found"
                     } else {
-                        value = "token " + tok
-                        println "RELEASE_TOKEN found - " + (10 < tok.length())
+                        value = "token " + tokenFromEnv
+                        println "RELEASE_TOKEN found - "
                     }
                 } else {
                     // use project-property (define e.g. in "~/.gradle/gradle.properties") when not running in ci

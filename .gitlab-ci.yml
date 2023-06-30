@@ -21,19 +21,17 @@ cache:
     - .gradle/wrapper
     - .gradle/caches
 
+
 build:
   stage: build
   script:
     - echo "---------- build stage ----------"
-    - apt-get update -y
-    - apt-get install -y iputils-ping ssh
-    - ping -c 2 repo.prod.meissa.de
-    - ssh-keyscan repo.prod.meissa.de
     - ./gradlew assemble
   artifacts:
     paths:
       - build/libs/*.jar
     expire_in: 1 week
+
 
 test:
   stage: test
@@ -61,18 +59,42 @@ test:
       junit: build/test-results/test/TEST-*.xml
 
 
-publish-maven-package:
-  stage: publish
+package:
+  stage: package
   rules:
     - if: $CI_PIPELINE_SOURCE != "push"
       when: never
     - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
   script:
     - ./gradlew -x assemble -x test jar
-    - ./gradlew -x assemble -x test publish
   artifacts:
     paths:
       - build/libs/*.jar
+
+
+publish-maven-package-to-gitlab:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "push"
+      when: never
+    - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
+  script:
+    - ./gradlew -x assemble -x test publishLibraryPublicationToGitlabRepository
+
+
+publish-maven-package-to-meissa:
+  stage: publish
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "push"
+      when: never
+    - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
+  script:
+    - apt-get update -y
+    - apt-get install -y iputils-ping ssh
+    - ping -c 2 repo.prod.meissa.de
+    - ssh-keyscan repo.prod.meissa.de
+    - ./gradlew -x assemble -x test publishLibraryPublicationToMeissaRepository
 
 
 release:
