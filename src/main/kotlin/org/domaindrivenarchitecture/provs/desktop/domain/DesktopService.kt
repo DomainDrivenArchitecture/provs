@@ -90,15 +90,6 @@ fun Prov.provisionIdeDesktop(onlyModules: List<String>? = null) {
     }
 }
 
-@Suppress("unused")  // used in other projects
-fun Prov.provisionMSDesktop(onlyModules: List<String>?) {
-    if (onlyModules == null) {
-        installMsTeams()
-    } else if (onlyModules.contains(DesktopOnlyModule.TEAMS.name.lowercase())) {
-        installMsTeams()
-    }
-}
-
 fun Prov.provisionOfficeDesktop(onlyModules: List<String>? = null) {
     if (onlyModules == null) {
         aptInstall(ZIP_UTILS)

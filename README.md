@@ -60,7 +60,6 @@ After having installed `provs-desktop.jar` (see prerequisites) execute:
 * `-o` for only executing one action, e.g.
   * `-o verify` for verifying your installation
   * `-o firefox` to install firefox from apt on ubuntu
-  * `-o teams` to install MS-Teams
 
 
 #### Example
