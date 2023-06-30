@@ -64,9 +64,14 @@ package:
   rules:
     - if: $CI_PIPELINE_SOURCE != "push"
       when: never
-    - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
   script:
     - ./gradlew -x assemble -x test jar
+    - ./gradlew -x assemble -x test -x jar uberjarDesktop
+    - ./gradlew -x assemble -x test -x jar uberjarServer
+    - ./gradlew -x assemble -x test -x jar uberjarSyspec
+    - cd build/libs/
+    - find . -type f -exec sha256sum {} \; | sort > sha256sum.lst
+    - find . -type f -exec sha512sum {} \; | sort > sha512sum.lst
   artifacts:
     paths:
       - build/libs/*.jar
@@ -97,8 +102,34 @@ publish-maven-package-to-meissa:
     - ./gradlew -x assemble -x test publishLibraryPublicationToMeissaRepository
 
 
-release:
+release-to-gitlab:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   stage: release
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "push"
+      when: never
+    - if: $CI_COMMIT_TAG =~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
+  artifacts:
+    paths:
+      - 'build/libs/provs-desktop.jar'
+      - 'build/libs/provs-server.jar'
+      - 'build/libs/provs-syspec.jar'
+      - 'build/libs/sha256sum.lst'
+      - 'build/libs/sha512sum.lst'
+  script:
+    - apk --no-cache add curl
+    - |
+      release-cli create --name "Release $CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG \
+        --assets-link "{\"name\":\"provs-desktop.jar\",\"url\":\"https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${CI_JOB_ID}/artifacts/file/build/libs/provs-desktop.jar\"}" \
+        --assets-link "{\"name\":\"provs-server.jar\",\"url\":\"https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${CI_JOB_ID}/artifacts/file/build/libs/provs-server.jar\"}" \
+        --assets-link "{\"name\":\"provs-syspec.jar\",\"url\":\"https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${CI_JOB_ID}/artifacts/file/build/libs/provs-syspec.jar\"}" \
+        --assets-link "{\"name\":\"sha256sum.lst\",\"url\":\"https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${CI_JOB_ID}/artifacts/file/build/libs/sha256sum.lst\"}" \
+        --assets-link "{\"name\":\"sha512sum.lst\",\"url\":\"https://gitlab.com/domaindrivenarchitecture/provs/-/jobs/${CI_JOB_ID}/artifacts/file/build/libs/sha512sum.lst\"}" \
+
+
+release-to-meissa:
+  stage: release
+  allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE != "push"
       when: never
