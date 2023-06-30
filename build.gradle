@@ -189,7 +189,13 @@ publishing {
             credentials(HttpHeaderCredentials) {
                 name = "Authorization"
                 if (System.getenv("CI_JOB_TOKEN") != null) {
-                    value = "token " + System.getenv("RELEASE_TOKEN")
+                    def tok = System.getenv("RELEASE_TOKEN")
+                    if (tok == null) {
+                        println "Error: RELEASE_TOKEN not found"
+                    } else {
+                        value = "token " + tok
+                        println "RELEASE_TOKEN found - " + (10 < tok.length())
+                    }
                 } else {
                     // use project-property (define e.g. in "~/.gradle/gradle.properties") when not running in ci
                     // you can create a token in gitea "Profile and Settings ... > Settings > Applications", Token Name, Select scopes (write:package) > "Generate Token"
