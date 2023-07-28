@@ -144,3 +144,11 @@ Or to get help for subcommands e.g.
 provs-desktop.jar ide -h
 provs-server.jar k3s -h
 ```
+## Development & mirrors
+Development happens at: https://repo.prod.meissa.de/meissa/provs
+
+Mirrors are:
+* https://gitlab.com/domaindrivenarchitecture/provs (CI issues and PR)
+* https://github.com/DomainDrivenArchitecture/provs
+
+For more details about our repository model see: https://repo.prod.meissa.de/meissa/federate-your-repos
