@@ -9,7 +9,7 @@ import java.io.File
 /**
  * Installs non-snap firefox, removing a firefox snap-installation if existing
  */
-fun Prov.installFirefox() = task {
+fun Prov.installPpaFirefox() = task {
 
     // inspired by: https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04
 

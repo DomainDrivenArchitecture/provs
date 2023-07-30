@@ -86,7 +86,7 @@ fun Prov.provisionIdeDesktop(onlyModules: List<String>? = null) {
     } else if (onlyModules.contains(DesktopOnlyModule.VERIFY.name.lowercase())) {
         verifyIdeSetup()
     } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
-        installFirefox()
+        installPpaFirefox()
     }
 }
 
@@ -109,7 +109,7 @@ fun Prov.provisionOfficeDesktop(onlyModules: List<String>? = null) {
     } else if (onlyModules.contains(DesktopOnlyModule.VERIFY.name.lowercase())) {
         verifyOfficeSetup()
     } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
-        installFirefox()
+        installPpaFirefox()
     }
 }
 
@@ -140,7 +140,7 @@ fun Prov.provisionBasicDesktop(
         provisionKeys(gpg, ssh)
         provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
 
-        installFirefox()
+        installPpaFirefox()
         installGopass()
         configureGopass(publicGpgKey = gpg?.publicKey)
         installGopassJsonApi()
@@ -153,6 +153,6 @@ fun Prov.provisionBasicDesktop(
         configureBash()
         installVirtualBoxGuestAdditions()
     } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
-        installFirefox()
+        installPpaFirefox()
     }
 }

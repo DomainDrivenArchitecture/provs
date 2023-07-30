@@ -17,7 +17,7 @@ internal class FirefoxKtTest {
     fun installFirefox() {
         // when
         val result = defaultTestContainer().session {
-            installFirefox()
+            installPpaFirefox()
             checkPackageInstalled("firefox")
         }
 
@@ -39,7 +39,7 @@ internal class FirefoxKtTest {
             /* remove for ssh authentication */
             PromptSecretSource("Remote password for user $user").secret()
         ).session {
-            installFirefox()
+            installPpaFirefox()
             firefoxVersion = cmd("apt list firefox --installed").out ?: ""
             checkPackageInstalled("firefox")
         }
