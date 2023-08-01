@@ -50,4 +50,12 @@ private val mozillaTeamFileContent = """
     Package: firefox*
     Pin: release o=Ubuntu
     Pin-Priority: -1
+    
+    Package: thunderbird*
+    Pin: release o=LP-PPA-mozillateam
+    Pin-Priority: 1001
+
+    Package: thunderbird*
+    Pin: release o=Ubuntu
+    Pin-Priority: -1
 """.trimIndent()
