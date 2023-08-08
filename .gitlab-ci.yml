@@ -12,14 +12,14 @@ stages:
     paths:
       - .gradle/wrapper
       - .gradle/caches
-    before_script:
-      - echo "---------- Start CI ----------"
-      - export GRADLE_USER_HOME=`pwd`/.gradle
-      - chmod +x gradlew
-      - echo "------ commit info ---------------"
-      - echo $CI_COMMIT_TAG
-      - echo $CI_COMMIT_REF_NAME
-      - echo "----------------------------------"
+  before_script:
+    - echo "---------- Start CI ----------"
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x gradlew
+    - echo "------ commit info ---------------"
+    - echo $CI_COMMIT_TAG
+    - echo $CI_COMMIT_REF_NAME
+    - echo "----------------------------------"
 
 .tag_only: &tag_only
   rules:
