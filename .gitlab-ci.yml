@@ -32,8 +32,7 @@ build:
   <<: *kotlin
   stage: build
   script:
-    - echo "---------- build stage ----------"
-    - ./gradlew assemble
+    - pyb build
   artifacts:
     paths:
       - build/libs/*.jar
