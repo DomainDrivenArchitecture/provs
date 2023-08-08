@@ -1,5 +1,3 @@
-image: openjdk:11-jdk-slim
-
 stages:
   - build
   - test
@@ -7,22 +5,31 @@ stages:
   - publish
   - release
 
-before_script:
-  - echo "---------- Start CI ----------"
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-  - chmod +x gradlew
-  - echo "------ commit info ---------------"
-  - echo $CI_COMMIT_TAG
-  - echo $CI_COMMIT_REF_NAME
-  - echo "----------------------------------"
+.kotlin-job: &kotlin
+  image: domaindrivenarchitecture/shadow-kotlin
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .gradle/wrapper
+      - .gradle/caches
+    before_script:
+      - echo "---------- Start CI ----------"
+      - export GRADLE_USER_HOME=`pwd`/.gradle
+      - chmod +x gradlew
+      - echo "------ commit info ---------------"
+      - echo $CI_COMMIT_TAG
+      - echo $CI_COMMIT_REF_NAME
+      - echo "----------------------------------"
 
-cache:
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
+.tag_only: &tag_only
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/'
 
 
 build:
+  <<: *kotlin
   stage: build
   script:
     - echo "---------- build stage ----------"
@@ -60,6 +67,7 @@ test:
 
 
 package:
+  <<: *kotlin
   stage: package
   script:
     - ./gradlew -x assemble -x test jar
@@ -76,22 +84,18 @@ package:
 
 
 publish-maven-package-to-gitlab:
+  <<: *kotlin
+  <<: *tag_only
   stage: publish
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "push"
-      when: never
-    - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
   script:
     - ./gradlew -x assemble -x test publishLibraryPublicationToGitlabRepository
 
 
 publish-maven-package-to-meissa:
+  <<: *kotlin
+  <<: *tag_only
   stage: publish
   allow_failure: true
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "push"
-      when: never
-    - if: $CI_COMMIT_TAG !~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
   script:
     - apt-get update -y
     - apt-get install -y iputils-ping ssh
@@ -101,12 +105,9 @@ publish-maven-package-to-meissa:
 
 
 release-to-gitlab:
+  <<: *tag_only
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   stage: release
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "push"
-      when: never
-    - if: $CI_COMMIT_TAG =~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
   artifacts:
     paths:
       - 'build/libs/provs-desktop.jar'
@@ -126,15 +127,11 @@ release-to-gitlab:
 
 
 release-to-meissa:
+  <<: *kotlin
+  <<: *tag_only
   stage: release
   allow_failure: true
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "push"
-      when: never
-    - if: $CI_COMMIT_TAG =~ /^release-[0-9]+[.][0-9]+([.][0-9]+)?$/
   script:
-    - apt-get update
-    - apt-get -yqq install curl
     - ./gradlew createReleaseAndUploadAssets
 
 
