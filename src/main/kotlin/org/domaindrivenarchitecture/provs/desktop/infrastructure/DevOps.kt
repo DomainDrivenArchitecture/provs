@@ -15,7 +15,9 @@ fun Prov.installDevOps() = task {
     installTerraform()
     installKubectlAndTools()
     installYq()
+    // TODO: the can be removed
     installAwsCredentials()
+    // TODO: the can be removed
     installDevOpsFolder()
 }
 

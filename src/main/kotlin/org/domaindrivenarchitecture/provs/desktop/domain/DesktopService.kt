@@ -12,6 +12,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.provisionKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
+
 internal fun Prov.provisionDesktopCommand(cmd: DesktopCliCommand, conf: DesktopConfig) = task {
     provisionDesktop(
         cmd.type,

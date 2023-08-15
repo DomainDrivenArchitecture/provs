@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.git.base
 
+import org.domaindrivenarchitecture.provs.desktop.domain.addKnownHosts
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.isHostKnown
@@ -18,12 +19,10 @@ internal class GitKtTest {
         a.aptInstall("openssh-client")
 
         // when
-        val res = a.trustGithub()
-        val res2 = a.trustGitlab()
+        val res = a.addKnownHosts()
 
         // then
         assertTrue(res.success)
-        assertTrue(res2.success)
 
         assertTrue(a.isHostKnown("github.com"), "github.com does not seem to be a known host")
         assertTrue(a.isHostKnown("gitlab.com"), "gitlab.com does not seem to be a known host")
@@ -37,7 +36,7 @@ internal class GitKtTest {
         prov.aptInstall("git")
 
         // when
-        prov.trustGithub()
+        prov.addKnownHosts()
         val res1 = prov.gitClone("https://gitlab.com/domaindrivenarchitecture/not a valid basename.git", "~/")
         val res2 = prov.gitClone(repo)
         val res3 = prov.gitClone(repo, pullIfExisting = false)
