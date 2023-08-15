@@ -22,7 +22,7 @@ fun Prov.installPpaFirefox() = taskWithResult {
     }
 
     cmd("sudo apt-get -qy remove firefox", sudo = true)
-    optional {
+    optional("remove snap firefox") {
         cmd("snap remove firefox", sudo = true)
     }
 
