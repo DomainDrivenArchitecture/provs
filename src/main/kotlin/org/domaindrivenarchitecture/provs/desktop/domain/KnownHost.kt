@@ -7,7 +7,10 @@ package org.domaindrivenarchitecture.provs.desktop.domain
  */
 typealias HostKey = String
 
-open class KnownHost protected constructor(val hostName: String, val hostKeys: List<HostKey>) {
+open class KnownHost protected constructor(
+    val hostName: String,
+    val hostKeys: List<HostKey>
+) {
     companion object {
         val GITHUB =  KnownHost(
             "github.com", listOf(

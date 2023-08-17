@@ -15,10 +15,6 @@ fun Prov.installDevOps() = task {
     installTerraform()
     installKubectlAndTools()
     installYq()
-    // TODO: the can be removed
-    installAwsCredentials()
-    // TODO: the can be removed
-    installDevOpsFolder()
 }
 
 
@@ -168,14 +164,4 @@ fun awsCredentials(id: String, key: String): String {
     aws_access_key_id = $id
     aws_secret_access_key = $key
     """.trimIndent()
-}
-
-fun Prov.installDevOpsFolder(): ProvResult = task {
-
-    val dir = "~/.devops/"
-
-    if (!checkDir(dir)) {
-        createDirs(dir)
-    }
-
 }

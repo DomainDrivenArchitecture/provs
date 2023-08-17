@@ -6,8 +6,6 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.addKnownHos
 
 fun Prov.addKnownHosts(knownHosts: List<KnownHost> = KnownHost.values()) = task {
     for (knownHost in knownHosts) {
-        with(knownHost) {
-            addKnownHost(hostName, hostKeys, verifyKeys = true)
-        }
+        addKnownHost(knownHost.hostName, knownHost.hostKeys, verifyKeys = true)
     }
 }
