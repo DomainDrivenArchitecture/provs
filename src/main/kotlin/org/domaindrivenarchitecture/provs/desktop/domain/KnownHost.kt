@@ -7,7 +7,7 @@ package org.domaindrivenarchitecture.provs.desktop.domain
  */
 typealias HostKey = String
 
-open class KnownHost protected constructor(
+open class KnownHost(
     val hostName: String,
     val hostKeys: List<HostKey>
 ) {

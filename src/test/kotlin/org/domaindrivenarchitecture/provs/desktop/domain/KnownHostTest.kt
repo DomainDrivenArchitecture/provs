@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.desktop.domain
 
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.KNOWN_HOSTS_FILE
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -18,7 +17,7 @@ class KnownHostTest {
         val prov = defaultTestContainer()
         prov.task {
             aptInstall("ssh")
-            deleteFile(KNOWN_HOSTS_FILE)
+            deleteFile("~/.ssh/known_hosts")
         }
 
         // when

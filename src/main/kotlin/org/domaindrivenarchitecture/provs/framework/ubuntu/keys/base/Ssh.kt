@@ -1,13 +1,12 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base
 
+import org.domaindrivenarchitecture.provs.desktop.domain.KnownHost
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.SshKeyPair
 import java.io.File
 
-
-const val KNOWN_HOSTS_FILE = "~/.ssh/known_hosts"
 
 /**
  * Installs ssh keys for active user; ssh filenames depend on the ssh key type, e.g. for public key file: "id_rsa.pub", "id_id_ed25519.pub", etc
@@ -24,34 +23,37 @@ fun Prov.configureSshKeys(sshKeys: SshKeyPair) = task {
  *
  * @return whether if was found
  */
-fun Prov.isHostKnown(hostOrIp: String) : Boolean {
+fun Prov.isHostKnown(hostOrIp: String): Boolean {
     return cmdNoEval("ssh-keygen -F $hostOrIp").out?.isNotEmpty() ?: false
 }
 
 
 /**
- * Adds ssh keys for specified host (which also can be an ip-address) to ssh-file "known_hosts"
- * Either add the specified keys or - if null - add keys automatically retrieved.
- * Note: adding keys automatically is vulnerable to a man-in-the-middle attack, thus considered insecure and not recommended.
+ * Adds ssh keys for specified host (which also can be an ip-address) to the ssh-file "known_hosts".
+ * If parameter verifyKeys is true the keys are checked against the live keys of the host and only added if valid.
  */
-fun Prov.addKnownHost(host: String, keysToBeAdded: List<String>?, verifyKeys: Boolean = false) = task {
-    if (!checkFile(KNOWN_HOSTS_FILE)) {
+fun Prov.addKnownHost(knownHost: KnownHost, verifyKeys: Boolean = false) = task {
+    val knownHostsFile = "~/.ssh/known_hosts"
+
+    if (!checkFile(knownHostsFile)) {
         createDir(".ssh")
-        createFile(KNOWN_HOSTS_FILE, null)
+        createFile(knownHostsFile, null)
     }
-    if (keysToBeAdded == null) {
-        // auto add keys
-        cmd("ssh-keyscan $host >> $KNOWN_HOSTS_FILE")
-    } else {
-        for (key in keysToBeAdded) {
+    with(knownHost) {
+        for (key in hostKeys) {
             if (!verifyKeys) {
-                addTextToFile("\n$host $key\n", File(KNOWN_HOSTS_FILE))
+                addTextToFile("\n$hostName $key\n", File(knownHostsFile))
             } else {
-                val validKeys = getSshKeys(host)
+                val validKeys = getSshKeys(hostName)
                 if (validKeys?.contains(key) == true) {
-                    addTextToFile("\n$host $key\n", File(KNOWN_HOSTS_FILE))
+                    addTextToFile("\n$hostName $key\n", File(knownHostsFile))
                 } else {
-                    addResultToEval(ProvResult(false, err = "The following key of host [$host] could not be verified successfully: " + key))
+                    addResultToEval(
+                        ProvResult(
+                            false,
+                            err = "The following key of host [$hostName] could not be verified successfully: " + key
+                        )
+                    )
                 }
             }
         }
