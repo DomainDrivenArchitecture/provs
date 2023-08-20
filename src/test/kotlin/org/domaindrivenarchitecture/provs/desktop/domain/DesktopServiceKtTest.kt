@@ -50,7 +50,7 @@ internal class DesktopServiceKtTest {
     fun provisionDesktop_with_onlyModules_firefox_installs_firefox() {
         // given
         val prov = Prov.newInstance(DummyProcessor())
-        mockkStatic(Prov::installPpaFirefox)  // mocks all function in file Firefox.kt
+        mockkStatic(Prov::installPpaFirefox)
         every { any<Prov>().installPpaFirefox() } returns ProvResult(true, cmd = "mocked")
 
         // when
@@ -69,7 +69,7 @@ internal class DesktopServiceKtTest {
         val prov = Prov.newInstance(DummyProcessor())
         mockkStatic(Prov::verifyIdeSetup)
         mockkStatic(Prov::verifyOfficeSetup)
-        mockkStatic(Prov::provisionBasicDesktop)  // mocks function provisionBasicDesktop and all other functions in same file
+        mockkStatic(Prov::provisionBasicDesktop)
         every { any<Prov>().verifyIdeSetup() } returns ProvResult(true, cmd = "mocked")
         every { any<Prov>().verifyOfficeSetup() } returns ProvResult(true, cmd = "mocked")
         every { any<Prov>().provisionBasicDesktop(any(), any(), any(), any()) }
