@@ -1,12 +1,14 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
-import org.domaindrivenarchitecture.provs.framework.core.ProgressType
-import org.domaindrivenarchitecture.provs.framework.core.Prov
+import io.mockk.*
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.installPpaFirefox
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.verifyIdeSetup
+import org.domaindrivenarchitecture.provs.desktop.infrastructure.verifyOfficeSetup
+import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
-import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
-import org.domaindrivenarchitecture.provs.framework.core.remote
+import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
@@ -43,6 +45,70 @@ internal class DesktopServiceKtTest {
             )
         }
     }
+
+    @Test
+    fun provisionDesktop_with_onlyModules_firefox_installs_firefox() {
+        // given
+        val prov = Prov.newInstance(DummyProcessor())
+        mockkStatic(Prov::installPpaFirefox)  // mocks all function in file Firefox.kt
+        every { any<Prov>().installPpaFirefox() } returns ProvResult(true, cmd = "mocked")
+
+        // when
+        prov.provisionDesktop(DesktopType.IDE, onlyModules = listOf("firefox"))
+
+        // then
+        verify(exactly = 1) { any<Prov>().installPpaFirefox() }
+
+        // cleanup
+        unmockkAll()
+    }
+
+    @Test
+    fun provisionDesktop_ide_with_onlyModules_verify_performs_verification() {
+        // given
+        val prov = Prov.newInstance(DummyProcessor())
+        mockkStatic(Prov::verifyIdeSetup)
+        mockkStatic(Prov::verifyOfficeSetup)
+        mockkStatic(Prov::provisionBasicDesktop)  // mocks function provisionBasicDesktop and all other functions in same file
+        every { any<Prov>().verifyIdeSetup() } returns ProvResult(true, cmd = "mocked")
+        every { any<Prov>().verifyOfficeSetup() } returns ProvResult(true, cmd = "mocked")
+        every { any<Prov>().provisionBasicDesktop(any(), any(), any(), any()) }
+
+        // when
+        prov.provisionDesktop(DesktopType.IDE, onlyModules = listOf("verify"))
+
+        // then
+        verify(exactly = 1) { any<Prov>().verifyIdeSetup() }
+        verify(exactly = 0) { any<Prov>().verifyOfficeSetup() }
+        verify(exactly = 0) { any<Prov>().provisionBasicDesktop(any(), any(), any(), any()) }
+
+        // cleanup
+        unmockkAll()
+    }
+
+    @Test
+    fun provisionDesktop_office_with_onlyModules_verify_performs_verification() {
+        // given
+        val prov = Prov.newInstance(DummyProcessor())
+        mockkStatic(Prov::verifyIdeSetup)
+        mockkStatic(Prov::verifyOfficeSetup)
+        mockkStatic(Prov::provisionBasicDesktop)
+        every { any<Prov>().verifyIdeSetup() } returns ProvResult(true, cmd = "mocked")
+        every { any<Prov>().verifyOfficeSetup() } returns ProvResult(true, cmd = "mocked")
+        every { any<Prov>().provisionBasicDesktop(any(), any(), any(), any()) }
+
+        // when
+        prov.provisionDesktop(DesktopType.OFFICE, onlyModules = listOf("verify"))
+
+        // then
+        verify(exactly = 0) { any<Prov>().verifyIdeSetup() }
+        verify(exactly = 1) { any<Prov>().verifyOfficeSetup() }
+        verify(exactly = 0) { any<Prov>().provisionBasicDesktop(any(), any(), any(), any()) }
+
+        // cleanup
+        unmockkAll()
+    }
+
 
     @ExtensiveContainerTest
     @Disabled("Takes very long, enable if you want to test a desktop setup")

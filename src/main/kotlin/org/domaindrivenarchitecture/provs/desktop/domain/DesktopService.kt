@@ -1,5 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopOnlyModule.FIREFOX
+import org.domaindrivenarchitecture.provs.desktop.domain.DesktopOnlyModule.VERIFY
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.*
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.ubuntu.git.provisionGit
@@ -42,21 +44,29 @@ internal fun Prov.provisionDesktop(
     onlyModules: List<String>?
 ) = task {
     validatePrecondition()
-    provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail, onlyModules)
 
-    if (desktopType == DesktopType.OFFICE) {
-        provisionOfficeDesktop(onlyModules)
-        if (onlyModules == null) {
+    if (onlyModules == null) {
+        provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail)
+
+        if (desktopType == DesktopType.OFFICE) {
+            provisionOfficeDesktop()
             verifyOfficeSetup()
         }
-    }
-    if (desktopType == DesktopType.IDE) {
-        if (onlyModules == null) {
+        if (desktopType == DesktopType.IDE) {
             provisionOfficeDesktop()
             provisionIdeDesktop()
             verifyIdeSetup()
-        } else {
-            provisionIdeDesktop(onlyModules)
+        }
+    } else {
+        if (FIREFOX.isIn(onlyModules)) {
+            installPpaFirefox()
+        }
+        if (VERIFY.isIn(onlyModules)) {
+            if (desktopType == DesktopType.OFFICE) {
+                verifyOfficeSetup()
+            } else if (desktopType == DesktopType.IDE) {
+                verifyIdeSetup()
+            }
         }
     }
 }
@@ -67,93 +77,78 @@ fun Prov.validatePrecondition() {
     }
 }
 
-fun Prov.provisionIdeDesktop(onlyModules: List<String>? = null) {
-    if (onlyModules == null) {
-        aptInstall(OPEN_VPM)
-        aptInstall(OPENCONNECT)
-        aptInstall(VPNC)
-
-        // DevEnvs
-        installDocker()
-        aptInstall(JAVA)
-        aptInstall(CLOJURE_TOOLS)
-        installShadowCljs()
-        installDevOps()
-        provisionPython()
-
-        // IDEs
-        installVSC("python", "clojure")
-        installIntelliJ()
-    } else if (onlyModules.contains(DesktopOnlyModule.VERIFY.name.lowercase())) {
-        verifyIdeSetup()
-    } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
-        installPpaFirefox()
-    }
-}
-
-fun Prov.provisionOfficeDesktop(onlyModules: List<String>? = null) {
-    if (onlyModules == null) {
-        aptInstall(ZIP_UTILS)
-        aptInstall(SPELLCHECKING_DE)
-        aptInstall(BROWSER)
-        aptInstall(EMAIL_CLIENT)
-        installDeltaChat()
-        aptInstall(OFFICE_SUITE)
-        installZimWiki()
-        installNextcloudClient()
-        aptInstall(COMPARE_TOOLS)
-
-        // optional as installation of these tools often fail and they are not considered mandatory
-        optional {
-            aptInstall(DRAWING_TOOLS)
-        }
-    } else if (onlyModules.contains(DesktopOnlyModule.VERIFY.name.lowercase())) {
-        verifyOfficeSetup()
-    } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
-        installPpaFirefox()
-    }
-}
 
 fun Prov.provisionBasicDesktop(
     gpg: KeyPair?,
     ssh: SshKeyPair?,
     gitUserName: String?,
     gitEmail: String?,
-    onlyModules: List<String>?
 ) {
-    if (onlyModules == null) {
-        aptInstall(KEY_MANAGEMENT)
-        aptInstall(VERSION_MANAGEMENT)
-        aptInstall(NETWORK_TOOLS)
-        aptInstall(SCREEN_TOOLS)
-        aptInstall(KEY_MANAGEMENT_GUI)
-        aptInstall(PASSWORD_TOOLS)
-        aptInstall(OS_ANALYSIS)
-        aptInstall(BASH_UTILS)
-        aptInstall(CLIP_TOOLS)
-        aptPurge(
-            "remove-power-management xfce4-power-manager " +
-                    "xfce4-power-manager-plugins xfce4-power-manager-data"
-        )
-        aptPurge("abiword gnumeric")
-        aptPurge("popularity-contest")
+    aptInstall(KEY_MANAGEMENT)
+    aptInstall(VERSION_MANAGEMENT)
+    aptInstall(NETWORK_TOOLS)
+    aptInstall(SCREEN_TOOLS)
+    aptInstall(KEY_MANAGEMENT_GUI)
+    aptInstall(PASSWORD_TOOLS)
+    aptInstall(OS_ANALYSIS)
+    aptInstall(BASH_UTILS)
+    aptInstall(CLIP_TOOLS)
+    aptPurge(
+        "remove-power-management xfce4-power-manager " +
+                "xfce4-power-manager-plugins xfce4-power-manager-data"
+    )
+    aptPurge("abiword gnumeric")
+    aptPurge("popularity-contest")
 
-        provisionKeys(gpg, ssh)
-        provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
+    provisionKeys(gpg, ssh)
+    provisionGit(gitUserName ?: whoami(), gitEmail, gpg?.let { gpgFingerprint(it.publicKey.plain()) })
 
-        installPpaFirefox()
-        installGopass()
-        configureGopass(publicGpgKey = gpg?.publicKey)
-        installGopassJsonApi()
-        downloadGopassBridge()
+    installPpaFirefox()
+    installGopass()
+    configureGopass(publicGpgKey = gpg?.publicKey)
+    installGopassJsonApi()
+    downloadGopassBridge()
 
-        installRedshift()
-        configureRedshift()
+    installRedshift()
+    configureRedshift()
 
-        configureNoSwappiness()
-        configureBash()
-        installVirtualBoxGuestAdditions()
-    } else if (onlyModules.contains(DesktopOnlyModule.FIREFOX.name.lowercase())) {
-        installPpaFirefox()
+    configureNoSwappiness()
+    configureBash()
+    installVirtualBoxGuestAdditions()
+}
+
+fun Prov.provisionOfficeDesktop() {
+    aptInstall(ZIP_UTILS)
+    aptInstall(SPELLCHECKING_DE)
+    aptInstall(BROWSER)
+    aptInstall(EMAIL_CLIENT)
+    installDeltaChat()
+    aptInstall(OFFICE_SUITE)
+    installZimWiki()
+    installNextcloudClient()
+    aptInstall(COMPARE_TOOLS)
+
+    // optional, as installation of these tools often fail and as they are not considered mandatory
+    optional {
+        aptInstall(DRAWING_TOOLS)
     }
+}
+
+
+fun Prov.provisionIdeDesktop() {
+    aptInstall(OPEN_VPM)
+    aptInstall(OPENCONNECT)
+    aptInstall(VPNC)
+
+    // DevEnvs
+    installDocker()
+    aptInstall(JAVA)
+    aptInstall(CLOJURE_TOOLS)
+    installShadowCljs()
+    installDevOps()
+    provisionPython()
+
+    // IDEs
+    installVSC("python", "clojure")
+    installIntelliJ()
 }

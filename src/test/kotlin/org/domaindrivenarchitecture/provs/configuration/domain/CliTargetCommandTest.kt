@@ -31,10 +31,8 @@ internal class TargetCliCommandKtTest {
         @AfterAll
         @JvmStatic
         internal fun afterAll() {
-            unmockkObject(Prov)
-            unmockkStatic(::local)
-            unmockkStatic(::remote)
-            unmockkStatic(::getPasswordToConfigureSudoWithoutPassword)
+            // cleanup
+            unmockkAll()
         }
     }
 

@@ -65,12 +65,8 @@ internal class ApplicationKtTest {
         @AfterAll
         @JvmStatic
         internal fun afterAll() {
-            unmockkObject(Prov)
-            unmockkStatic(::local)
-            unmockkStatic(::remote)
-            unmockkStatic(::getConfig)
-            unmockkStatic(Prov::provisionDesktop)
-            unmockkStatic(::getPasswordToConfigureSudoWithoutPassword)
+            // cleanup
+            unmockkAll()
         }
     }
 

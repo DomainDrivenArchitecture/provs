@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.configuration.application
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
+import io.mockk.unmockkAll
 import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.cli.getPasswordToConfigureSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
@@ -49,7 +49,8 @@ class ProvWithSudoKtTest {
         assertFalse(canSudo1)
         assertTrue(canSudo2)
 
-        unmockkStatic(::getPasswordToConfigureSudoWithoutPassword)
+        // cleanup
+        unmockkAll()
     }
 
     @ExtensiveContainerTest
