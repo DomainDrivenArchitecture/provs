@@ -55,7 +55,7 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
 fun Prov.installKubectl(): ProvResult = task {
 
     // see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
-    val kubectlVersion = "1.23.0"
+    val kubectlVersion = "1.27.4"
     val tmpDir = "~/tmp"
 
     // prerequisites -- see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/

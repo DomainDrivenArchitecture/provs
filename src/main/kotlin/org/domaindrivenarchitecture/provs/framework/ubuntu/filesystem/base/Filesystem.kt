@@ -403,7 +403,7 @@ fun Prov.fileSize(filename: String, sudo: Boolean = false): Int? {
 
 
 private fun ensureValidPosixFilePermission(posixFilePermission: String) {
-    if (!Regex("^[0-7]{3}$").matches(posixFilePermission)) throw IllegalArgumentException("Wrong file permission ($posixFilePermission), permission must consist of 3 digits as e.g. 664")
+    if (!Regex("^0?[0-7]{3}$").matches(posixFilePermission)) throw IllegalArgumentException("Wrong file permission ($posixFilePermission), permission must consist of 3 digits as e.g. 664")
 }
 
 /**

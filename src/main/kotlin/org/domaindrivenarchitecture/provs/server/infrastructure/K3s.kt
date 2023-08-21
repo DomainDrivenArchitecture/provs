@@ -10,7 +10,7 @@ import java.io.File
 
 // -----------------------------------  versions  --------------------------------
 
-const val K3S_VERSION = "v1.23.6+k3s1"
+const val K3S_VERSION = "v1.27.4+k3s1"
 
 // -----------------------------------  directories  --------------------------------
 const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
@@ -31,7 +31,8 @@ private val k3sMiddleWareHttpsRedirect = File(k3sManualManifestsDir, "middleware
 private val certManagerDeployment = File(k3sManualManifestsDir, "cert-manager.yaml")
 
 private val certManagerIssuer = File(k3sManualManifestsDir, "le-issuer.yaml")
-private val k3sEcho = File(k3sManualManifestsDir, "echo.yaml")
+private val k3sEchoWithTls = File(k3sManualManifestsDir, "echo-tls.yaml")
+private val k3sEchoNoTls = File(k3sManualManifestsDir, "echo-no-tls.yaml")
 private val selfSignedCertificate = File(k3sManualManifestsDir, "selfsigned-certificate.yaml")
 
 private val localPathProvisionerConfig = File(k3sManualManifestsDir, "local-path-provisioner-config.yaml")
@@ -95,7 +96,7 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
         // metallb
         applyK3sFileFromResource(File(k3sManualManifestsDir, "metallb-0.13.7-native-manifest.yaml"))
 
-        repeatTaskUntilSuccess(6, 10) {
+        repeatTaskUntilSuccess(10, 10) {
             applyK3sFileFromResourceTemplate(
                 File(k3sManualManifestsDir, "metallb-config.yaml"),
                 k3sConfigMap,
@@ -144,17 +145,20 @@ fun Prov.provisionK3sCertManager(certmanager: Certmanager) = task {
     }
 }
 
-fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null) = task {
-    val endpointName = endpoint?.name?.lowercase()
+fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null, withTls: Boolean = false) = task {
+    if (withTls) {
+        val endpointName = endpoint?.name?.lowercase()
 
-    val issuer = if (endpointName == null) {
-        createK3sFileFromResourceTemplate(selfSignedCertificate, mapOf("host" to fqdn))
-        "selfsigned-issuer"
+        val issuer = if (endpointName == null) {
+            createK3sFileFromResourceTemplate(selfSignedCertificate, mapOf("host" to fqdn))
+            "selfsigned-issuer"
+        } else {
+            endpointName
+        }
+        applyK3sFileFromResourceTemplate(k3sEchoWithTls, mapOf("fqdn" to fqdn, "issuer_name" to issuer))
     } else {
-        endpointName
+        applyK3sFileFromResource(k3sEchoNoTls)
     }
-
-    applyK3sFileFromResourceTemplate(k3sEcho, mapOf("fqdn" to fqdn, "issuer_name" to issuer))
 }
 
 fun Prov.provisionK3sApplication(applicationFile: ApplicationFile) = task {
