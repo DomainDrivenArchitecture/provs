@@ -40,7 +40,7 @@ internal class ApplicationKtTest {
             val dummyProv = Prov.newInstance(DummyProcessor())
 
             mockkObject(Prov)
-            every { Prov.newInstance(any(), any(), any(), any(), ) } returns dummyProv
+            every { Prov.newInstance(any(), any(), any(), any()) } returns dummyProv
 
             mockkStatic(::local)
             every { local() } returns dummyProv
@@ -52,7 +52,7 @@ internal class ApplicationKtTest {
             every { getConfig("testconfig.yaml") } returns testConfig
 
             mockkStatic(Prov::provisionDesktop)
-            every { any<Prov>().provisionDesktop(any(), any(), any(), any(), any(),any()) } returns ProvResult(
+            every { any<Prov>().provisionDesktop(any(), any(), any(), any(), any()) } returns ProvResult(
                 true,
                 cmd = "mocked command"
             )
@@ -85,7 +85,6 @@ internal class ApplicationKtTest {
                 null,
                 testConfig.gitUserName,
                 testConfig.gitEmail,
-                null
             )
         }
     }
@@ -119,7 +118,7 @@ internal class ApplicationKtTest {
             "Error: File\u001B[31m idontexist.yaml \u001B[0m was not found.Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m idontexist.yaml \u001B[0m and change the content according to your needs.No suitable config found."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
-        verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any()) }
 
         unmockkStatic(::quit)
     }
@@ -153,7 +152,7 @@ internal class ApplicationKtTest {
             "Error: File \"src/test/resources/invalid-desktop-config.yaml\" has an invalid format and or invalid data.No suitable config found."
         assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
 
-        verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any()) }
 
         unmockkStatic(::quit)
     }

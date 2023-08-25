@@ -16,14 +16,21 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 
 
 internal fun Prov.provisionDesktopCommand(cmd: DesktopCliCommand, conf: DesktopConfig) = task {
-    provisionDesktop(
-        cmd.type,
-        conf.ssh?.keyPair(),
-        conf.gpg?.keyPair(),
-        conf.gitUserName,
-        conf.gitEmail,
-        cmd.onlyModules
-    )
+
+    validatePrecondition()
+
+    val only = cmd.onlyModules
+    if (only == null) {
+        provisionDesktop(
+            cmd.type,
+            conf.ssh?.keyPair(),
+            conf.gpg?.keyPair(),
+            conf.gitUserName,
+            conf.gitEmail,
+        )
+    } else {
+        provisionOnlyModules(cmd.type, only)
+    }
 }
 
 
@@ -41,32 +48,34 @@ internal fun Prov.provisionDesktop(
     gpg: KeyPair? = null,
     gitUserName: String? = null,
     gitEmail: String? = null,
-    onlyModules: List<String>?
 ) = task {
-    validatePrecondition()
 
-    if (onlyModules == null) {
-        provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail)
+    provisionBasicDesktop(gpg, ssh, gitUserName, gitEmail)
 
+    if (desktopType == DesktopType.OFFICE) {
+        provisionOfficeDesktop()
+        verifyOfficeSetup()
+    }
+    if (desktopType == DesktopType.IDE) {
+        provisionOfficeDesktop()
+        provisionIdeDesktop()
+        verifyIdeSetup()
+    }
+}
+
+internal fun Prov.provisionOnlyModules(
+    desktopType: DesktopType = DesktopType.BASIC,
+    onlyModules: List<String>
+) = task {
+
+    if (FIREFOX.isIn(onlyModules)) {
+        installPpaFirefox()
+    }
+    if (VERIFY.isIn(onlyModules)) {
         if (desktopType == DesktopType.OFFICE) {
-            provisionOfficeDesktop()
             verifyOfficeSetup()
-        }
-        if (desktopType == DesktopType.IDE) {
-            provisionOfficeDesktop()
-            provisionIdeDesktop()
+        } else if (desktopType == DesktopType.IDE) {
             verifyIdeSetup()
-        }
-    } else {
-        if (FIREFOX.isIn(onlyModules)) {
-            installPpaFirefox()
-        }
-        if (VERIFY.isIn(onlyModules)) {
-            if (desktopType == DesktopType.OFFICE) {
-                verifyOfficeSetup()
-            } else if (desktopType == DesktopType.IDE) {
-                verifyIdeSetup()
-            }
         }
     }
 }

@@ -41,7 +41,6 @@ internal class DesktopServiceKtTest {
                 DesktopType.BASIC,
                 gitUserName = "testuser",
                 gitEmail = "testuser@test.org",
-                onlyModules = null
             )
         }
     }
@@ -54,7 +53,7 @@ internal class DesktopServiceKtTest {
         every { any<Prov>().installPpaFirefox() } returns ProvResult(true, cmd = "mocked")
 
         // when
-        prov.provisionDesktop(DesktopType.IDE, onlyModules = listOf("firefox"))
+        prov.provisionOnlyModules(DesktopType.IDE, onlyModules = listOf("firefox"))
 
         // then
         verify(exactly = 1) { any<Prov>().installPpaFirefox() }
@@ -75,7 +74,7 @@ internal class DesktopServiceKtTest {
         every { any<Prov>().provisionBasicDesktop(any(), any(), any(), any()) }
 
         // when
-        prov.provisionDesktop(DesktopType.IDE, onlyModules = listOf("verify"))
+        prov.provisionOnlyModules(DesktopType.IDE, onlyModules = listOf("verify"))
 
         // then
         verify(exactly = 1) { any<Prov>().verifyIdeSetup() }
@@ -98,7 +97,7 @@ internal class DesktopServiceKtTest {
         every { any<Prov>().provisionBasicDesktop(any(), any(), any(), any()) }
 
         // when
-        prov.provisionDesktop(DesktopType.OFFICE, onlyModules = listOf("verify"))
+        prov.provisionOnlyModules(DesktopType.OFFICE, onlyModules = listOf("verify"))
 
         // then
         verify(exactly = 0) { any<Prov>().verifyIdeSetup() }
@@ -122,7 +121,6 @@ internal class DesktopServiceKtTest {
             DesktopType.BASIC,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
-            onlyModules = null
         )
 
         // then
@@ -147,7 +145,6 @@ internal class DesktopServiceKtTest {
             DesktopType.IDE,
             gitUserName = "testuser",
             gitEmail = "testuser@test.org",
-            onlyModules = null
         )
 
         // then

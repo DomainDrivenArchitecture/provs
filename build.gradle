@@ -13,12 +13,11 @@ plugins {
     id "java"
     id "java-test-fixtures"
 }
-
 apply plugin: "maven-publish"
 
 
+version = "0.26.3-SNAPSHOT"
 group = "org.domaindrivenarchitecture.provs"
-version = "0.26.2"
 
 
 repositories {
