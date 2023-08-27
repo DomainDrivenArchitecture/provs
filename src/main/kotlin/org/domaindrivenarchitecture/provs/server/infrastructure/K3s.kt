@@ -119,7 +119,7 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
         }
 
         applyK3sFileFromResource(localPathProvisionerConfig)
-        // TODO: jem 2022-11-25: Why do we need sudo here??
+
         cmd("kubectl set env deployment -n kube-system local-path-provisioner DEPLOY_DATE=\"$(date)\"", sudo = true)
 
         cmd("ln -sf $k3sKubeConfig " + k8sCredentialsDir + "admin.conf", sudo = true)
