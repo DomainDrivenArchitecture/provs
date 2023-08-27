@@ -19,18 +19,21 @@ fun Prov.configureSshKeys(sshKeys: SshKeyPair) = task {
 
 
 /**
- * Checks if the specified hostname or Ip is in a known_hosts file
- *
- * @return whether if was found
+ * Checks if the specified host (domain name or IP) and (optional) port is contained in the known_hosts file
  */
-fun Prov.isKnownHost(hostOrIp: String): Boolean {
-    return cmdNoEval("ssh-keygen -F $hostOrIp").out?.isNotEmpty() ?: false
+fun Prov.isKnownHost(hostOrIp: String, port: Int? = null): Boolean {
+    val hostWithPotentialPort = port?.let { hostInKnownHostsFileFormat(hostOrIp, port) } ?: hostOrIp
+    return cmdNoEval("ssh-keygen -F $hostWithPotentialPort").out?.isNotEmpty() ?: false
+}
+
+fun hostInKnownHostsFileFormat(hostOrIp: String, port: Int? = null): String {
+    return port?.let { "[$hostOrIp]:$port" } ?: hostOrIp
 }
 
 
 /**
  * Adds ssh keys for specified host (which also can be an ip-address) to the ssh-file "known_hosts".
- * If parameter verifyKeys is true the keys are checked against the live keys of the host and only added if valid.
+ * If parameter verifyKeys is true, the keys are checked against the live keys of the host and added only if valid.
  */
 fun Prov.addKnownHost(knownHost: KnownHost, verifyKeys: Boolean = false) = task {
     val knownHostsFile = "~/.ssh/known_hosts"
@@ -44,9 +47,10 @@ fun Prov.addKnownHost(knownHost: KnownHost, verifyKeys: Boolean = false) = task 
             if (!verifyKeys) {
                 addTextToFile("\n$hostName $key\n", File(knownHostsFile))
             } else {
-                val validKeys = getSshKeys(hostName)
+                val validKeys = findSshKeys(hostName, port)
                 if (validKeys?.contains(key) == true) {
-                    addTextToFile("\n$hostName $key\n", File(knownHostsFile))
+                    val formattedHost = hostInKnownHostsFileFormat(hostName, port)
+                    addTextToFile("\n$formattedHost $key\n", File(knownHostsFile))
                 } else {
                     addResultToEval(
                         ProvResult(
@@ -62,10 +66,14 @@ fun Prov.addKnownHost(knownHost: KnownHost, verifyKeys: Boolean = false) = task 
 
 
 /**
- * Returns a list of valid ssh keys for the given host (host can also be an ip address), keys are returned as keytype and key BUT WITHOUT the host name
+ * Returns a list of valid ssh keys for the given host (host can also be an ip address),
+ * keys are returned (space-separated) as keytype and key, but WITHOUT the host name.*
+ * If no port is specified, the keys for the default port (22) are returned.
+ * If no keytype is specified, keys are returned for all keytypes.
  */
-private fun Prov.getSshKeys(host: String, keytype: String? = null): List<String>? {
+fun Prov.findSshKeys(host: String, port: Int? = null, keytype: String? = null): List<String>? {
+    val portOption = port?.let { " -p $port " } ?: ""
     val keytypeOption = keytype?.let { " -t $keytype " } ?: ""
-    val output = cmd("ssh-keyscan $keytypeOption $host 2>/dev/null").out?.trim()
+    val output = cmd("ssh-keyscan $portOption $keytypeOption $host 2>/dev/null").out?.trim()
     return output?.split("\n")?.filter { x -> "" != x }?.map { x -> x.substringAfter(" ") }
 }
