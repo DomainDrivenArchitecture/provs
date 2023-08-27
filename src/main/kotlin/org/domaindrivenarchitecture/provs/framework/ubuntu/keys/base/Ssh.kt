@@ -23,7 +23,7 @@ fun Prov.configureSshKeys(sshKeys: SshKeyPair) = task {
  *
  * @return whether if was found
  */
-fun Prov.isHostKnown(hostOrIp: String): Boolean {
+fun Prov.isKnownHost(hostOrIp: String): Boolean {
     return cmdNoEval("ssh-keygen -F $hostOrIp").out?.isNotEmpty() ?: false
 }
 

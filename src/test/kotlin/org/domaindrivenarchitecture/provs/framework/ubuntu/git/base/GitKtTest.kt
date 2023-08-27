@@ -3,7 +3,7 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.git.base
 import org.domaindrivenarchitecture.provs.desktop.domain.addKnownHosts
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.isHostKnown
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.isKnownHost
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
@@ -24,8 +24,8 @@ internal class GitKtTest {
         // then
         assertTrue(res.success)
 
-        assertTrue(a.isHostKnown("github.com"), "github.com does not seem to be a known host")
-        assertTrue(a.isHostKnown("gitlab.com"), "gitlab.com does not seem to be a known host")
+        assertTrue(a.isKnownHost("github.com"), "github.com does not seem to be a known host")
+        assertTrue(a.isKnownHost("gitlab.com"), "gitlab.com does not seem to be a known host")
     }
 
     @ExtensiveContainerTest
