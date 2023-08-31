@@ -30,10 +30,13 @@ fun Prov.gitClone(
             ProvResult(true, out = "Repo [$pathWithBasename] already exists, but might not be up-to-date.")
         }
     } else {
-        // create targetPath (if not yet existing)
+        // create targetPath if not yet existing
         if (!checkDir(targetPath)) {
             createDirs(targetPath)
         }
+
+        // Note that all output of git clone on Linux is shown in stderr (normal progress info AND errors),
+        // which might be confusing in the logfile.
         cmd("cd $targetPath && git clone $repoSource ${targetFolderName ?: ""}")
     }
 }
