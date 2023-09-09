@@ -9,9 +9,9 @@ internal class PythonKtTest {
     @ExtensiveContainerTest
     fun test_provisionPython() {
         // when
-        val res = defaultTestContainer().provisionPython()
+        val result = defaultTestContainer().provisionPython()
 
         // then
-        assertTrue(res.success)
+        assertTrue(result.success)
     }
 }

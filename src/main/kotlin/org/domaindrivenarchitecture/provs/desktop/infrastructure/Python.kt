@@ -28,7 +28,7 @@ fun Prov.configureVenv(venvHome: String): ProvResult = task {
 
 fun Prov.installPybuilder(venvHome: String? = null): ProvResult = task {
     pipInstall("pybuilder ddadevops pypandoc mockito coverage unittest-xml-reporting deprecation" +
-                " python_terraform dda_python_terraform boto3 pyyaml packaging",
+                " python_terraform dda_python_terraform boto3 pyyaml packaging inflection",
         venvHome
     )
     pipInstall("--upgrade ddadevops", venvHome)
