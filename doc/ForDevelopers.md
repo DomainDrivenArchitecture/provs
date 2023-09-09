@@ -11,7 +11,7 @@ This uberjar is a Java jar-file including all required dependencies.
 ## Task
 
 ```kotlin
-fun Prov.provisionK8s() = task { /* ... code and subtasks come here ... */ }
+fun Prov.provisionK3s() = task { /* ... code and subtasks come here ... */ }
 ```
 
 If you're having a deeper look into the provs code, you'll see regularly a task definition like this and might wonder ...

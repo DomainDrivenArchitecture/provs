@@ -13,6 +13,7 @@ box "application" #LightBlue
 participant Application
 participant CliArgumentsParser
 participant DesktopCliCommand
+participant ProvWithSudo
 end box
 
 box  #White
@@ -21,8 +22,7 @@ participant "Prov (local or remote...)" as ProvInstance
 end box
 
 box "domain" #LightGreen
-participant "DesktopService\n.provisionDesktopCommand" as DesktopService1
-participant "DesktopService\n.provisionDesktop" as DesktopService2
+participant "DesktopService"
 end box
 
 box "infrastructure" #CornSilk
@@ -36,14 +36,18 @@ Application -> CliArgumentsParser : parseCommand
 Application -> DesktopCliCommand : isValid ?
 Application -> CliUtils : createProvInstance
 ProvInstance <- CliUtils : create
-Application -> DesktopService1 : provisionDesktopCommand ( provInstance, desktopCliCommand )
-DesktopService1 -> ConfigRepository : getConfig
-DesktopService1 -> DesktopService2 : provisionDesktop( config )
 
-DesktopService2 -> Infrastructure_functions: Various calls like:
-DesktopService2 -> Infrastructure_functions: install ssh, gpg, git ...
-DesktopService2 -> Infrastructure_functions: installVirtualBoxGuestAdditions
-DesktopService2 -> Infrastructure_functions: configureNoSwappiness, ...
+Application -> ProvWithSudo : ensureSudoWithoutPassword
+Application -> DesktopService : provisionDesktopCommand ( provInstance, desktopCliCommand )
+
+DesktopService -> ConfigRepository : getConfig
+
+DesktopService -> DesktopService : provisionDesktop( config )
+
+DesktopService -> Infrastructure_functions: Various calls like:
+DesktopService -> Infrastructure_functions: install ssh, gpg, git ...
+DesktopService -> Infrastructure_functions: installVirtualBoxGuestAdditions
+DesktopService -> Infrastructure_functions: configureNoSwappiness, ...
 
 @enduml
 ```
