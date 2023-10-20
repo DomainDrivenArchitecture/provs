@@ -4,18 +4,20 @@
 #### remove old version
 sudo rm -rf ~/go
 ### download latest version and configure  
-curl -OL https://go.dev/dl/$(curl 'https://go.dev/VERSION?m=text').linux-amd64.tar.gz
+curl -OL https://go.dev/dl/go1.21.3.linux-amd64.tar.gz
 
-extract latest version to ~/go
+# extract latest version to ~/go
 tar -C ~ -xzf go*.linux-amd64.tar.gz
 
-APPEND='export PATH=$PATH:$HOME/go/bin'
-
-echo $APPEND >> $HOME/.profile
+# append path
+```
+(meissa) jem@meissa-ide-2023:~$ cat .bashrc.d/go.sh
+PATH=$PATH:$HOME/go/bin
+export PATH
+```
 
 ## VScode optional - TODO!?!
-Go extension autoinstall  
-install gpls, div, etc.
+"Go for VS Code v0.39.1"
 
 ## Testing forgejo
 full:
