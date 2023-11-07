@@ -14,6 +14,7 @@ fun Prov.provisionPython(venvHome: String? = "~/.venv/meissa") = task {
     installRestClient(venvHome)
     installJupyterlab(venvHome)
     installLinters(venvHome)
+    installAsciinema(venvHome)
 }
 
 fun Prov.installPython3(): ProvResult = task {
@@ -44,6 +45,9 @@ fun Prov.installJupyterlab(venvHome: String? = null): ProvResult = task {
 
 fun Prov.installLinters(venvHome: String? = null): ProvResult = task {
     pipInstall("flake8 mypy pylint", venvHome)
+}
+fun Prov.installAsciinema(venvHome: String? = null): ProvResult = task {
+    pipInstall("asciinema", venvHome)
 }
 
 private fun Prov.pipInstall(pkg: String, venvHome: String? = null) {
