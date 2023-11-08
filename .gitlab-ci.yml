@@ -96,10 +96,6 @@ publish-maven-package-to-meissa:
   stage: publish
   allow_failure: true
   script:
-    - apt-get update -y
-    - apt-get install -y iputils-ping ssh
-    - ping -c 2 repo.prod.meissa.de
-    - ssh-keyscan repo.prod.meissa.de
     - ./gradlew -x assemble -x test publishLibraryPublicationToMeissaRepository
 
 
