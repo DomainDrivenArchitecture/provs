@@ -33,33 +33,34 @@ internal class ProvTest {
         assertTrue(res)
     }
 
-    @ContainerTest
+    @Test
     fun sh() {
         // given
         val script = """
             # test some script commands
-        
-            ping -c1 hetzner.com
-            echo something
+            
+            echo something1
+            pwd
+            echo something3
         """
 
         // when
-        val res = Prov.newInstance(name = "testing").sh(script).success
+        val res = Prov.newInstance(name = "provs_test").sh(script).success
 
         // then
         assertTrue(res)
     }
 
     @ContainerTest
-    @NonCi
+    @NonCi    // sudo might not be available
     fun sh_with_dir_and_sudo() {
         // given
         val script = """
             # test some script commands
         
-            ping -c1 hetzner.com
-            echo something
-            echo 1 # comment behind command
+            pwd
+            echo something1
+            echo something2  # with comment behind command
         """
 
         // when
