@@ -69,13 +69,7 @@ package:
   <<: *kotlin
   stage: package
   script:
-    - ./gradlew -x assemble -x test jar
-    - ./gradlew -x assemble -x test -x jar uberjarDesktop
-    - ./gradlew -x assemble -x test -x jar uberjarServer
-    - ./gradlew -x assemble -x test -x jar uberjarSyspec
-    - cd build/libs/
-    - find . -type f -exec sha256sum {} \; | sort > sha256sum.lst
-    - find . -type f -exec sha512sum {} \; | sort > sha512sum.lst
+    - pyb package
   artifacts:
     paths:
       - build/libs/*.jar

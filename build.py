@@ -1,4 +1,3 @@
-from os import environ
 from subprocess import run
 from pybuilder.core import init, task
 from ddadevops import *
@@ -59,10 +58,22 @@ def tag(project):
     build = get_devops_build(project)
     build.tag_bump_and_push_release()
 
+
 @task
 def build(project):
     print("---------- build stage ----------")
     run("./gradlew assemble", shell=True)
+
+
+@task
+def package(project):
+    run("./gradlew -x test jar", shell=True)
+    run("./gradlew -x test uberjarDesktop", shell=True)
+    run("./gradlew -x test uberjarServer", shell=True)
+    run("./gradlew -x test uberjarSyspec", shell=True)
+    run("cd build/libs/ && find . -type f -exec sha256sum {} \; | sort > sha256sum.lst", shell=True)
+    run("cd build/libs/ && find . -type f -exec sha512sum {} \; | sort > sha512sum.lst", shell=True)
+
 
 def release(project):
     prepare(project)
