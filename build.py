@@ -19,38 +19,52 @@ def initialize(project):
         "mixin_types": ["RELEASE"],
         "release_primary_build_file": "build.gradle",
         "release_secondary_build_files": [],
+        # release artifacts
+        "release_artifact_server_url": "https://repo.prod.meissa.de",
+        "release_organisation": "meissa",
+        "release_repository_name": name,
+        "release_artifacts": [
+            "build/libs/provs-server.jar",
+            "build/libs/provs-desktop.jar",
+            "build/libs/provs-syspec.jar",
+            "build/libs/sha256sum.lst",
+            "build/libs/sha512sum.lst",
+        ],
     }
 
-    build = ReleaseMixin(project, input)
-    build.initialize_build_dir()
+
+@task
+def build(project):
+    run("./gradlew assemble", shell=True)
+
+
+@task
+def dev(project):
+    build(project)
+
 
 @task
 def patch(project):
-    linttest(project, "PATCH")
+    """
+    updates version to next patch level, creates a tag, creates new SNAPSHOT version,
+    executes git commit and push
+    """
+    increase_version_number(project, "PATCH")
     release(project)
 
 
 @task
 def minor(project):
-    linttest(project, "MINOR")
+    """ updates version to next minor level, creates new SNAPSHOT version, executes git commit and push """
+    increase_version_number(project, "MINOR")
     release(project)
 
 
 @task
 def major(project):
-    linttest(project, "MAJOR")
+    """ updates version to next major level, creates new SNAPSHOT version, executes git commit and push """
+    increase_version_number(project, "MAJOR")
     release(project)
-
-
-@task
-def dev(project):
-    linttest(project, "NONE")
-
-
-@task
-def prepare(project):
-    build = get_devops_build(project)
-    build.prepare_release()
 
 
 @task
@@ -60,24 +74,28 @@ def tag(project):
 
 
 @task
-def build(project):
-    print("---------- build stage ----------")
-    run("./gradlew assemble", shell=True)
+def release(project):
+    build = get_devops_build(project)
+    build.prepare_release()
+    tag(project)
 
 
 @task
 def package(project):
-    run("./gradlew -x test jar", shell=True)
-    run("./gradlew -x test uberjarDesktop", shell=True)
-    run("./gradlew -x test uberjarServer", shell=True)
-    run("./gradlew -x test uberjarSyspec", shell=True)
+    run("./gradlew assemble -x test jar", shell=True)
+    run("./gradlew assemble -x test uberjarDesktop", shell=True)
+    run("./gradlew assemble -x test uberjarServer", shell=True)
+    run("./gradlew assemble -x test uberjarSyspec", shell=True)
     run("cd build/libs/ && find . -type f -exec sha256sum {} \; | sort > sha256sum.lst", shell=True)
     run("cd build/libs/ && find . -type f -exec sha512sum {} \; | sort > sha512sum.lst", shell=True)
 
 
-def release(project):
-    prepare(project)
-    tag(project)
+@task
+def publish_artifacts(project):
+    build = get_devops_build(project)
+    build.publish_artifacts()
 
-def linttest(project, release_type):
-    build(project)
+
+def increase_version_number(project, release_type):
+    build = get_devops_build(project)
+    build.update_release_type(release_type)
