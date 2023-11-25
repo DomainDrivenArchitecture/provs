@@ -199,23 +199,25 @@ publishing {
 
             credentials(HttpHeaderCredentials) {
                 name = "Authorization"
+                def publishPackageTokenName = "MEISSA_PUBLISH_PACKAGE_TOKEN"
                 if (System.getenv("CI_JOB_TOKEN") != null) {
-                    def tokenFromEnv = System.getenv("RELEASE_TOKEN")
+                    def tokenFromEnv = System.getenv(publishPackageTokenName)
                     if (tokenFromEnv == null) {
-                        println "Error: RELEASE_TOKEN not found"
+                        println "Error: $publishPackageTokenName not found"
                     } else {
                         value = "token " + tokenFromEnv
-                        println "RELEASE_TOKEN found - "
+                        println "$publishPackageTokenName found - "
                     }
                 } else {
                     // use project-property (define e.g. in "~/.gradle/gradle.properties") when not running in ci
                     // you can create a token in gitea "Profile and Settings ... > Settings > Applications", Token Name, Select scopes (write:package) > "Generate Token"
-                    if (!project.hasProperty("RELEASE_TOKEN")) {
-                        // if RELEASE_TOKEN is missing, provide a dummy in order to avoid error "Could not get unknown property 'RELEASE_TOKEN' for Credentials [header: Authorization]" for other gradle tasks
-                        ext.RELEASE_TOKEN = "RELEASE_TOKEN not provided in file \".gradle/gradle.properties\""
-                        println "Error: RELEASE_TOKEN not found"
+                    if (!project.hasProperty(publishPackageTokenName)) {
+                        // if token is missing, provide a dummy in order to avoid error "Could not get unknown property 'MEISSA_PUBLISH_PACKAGE_TOKEN' for Credentials [header: Authorization]" for other gradle tasks
+                        ext.MEISSA_PUBLISH_PACKAGE_TOKEN = "Token $publishPackageTokenName not provided in file \".gradle/gradle.properties\""
+                        println "Error: Token $publishPackageTokenName not found"
+                    } else {
+                        value = "token " + project.property(publishPackageTokenName)
                     }
-                    value = "token $RELEASE_TOKEN"
                 }
             }
 
@@ -223,41 +225,5 @@ publishing {
                 header(HttpHeaderAuthentication)
             }
         }
-    }
-}
-
-
-tasks.register('createReleaseAndUploadAssets') {
-    dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
-    doLast {
-
-        def token = project.properties.get("RELEASE_TOKEN") ?: System.getenv("RELEASE_TOKEN")
-        if (token == null) {
-            throw new GradleException('No token found.')
-        }
-
-        def output1 = new ByteArrayOutputStream()
-        exec {
-            standardOutput = output1
-            def TAG = project.version
-            commandLine("sh", "-c", "curl -X 'POST' 'https://repo.prod.meissa.de/api/v1/repos/meissa/provs/releases' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{ \"body\": \"Provides jar-files for release $TAG\\nAttention: The \\\"Source Code\\\"-files below are not up-to-date!\", \"tag_name\": \"$TAG\" }' -H \"Authorization: token $token\"")
-        }
-
-        def matches = output1 =~ /\{"id":(\d+?),/
-        if (!matches) {
-            throw new GradleException('id of release could not be parsed in: ' + output1)
-        }
-
-        def releaseId = matches.group(1)
-        println "Release=$releaseId"
-
-        def releaseApiUrl = "https://repo.prod.meissa.de/api/v1/repos/meissa/provs/releases"
-        exec { commandLine("sh", "-c", "find build/libs/ -type f -exec sha256sum {} \\; | sort > build/libs/sha256sum.lst") }
-        exec { commandLine("sh", "-c", "find build/libs/ -type f -exec sha512sum {} \\; | sort > build/libs/sha512sum.lst") }
-        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/provs-desktop.jar;type=application/x-java-archive'") }
-        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/provs-server.jar;type=application/x-java-archive'") }
-        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/provs-syspec.jar;type=application/x-java-archive'") }
-        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/sha256sum.lst;type=text/plain'") }
-        exec { commandLine("sh", "-c", "curl -X 'POST' '$releaseApiUrl/$releaseId/assets' -H 'accept: application/json' -H \"Authorization: token $token\" -H 'Content-Type: multipart/form-data' -F 'attachment=@build/libs/sha512sum.lst;type=text/plain'") }
     }
 }
