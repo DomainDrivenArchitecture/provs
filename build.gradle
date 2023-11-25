@@ -16,7 +16,7 @@ plugins {
 apply plugin: "maven-publish"
 
 
-version = "0.28.4-SNAPSHOT"
+version = "0.29.0"
 group = "org.domaindrivenarchitecture.provs"
 
 
