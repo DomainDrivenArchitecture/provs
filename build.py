@@ -31,6 +31,8 @@ def initialize(project):
             "build/libs/sha512sum.lst",
         ],
     }
+    build = ReleaseMixin(project, input)
+    build.initialize_build_dir()
 
 
 @task
