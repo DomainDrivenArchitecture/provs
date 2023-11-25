@@ -39,7 +39,7 @@ build:
     expire_in: 1 week
 
 
-.test:
+test:
   stage: test
   image: docker:latest
   services:
