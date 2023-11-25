@@ -49,7 +49,7 @@ def dev(project):
 def patch(project):
     """
     updates version to next patch level, creates a tag, creates new SNAPSHOT version,
-    executes git commit and push
+    commits primary build file (build.gradle) and pushes to remote
     """
     increase_version_number(project, "PATCH")
     release(project)
@@ -57,14 +57,20 @@ def patch(project):
 
 @task
 def minor(project):
-    """ updates version to next minor level, creates new SNAPSHOT version, executes git commit and push """
+    """
+    updates version to next minor level, creates a tag, creates new SNAPSHOT version,
+    commits primary build file (build.gradle) and pushes to remote
+    """
     increase_version_number(project, "MINOR")
     release(project)
 
 
 @task
 def major(project):
-    """ updates version to next major level, creates new SNAPSHOT version, executes git commit and push """
+    """
+    updates version to next major level, creates a tag, creates new SNAPSHOT version,
+    commits primary build file (build.gradle) and pushes to remote
+    """
     increase_version_number(project, "MAJOR")
     release(project)
 
