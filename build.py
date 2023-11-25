@@ -93,7 +93,8 @@ def package(project):
 
 
 @task
-def publish_artifacts(project):
+def publish_release(project):
+    """ creates a release in repo.meissa and uploads artifacts (jar-files and checksum files) """
     build = get_devops_build(project)
     build.publish_artifacts()
 

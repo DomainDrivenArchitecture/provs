@@ -121,7 +121,7 @@ release-to-meissa:
   stage: release
   allow_failure: true
   script:
-    - ./gradlew createReleaseAndUploadAssets
+    - pyb publish_release
 
 
 after_script:
