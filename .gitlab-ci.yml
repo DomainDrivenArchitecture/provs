@@ -121,7 +121,7 @@ release-to-meissa:
   stage: release
   allow_failure: true
   script:
-    - pip install --upgrade ddadevops
+    - pip install --upgrade ddadevops --break-system-packages
     - pyb publish_release
 
 
