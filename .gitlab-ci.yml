@@ -122,6 +122,7 @@ release-to-meissa:
   allow_failure: true
   script:
     - export RELEASE_ARTIFACT_TOKEN=$MEISSA_REPO_BUERO_RW
+    - pip install --upgrade ddadevops --break-system-packages
     - pyb publish_release
 
 
