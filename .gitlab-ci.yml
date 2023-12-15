@@ -40,16 +40,20 @@ build:
     expire_in: 1 week
 
 
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+
+
 test:
   stage: test
-  image: docker:latest
+  image: docker:24.0.5
   services:
-    - docker:dind
+    - docker:24.0.5-dind
   dependencies:
     - build
   before_script:
     - echo "---------- BEFORE -------------"
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - echo "$DOCKER_REGISTRY_PASS" | docker login $DOCKER_REGISTRY --username $DOCKER_REGISTRY_USER --password-stdin
   script:
     - echo "---------- TEST -------------"
     - apk update && apk add bash openjdk11 git
