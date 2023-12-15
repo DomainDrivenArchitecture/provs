@@ -16,10 +16,10 @@ stages:
     - echo "---------- Start CI ----------"
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x gradlew
+    - export RELEASE_ARTIFACT_TOKEN=$MEISSA_REPO_BUERO_RW
     - echo "------ commit info ---------------"
     - echo $CI_COMMIT_TAG
     - echo $CI_COMMIT_REF_NAME
-    - export RELEASE_ARTIFACT_TOKEN=$MEISSA_REPO_BUERO_RW
     - echo "----------------------------------"
 
 .tag_only: &tag_only
