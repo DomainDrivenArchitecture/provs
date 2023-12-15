@@ -46,9 +46,9 @@ variables:
 
 test:
   stage: test
-  image: docker:24.0.5
+  image: docker:latest
   services:
-    - docker:24.0.5-dind
+    - docker:dind
   dependencies:
     - build
   before_script:
@@ -74,6 +74,7 @@ package:
   <<: *kotlin
   stage: package
   script:
+    - export RELEASE_ARTIFACT_TOKEN=$MEISSA_REPO_BUERO_RW
     - pyb package
   artifacts:
     paths:
@@ -127,9 +128,7 @@ release-to-meissa:
   allow_failure: true
   script:
     - export RELEASE_ARTIFACT_TOKEN=$MEISSA_REPO_BUERO_RW
-    - pip install --upgrade ddadevops --break-system-packages
     - pyb publish_release
-
 
 after_script:
   - echo "---------- End CI ----------"
