@@ -33,7 +33,6 @@ build:
   stage: build
   script:
     - export RELEASE_ARTIFACT_TOKEN=$MEISSA_REPO_BUERO_RW
-    - pip install --upgrade ddadevops --break-system-packages
     - pyb build
   artifacts:
     paths:
@@ -62,7 +61,7 @@ test:
   artifacts:
     when: on_failure
     paths:
-      - build/reports/tests/test
+      - build/reports/*
     reports:
       junit: build/test-results/test/TEST-*.xml
 
