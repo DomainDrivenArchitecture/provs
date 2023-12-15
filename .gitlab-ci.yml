@@ -46,9 +46,9 @@ variables:
 
 test:
   stage: test
-  image: docker:latest
+  image: docker:24.0.5
   services:
-    - docker:dind
+    - docker:24.0.5-dind
   dependencies:
     - build
   before_script:
