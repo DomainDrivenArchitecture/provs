@@ -41,11 +41,6 @@ def build(project):
 
 
 @task
-def dev(project):
-    build(project)
-
-
-@task
 def patch(project):
     """
     updates version to next patch level, creates a tag, creates new SNAPSHOT version,
