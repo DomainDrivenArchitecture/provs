@@ -15,6 +15,7 @@ fun Prov.provisionPython(venvHome: String? = "~/.venv/meissa") = task {
     installJupyterlab(venvHome)
     installLinters(venvHome)
     installAsciinema(venvHome)
+    installPyTest(venvHome)
 }
 
 fun Prov.installPython3(): ProvResult = task {
@@ -48,6 +49,10 @@ fun Prov.installLinters(venvHome: String? = null): ProvResult = task {
 }
 fun Prov.installAsciinema(venvHome: String? = null): ProvResult = task {
     pipInstall("asciinema", venvHome)
+}
+
+fun Prov.installPyTest(venvHome: String? = null): ProvResult = task {
+    pipInstall("pytest", venvHome)
 }
 
 private fun Prov.pipInstall(pkg: String, venvHome: String? = null) {
