@@ -1,5 +1,5 @@
 import os
-from os import environ
+from subprocess import run
 from pybuilder.core import task, init
 from ddadevops import *
 
@@ -23,7 +23,7 @@ def initialize0(project):
 @init(environments=["artifacts"])
 def initialize1(project):
     """
-    prompt for gopass if no artifacts need to be uploaded
+    prompt for gopass if artifacts need to be uploaded
     usage: with option "-E artifacts" , e.g. "pyb -E artifacts dev"
     """
     del os.environ["RELEASE_ARTIFACT_TOKEN"]
