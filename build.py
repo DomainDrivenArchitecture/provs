@@ -1,11 +1,32 @@
-from subprocess import run
-from pybuilder.core import init, task
+import os
+from os import environ
+from pybuilder.core import task, init
 from ddadevops import *
 
-default_task = "dev"
 
 name = "provs"
 PROJECT_ROOT_PATH = "."
+
+
+version = "0.0.1"
+
+
+@init
+def initialize0(project):
+    """
+    workaround to avoid prompt for gopass if no artifacts need to be uploaded
+    usage: with option "-E ng" , e.g. "pyb -E artifacts patch_local"
+    """
+    os.environ["RELEASE_ARTIFACT_TOKEN"] = "dummy"  # avoids prompt for RELEASE_ARTIFACT_TOKEN
+
+
+@init(environments=["artifacts"])
+def initialize1(project):
+    """
+    prompt for gopass if no artifacts need to be uploaded
+    usage: with option "-E artifacts" , e.g. "pyb -E artifacts dev"
+    """
+    del os.environ["RELEASE_ARTIFACT_TOKEN"]
 
 
 @init
@@ -18,7 +39,7 @@ def initialize(project):
         "build_types": [],
         "mixin_types": ["RELEASE"],
         "release_primary_build_file": "build.gradle",
-        "release_secondary_build_files": [],
+        "release_secondary_build_files": ["build.py"],
         # release artifacts
         "release_artifact_server_url": "https://repo.prod.meissa.de",
         "release_organisation": "meissa",
@@ -33,6 +54,15 @@ def initialize(project):
     }
     build = ReleaseMixin(project, input)
     build.initialize_build_dir()
+
+
+@task
+def dev(project):
+    """
+    to avoid gopass prompt set RELEASE_ARTIFACT_TOKEN e.g.:
+    RELEASE_ARTIFACT_TOKEN=xxx pyb dev
+    """
+    run("./gradlew assemble", shell=True)
 
 
 @task
