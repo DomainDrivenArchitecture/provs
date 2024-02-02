@@ -30,7 +30,7 @@ def initialize1(project):
 
 
 @init
-def initialize(project):
+def initialize2(project):
     input = {
         "name": name,
         "module": "notused",
