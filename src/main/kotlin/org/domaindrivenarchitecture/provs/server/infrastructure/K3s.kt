@@ -10,7 +10,7 @@ import java.io.File
 
 // -----------------------------------  versions  --------------------------------
 
-const val K3S_VERSION = "v1.27.4+k3s1"
+const val K3S_VERSION = "v1.29.1+k3s2"
 
 // -----------------------------------  directories  --------------------------------
 const val k3sManualManifestsDir = "/etc/rancher/k3s/manifests/"
