@@ -1,4 +1,5 @@
 # based on https://github.com/k3s-io/k3s/blob/master/manifests/traefik.yaml
+# required changes: global.systemDefaultRegistry must be set to ""
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -16,7 +17,7 @@ metadata:
 spec:
   chart: https://%{KUBERNETES_API}%/static/charts/traefik-25.0.2+up25.0.0.tgz
   set:
-    global.systemDefaultRegistry: "%{SYSTEM_DEFAULT_REGISTRY_RAW}%"
+    global.systemDefaultRegistry: ""
   valuesContent: |-
     podAnnotations:
       prometheus.io/port: "8082"
