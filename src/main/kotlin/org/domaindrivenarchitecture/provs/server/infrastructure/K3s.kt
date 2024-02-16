@@ -10,8 +10,8 @@ import java.io.File
 
 // -----------------------------------  versions  --------------------------------
 
-// when updating this version, it is recommended to update also file k3s-install.sh in this repo
-// (under: src/main/resources/org/domaindrivenarchitecture/provs/server/infrastructure/k3s/k3s-install.sh)
+// when updating this version, it is recommended to update also file k3s-install.sh as well as traefik.yaml in this repo
+// (both files in: src/main/resources/org/domaindrivenarchitecture/provs/server/infrastructure/k3s/)
 const val K3S_VERSION = "v1.29.1+k3s2"
 
 // -----------------------------------  directories  --------------------------------

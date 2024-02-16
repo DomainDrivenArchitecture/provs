@@ -6,7 +6,7 @@ metadata:
   name: traefik-crd
   namespace: kube-system
 spec:
-  chart: https://%{KUBERNETES_API}%/static/charts/traefik-crd-21.2.1+up21.2.0.tgz
+  chart: https://%{KUBERNETES_API}%/static/charts/traefik-crd-25.0.2+up25.0.0.tgz
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -14,16 +14,10 @@ metadata:
   name: traefik
   namespace: kube-system
 spec:
-  chart: https://%{KUBERNETES_API}%/static/charts/traefik-21.2.1+up21.2.0.tgz
+  chart: https://%{KUBERNETES_API}%/static/charts/traefik-25.0.2+up25.0.0.tgz
   set:
-    global.systemDefaultRegistry: ""
+    global.systemDefaultRegistry: "%{SYSTEM_DEFAULT_REGISTRY_RAW}%"
   valuesContent: |-
-    rbac:
-      enabled: true
-    ports:
-      websecure:
-        tls:
-          enabled: true
     podAnnotations:
       prometheus.io/port: "8082"
       prometheus.io/scrape: "true"
@@ -33,8 +27,8 @@ spec:
           enabled: true
     priorityClassName: "system-cluster-critical"
     image:
-      name: "rancher/mirrored-library-traefik"
-      tag: "2.6.2"
+      repository: "rancher/mirrored-library-traefik"
+      tag: "2.10.5"
     tolerations:
     - key: "CriticalAddonsOnly"
       operator: "Exists"
@@ -45,11 +39,4 @@ spec:
       operator: "Exists"
       effect: "NoSchedule"
     service:
-      ipFamilyPolicy: "PreferDualStack"      
-      annotations: 
-        metallb.universe.tf/allow-shared-ip: "shared-ip-service-group"
-        metallb.universe.tf/address-pool: public
-      spec:
-        type: LoadBalancer
-        externalTrafficPolicy: Cluster
-        
+      ipFamilyPolicy: "PreferDualStack"
