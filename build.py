@@ -8,7 +8,7 @@ name = "provs"
 PROJECT_ROOT_PATH = "."
 
 
-version = "0.32.3-dev"
+version = "0.33.0"
 
 
 @init
