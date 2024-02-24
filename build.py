@@ -38,6 +38,7 @@ def initialize2(project):
         "project_root_path": PROJECT_ROOT_PATH,
         "build_types": [],
         "mixin_types": ["RELEASE"],
+        "release_main_branch": "main",
         "release_primary_build_file": "build.gradle",
         "release_secondary_build_files": ["build.py"],
         # release artifacts

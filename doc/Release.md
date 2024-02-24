@@ -5,7 +5,7 @@ release-1.2 or release-1.2.3
 
 I.e.: release-X.X.Z where X, Y, Z are the major, minor resp. the patch level of the release. Z can be omitted.
 
-**Note:** Such kind of release tags should only be applied to commits in the master branch.
+**Note:** Such kind of release tags should only be applied to commits in the main branch.
 
 ```
 #adjust [version]
