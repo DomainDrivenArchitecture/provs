@@ -76,8 +76,8 @@ dependencies {
     api('com.charleskorn.kaml:kaml:0.54.0')
 
     api("org.slf4j:slf4j-api:1.7.36")
-    api('ch.qos.logback:logback-classic:1.2.11')
-    api('ch.qos.logback:logback-core:1.2.11')
+    api('ch.qos.logback:logback-classic:1.4.14')
+    api('ch.qos.logback:logback-core:1.4.14')
 
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version_no")
     implementation("com.hierynomus:sshj:0.32.0")
