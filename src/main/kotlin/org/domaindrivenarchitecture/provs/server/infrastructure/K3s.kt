@@ -52,7 +52,11 @@ fun Prov.deprovisionK3sInfra() = task {
     deleteFile(certManagerDeployment.path, sudo = true)
     deleteFile(certManagerIssuer.path, sudo = true)
     deleteFile(k3sKubeConfig.path, sudo = true)
-    cmd("k3s-uninstall.sh")
+
+    val k3sUninstallScript = "k3s-uninstall.sh"
+    if (chk("which $k3sUninstallScript")) {
+        cmd(k3sUninstallScript)
+    }
 }
 
 
