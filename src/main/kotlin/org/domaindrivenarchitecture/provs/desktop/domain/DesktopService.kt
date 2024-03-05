@@ -160,4 +160,6 @@ fun Prov.provisionIdeDesktop() {
     // IDEs
     installVSC("python", "clojure")
     installIntelliJ()
+
+    installKubeconform()
 }
