@@ -18,7 +18,7 @@ fun Prov.provisionHetznerCSIForK8s(hetznerApiToken: Secret, encryptionPassphrase
         values = mapOf(
             "HETZNER_API_TOKEN" to hetznerApiToken.plain()
         ))
-    applyHetznerCSIFileFromResource(File(k3sManualManifestsDir, "hcloud-api-token-secret.yaml"))
+    cmd("kubectl apply -f hcloud-api-token-secret.yaml", k3sManualManifestsDir)
     applyHetznerCSIFileFromResource(File(k3sManualManifestsDir, "hcloud-csi.yaml"))
 
     // Encryption
@@ -30,7 +30,7 @@ fun Prov.provisionHetznerCSIForK8s(hetznerApiToken: Secret, encryptionPassphrase
         values = mapOf(
             "HETZNER_ENCRYPTION_PASSPHRASE" to encryptionPassphrase.plain()
         ))
-    applyHetznerCSIFileFromResource(File(k3sManualManifestsDir, "hcloud-encryption-secret.yaml"))
+    cmd("kubectl apply -f hcloud-encryption-secret.yaml", k3sManualManifestsDir)
     applyHetznerCSIFileFromResource(File(k3sManualManifestsDir, "hcloud-encrypted-storage-class.yaml"))
 }
 
