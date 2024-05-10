@@ -106,6 +106,24 @@ To provision the grafana agent only to an existing k8s system, ensure that the c
 provs-server.jar k3s myuser@myhost.com -o grafana
 ```
 
+To add the hetzner csi driver and encrypted volumes to your k3s installation add the following to the config:
+
+```yaml
+hetzner:
+  hcloudApiToken:
+    source: "PLAIN"           # PLAIN, GOPASS or PROMPT
+    parameter: "mypassword"   # the api key for the hetzner cloud
+  encryptionPassphrase:
+    source: "PLAIN"           # PLAIN, GOPASS or PROMPT
+    parameter: "mypassword"   # the encryption passphrase for created volumes
+```
+
+To provision the grafana agent only to an existing k8s system, ensure that the config (as above) is available and execute:
+
+```bash
+provs-server.jar k3s myuser@myhost.com -o grafana
+```
+
 Reprovisioning the server can easily be done using the -r or --reprovision option.
 
 ```bash

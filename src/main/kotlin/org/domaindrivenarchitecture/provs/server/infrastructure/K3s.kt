@@ -37,8 +37,9 @@ private val k3sEchoWithTls = File(k3sManualManifestsDir, "echo-tls.yaml")
 private val k3sEchoNoTls = File(k3sManualManifestsDir, "echo-no-tls.yaml")
 private val selfSignedCertificate = File(k3sManualManifestsDir, "selfsigned-certificate.yaml")
 
-private val localPathProvisionerConfig = File(k3sManualManifestsDir, "local-path-provisioner-config.yaml")
+private val hetznerCSIDriver = File(k3sManualManifestsDir, "hcloud-csi.yaml")
 
+private val localPathProvisionerConfig = File(k3sManualManifestsDir, "local-path-provisioner-config.yaml")
 
 // -----------------------------------  public functions  --------------------------------
 
@@ -124,6 +125,10 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
             applyK3sFileFromResource(k3sMiddleWareHttpsRedirect)
         }
 
+        // hetzner csi-driver
+        applyK3sFileFromResource(hetznerCSIDriver)
+
+        // other
         applyK3sFileFromResource(localPathProvisionerConfig)
 
         cmd("kubectl set env deployment -n kube-system local-path-provisioner DEPLOY_DATE=\"$(date)\"", sudo = true)
