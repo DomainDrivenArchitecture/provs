@@ -21,8 +21,8 @@ FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get -y install adduser sudo
-RUN useradd -m $userName && echo "$userName:$userName" | chpasswd && adduser $userName sudo
+RUN apt-get update && apt-get -y install sudo
+RUN useradd -m $userName && echo "$userName:$userName" | chpasswd && usermod -aG sudo $userName
 RUN echo "$userName ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$userName
 
 USER $userName
