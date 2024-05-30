@@ -49,7 +49,31 @@ fun Prov.installKubectlAndTools(): ProvResult = task {
         }
     }
 
+    task("installKubeconform") {
+
+        installKubeconform()
+    }
     installDevopsScripts()
+}
+
+fun Prov.installKubeconform() = task {
+    // check for latest stable release on: https://github.com/yannh/kubeconform/releases
+    val version = "0.6.4"
+    val installationPath = "/usr/local/bin/"
+    val tmpDir = "~/tmp"
+    val filename = "kubeconform-linux-amd64"
+    val packedFilename = "$filename.tar.gz"
+
+    if ( !chk("kubeconform -v") || "v$version" != cmd("kubeconform -v").out?.trim() ) {
+        downloadFromURL(
+            "https://github.com/yannh/kubeconform/releases/download/v$version/$packedFilename",
+            path = tmpDir,
+            sha256sum = "2b4ebeaa4d5ac4843cf8f7b7e66a8874252b6b71bc7cbfc4ef1cbf85acec7c07"
+        )
+        cmd("sudo tar -xzf $packedFilename -C $installationPath", tmpDir)
+    } else {
+        ProvResult(true, out = "Kubeconform $version already installed")
+    }
 }
 
 fun Prov.installKubectl(): ProvResult = task {

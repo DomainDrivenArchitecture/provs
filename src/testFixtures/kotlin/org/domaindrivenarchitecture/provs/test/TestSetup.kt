@@ -16,7 +16,9 @@ const val defaultTestContainerName = "provs_test"
 private lateinit var prov: Prov
 
 fun defaultTestContainer(startMode: ContainerStartMode = ContainerStartMode.USE_RUNNING_ELSE_CREATE): Prov {
-    if (!::prov.isInitialized || !testLocal().containerRuns(defaultTestContainerName) || (startMode == ContainerStartMode.CREATE_NEW_KILL_EXISTING)) { prov = initDefaultTestContainer(startMode) }
+    if (!::prov.isInitialized || !testLocal().containerRuns(defaultTestContainerName) || (startMode == ContainerStartMode.CREATE_NEW_KILL_EXISTING)) {
+        prov = initDefaultTestContainer(startMode)
+    }
     return prov
 }
 

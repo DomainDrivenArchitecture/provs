@@ -2,6 +2,8 @@ package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 import org.domaindrivenarchitecture.provs.configuration.infrastructure.DefaultConfigFileRepository
 import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.HetznerCSIConfigResolved
+import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.provisionHetznerCSI
 import org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent.GrafanaAgentConfigResolved
 import org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent.provisionGrafanaAgent
 import org.domaindrivenarchitecture.provs.server.infrastructure.*
@@ -11,6 +13,7 @@ import kotlin.system.exitProcess
 fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
 
     val grafanaConfigResolved: GrafanaAgentConfigResolved? = findK8sGrafanaConfig(cli.configFileName)?.resolveSecret()
+    val hcloudConfigResolved: HetznerCSIConfigResolved? = findHetznerCSIConfig(cli.configFileName)?.resolveSecret()
 
     if (cli.onlyModules == null) {
         val k3sConfig: K3sConfig = getK3sConfig(cli.configFileName)
@@ -18,9 +21,10 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
         val k3sConfigReprovision = k3sConfig.copy(reprovision = cli.reprovision || k3sConfig.reprovision)
 
         val applicationFile = cli.applicationFileName?.let { DefaultApplicationFileRepository(cli.applicationFileName).getFile() }
-        provisionK3s(k3sConfigReprovision, grafanaConfigResolved, applicationFile)
+        provisionK3s(k3sConfigReprovision, grafanaConfigResolved, hcloudConfigResolved, applicationFile)
     } else {
         provisionGrafana(cli.onlyModules, grafanaConfigResolved)
+        provisionHetznerCSI(cli.onlyModules, hcloudConfigResolved)
     }
 }
 
@@ -30,6 +34,7 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
 fun Prov.provisionK3s(
     k3sConfig: K3sConfig,
     grafanaConfigResolved: GrafanaAgentConfigResolved? = null,
+    hetznerCSIConfigResolved: HetznerCSIConfigResolved? = null,
     applicationFile: ApplicationFile? = null
 ) = task {
 
@@ -53,6 +58,10 @@ fun Prov.provisionK3s(
         provisionGrafanaAgent(grafanaConfigResolved)
     }
 
+    if (hetznerCSIConfigResolved != null) {
+        provisionHetznerCSI(hetznerCSIConfigResolved)
+    }
+
     if (applicationFile != null) {
         provisionK3sApplication(applicationFile)
     }
@@ -74,4 +83,19 @@ private fun Prov.provisionGrafana(
         }
         provisionGrafanaAgent(grafanaConfigResolved)
     }
+}
+
+private fun Prov.provisionHetznerCSI(
+    onlyModules: List<String>?,
+    hetznerCSIConfigResolved: HetznerCSIConfigResolved?
+) = task {
+
+    if (onlyModules != null && onlyModules.contains(ServerOnlyModule.HETZNER_CSI.name.lowercase())) {
+        if (hetznerCSIConfigResolved == null) {
+            println("ERROR: Could not find grafana config.")
+            exitProcess(7)
+        }
+        provisionHetznerCSI(hetznerCSIConfigResolved)
+    }
+
 }

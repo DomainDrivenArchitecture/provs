@@ -39,7 +39,6 @@ private val selfSignedCertificate = File(k3sManualManifestsDir, "selfsigned-cert
 
 private val localPathProvisionerConfig = File(k3sManualManifestsDir, "local-path-provisioner-config.yaml")
 
-
 // -----------------------------------  public functions  --------------------------------
 
 fun Prov.testConfigExists(): Boolean {
@@ -52,7 +51,11 @@ fun Prov.deprovisionK3sInfra() = task {
     deleteFile(certManagerDeployment.path, sudo = true)
     deleteFile(certManagerIssuer.path, sudo = true)
     deleteFile(k3sKubeConfig.path, sudo = true)
-    cmd("k3s-uninstall.sh")
+
+    val k3sUninstallScript = "k3s-uninstall.sh"
+    if (chk("which $k3sUninstallScript")) {
+        cmd(k3sUninstallScript)
+    }
 }
 
 
@@ -120,6 +123,7 @@ fun Prov.installK3s(k3sConfig: K3sConfig): ProvResult {
             applyK3sFileFromResource(k3sMiddleWareHttpsRedirect)
         }
 
+        // other
         applyK3sFileFromResource(localPathProvisionerConfig)
 
         cmd("kubectl set env deployment -n kube-system local-path-provisioner DEPLOY_DATE=\"$(date)\"", sudo = true)

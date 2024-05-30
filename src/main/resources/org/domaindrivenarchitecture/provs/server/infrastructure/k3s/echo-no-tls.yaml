@@ -2,9 +2,8 @@ kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
   name: echo-ingress
-  annotations:
-    kubernetes.io/ingress.class: "traefik"
 spec:
+  ingressClassName: traefik
   rules:
   - http:
       paths:

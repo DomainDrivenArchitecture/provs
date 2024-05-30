@@ -103,7 +103,8 @@ internal class UbuntuProvTest {
 
         // then
         assertFalse(result.success)
-        assertEquals("sudo: no tty present and no askpass program specified\n", result.err)
+        val expectedMsg = "a password is required"
+        assertTrue(result.err?.contains(expectedMsg) ?: false, "Error: [$expectedMsg] is not found in [${result.err}]")
     }
 
 }
@@ -119,12 +120,12 @@ class UbuntuUserNeedsPasswordForSudo(private val userName: String = "testuser") 
 
     override fun imageText(): String {
         return """
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get -y install sudo
-RUN useradd -m $userName && echo "$userName:$userName" | chpasswd && adduser $userName sudo
+RUN useradd -m $userName && echo "$userName:$userName" | chpasswd && usermod -aG sudo $userName
 
 USER $userName
 CMD /bin/bash
