@@ -156,6 +156,7 @@ fun Prov.provisionIdeDesktop() {
     installShadowCljs()
     installDevOps()
     provisionPython()
+    installHugoByDeb()
 
     // IDEs
     installVSC("python", "clojure")
