@@ -34,7 +34,7 @@ class ContainerUbuntuHostProcessorTest {
 
         // given
         val containerName = "prov-test-ssh-with-container"
-        val password = Secret("testuserpw")
+        val password = Secret("testuser")
 
         val prov = Prov.newInstance(
             ContainerUbuntuHostProcessor(
