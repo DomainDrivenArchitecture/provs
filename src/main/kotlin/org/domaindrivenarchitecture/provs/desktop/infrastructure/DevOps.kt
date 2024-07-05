@@ -91,8 +91,8 @@ fun Prov.installKubectl(): ProvResult = task {
     downloadFromURL(
         "https://dl.k8s.io/release/v$kubectlVersion/bin/linux/amd64/kubectl",
         path = tmpDir,
-        // from https://dl.k8s.io/v1.23.0/bin/linux/amd64/kubectl.sha256
-        sha256sum = "2d0f5ba6faa787878b642c151ccb2c3390ce4c1e6c8e2b59568b3869ba407c4f"
+        // from https://dl.k8s.io/v1.27.4/bin/linux/amd64/kubectl.sha256
+        sha256sum = "4685bfcf732260f72fce58379e812e091557ef1dfc1bc8084226c7891dd6028f"
     )
     cmd("sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl", dir = tmpDir)
 }
@@ -157,35 +157,4 @@ fun Prov.installTerraform(): ProvResult = task {
     cmd("tfenv install", sudo = true)
     cmd("tfenv install latest:^1.4.6", sudo = true)
     cmd("tfenv use latest:^1.4.6", sudo = true)
-}
-
-
-// --------------------------------------------  AWS credentials file  -----------------------------------------------
-fun Prov.installAwsCredentials(id: String = "REPLACE_WITH_YOUR_ID", key: String = "REPLACE_WITH_YOUR_KEY"): ProvResult =
-    task {
-        val dir = "~/.aws"
-
-        if (!checkDir(dir)) {
-            createDirs(dir)
-            createFile("~/.aws/config", awsConfig())
-            createFile("~/.aws/credentials", awsCredentials(id, key))
-        } else {
-            ProvResult(true, "aws credential folder already installed")
-        }
-    }
-
-fun awsConfig(): String {
-    return """
-    [default]
-    region = eu-central-1
-    output = json
-    """.trimIndent()
-}
-
-fun awsCredentials(id: String, key: String): String {
-    return """
-    [default]
-    aws_access_key_id = $id
-    aws_secret_access_key = $key
-    """.trimIndent()
 }
