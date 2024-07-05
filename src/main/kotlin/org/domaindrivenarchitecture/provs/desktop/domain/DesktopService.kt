@@ -134,7 +134,7 @@ fun Prov.provisionOfficeDesktop() {
     installDeltaChat()
     aptInstall(OFFICE_SUITE)
     installZimWiki()
-    installNextcloudClient()
+    // installNextcloudClient() might not install - might need fix and working test
     aptInstall(COMPARE_TOOLS)
 
     // optional, as installation of these tools often fail and as they are not considered mandatory
