@@ -57,8 +57,8 @@ class ContainerUbuntuHostProcessorTest {
         val remoteProvBySsh = remote(ipOfContainer, "testuser", password)
 
         // when
-        val firstSessionResult = remoteProvBySsh.cmd("echo 1")
-        val secondSessionResult = remoteProvBySsh.cmd("echo 1")
+        val firstSessionResult = remoteProvBySsh.cmd("echo 1")  // connect (to container) by ssh via ip
+        val secondSessionResult = remoteProvBySsh.cmd("echo 2") // second connect after first connection has been closed
 
         // then
         assertTrue(firstSessionResult.success)
