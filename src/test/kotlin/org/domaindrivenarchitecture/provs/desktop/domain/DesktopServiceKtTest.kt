@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
 import io.mockk.*
+import org.domaindrivenarchitecture.provs.configuration.domain.TargetCliCommand
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.installPpaFirefox
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.verifyIdeSetup
 import org.domaindrivenarchitecture.provs.desktop.infrastructure.verifyOfficeSetup
@@ -37,10 +38,8 @@ internal class DesktopServiceKtTest {
 
         // when
         Assertions.assertThrows(Exception::class.java) {
-            prov.provisionDesktop(
-                DesktopType.BASIC,
-                gitUserName = "testuser",
-                gitEmail = "testuser@test.org",
+            prov.provisionDesktopCommand(
+                DesktopCliCommand(DesktopType.BASIC, TargetCliCommand("testuser@somehost"), null), DesktopConfig()   // dummy data
             )
         }
     }

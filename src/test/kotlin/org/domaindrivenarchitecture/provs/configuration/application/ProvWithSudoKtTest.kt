@@ -24,7 +24,7 @@ class ProvWithSudoKtTest {
     fun test_ensureSudoWithoutPassword_local_Prov() {
 
         mockkStatic(::getPasswordToConfigureSudoWithoutPassword)
-        every { getPasswordToConfigureSudoWithoutPassword() } returns Secret("testuserpw")
+        every { getPasswordToConfigureSudoWithoutPassword() } returns Secret("testuser")
 
         // given
         val containerName = "prov-test-sudo-no-pw"
@@ -58,7 +58,7 @@ class ProvWithSudoKtTest {
 
         // given
         val containerName = "prov-test-sudo-no-pw-ssh"
-        val password = Secret("testuserpw")
+        val password = Secret("testuser")
 
         val prov = Prov.newInstance(
             ContainerUbuntuHostProcessor(
