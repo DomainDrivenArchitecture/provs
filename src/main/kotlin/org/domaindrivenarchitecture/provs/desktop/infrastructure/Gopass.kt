@@ -11,9 +11,10 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 
 fun Prov.installGopass(
-    version: String = "1.15.5",
+    version: String = "1.15.13",  // when adjusting pls also adjust checksum below
     enforceVersion: Boolean = false,
-    sha256sum: String = "23ec10015c2643f22cb305859eb36d671094d463d2eb1798cc675e7bb06f4b39"
+    // from https://github.com/gopasspw/gopass/releases/tag/v1.15.13
+    sha256sum: String = "409ed5617e64fa2c781d5e2807ba7fcd65bc383a4e110f410f90b590e51aec55"
 ) = taskWithResult {
 
     if (isPackageInstalled("gopass") && !enforceVersion) {
