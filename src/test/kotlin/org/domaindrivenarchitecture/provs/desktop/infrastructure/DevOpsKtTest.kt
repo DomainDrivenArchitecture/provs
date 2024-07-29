@@ -1,10 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
@@ -61,5 +58,18 @@ internal class DevOpsKtTest {
         // then
         assertTrue(res.success)
         assertTrue(prov.checkFile("/usr/local/bin/kubeconform"))
+    }
+
+    @ContainerTest
+    fun installGraalVM() {
+        // given
+        val prov = defaultTestContainer()
+
+        // when
+        val res = prov.installGraalVM()
+
+        // then
+        assertTrue(res.success)
+        assertTrue(prov.checkFile("/usr/local/bin/native-image"))
     }
 }
