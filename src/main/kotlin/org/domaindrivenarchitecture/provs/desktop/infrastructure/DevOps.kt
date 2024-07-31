@@ -27,7 +27,7 @@ fun Prov.installGraalVM():ProvResult = task{
     val extractedFilenameHunch = "graalvm-community-openjdk-"
     val installationPath = "/usr/lib/jvm/"
 
-    if ( !chk("/usr/local/bin/native-image --version") || version != cmd("/usr/local/bin/native-image --version").out?.trim() || !chk("ls -d $installationPath$extractedFilenameHunch$version*")) {
+    if ( !chk("/usr/local/bin/native-image --version") || version != cmd("/usr/local/bin/native-image --version|awk 'NR==1 {print $2}").out?.trim() || !chk("ls -d $installationPath$extractedFilenameHunch$version*")) {
         downloadFromURL(
             "https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-$version/$packedFilename",
             path = tmpDir,
