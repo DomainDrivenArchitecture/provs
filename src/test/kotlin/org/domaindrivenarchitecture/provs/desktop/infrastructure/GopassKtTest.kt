@@ -1,17 +1,21 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
+import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.configureGpgKeys
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.GopassSecretSource
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.privateGPGSnakeoilKey
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.makeCurrentUserSudoerWithoutPasswordRequired
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
+import org.domaindrivenarchitecture.provs.test_keys.publicGPGSnakeoilKey
 import org.junit.jupiter.api.Assertions.assertFalse
 
 
@@ -56,24 +60,32 @@ internal class GopassKtTest {
     }
 
     @Test
-    @Disabled  // Integrationtest; change user, host and keys, then remove this line to run this test
+    @Disabled  // This is an integration test, which needs preparation:
+    // Pls change user, host and remote connection (choose connection either by password or by ssh key)
+    // then remove tag @Disabled to be able to run this test.
+    // PREREQUISITE: remote machine needs openssh-server installed
     fun test_install_and_configure_Gopass_and_GopassBridgeJsonApi() {
-        // settings to change
-        val host = "192.168.56.135"
+        // host and user
+        val host = "192.168.56.154"
         val user = "xxx"
-        val pubKey = GopassSecretSource("path-to/pub.key").secret()
-        val privateKey = GopassSecretSource("path-to/priv.key").secret()
 
-        // given
-        val prov = remote(host, user)
+        // connection by password
+        val pw = PromptSecretSource("Pw for $user").secret()
+        val prov = remote(host, user, pw)
+        prov.makeCurrentUserSudoerWithoutPasswordRequired(pw)  // may be commented out if user can already sudo without password
+
+        // or alternatively use connection by ssh key if the public key is already available remotely
+        // val prov = remote(host, user)
+
+
+        val pubKey = Secret(publicGPGSnakeoilKey())
+        val privateKey = Secret(privateGPGSnakeoilKey())
+
 
         // when
         val res = prov.task {
             configureGpgKeys(
-                KeyPair(
-                    pubKey,
-                    privateKey
-                ),
+                KeyPair(pubKey, privateKey),
                 trust = true,
                 skipIfExistin = true
             )

@@ -2,8 +2,6 @@ This repository holds the documentation of the provs framework.
 
 # Design principles
 
-For usage examples it is recommended to have a look at [provs-scripts](https://gitlab.com/domaindrivenarchitecture/provs-scripts) or [provs-ubuntu-extensions](https://gitlab.com/domaindrivenarchitecture/provs-ubuntu-extensions).
-
 ## "Implarative" 
 
 Configuration management tools are usually classified as either **imperative** or **declarative**. 

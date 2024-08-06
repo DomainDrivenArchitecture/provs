@@ -15,8 +15,37 @@ fun Prov.installDevOps() = task {
     installTerraform()
     installKubectlAndTools()
     installYq()
+    installGraalVM()
 }
 
+fun Prov.installGraalVM():ProvResult = task{
+    val version = "21.0.2"
+    val tmpDir = "~/tmp"
+    val filename = "graalvm-community-jdk-"
+    val additionalPartFilename = "_linux-x64_bin"
+    val packedFilename = "$filename$version$additionalPartFilename.tar.gz"
+    val extractedFilenameHunch = "graalvm-community-openjdk-"
+    val installationPath = "/usr/lib/jvm/"
+
+    if ( !chk("/usr/local/bin/native-image --version") || version != cmd("/usr/local/bin/native-image --version|awk 'NR==1 {print $2}").out?.trim() || !chk("ls -d $installationPath$extractedFilenameHunch$version*")) {
+        downloadFromURL(
+            "https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-$version/$packedFilename",
+            path = tmpDir,
+            sha256sum = "b048069aaa3a99b84f5b957b162cc181a32a4330cbc35402766363c5be76ae48"
+        )
+        if (!chk("ls -d $installationPath"))
+            cmd("sudo mkdir $installationPath")
+        else {
+            ProvResult(true, out = "$installationPath just exists, mkdir not necessary.")
+        }
+        cmd("sudo tar -C $installationPath -xzf $packedFilename", tmpDir)
+        val graalInstPath = installationPath + (cmd("ls /usr/lib/jvm/|grep -e graalvm-community-openjdk-$version").out?.replace("\n", ""))
+        cmd("sudo ln -s $graalInstPath/lib/svm/bin/native-image /usr/local/bin/native-image")
+        cmd("/usr/local/bin/native-image --version")
+    } else {
+        ProvResult(true, out = "GraalVM $version already installed")
+    }
+}
 
 fun Prov.installYq(
     version: String = "4.13.2",
@@ -91,8 +120,8 @@ fun Prov.installKubectl(): ProvResult = task {
     downloadFromURL(
         "https://dl.k8s.io/release/v$kubectlVersion/bin/linux/amd64/kubectl",
         path = tmpDir,
-        // from https://dl.k8s.io/v1.23.0/bin/linux/amd64/kubectl.sha256
-        sha256sum = "2d0f5ba6faa787878b642c151ccb2c3390ce4c1e6c8e2b59568b3869ba407c4f"
+        // from https://dl.k8s.io/v1.27.4/bin/linux/amd64/kubectl.sha256
+        sha256sum = "4685bfcf732260f72fce58379e812e091557ef1dfc1bc8084226c7891dd6028f"
     )
     cmd("sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl", dir = tmpDir)
 }
@@ -157,35 +186,4 @@ fun Prov.installTerraform(): ProvResult = task {
     cmd("tfenv install", sudo = true)
     cmd("tfenv install latest:^1.4.6", sudo = true)
     cmd("tfenv use latest:^1.4.6", sudo = true)
-}
-
-
-// --------------------------------------------  AWS credentials file  -----------------------------------------------
-fun Prov.installAwsCredentials(id: String = "REPLACE_WITH_YOUR_ID", key: String = "REPLACE_WITH_YOUR_KEY"): ProvResult =
-    task {
-        val dir = "~/.aws"
-
-        if (!checkDir(dir)) {
-            createDirs(dir)
-            createFile("~/.aws/config", awsConfig())
-            createFile("~/.aws/credentials", awsCredentials(id, key))
-        } else {
-            ProvResult(true, "aws credential folder already installed")
-        }
-    }
-
-fun awsConfig(): String {
-    return """
-    [default]
-    region = eu-central-1
-    output = json
-    """.trimIndent()
-}
-
-fun awsCredentials(id: String, key: String): String {
-    return """
-    [default]
-    aws_access_key_id = $id
-    aws_secret_access_key = $key
-    """.trimIndent()
 }

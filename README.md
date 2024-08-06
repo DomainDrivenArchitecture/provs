@@ -12,9 +12,6 @@ provs provides cli-based tools for
 
 Tasks can be run locally or remotely.
 
-## Status
-
-under development - though we already set up a few IDEs and servers with provs. 
 
 ## Try out
 ### Prerequisites
@@ -28,8 +25,9 @@ under development - though we already set up a few IDEs and servers with provs.
 * Download the latest `provs-desktop.jar`,`provs-server.jar` and/or `provs-syspec.jar` from: https://gitlab.com/domaindrivenarchitecture/provs/-/releases
   * Preferably into `/usr/local/bin` or any other folder where executables can be found by the system 
 * Make the jar-file executable e.g. by `chmod +x provs-desktop.jar`
+* Check with `provs-desktop.jar -h` to show help information
 
-#### Build the binaries
+###### Build the binaries
 
 Instead of downloading the binaries you can build them yourself
 
