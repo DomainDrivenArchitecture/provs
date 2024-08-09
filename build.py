@@ -131,6 +131,11 @@ def publish_release(project):
     build.publish_artifacts()
 
 
+@task
+def inst(project):
+   run("./gradlew inst", shell=True)
+
+
 def increase_version_number(project, release_type):
     build = get_devops_build(project)
     build.update_release_type(release_type)

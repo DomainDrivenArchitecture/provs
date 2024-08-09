@@ -69,6 +69,8 @@ fun Prov.provisionK3s(
     if (!k3sConfig.reprovision) {
         provisionServerCliConvenience()
     }
+
+    installK9s()
 }
 
 private fun Prov.provisionGrafana(
