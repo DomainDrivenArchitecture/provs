@@ -163,7 +163,9 @@ Or to get help for subcommands e.g.
 provs-desktop.jar ide -h
 provs-server.jar k3s -h
 ```
+
 ## Development & mirrors
+
 Development happens at: https://repo.prod.meissa.de/meissa/provs
 
 Mirrors are:
@@ -171,3 +173,17 @@ Mirrors are:
 * https://github.com/DomainDrivenArchitecture/provs
 
 For more details about our repository model see: https://repo.prod.meissa.de/meissa/federate-your-repos
+
+## Developer information
+
+For using provs framework, add the required dependency to your project, then you can implement your own tasks e.g. by:
+
+```kotlin
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+
+fun Prov.myCustomTask() = task {
+    cmd("echo \"Hello world!\"")
+}
+```
+
+See also [ForDevelopers.md](doc/ForDevelopers.md)
