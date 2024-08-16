@@ -137,7 +137,10 @@ fun Prov.provisionOfficeDesktop() {
     // installNextcloudClient() might not install - might need fix and working test
     aptInstall(COMPARE_TOOLS)
 
-    // optional, as installation of these tools often fail and as they are not considered mandatory
+    // VSCode is also required in office VM (not only in IDE desktop) e.g. as editor
+    installVSCode("python", "clojure")
+
+    // optional, as installation of these tools often fail and as they are not mandatory
     optional {
         aptInstall(DRAWING_TOOLS)
     }
@@ -159,7 +162,6 @@ fun Prov.provisionIdeDesktop() {
     installHugoByDeb()
 
     // IDEs
-    installVSC("python", "clojure")
     installIntelliJ()
 
     installKubeconform()

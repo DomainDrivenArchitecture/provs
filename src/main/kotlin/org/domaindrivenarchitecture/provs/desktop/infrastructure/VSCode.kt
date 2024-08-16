@@ -6,33 +6,33 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 
 
-fun Prov.installVSC(vararg options: String) = task {
+fun Prov.installVSCode(vararg options: String) = task {
     val clojureExtensions = setOf("betterthantomorrow.calva", "DavidAnson.vscode-markdownlint")
     val pythonExtensions = setOf("ms-python.python")
 
-    prerequisitesVSCinstall()
+    installVSCodePrerequisites()
 
     installVSCPackage()
     installVSCodiumPackage()
 
     if (options.contains("clojure")) {
-        installExtensionsCode(clojureExtensions)
-        installExtensionsCodium(clojureExtensions)
+        installVSCodeExtensions(clojureExtensions)
+        installVSCodiumExtensions(clojureExtensions)
     }
     if (options.contains("python")) {
-        installExtensionsCode(pythonExtensions)
-        installExtensionsCodium(pythonExtensions)
+        installVSCodeExtensions(pythonExtensions)
+        installVSCodiumExtensions(pythonExtensions)
     }
 }
 
 
-private fun Prov.prerequisitesVSCinstall() = task {
+private fun Prov.installVSCodePrerequisites() = task {
     aptInstall("curl gpg unzip apt-transport-https")
 }
 
 
 @Suppress("unused") // only required for installation of vscode via apt
-private fun Prov.installVscWithApt() = task {
+private fun Prov.installVSCodeWithApt() = task {
     val packageName = "code"
     if (!isPackageInstalled(packageName)) {
         // see https://code.visualstudio.com/docs/setup/linux
@@ -62,7 +62,7 @@ private fun Prov.installVSCodiumPackage() = task {
 }
 
 
-private fun Prov.installExtensionsCode(extensions: Set<String>) = optional {
+private fun Prov.installVSCodeExtensions(extensions: Set<String>) = optional {
     var res = ProvResult(true)
     for (ext in extensions) {
         res = cmd("code --install-extension $ext")
@@ -71,11 +71,11 @@ private fun Prov.installExtensionsCode(extensions: Set<String>) = optional {
     // Settings can be found at $HOME/.config/Code/User/settings.json
 }
 
-private fun Prov.installExtensionsCodium(extensions: Set<String>) = optional {
+private fun Prov.installVSCodiumExtensions(extensions: Set<String>) = optional {
     var res = ProvResult(true)
     for (ext in extensions) {
-        res = cmd("codium --install-extension $ext")
+        res = ProvResult(res.success && cmd("codium --install-extension $ext").success)
     }
     res
-    // Settings can be found at $HOME/.config/Code/User/settings.json
+    // Settings can be found at $HOME/.config/VSCodium/User/settings.json
 }
