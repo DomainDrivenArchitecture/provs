@@ -18,39 +18,10 @@ fun Prov.installDevOps() = task {
     installGraalVM()
 }
 
-fun Prov.installGraalVM():ProvResult = task{
-    val version = "21.0.2"
-    val tmpDir = "~/tmp"
-    val filename = "graalvm-community-jdk-"
-    val additionalPartFilename = "_linux-x64_bin"
-    val packedFilename = "$filename$version$additionalPartFilename.tar.gz"
-    val extractedFilenameHunch = "graalvm-community-openjdk-"
-    val installationPath = "/usr/lib/jvm/"
-
-    if ( !chk("/usr/local/bin/native-image --version") || version != cmd("/usr/local/bin/native-image --version|awk 'NR==1 {print $2}").out?.trim() || !chk("ls -d $installationPath$extractedFilenameHunch$version*")) {
-        downloadFromURL(
-            "https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-$version/$packedFilename",
-            path = tmpDir,
-            sha256sum = "b048069aaa3a99b84f5b957b162cc181a32a4330cbc35402766363c5be76ae48"
-        )
-        if (!chk("ls -d $installationPath"))
-            cmd("sudo mkdir $installationPath")
-        else {
-            ProvResult(true, out = "$installationPath just exists, mkdir not necessary.")
-        }
-        cmd("sudo tar -C $installationPath -xzf $packedFilename", tmpDir)
-        val graalInstPath = installationPath + (cmd("ls /usr/lib/jvm/|grep -e graalvm-community-openjdk-$version").out?.replace("\n", ""))
-        cmd("sudo ln -s $graalInstPath/lib/svm/bin/native-image /usr/local/bin/native-image")
-        cmd("/usr/local/bin/native-image --version")
-    } else {
-        ProvResult(true, out = "GraalVM $version already installed")
-    }
-}
-
 fun Prov.installYq(
     version: String = "4.13.2",
     sha256sum: String = "d7c89543d1437bf80fee6237eadc608d1b121c21a7cbbe79057d5086d74f8d79"
-): ProvResult = task {
+) = task {
     val path = "/usr/bin/"
     val filename = "yq"
     if (!checkFile(path + filename)) {
@@ -67,7 +38,7 @@ fun Prov.installYq(
     }
 }
 
-fun Prov.installKubectlAndTools(): ProvResult = task {
+fun Prov.installKubectlAndTools() = task {
 
     task("installKubectl") {
         if (!checkFile(KUBE_CONFIG_CONTEXT_SCRIPT)) {
@@ -105,7 +76,7 @@ fun Prov.installKubeconform() = task {
     }
 }
 
-fun Prov.installKubectl(): ProvResult = task {
+fun Prov.installKubectl() = task {
 
     // see https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
     val kubectlVersion = "1.27.4"
@@ -126,13 +97,13 @@ fun Prov.installKubectl(): ProvResult = task {
     cmd("sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl", dir = tmpDir)
 }
 
-fun Prov.configureKubectlBashCompletion(): ProvResult = task {
+fun Prov.configureKubectlBashCompletion() = task {
     cmd("kubectl completion bash >> /etc/bash_completion.d/kubernetes", sudo = true)
     createDir(".bashrc.d")
     createFileFromResource(KUBE_CONFIG_CONTEXT_SCRIPT, "kubectl.sh", RESOURCE_PATH)
 }
 
-fun Prov.installDevopsScripts() {
+fun Prov.installDevopsScripts() = task {
 
     task("install ssh helper") {
         createFileFromResource(
@@ -174,7 +145,7 @@ fun Prov.installDevopsScripts() {
     }
 }
 
-fun Prov.installTerraform(): ProvResult = task {
+fun Prov.installTerraform() = task {
     val dir = "/usr/lib/tfenv/"
 
     if (!checkDir(dir)) {

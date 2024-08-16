@@ -80,8 +80,8 @@ open class Prov protected constructor(
     }
 
     /**
-     * A task is the base execution unit in provs. In the results overview it is represented by one line resp. result (of either success or failure).
-     * Returns success if no sub-tasks are called or if all subtasks finish with success.
+     * A task is the fundamental execution unit. In the results overview it is represented by one line with a success or failure result.
+     * Returns success if all sub-tasks finished with success or if no sub-tasks are called at all.
      */
     fun task(name: String? = null, taskLambda: Prov.() -> Unit): ProvResult {
         printDeprecationWarningIfLevel0("task")
@@ -89,8 +89,10 @@ open class Prov protected constructor(
     }
 
     /**
-     * Same as task but the provided lambda is explicitly required to provide a ProvResult to be returned.
-     * The returned result is included in the evaluation.
+     * Same as task above but the lambda parameter must have a ProvResult as return type.
+     * The returned ProvResult is included in the success resp. failure evaluation,
+     * i.e. if the returned ProvResult from the lambda fails, the returned ProvResult from
+     * taskWithResult also fails, else success depends on potentially called sub-tasks.
      */
     fun taskWithResult(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
         printDeprecationWarningIfLevel0("taskWithResult")
@@ -98,27 +100,27 @@ open class Prov protected constructor(
     }
 
     /**
-     * defines a task, which returns the returned result, the results of sub-tasks are not considered
+     * defines a task, which returns the returned result from the lambda, the results of sub-tasks are not considered
      */
-    fun requireLast(name: String? = null, a: Prov.() -> ProvResult): ProvResult {
+    fun requireLast(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
         printDeprecationWarningIfLevel0("requireLast")
-        return evaluate(ResultMode.LAST, name) { a() }
+        return evaluate(ResultMode.LAST, name) { taskLambda() }
     }
 
     /**
-     * defines a task, which always returns success
+     * Defines a task, which always returns success.
      */
-    fun optional(name: String? = null, a: Prov.() -> ProvResult): ProvResult {
+    fun optional(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
         printDeprecationWarningIfLevel0("optional")
-        return evaluate(ResultMode.OPTIONAL, name) { a() }
+        return evaluate(ResultMode.OPTIONAL, name) { taskLambda() }
     }
 
     /**
-     * defines a task, which exits the overall execution on failure
+     * Defines a task, which exits the overall execution on failure result of the taskLambda.
      */
-    fun exitOnFailure(a: Prov.() -> ProvResult): ProvResult {
+    fun exitOnFailure(taskLambda: Prov.() -> ProvResult): ProvResult {
         printDeprecationWarningIfLevel0("exitOnFailure")
-        return evaluate(ResultMode.FAILEXIT) { a() }
+        return evaluate(ResultMode.FAILEXIT) { taskLambda() }
     }
 
     /**

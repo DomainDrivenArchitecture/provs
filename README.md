@@ -6,7 +6,10 @@
 ## Purpose
 
 provs provides cli-based tools for 
-* provisioning a desktop (various kinds) 
+* provisioning desktop software for different desktop types:
+  * basic
+  * office
+  * IDE
 * provisioning a k3s server
 * performing system checks
 

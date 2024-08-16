@@ -59,17 +59,4 @@ internal class DevOpsKtTest {
         assertTrue(res.success)
         assertTrue(prov.checkFile("/usr/local/bin/kubeconform"))
     }
-
-    @ContainerTest
-    fun installGraalVM() {
-        // given
-        val prov = defaultTestContainer()
-
-        // when
-        val res = prov.installGraalVM()
-
-        // then
-        assertTrue(res.success)
-        assertTrue(prov.checkFile("/usr/local/bin/native-image"))
-    }
 }
