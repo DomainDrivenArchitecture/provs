@@ -14,7 +14,10 @@ class GraalVMKtTest {
         val prov = defaultTestContainer()
 
         // when
-        val res = prov.installGraalVM()
+        val res = prov.task {
+            installGraalVM()
+            installGraalVM()   // test repeatability
+        }
 
         // then
         assertTrue(res.success)
