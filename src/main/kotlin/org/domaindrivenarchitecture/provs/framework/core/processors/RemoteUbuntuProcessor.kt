@@ -93,9 +93,9 @@ class RemoteProcessor(val host: InetAddress, val user: String, val password: Sec
         var session: Session? = null
 
         try {
-            session = ssh.startSession()
+            session = ssh.startSession() ?: throw IllegalStateException("ERROR: Could not start ssh session.")
 
-            val cmd: Command = session!!.exec(cmdString)
+            val cmd: Command = session.exec(cmdString)
             val out = BufferedReader(InputStreamReader(cmd.inputStream)).use { it.readText() }
             val err = BufferedReader(InputStreamReader(cmd.errorStream)).use { it.readText() }
             cmd.join(100, TimeUnit.SECONDS)
