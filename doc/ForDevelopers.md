@@ -46,15 +46,32 @@ fun Prov.myCustomTask() = task("myCustomTask") { /* ... code and subtasks come h
 fun Prov.myCustomTask() { task { /* ... code and subtasks come here ... */ } }
 ```
 
-Btw, the following lines are wrong and will not work as expected, as they result in too much lamda nesting:
-```
+Btw, the following lines and WILL NOT work as expected. 
+Due to too much lamda nesting, the code within the task is NOT executed:
+
+```kotlin
 fun Prov.myCustomTask() = { task { /* ... code and subtasks come here ... */ } }
 fun Prov.myCustomTask() {{ task { /* ... code and subtasks come here ... */ } }}
 ```
-### TaskWithResult
 
-In case you want explicitly to include the return value (of type `ProvResult`) of a task to be added to the evaluation, 
-you need to use `taskWithResult` instead of `task` and return the intended value, e.g. like 
+### Add custom results
+
+If you want to add a result explicitly, you can use method `addResultToEval`.
+This maxy be used e.g. to add explicitly an error line, like in: 
+
+```kotlin
+fun Prov.myCustomTask() = task {
+    /* some other code ... */
+    addResultToEval(ProvResult(false, err = "my error msg"))
+    /* some other code ... */
+}
+```
+or alternatively you can use `taskWithResult`.
+
+#### TaskWithResult
+
+In case you want to include the return value (of type `ProvResult`) of a task to be added to the evaluation, 
+you can use `taskWithResult` instead of `task` and return the value, e.g. like 
 
 ```kotlin
 fun Prov.myEchoTask() = taskWithResult { 
@@ -79,7 +96,7 @@ fun Prov.myEchoTask() = taskWithResult {
 
 ### Task output
 
-If the correctly defined task `myEchoTask` is run e.g. with `local().myEchoTask()`, it will produce output like
+If a task is run e.g. with `local().myEchoTask()`, it will produce output like
 ```
 >  Success -- myEchoTask 
 --->  Success -- cmd [/bin/bash, -c, echo hello world!]
