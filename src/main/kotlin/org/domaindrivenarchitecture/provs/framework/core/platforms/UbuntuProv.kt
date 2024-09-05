@@ -7,10 +7,10 @@ import org.domaindrivenarchitecture.provs.framework.core.processors.Processor
 const val SHELL = "/bin/bash"
 
 
-class UbuntuProv internal constructor(
+open class UbuntuProv(
     processor: Processor = LocalProcessor(),
     name: String? = null,
-    progressType: ProgressType
+    progressType: ProgressType = ProgressType.BASIC
 ) : Prov(processor, name, progressType) {
 
     override fun cmd(cmd: String, dir: String?, sudo: Boolean): ProvResult = taskWithResult {
