@@ -13,7 +13,7 @@ abstract class SecretSource(protected val input: String) {
 
 
 @Serializable
-enum class SecretSourceType() {
+enum class SecretSourceType {
 
     PLAIN, FILE, PROMPT, PASS, GOPASS;
 

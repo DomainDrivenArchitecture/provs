@@ -201,7 +201,7 @@ fun Prov.fileContentLargeFile(file: String, sudo: Boolean = false, chunkSize: In
         // check first chunk
         if (resultString == null) {
             if (!chunkResult.success) {
-                return resultString
+                return null
             } else {
                 resultString = ""
             }

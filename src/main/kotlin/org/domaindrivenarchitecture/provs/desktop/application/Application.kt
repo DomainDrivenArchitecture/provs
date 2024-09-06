@@ -38,8 +38,8 @@ fun main(args: Array<String>) {
             null
         } catch (e: FileNotFoundException) {
             println(
-                "Error: File\u001b[31m ${configFileName} \u001b[0m was not found.\n" +
-                        "Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m ${configFileName} \u001B[0m " +
+                "Error: File\u001b[31m $configFileName \u001b[0m was not found.\n" +
+                        "Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m $configFileName \u001B[0m " +
                         "and change the content according to your needs."
             )
             null

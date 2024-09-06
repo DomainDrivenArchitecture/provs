@@ -6,7 +6,7 @@ import org.domaindrivenarchitecture.provs.framework.core.docker.dockerimages.Doc
 import org.domaindrivenarchitecture.provs.framework.core.docker.platforms.*
 import org.domaindrivenarchitecture.provs.framework.core.platforms.UbuntuProv
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
-import org.domaindrivenarchitecture.provs.framework.core.docker.platforms.*
+
 
 private const val DOCKER_NOT_SUPPORTED = "docker not yet supported for "
 
@@ -17,7 +17,7 @@ fun Prov.dockerProvideImage(image: DockerImage, skipIfExisting: Boolean = true, 
     if (this is UbuntuProv) {
         return this.dockerProvideImagePlatform(image, skipIfExisting, sudo)
     } else {
-        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + this.javaClass)
     }
 }
 
@@ -28,7 +28,7 @@ fun Prov.dockerImageExists(imageName: String, sudo: Boolean = true) : Boolean {
     if (this is UbuntuProv) {
         return this.dockerImageExistsPlatform(imageName, sudo)
     } else {
-        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + this.javaClass)
     }
 }
 
@@ -50,7 +50,7 @@ fun Prov.provideContainer(
     if (this is UbuntuProv) {
         return this.provideContainerPlatform(containerName, imageName, startMode, sudo, options, command)
     } else {
-        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + this.javaClass)
     }
 }
 
@@ -59,7 +59,7 @@ fun Prov.containerRuns(containerName: String, sudo: Boolean = true) : Boolean {
     if (this is UbuntuProv) {
         return this.containerRunsPlatform(containerName, sudo)
     } else {
-        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + this.javaClass)
     }
 }
 
@@ -72,7 +72,7 @@ fun Prov.runContainer(
     if (this is UbuntuProv) {
         return this.runContainerPlatform(containerName, imageName, sudo)
     } else {
-        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + this.javaClass)
     }
 }
 
@@ -84,16 +84,17 @@ fun Prov.exitAndRmContainer(
     if (this is UbuntuProv) {
         return this.exitAndRmContainerPlatform(containerName, sudo)
     } else {
-        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + this.javaClass)
     }
 }
 
 
+@Suppress("unused")
 fun Prov.containerExec(containerName: String, cmd: String, sudo: Boolean = true): ProvResult {
     if (this is UbuntuProv) {
         return this.containerExecPlatform(containerName, cmd, sudo)
     } else {
-        throw RuntimeException(DOCKER_NOT_SUPPORTED + (this as UbuntuProv).javaClass)
+        throw RuntimeException(DOCKER_NOT_SUPPORTED + this.javaClass)
     }
 }
 

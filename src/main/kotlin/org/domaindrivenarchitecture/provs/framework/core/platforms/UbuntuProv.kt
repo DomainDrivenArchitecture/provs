@@ -30,13 +30,15 @@ open class UbuntuProv(
     }
 
     private fun buildCommand(vararg args: String): String {
-        return if (args.size == 1)
+        return if (args.size == 1) {
             args[0].escapeAndEncloseByDoubleQuoteForShell()
-        else
-            if (args.size == 3 && SHELL.equals(args[0]) && "-c".equals(args[1]))
+        } else {
+            if (args.size == 3 && SHELL == args[0] && "-c" == args[1]) {
                 SHELL + " -c " + args[2].escapeAndEncloseByDoubleQuoteForShell()
-            else
+            } else {
                 args.joinToString(separator = " ")
+            }
+        }
     }
 }
 

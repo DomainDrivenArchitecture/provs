@@ -1,11 +1,7 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.remote
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createSecretFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Node
 import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3s
@@ -13,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.lang.Thread.sleep
+
 
 class K3sKtTest {
 
