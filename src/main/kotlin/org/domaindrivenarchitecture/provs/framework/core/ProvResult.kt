@@ -8,6 +8,8 @@ data class ProvResult(val success: Boolean,
                         val exception: Exception? = null,
                         val exit: String? = null) {
 
+    val outTrimmed: String? = out?.trim()
+
     constructor(returnCode : Int) : this(returnCode == 0)
 
     override fun toString(): String {

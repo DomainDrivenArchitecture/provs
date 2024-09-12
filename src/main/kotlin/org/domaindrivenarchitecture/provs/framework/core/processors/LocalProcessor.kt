@@ -5,13 +5,14 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
+import java.nio.file.Paths
 
 
 private fun getOsName(): String {
     return System.getProperty("os.name")
 }
 
-open class LocalProcessor : Processor {
+open class LocalProcessor(val useHomeDirAsWorkingDir: Boolean = true) : Processor {
 
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")
@@ -26,7 +27,12 @@ open class LocalProcessor : Processor {
 
     private fun workingDir() : String
     {
-        return System.getProperty("user.home") ?: File.separator
+        return if (useHomeDirAsWorkingDir) {
+            System.getProperty("user.home") ?: File.separator
+        } else {
+            // folder in which program was started
+            Paths.get("").toAbsolutePath().toString()
+        }
     }
 
     override fun exec(vararg args: String): ProcessResult {

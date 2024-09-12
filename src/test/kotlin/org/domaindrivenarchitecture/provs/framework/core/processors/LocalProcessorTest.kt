@@ -6,6 +6,7 @@ import org.domaindrivenarchitecture.provs.framework.core.escapeProcentForPrintf
 import org.domaindrivenarchitecture.provs.framework.core.escapeSingleQuoteForShell
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import java.nio.file.Paths
 
 
 internal class LocalProcessorTest {
@@ -22,6 +23,18 @@ internal class LocalProcessorTest {
         // then
         assertTrue(res.success)
         assertTrue(res.out == text)
+    }
+
+    @Test
+    fun cmd_in_folder_where_program_was_started() {
+        // given
+        val prov = Prov.newInstance(LocalProcessor(false))
+
+        // when
+        val pwd = prov.cmd("pwd").outTrimmed
+
+        // then
+        assertEquals(Paths.get("").toAbsolutePath().toString(), pwd)
     }
 
 
@@ -59,7 +72,7 @@ internal class LocalProcessorTest {
 
 
     @Test
-    fun cmd_forUnkownCommand_resultWithError() {
+    fun cmd_forUnknownCommand_resultWithError() {
         // given
         val prov = Prov.newInstance()
 
