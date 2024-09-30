@@ -80,13 +80,13 @@ dependencies {
     api('ch.qos.logback:logback-core:1.4.14')
 
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version_no")
-    implementation("com.hierynomus:sshj:0.32.0")
+    implementation("com.hierynomus:sshj:0.38.0")
 
-    implementation("aws.sdk.kotlin:s3:0.17.1-beta")
+    implementation("aws.sdk.kotlin:s3:1.2.0")
 
-    testFixturesApi("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testFixturesApi('io.mockk:mockk:1.12.3')
 
+    testFixturesApi("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
