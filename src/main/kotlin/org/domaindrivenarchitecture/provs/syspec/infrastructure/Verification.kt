@@ -1,10 +1,5 @@
 package org.domaindrivenarchitecture.provs.syspec.infrastructure
 
-import aws.sdk.kotlin.services.s3.S3Client
-import aws.sdk.kotlin.services.s3.model.ListObjectsRequest
-import aws.sdk.kotlin.services.s3.model.ListObjectsResponse
-import aws.smithy.kotlin.runtime.time.Instant
-import kotlinx.coroutines.runBlocking
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkDir
@@ -13,7 +8,6 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackag
 import org.domaindrivenarchitecture.provs.syspec.domain.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -29,7 +23,6 @@ fun Prov.verifySpecConfig(conf: SyspecConfig) = task {
     conf.netcat?.let { task("NetcatSpecs") { for (spec in conf.netcat) verify(spec) } }
     conf.socket?.let { task("SocketSpecs") { for (spec in conf.socket) verify(spec) } }
     conf.certificate?.let { task("CertificateFileSpecs") { for (spec in conf.certificate) verify(spec) } }
-    conf.s3?.let { task("CertificateFileSpecs") { for (spec in conf.s3) verify(spec) } }
 }
 
 // -------------------------------  verification functions for individual specs  --------------------------------
@@ -109,27 +102,6 @@ fun Prov.verify(cert: CertificateFileSpec) {
         verify(false, "Could not retrieve certificate from [${cert.name}] due to error: ${res.err}")
     } else {
         verifyCertExpiration(res.out, cert.name, cert.expirationDays)
-    }
-}
-
-fun Prov.verify(s3ObjectSpec: S3ObjectSpec) {
-    val (bucket, prefix, maxAge) = s3ObjectSpec
-    val expectedAge = Duration.ofHours(s3ObjectSpec.age)
-
-    val latestObject = getS3Objects(bucket, prefix).contents?.maxByOrNull { it.lastModified ?: Instant.fromEpochSeconds(0) }
-
-    if (latestObject == null) {
-        verify(false, "Could not retrieve an s3 object with prefix $prefix")
-    } else {
-        // convert to java.time.Instant for easier comparison
-        val lastModified = java.time.Instant.ofEpochSecond(latestObject.lastModified?.epochSeconds ?: 0)
-        val actualAge = Duration.between(lastModified, java.time.Instant.now())
-
-        verify(
-            actualAge <= expectedAge,
-            "Age is ${actualAge.toHours()} h (expected: <= $maxAge) for latest file with prefix \"$prefix\" " +
-                    "---  modified date: $lastModified - size: ${(latestObject.size)} B - key: ${latestObject.key}"
-        )
     }
 }
 
@@ -213,16 +185,5 @@ private fun Prov.verifyCertExpiration(enddate: String?, certName: String, expira
             diffInDays > expirationDays,
             "Certificate of [$certName] expires on [${enddateCleaned}] in $diffInDays days (expected > $expirationDays days)",
         )
-    }
-}
-
-private fun getS3Objects(bucketName: String, prefixIn: String): ListObjectsResponse {
-
-    val request = ListObjectsRequest { bucket = bucketName; prefix = prefixIn }
-
-    return runBlocking {
-        S3Client { region = "eu-central-1" }.use { s3 ->
-            s3.listObjects(request)
-        }
     }
 }
