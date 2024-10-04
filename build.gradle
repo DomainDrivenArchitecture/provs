@@ -82,7 +82,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version_no")
     implementation("com.hierynomus:sshj:0.38.0")
 
-    implementation("aws.sdk.kotlin:s3:1.2.0")
+    implementation("aws.sdk.kotlin:s3:1.2.54")
 
     testFixturesApi('io.mockk:mockk:1.12.3')
 
@@ -167,6 +167,22 @@ tasks.register('installlocally') {
         exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-server.jar") }
         exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-desktop.jar") }
         exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-syspec.jar") }
+    }
+}
+
+
+// create binaries and install into /usr/local/bin
+// PREREQUISITE: graalvm / native-image must be installed - see https://www.graalvm.org/
+tasks.register('installbinaires') {
+    dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
+    doLast {
+        println "Building binaries ..."
+        exec { commandLine("sh", "-c", "cd build/libs/ && native-image -jar provs-desktop.jar") }
+        exec { commandLine("sh", "-c", "cd build/libs/ && native-image -jar provs-server.jar") }
+        exec { commandLine("sh", "-c", "cd build/libs/ && native-image -jar provs-syspec.jar") }
+        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-desktop /usr/local/bin/") }
+        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-server /usr/local/bin/") }
+        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-syspec /usr/local/bin/") }
     }
 }
 
