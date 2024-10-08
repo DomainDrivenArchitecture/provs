@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.framework.core
 
 import com.charleskorn.kaml.Yaml
 import com.charleskorn.kaml.YamlConfiguration
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
 import java.io.BufferedReader
 import java.io.File
@@ -18,15 +17,13 @@ fun writeToFile(fileName: String, text: String) {
 }
 
 
-@OptIn(InternalSerializationApi::class)
 inline fun <reified T : Any> String.yamlToType() = Yaml(configuration = YamlConfiguration(strictMode = false)).decodeFromString(
-    T::class.serializer(),
+    serializer<T>(),
     this
 )
 
 
-@OptIn(InternalSerializationApi::class)
 inline fun <reified T : Any> T.toYaml() = Yaml(configuration = YamlConfiguration(strictMode = false, encodeDefaults = false)).encodeToString(
-    T::class.serializer(),
+    serializer<T>(),
     this
 )

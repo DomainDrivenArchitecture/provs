@@ -169,9 +169,9 @@ tasks.register('installbinaires') {
     dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
     doLast {
         println "Building binaries ..."
-        exec { commandLine("sh", "-c", "cd build/libs/ && native-image -jar provs-desktop.jar") }
-        exec { commandLine("sh", "-c", "cd build/libs/ && native-image -jar provs-server.jar") }
-        exec { commandLine("sh", "-c", "cd build/libs/ && native-image -jar provs-syspec.jar") }
+        exec { commandLine("sh", "-c", "cd build/libs/ && native-image  --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel  -jar provs-desktop.jar") }
+        exec { commandLine("sh", "-c", "cd build/libs/ && native-image  --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel  -jar provs-server.jar") }
+        exec { commandLine("sh", "-c", "cd build/libs/ && native-image  --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel  -jar provs-syspec.jar") }
         exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-desktop /usr/local/bin/") }
         exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-server /usr/local/bin/") }
         exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-syspec /usr/local/bin/") }
