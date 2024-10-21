@@ -184,6 +184,7 @@ internal class FilesystemKtTest {
         val res7 = prov.createDirs("test/testdir")
         val res8 = prov.checkDir("testdir", "~/test")
         prov.deleteDir("testdir", "~/test/")
+        val res9 = prov.deleteDir("notexistingdirdir", "~/")
 
         // then
         assertFalse(res1)
@@ -194,6 +195,7 @@ internal class FilesystemKtTest {
         assertFalse(res6)
         assertTrue(res7.success)
         assertTrue(res8)
+        assertTrue(res9.success)
     }
 
 

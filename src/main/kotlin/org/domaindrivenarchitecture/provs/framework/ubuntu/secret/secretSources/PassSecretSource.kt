@@ -12,10 +12,10 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSource
 class PassSecretSource(path: String) : SecretSource(path) {
     override fun secret(): Secret {
         val p = Prov.newInstance(name = "PassSecretSource", progressType = ProgressType.NONE)
-        return p.getSecret("pass " + input) ?: throw Exception("Failed to get secret.")
+        return p.getSecret("pass " + parameter) ?: throw Exception("Failed to get secret.")
     }
     override fun secretNullable(): Secret? {
         val p = Prov.newInstance(name = "PassSecretSource", progressType = ProgressType.NONE)
-        return p.getSecret("pass " + input)
+        return p.getSecret("pass " + parameter)
     }
 }

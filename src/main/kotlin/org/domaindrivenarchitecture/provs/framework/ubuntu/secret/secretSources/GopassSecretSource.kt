@@ -11,10 +11,10 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSource
  */
 class GopassSecretSource(path: String) : SecretSource(path) {
     override fun secret(): Secret {
-        return secretNullable() ?: throw Exception("Failed to get \"$input\" secret from gopass.")
+        return secretNullable() ?: throw Exception("Failed to get \"$parameter\" secret from gopass.")
     }
     override fun secretNullable(): Secret? {
-        val p = Prov.newInstance(name = "GopassSecretSource for $input", progressType = ProgressType.NONE)
-        return p.getSecret("gopass show -f $input", true)
+        val p = Prov.newInstance(name = "GopassSecretSource for $parameter", progressType = ProgressType.NONE)
+        return p.getSecret("gopass show -f $parameter", true)
     }
 }

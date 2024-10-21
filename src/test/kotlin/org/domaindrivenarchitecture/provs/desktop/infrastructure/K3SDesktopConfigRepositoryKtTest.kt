@@ -1,9 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import com.charleskorn.kaml.InvalidPropertyValueException
-import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceType
-import org.domaindrivenarchitecture.provs.server.infrastructure.getK3sConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -34,7 +32,7 @@ internal class K3SDesktopConfigRepositoryKtTest {
         val exception = assertThrows<InvalidPropertyValueException> {
             getConfig("src/test/resources/invalid-desktop-config.yaml")
         }
-        assertEquals("Value for 'sourceType' is invalid: Value 'xxx' is not a valid option, permitted choices are: FILE, GOPASS, PASS, PLAIN, PROMPT", exception.message)
+        assertEquals("Value for 'sourceType' is invalid: Value 'xxx' is not a valid option, permitted choices are: ENV, FILE, GOPASS, PASS, PLAIN, PROMPT", exception.message)
     }
 
     @Test

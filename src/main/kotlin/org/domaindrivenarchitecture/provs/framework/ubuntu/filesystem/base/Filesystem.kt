@@ -329,11 +329,15 @@ fun Prov.deleteDir(dir: String, path: String, sudo: Boolean = false): ProvResult
     if ("" == path) {
         throw RuntimeException("In deleteDir: path must not be empty.")
     }
-    val cmd = "cd $path && rmdir $dir"
-    return if (!sudo) {
-        cmd(cmd)
+    return if (checkDir(dir, path, sudo)) {
+        val cmd = "cd $path && rmdir $dir"
+        if (!sudo) {
+            cmd(cmd)
+        } else {
+            cmd(cmd.sudoizeCommand())
+        }
     } else {
-        cmd(cmd.sudoizeCommand())
+        ProvResult(true, out = "Dir to delete did not exist: $dir")
     }
 }
 

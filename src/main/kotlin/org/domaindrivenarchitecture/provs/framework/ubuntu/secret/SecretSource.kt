@@ -6,7 +6,7 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.
 
 
 @Serializable
-abstract class SecretSource(protected val input: String) {
+abstract class SecretSource(protected val parameter: String) {
     abstract fun secret() : Secret
     abstract fun secretNullable() : Secret?
 }
@@ -15,15 +15,16 @@ abstract class SecretSource(protected val input: String) {
 @Serializable
 enum class SecretSourceType {
 
-    PLAIN, FILE, PROMPT, PASS, GOPASS;
+    PLAIN, FILE, PROMPT, PASS, GOPASS, ENV;
 
-    fun secret(input: String) : Secret {
+    fun secret(parameter: String) : Secret {
         return when (this) {
-            PLAIN -> PlainSecretSource(input).secret()
-            FILE -> FileSecretSource(input).secret()
+            PLAIN -> PlainSecretSource(parameter).secret()
+            FILE -> FileSecretSource(parameter).secret()
             PROMPT -> PromptSecretSource().secret()
-            PASS -> PassSecretSource(input).secret()
-            GOPASS -> GopassSecretSource(input).secret()
+            PASS -> PassSecretSource(parameter).secret()
+            GOPASS -> GopassSecretSource(parameter).secret()
+            ENV -> EnvSecretSource(parameter).secret()
         }
     }
 }

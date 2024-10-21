@@ -13,11 +13,11 @@ class FileSecretSource(fqFileName: String) : SecretSource(fqFileName) {
 
     override fun secret(): Secret {
         val p = Prov.newInstance(name = "FileSecretSource", progressType = ProgressType.NONE)
-        return p.getSecret("cat " + input) ?: throw Exception("Failed to get secret.")
+        return p.getSecret("cat " + parameter) ?: throw Exception("Failed to get secret.")
     }
 
     override fun secretNullable(): Secret? {
         val p = Prov.newInstance(name = "FileSecretSource", progressType = ProgressType.NONE)
-        return p.getSecret("cat " + input)
+        return p.getSecret("cat " + parameter)
     }
 }

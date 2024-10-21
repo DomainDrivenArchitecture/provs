@@ -3,7 +3,6 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
-import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
@@ -47,7 +46,7 @@ internal class DevOpsKtTest {
         assertTrue(res.success)
     }
 
-    @ContainerTest
+    @ExtensiveContainerTest
     fun installKubeconform() {
         // given
         val prov = defaultTestContainer()

@@ -47,7 +47,7 @@ class PasswordPanel : JPanel(FlowLayout()) {
 class PromptSecretSource(text: String = "Secret/Password") : SecretSource(text) {
 
     override fun secret(): Secret {
-        val password = PasswordPanel.requestPassword(input)
+        val password = PasswordPanel.requestPassword(parameter)
         if (password == null) {
             throw IllegalArgumentException("Failed to retrieve secret from prompting.")
         } else {
@@ -56,7 +56,7 @@ class PromptSecretSource(text: String = "Secret/Password") : SecretSource(text) 
     }
 
     override fun secretNullable(): Secret? {
-        val password = PasswordPanel.requestPassword(input)
+        val password = PasswordPanel.requestPassword(parameter)
 
         return if(password == null) {
             null
