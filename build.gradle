@@ -163,7 +163,7 @@ tasks.register('installlocally') {
 
 // create binaries and install into /usr/local/bin
 // PREREQUISITE: graalvm / native-image must be installed - see https://www.graalvm.org/
-tasks.register('installbinaires') {
+tasks.register('binariesInstall') {
     dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
     doLast {
         println "Building binaries ..."
