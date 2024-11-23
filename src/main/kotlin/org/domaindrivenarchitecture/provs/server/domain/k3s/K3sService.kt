@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 import org.domaindrivenarchitecture.provs.configuration.infrastructure.DefaultConfigFileRepository
 import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.ubuntu.cron.infrastructure.scheduleMonthlyReboot
 import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.HetznerCSIConfigResolved
 import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.provisionHetznerCSI
 import org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent.GrafanaAgentConfigResolved
@@ -68,6 +69,10 @@ fun Prov.provisionK3s(
 
     if (!k3sConfig.reprovision) {
         provisionServerCliConvenience()
+    }
+
+    if (k3sConfig.monthlyReboot) {
+        scheduleMonthlyReboot()
     }
 
     installK9s()
