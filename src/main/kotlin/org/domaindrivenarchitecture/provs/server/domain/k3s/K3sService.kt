@@ -26,6 +26,7 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
     } else {
         provisionGrafana(cli.onlyModules, grafanaConfigResolved)
         provisionHetznerCSI(cli.onlyModules, hcloudConfigResolved)
+        scheduleMonthlyReboot(cli.onlyModules)
     }
 }
 
@@ -105,4 +106,12 @@ private fun Prov.provisionHetznerCSI(
         provisionHetznerCSI(hetznerCSIConfigResolved)
     }
 
+}
+
+fun Prov.scheduleMonthlyReboot(
+    onlyModules: List<String>?,
+) = task {
+    if (onlyModules != null && onlyModules.contains(ServerOnlyModule.MONTHLY_REBOOT.name.lowercase())) {
+        scheduleMonthlyReboot()
+    }
 }
