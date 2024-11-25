@@ -100,7 +100,7 @@ private fun Prov.provisionHetznerCSI(
 
     if (onlyModules != null && onlyModules.contains(ServerOnlyModule.HETZNER_CSI.name.lowercase())) {
         if (hetznerCSIConfigResolved == null) {
-            println("ERROR: Could not find grafana config.")
+            println("ERROR: Could not find hetznerCSI config.")
             exitProcess(7)
         }
         provisionHetznerCSI(hetznerCSIConfigResolved)
