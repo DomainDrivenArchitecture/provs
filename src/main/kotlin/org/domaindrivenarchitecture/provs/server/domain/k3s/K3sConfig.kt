@@ -11,7 +11,7 @@ data class K3sConfig(
     val certmanager: Certmanager? = null,
     val echo: Echo? = null,
     val reprovision: Reprovision = false,
-    val monthlyReboot: Boolean = false,
+    val monthlyReboot: Boolean = true,
 ) {
     fun isDualStack(): Boolean {
       return node.ipv6 != null && loopback.ipv6 != null
