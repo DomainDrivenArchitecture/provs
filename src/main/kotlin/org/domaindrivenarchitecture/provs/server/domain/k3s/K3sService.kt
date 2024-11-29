@@ -2,12 +2,23 @@ package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 import org.domaindrivenarchitecture.provs.configuration.infrastructure.DefaultConfigFileRepository
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.cron.infrastructure.scheduleMonthlyReboot
+import org.domaindrivenarchitecture.provs.framework.ubuntu.scheduledjobs.domain.scheduleMonthlyReboot
 import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.HetznerCSIConfigResolved
 import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.provisionHetznerCSI
 import org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent.GrafanaAgentConfigResolved
 import org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent.provisionGrafanaAgent
-import org.domaindrivenarchitecture.provs.server.infrastructure.*
+import org.domaindrivenarchitecture.provs.server.infrastructure.DefaultApplicationFileRepository
+import org.domaindrivenarchitecture.provs.server.infrastructure.deprovisionK3sInfra
+import org.domaindrivenarchitecture.provs.server.infrastructure.findHetznerCSIConfig
+import org.domaindrivenarchitecture.provs.server.infrastructure.findK8sGrafanaConfig
+import org.domaindrivenarchitecture.provs.server.infrastructure.getK3sConfig
+import org.domaindrivenarchitecture.provs.server.infrastructure.installK3s
+import org.domaindrivenarchitecture.provs.server.infrastructure.installK9s
+import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sApplication
+import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sCertManager
+import org.domaindrivenarchitecture.provs.server.infrastructure.provisionK3sEcho
+import org.domaindrivenarchitecture.provs.server.infrastructure.provisionNetwork
+import org.domaindrivenarchitecture.provs.server.infrastructure.provisionServerCliConvenience
 import kotlin.system.exitProcess
 
 
@@ -26,7 +37,7 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
     } else {
         provisionGrafana(cli.onlyModules, grafanaConfigResolved)
         provisionHetznerCSI(cli.onlyModules, hcloudConfigResolved)
-        scheduleMonthlyReboot(cli.onlyModules)
+        scheduleMonthlyRebootOnly(cli.onlyModules)
     }
 }
 
@@ -108,7 +119,7 @@ private fun Prov.provisionHetznerCSI(
 
 }
 
-fun Prov.scheduleMonthlyReboot(
+fun Prov.scheduleMonthlyRebootOnly(
     onlyModules: List<String>?,
 ) = task {
     if (onlyModules != null && onlyModules.contains(ServerOnlyModule.MONTHLY_REBOOT.name.lowercase())) {

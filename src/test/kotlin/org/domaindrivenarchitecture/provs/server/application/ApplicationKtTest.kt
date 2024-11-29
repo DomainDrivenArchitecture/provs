@@ -6,7 +6,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
 import org.domaindrivenarchitecture.provs.framework.core.remote
-import org.domaindrivenarchitecture.provs.framework.ubuntu.cron.infrastructure.scheduleMonthlyReboot
+import org.domaindrivenarchitecture.provs.framework.ubuntu.scheduledjobs.domain.scheduleMonthlyReboot
 import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3s
 import org.junit.jupiter.api.Test
 
