@@ -6,13 +6,13 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileC
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
 
 class CronJobsKtTest {
 
-    @Test
+    @ContainerTest
     fun createCronJob_creates_cron_file() {
         // given
         val prov = defaultTestContainer()
@@ -31,7 +31,7 @@ class CronJobsKtTest {
     }
 
 
-    @Test
+    @ContainerTest
 //    @Disabled // only for manual execution and manual check for the created files
     // Test if cron-job is actually running, but needs manual checks
     fun createCronJob_which_creates_files_with_timestamp() {
