@@ -25,7 +25,7 @@ fun main(args: Array<String>) {
         exitProcess(1)
     }
 
-    val cmd = CliArgumentsParser("provs-server.jar subcommand target").parseCommand(checkedArgs)
+    val cmd = CliArgumentsParser("provs-server subcommand target").parseCommand(checkedArgs)
 
     // validate parsed arguments
     if (!cmd.isValidTarget()) {
