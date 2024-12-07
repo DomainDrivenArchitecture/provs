@@ -90,6 +90,39 @@ node:
 echo: true                 # for demo reasons only - deploys an echo app 
 ```
 
+#### Monthly reboot
+
+A monthly reboot can be deployed as only-module (i.e. without a full server deployment) by:
+
+```bash
+provs-server k3s <user>@<server> -o monthly_reboot
+# Example
+provs-server k3s root@myserver.org -o monthly_reboot
+```
+#### Hetzner CSI driver
+
+To add the hetzner csi driver and encrypted volumes to your k3s installation add the following to the config:
+
+```yaml
+hetzner:
+  hcloudApiToken:
+    source: "PLAIN"           # PLAIN, GOPASS or PROMPT
+    parameter: "mypassword"   # the api key for the hetzner cloud
+  encryptionPassphrase:
+    source: "PLAIN"           # PLAIN, GOPASS or PROMPT
+    parameter: "mypassword"   # the encryption passphrase for created volumes
+```
+
+or as only-module (i.e. without a full server deployment) by:
+
+```bash
+provs-server k3s <user>@<server> -o hetzner_csi
+# Example
+provs-server k3s root@myserver.org -o hetzner_csi
+```
+
+#### Grafana agent
+
 To add a grafana agent to your k3s installation add the following to the config:
   
 ```yaml
@@ -105,18 +138,6 @@ To provision the grafana agent only to an existing k8s system, ensure that the c
 
 ```bash
 provs-server.jar k3s myuser@myhost.com -o grafana
-```
-
-To add the hetzner csi driver and encrypted volumes to your k3s installation add the following to the config:
-
-```yaml
-hetzner:
-  hcloudApiToken:
-    source: "PLAIN"           # PLAIN, GOPASS or PROMPT
-    parameter: "mypassword"   # the api key for the hetzner cloud
-  encryptionPassphrase:
-    source: "PLAIN"           # PLAIN, GOPASS or PROMPT
-    parameter: "mypassword"   # the encryption passphrase for created volumes
 ```
 
 To provision the grafana agent only to an existing k8s system, ensure that the config (as above) is available and execute:
