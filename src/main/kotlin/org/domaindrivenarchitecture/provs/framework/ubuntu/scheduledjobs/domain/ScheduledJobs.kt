@@ -17,7 +17,7 @@ fun Prov.scheduleMonthlyReboot() = task {
     // ensure shutdown command exists
     if (checkFile(shutdown, sudo = true)) {
         // reboot each first Tuesday in a month at 3:00
-        createCronJob("50_monthly_reboot", "0 3 1-7 * 2", "$shutdown -r now", "root")
+        createCronJob("50_monthly_reboot", "0 2 1-7 * 2", "$shutdown -r now", "root")
     } else {
         addResultToEval(ProvResult(false, err = "$shutdown not found."))
     }

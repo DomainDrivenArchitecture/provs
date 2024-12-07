@@ -29,6 +29,6 @@ class ScheduledJobsKtTest {
         val fqFilename = "/etc/cron.d/50_monthly_reboot"
         assertTrue(prov.checkFile(fqFilename), "")
         val actualFileContent = prov.fileContent(fqFilename, sudo = true)
-        assertEquals("0 3 1-7 * 2 root /sbin/shutdown -r now\n", actualFileContent)
+        assertEquals("0 2 1-7 * 2 root /sbin/shutdown -r now\n", actualFileContent)
     }
 }
