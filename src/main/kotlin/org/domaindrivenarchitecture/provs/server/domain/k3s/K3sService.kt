@@ -35,9 +35,13 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
         val applicationFile = cli.applicationFileName?.let { DefaultApplicationFileRepository(cli.applicationFileName).getFile() }
         provisionK3s(k3sConfigReprovision, grafanaConfigResolved, hcloudConfigResolved, applicationFile)
     } else {
-        provisionGrafana(cli.onlyModules, grafanaConfigResolved)
-        provisionHetznerCSI(cli.onlyModules, hcloudConfigResolved)
-        scheduleMonthlyRebootOnly(cli.onlyModules)
+        cli.onlyModules.forEach { module ->
+            when (module.uppercase()) {
+                ServerOnlyModule.MONTHLY_REBOOT.name -> scheduleMonthlyReboot()
+                ServerOnlyModule.HETZNER_CSI.name -> provisionHetznerCSI(hcloudConfigResolved)
+                ServerOnlyModule.GRAFANA.name -> provisionGrafana(grafanaConfigResolved)
+            }
+        }
     }
 }
 
@@ -91,38 +95,22 @@ fun Prov.provisionK3s(
 }
 
 private fun Prov.provisionGrafana(
-    onlyModules: List<String>?,
     grafanaConfigResolved: GrafanaAgentConfigResolved?
 ) = task {
-
-    if (onlyModules != null && onlyModules.contains(ServerOnlyModule.GRAFANA.name.lowercase())) {
-        if (grafanaConfigResolved == null) {
-            println("ERROR: Could not find grafana config.")
-            exitProcess(7)
-        }
-        provisionGrafanaAgent(grafanaConfigResolved)
+    if (grafanaConfigResolved == null) {
+        println("ERROR: Could not find grafana config.")
+        exitProcess(7)
     }
+    provisionGrafanaAgent(grafanaConfigResolved)
 }
 
 private fun Prov.provisionHetznerCSI(
-    onlyModules: List<String>?,
     hetznerCSIConfigResolved: HetznerCSIConfigResolved?
 ) = task {
-
-    if (onlyModules != null && onlyModules.contains(ServerOnlyModule.HETZNER_CSI.name.lowercase())) {
         if (hetznerCSIConfigResolved == null) {
             println("ERROR: Could not find hetznerCSI config.")
             exitProcess(7)
         }
         provisionHetznerCSI(hetznerCSIConfigResolved)
-    }
-
 }
 
-fun Prov.scheduleMonthlyRebootOnly(
-    onlyModules: List<String>?,
-) = task {
-    if (onlyModules != null && onlyModules.contains(ServerOnlyModule.MONTHLY_REBOOT.name.lowercase())) {
-        scheduleMonthlyReboot()
-    }
-}

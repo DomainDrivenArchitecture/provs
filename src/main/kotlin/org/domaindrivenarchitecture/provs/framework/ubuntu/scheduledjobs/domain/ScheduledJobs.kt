@@ -7,8 +7,8 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.check
 
 
 /**
- * Adds a cronJob for a monthly reboot of the (Linux) system.
- * ATTENTION: Use with care!!
+ * Adds a schedule for a monthly reboot of the (Linux) system.
+ * ATTENTION: Use with care!! System will be shut down, restart might not succeed in all cases.
  */
 fun Prov.scheduleMonthlyReboot() = task {
     // use controlled "shutdown" instead of direct "reboot"
