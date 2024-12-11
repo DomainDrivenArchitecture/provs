@@ -15,7 +15,7 @@ import org.domaindrivenarchitecture.provs.framework.core.cli.quit
 import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
 import org.domaindrivenarchitecture.provs.test.setRootLoggingLevel
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -116,7 +116,10 @@ internal class ApplicationKtTest {
 
         val expectedOutput =
             "Error: File\u001B[31m idontexist.yaml \u001B[0m was not found.Pls copy file \u001B[31m desktop-config-example.yaml \u001B[0m to file \u001B[31m idontexist.yaml \u001B[0m and change the content according to your needs.No suitable config found."
-        assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
+        assertTrue(
+            outContent.toString().replace("\r", "").replace("\n", "").contains(expectedOutput),
+            "$expectedOutput\nnot found in:\n$outContent"
+        )
 
         verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any()) }
 
@@ -150,7 +153,10 @@ internal class ApplicationKtTest {
 
         val expectedOutput =
             "Error: File \"src/test/resources/invalid-desktop-config.yaml\" has an invalid format and or invalid data.No suitable config found."
-        assertEquals(expectedOutput, outContent.toString().replace("\r", "").replace("\n", ""))
+        assertTrue(
+            outContent.toString().replace("\r", "").replace("\n", "").contains(expectedOutput),
+            "$expectedOutput\nnot found in:\n$outContent"
+        )
 
         verify(exactly = 0) { any<Prov>().provisionDesktop(any(), any(), any(), any(), any()) }
 

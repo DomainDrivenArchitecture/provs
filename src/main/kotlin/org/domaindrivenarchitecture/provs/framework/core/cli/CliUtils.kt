@@ -35,6 +35,20 @@ fun createProvInstance(targetCommand: TargetCliCommand): Prov {
 }
 
 
+/**
+ * Wrapper for exitProcess, which allows e.g. mocking for test purposes
+ */
+fun quit(status: Int): Nothing {
+    exitProcess(status)
+}
+
+
+fun printProvsVersion() {
+    val version = object {}.javaClass.getResource("/version.txt")?.readText()?.trim()
+    println("Provs version: $version")
+}
+
+
 internal fun createRemoteProvInstance(
     target: TargetCliCommand.RemoteTarget?,
     password: Secret? = null
@@ -51,12 +65,4 @@ internal fun createRemoteProvInstance(
 
 internal fun getPasswordToConfigureSudoWithoutPassword(): Secret {
     return PromptSecretSource("password to configure sudo without password.").secret()
-}
-
-
-/**
- * Wrapper for exitProcess, which allows e.g. mocking for test purposes
- */
-fun quit(status: Int): Nothing {
-    exitProcess(status)
 }

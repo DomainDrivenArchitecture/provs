@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.server.application
 
 import org.domaindrivenarchitecture.provs.configuration.application.ensureSudoWithoutPassword
 import org.domaindrivenarchitecture.provs.framework.core.cli.createProvInstance
+import org.domaindrivenarchitecture.provs.framework.core.cli.printProvsVersion
 import org.domaindrivenarchitecture.provs.framework.core.cli.quit
 import org.domaindrivenarchitecture.provs.server.domain.ServerType
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sCliCommand
@@ -16,6 +17,8 @@ import kotlin.system.exitProcess
  * Get help with option -h
  */
 fun main(args: Array<String>) {
+
+    printProvsVersion()
 
     val checkedArgs = if (args.isEmpty()) arrayOf("-h") else args
 

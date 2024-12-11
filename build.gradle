@@ -234,3 +234,20 @@ publishing {
         }
     }
 }
+
+
+// create version file to allow Kotlin code to print own version - see https://stackoverflow.com/questions/33020069/how-to-get-version-attribute-from-a-gradle-build-to-be-included-in-runtime-swing
+tasks.register('createVersion') {
+    dependsOn processResources
+    doLast {
+        def version = project.version.toString() + " (" + Instant.now().toString().split("\\.")[0] + ")"
+        def fileName = "src/main/resources/version.txt"
+        def file = new File(fileName)
+        file.write(version)
+        println "Created file: " + fileName
+    }
+}
+
+classes {
+    dependsOn createVersion
+}
