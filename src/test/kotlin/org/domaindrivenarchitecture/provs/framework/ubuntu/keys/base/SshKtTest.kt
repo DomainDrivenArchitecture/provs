@@ -99,4 +99,26 @@ internal class SshKtTest {
         assertFalse(res3.success)
         assertFalse(prov.fileContainsText(KNOWN_HOSTS_FILE, invalidKey))
     }
+
+    @ContainerTest
+    fun addKnownHost_with_port_without_verifications() {
+        // given
+        val prov = defaultTestContainer()
+        prov.task {
+            aptInstall("ssh")
+            deleteFile(KNOWN_HOSTS_FILE)
+        }
+
+        // when
+        val res1 = prov.addKnownHost(KnownHost("myserver.org", 2222, listOf("mytype mykey")), verifyKeys = false)
+        // check idem-potence
+        val res2 = prov.addKnownHost(KnownHost("myserver.org", 2222, listOf("mytype mykey")), verifyKeys = false)
+
+        // then
+        assertTrue(res1.success)
+        assertTrue(res2.success)
+        val expectedContent = "[myserver.org]:2222 mytype mykey"
+        val actualContent = prov.fileContent(KNOWN_HOSTS_FILE)
+        assertTrue(actualContent?.contains(expectedContent) == true, "$expectedContent\nis not contained in:\n$actualContent")
+    }
 }

@@ -240,7 +240,7 @@ publishing {
 tasks.register('createVersion') {
     dependsOn processResources
     doLast {
-        def version = project.version.toString() + " (" + Instant.now().toString().split("\\.")[0] + ")"
+        def version = project.version.toString()
         def fileName = "src/main/resources/version.txt"
         def file = new File(fileName)
         file.write(version)

@@ -3,6 +3,7 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base
 import org.domaindrivenarchitecture.provs.desktop.domain.KnownHost
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.SshKeyPair
 import java.io.File
@@ -22,11 +23,11 @@ fun Prov.configureSshKeys(sshKeys: SshKeyPair) = task {
  * Checks if the specified host (domain name or IP) and (optional) port is contained in the known_hosts file
  */
 fun Prov.isKnownHost(hostOrIp: String, port: Int? = null): Boolean {
-    val hostWithPotentialPort = port?.let { hostInKnownHostsFileFormat(hostOrIp, port) } ?: hostOrIp
+    val hostWithPotentialPort = port?.let { formatHostForKnownHostsFile(hostOrIp, port) } ?: hostOrIp
     return cmdNoEval("ssh-keygen -F $hostWithPotentialPort").out?.isNotEmpty() ?: false
 }
 
-fun hostInKnownHostsFileFormat(hostOrIp: String, port: Int? = null): String {
+fun formatHostForKnownHostsFile(hostOrIp: String, port: Int? = null): String {
     return port?.let { "[$hostOrIp]:$port" } ?: hostOrIp
 }
 
@@ -45,11 +46,11 @@ fun Prov.addKnownHost(knownHost: KnownHost, verifyKeys: Boolean = false) = task 
     with(knownHost) {
         for (key in hostKeys) {
             if (!verifyKeys) {
-                addTextToFile("\n$hostName $key\n", File(knownHostsFile))
+                addTextToFile("\n${formatHostForKnownHostsFile(hostName, port)} $key\n", File(knownHostsFile))
             } else {
                 val validKeys = findSshKeys(hostName, port)
                 if (validKeys?.contains(key) == true) {
-                    val formattedHost = hostInKnownHostsFileFormat(hostName, port)
+                    val formattedHost = formatHostForKnownHostsFile(hostName, port)
                     addTextToFile("\n$formattedHost $key\n", File(knownHostsFile))
                 } else {
                     addResultToEval(
@@ -76,4 +77,9 @@ fun Prov.findSshKeys(host: String, port: Int? = null, keytype: String? = null): 
     val keytypeOption = keytype?.let { " -t $keytype " } ?: ""
     val output = cmd("ssh-keyscan $portOption $keytypeOption $host 2>/dev/null").out?.trim()
     return output?.split("\n")?.filter { x -> "" != x }?.map { x -> x.substringAfter(" ") }
+}
+
+fun main() {
+    val k = local().findSshKeys("repo.prod.meissa.de", 2222)
+    println(k)
 }
