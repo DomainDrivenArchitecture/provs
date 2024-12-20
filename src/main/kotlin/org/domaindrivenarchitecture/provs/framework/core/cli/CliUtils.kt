@@ -45,7 +45,7 @@ fun quit(status: Int): Nothing {
 
 fun printProvsVersion() {
     val version = object {}.javaClass.getResource("/version.txt")?.readText()?.trim()
-    println("Provs version: $version")
+    println("\nProvs version: $version\n")
 }
 
 
