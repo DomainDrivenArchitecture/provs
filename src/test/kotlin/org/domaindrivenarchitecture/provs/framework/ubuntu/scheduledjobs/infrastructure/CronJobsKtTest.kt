@@ -19,7 +19,7 @@ class CronJobsKtTest {
         val cronFilename = "50_test_cron"
 
         // when
-        val result = prov.createCronJob(cronFilename, "0 * * * *", "echo hello > /dev/null 2>&1")
+        val result = prov.createCronJob(cronFilename, "0 * * * *", "/usr/bin/echo", "hello > /dev/null 2>&1")
 
         // then
         assertTrue(result.success)
@@ -27,7 +27,21 @@ class CronJobsKtTest {
         assertTrue(prov.checkFile(fqFilename), "")
         val actualFileContent = prov.fileContent(fqFilename, sudo = true)
         val expectedUser = prov.whoami()
-        assertEquals("0 * * * * $expectedUser echo hello > /dev/null 2>&1\n", actualFileContent)
+        assertEquals("0 * * * * $expectedUser /usr/bin/echo hello > /dev/null 2>&1\n", actualFileContent)
+    }
+
+    @ContainerTest
+    fun createCronJob_is_not_created_due_to_command_not_found() {
+        // given
+        val prov = defaultTestContainer()
+        val cronFilename = "88_test_cron"
+
+        // when
+        val result = prov.createCronJob(cronFilename, "0 * * * *", "/usr/bin/dontexist", "")
+
+        // then
+        assertTrue(!result.success)
+        assertTrue(!prov.checkFile(cronFilename), "File should not exist: $cronFilename")
     }
 
 
@@ -56,7 +70,7 @@ class CronJobsKtTest {
         val result = prov.createCronJob(
             cronFilename,
             "*/1 * * * *",
-            "echo \"xxx\" > /home/$user/tmp/\$(/usr/bin/date +\\%Y_\\%m_\\%d-\\%H_\\%M)"
+            "/usr/bin/echo", "\"xxx\" > /home/$user/tmp/\$(/usr/bin/date +\\%Y_\\%m_\\%d-\\%H_\\%M)"
         )
 
         // then

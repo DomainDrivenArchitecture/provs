@@ -1,6 +1,8 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.scheduledjobs.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
@@ -13,10 +15,15 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
  * @param command the executed command
  * @param user the user with whom the command will be executed, if null the current user is used
  */
-fun Prov.createCronJob(cronFilename: String, schedule: String, command: String, user: String? = null) = task {
+fun Prov.createCronJob(cronFilename: String, schedule: String, command: String, parameter: String, user: String? = null) = task {
     val cronUser = user ?: whoami()
-    val cronLine = "$schedule $cronUser $command\n"
 
-    createDirs("/etc/cron.d/", sudo = true)
-    createFile("/etc/cron.d/$cronFilename", cronLine, "644", sudo = true, overwriteIfExisting = true)
+    // ensure command exists
+    if (checkFile(command, sudo = true)) {
+        val cronLine = "$schedule $cronUser $command $parameter\n"
+        createDirs("/etc/cron.d/", sudo = true)
+        createFile("/etc/cron.d/$cronFilename", cronLine, "644", sudo = true, overwriteIfExisting = true)
+    } else {
+        addResultToEval(ProvResult(false, err = "$command not found."))
+    }
 }
