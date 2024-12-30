@@ -61,7 +61,6 @@ open class Prov protected constructor(
     }
 
     private var level = 0
-    private var previousLevel = 0
     private var exit = false
     private var runInContainerWithName: String? = null
 
@@ -270,7 +269,6 @@ open class Prov protected constructor(
         // init
         if (level == 0) {
             internalResults.clear()
-            previousLevel = -1
             exit = false
             initProgress()
 
@@ -282,8 +280,6 @@ open class Prov protected constructor(
         val taskName = name ?: getCallingMethodName()
         val internalResult = ResultLine(level, taskName, null)
         internalResults.add(internalResult)
-
-        previousLevel = level
 
         level++
 
@@ -328,8 +324,6 @@ open class Prov protected constructor(
             } else {
                 ProvResult(false, err = "mode unknown")
             }
-
-        previousLevel = level
 
         internalResults[resultIndex].provResult = returnValue
 
