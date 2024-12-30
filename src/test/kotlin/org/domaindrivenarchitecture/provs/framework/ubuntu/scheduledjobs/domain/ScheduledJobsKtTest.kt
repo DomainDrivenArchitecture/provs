@@ -4,12 +4,12 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.check
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContent
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
 
 class ScheduledJobsKtTest {
 
-    @Test
+    @ContainerTest
     fun tests_scheduleMonthlyReboot() {
         // given
         val prov = defaultTestContainer()
@@ -29,6 +29,6 @@ class ScheduledJobsKtTest {
         val fqFilename = "/etc/cron.d/50_monthly_reboot"
         assertTrue(prov.checkFile(fqFilename), "")
         val actualFileContent = prov.fileContent(fqFilename, sudo = true)
-        assertEquals("0 2 1-7 * 2 root /sbin/shutdown -r now\n", actualFileContent)
+        assertEquals("0 2 */100,1-7 * TUE root /sbin/shutdown -r now\n", actualFileContent)
     }
 }
