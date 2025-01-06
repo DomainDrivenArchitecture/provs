@@ -1,7 +1,5 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.core.docker.exitAndRmContainer
-import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -12,14 +10,15 @@ internal class HugoTest {
     @ExtensiveContainerTest
     fun test_installHugoByDeb() {
         // given
-        local().exitAndRmContainer("provs_test")
         val prov = defaultTestContainer()
 
         // when
         val res = prov.installHugoByDeb()
+        val res2 = prov.installHugoByDeb()  // check idem-potency
 
         // then
         assertTrue(res.success)
+        assertTrue(res2.success)
     }
 
     @Test

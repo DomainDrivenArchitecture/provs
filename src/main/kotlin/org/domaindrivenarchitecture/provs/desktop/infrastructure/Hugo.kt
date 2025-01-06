@@ -76,10 +76,14 @@ fun compareVersions(firstVersion : List<Int>, secondVersion: List<Int>) : String
     return result
 }
 
+/**
+ * Parses hugo version.
+ * @param hugoVersion can either be version a simple version like "1.22.33" or
+ * a version string like: hugo v0.126.1-3d40ab+extended linux/amd64 BuildDate=2024-05-15T10:42:34Z VendorInfo=snap:0.126.1
+ */
 fun getHugoVersionNo(hugoVersion: String) : List<Int> {
-    // hugo v0.126.1-3d40ab+extended linux/amd64 BuildDate=2024-05-15T10:42:34Z VendorInfo=snap:0.126.1
-    var result = hugoVersion.split(" ")[1]
+    var words = hugoVersion.split(" ")
+    var result = if (words.size > 1) words[1] else words[0]
     result = result.split("-")[0].removePrefix("v")
     return result.split(".").map { it.toInt() }
 }
-
