@@ -55,7 +55,7 @@ class RemoteProcessor(val host: InetAddress, val user: String, val password: Sec
             try {
                 ssh.disconnect()
             } finally {
-                val errorMag = "Error when initializing ssh (Host, username, password or ssh-key might be wrong) "
+                val errorMag = "Error when initializing ssh (ensure openssh-server is running and that host, username, password and ssh-key are correct) "
                 log.error(errorMag + e.message)
                 throw RuntimeException(errorMag, e)
             }
@@ -126,7 +126,7 @@ class RemoteProcessor(val host: InetAddress, val user: String, val password: Sec
         try {
             log.info("Disconnecting ssh.")
             ssh.disconnect()
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             // No prov required
         }
     }
