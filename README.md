@@ -128,6 +128,7 @@ To add a grafana agent to your k3s installation add the following to the config:
 ```yaml
 grafana:
   user: "myusername"   # username for the grafana data source 
+  url: "https://your-grafana-endpoint-url"
   password:
     source: "PLAIN"           # PLAIN, GOPASS or PROMPT
     parameter: "mypassword"   # the password or api key for the grafana data source user 
