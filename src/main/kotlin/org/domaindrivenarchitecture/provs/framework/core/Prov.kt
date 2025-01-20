@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.framework.core
 
+import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
 import org.domaindrivenarchitecture.provs.framework.core.platforms.UbuntuProv
 import org.domaindrivenarchitecture.provs.framework.core.processors.LocalProcessor
 import org.domaindrivenarchitecture.provs.framework.core.processors.Processor
@@ -325,7 +326,8 @@ open class Prov protected constructor(
                 ProvResult(false, err = "mode unknown")
             }
 
-        internalResults[resultIndex].provResult = returnValue
+        val resultValueWithCmdCleanedUp = returnValue.copy(cmd = returnValue.cmd?.replace("[" + SHELL + ", -c, ", "["))
+        internalResults[resultIndex].provResult = resultValueWithCmdCleanedUp
 
         // Add failure result to output if not yet included,
         // which is the case if the result was not part of another subtask but created and returned by the lambda itself.
