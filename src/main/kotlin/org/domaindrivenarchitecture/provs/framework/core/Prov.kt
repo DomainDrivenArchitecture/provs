@@ -1,5 +1,6 @@
 package org.domaindrivenarchitecture.provs.framework.core
 
+import org.domaindrivenarchitecture.provs.framework.core.platforms.SHELL
 import org.domaindrivenarchitecture.provs.framework.core.platforms.UbuntuProv
 import org.domaindrivenarchitecture.provs.framework.core.processors.LocalProcessor
 import org.domaindrivenarchitecture.provs.framework.core.processors.Processor
@@ -325,7 +326,11 @@ open class Prov protected constructor(
                 ProvResult(false, err = "mode unknown")
             }
 
-        internalResults[resultIndex].provResult = returnValue
+        // removes potential prefix from cmd in ProvResult, e.g. removes "/bin/bash -c "
+        fun cleanedResult(result: ProvResult): ProvResult { return result.copy(cmd = returnValue.cmd?.replace("[" + SHELL + ", -c, ", "[")) }
+
+        val resultValueWithCmdCleanedUp = cleanedResult(returnValue)
+        internalResults[resultIndex].provResult = resultValueWithCmdCleanedUp
 
         // Add failure result to output if not yet included,
         // which is the case if the result was not part of another subtask but created and returned by the lambda itself.
@@ -333,7 +338,7 @@ open class Prov protected constructor(
         // whereas the failure results may have a useful error message, which should be in the output.
         // Only direct result objects are added, but not result objects that were passed from a subtask as they are already handled in the subtask.
         if (!resultOfTaskLambda.success && (resultIndex < internalResults.size - 1) && (resultOfTaskLambda != internalResults[resultIndex + 1].provResult)) {
-            internalResults.add(ResultLine(level + 1, "<<returned result>>", resultOfTaskLambda))
+            internalResults.add(ResultLine(level + 1, name + " (returned result)", cleanedResult(resultOfTaskLambda)))
         }
 
         if (level == 0) {

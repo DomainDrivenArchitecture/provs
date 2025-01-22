@@ -191,6 +191,7 @@ provs-server.jar k3s -h
 Development happens at: https://repo.prod.meissa.de/meissa/provs
 
 Mirrors are:
+* https://codeberg.org/meissa/provs.git
 * https://gitlab.com/domaindrivenarchitecture/provs (CI issues and PR)
 * https://github.com/DomainDrivenArchitecture/provs
 

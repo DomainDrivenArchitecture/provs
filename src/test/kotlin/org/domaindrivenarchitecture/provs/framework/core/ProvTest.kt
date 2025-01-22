@@ -318,10 +318,10 @@ internal class ProvTest {
                     "--->  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_with_mode_requireLast (requireLast) \n" +
                     "------>  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- sh \n" +
-                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -Start test-]\n" +
-                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo Some output]\n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [echo -Start test-]\n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [echo Some output]\n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- sh \n" +
-                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- cmd [echo -End test-]\n" +
                     "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[92mSuccess\u001B[0m\n" +
                     "============================================ SUMMARY END ===========================================\n" +
@@ -362,8 +362,8 @@ internal class ProvTest {
                     "--->  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_nested_with_failure \n" +
                     "------>  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
                     "--------->  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_nested_with_failure \n" +
-                    "--------->  \u001B[91mFAILED\u001B[0m  -- <<returned result>>  -- Error: Iamanerrormessage\n" +
-                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [/bin/bash, -c, echo -End test-]\n" +
+                    "--------->  \u001B[91mFAILED\u001B[0m  -- sub1 (returned result)  -- Error: Iamanerrormessage\n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- cmd [echo -End test-]\n" +
                     "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[91mFAILED\u001B[0m \n" +
                     "============================================ SUMMARY END ===========================================\n" +
@@ -734,7 +734,7 @@ internal class ProvTest {
                     "------>  \u001B[92mSuccess\u001B[0m -- sub2e-task \n" +
                     "--------->  \u001B[92mSuccess\u001B[0m -- addResultToEval \n" +
                     "------>  \u001B[91mFAILED\u001B[0m  -- sub2f-taskWithResult  -- Error: returned-result - error msg C should be once in output - at the end of sub3taskWithResult \n" +
-                    "------>  \u001B[91mFAILED\u001B[0m  -- <<returned result>>  -- Error: returned-result - error msg D should be once in output - at the end of sub1 \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub1 (returned result)  -- Error: returned-result - error msg D should be once in output - at the end of sub1 \n" +
                     "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[91mFAILED\u001B[0m \n" +
                     "============================================ SUMMARY END ===========================================\n" +
