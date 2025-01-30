@@ -22,16 +22,17 @@ fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): P
             if (!aptInit) {
                 optional {
                     // may fail for some packages, but this should in general not be an issue
-                    cmd("sudo apt-get update")
+                    cmd("sudo apt-get update -q=2 && sudo apt-get upgrade -q=2")
                 }
-                cmd("sudo apt-get install -qy apt-utils")
+                cmd("sudo apt-get install -q=2 apt-utils")
                 aptInit = true
             }
         }
 
         for (packg in packageList) {
             // see https://superuser.com/questions/164553/automatically-answer-yes-when-using-apt-get-install
-            cmd("sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy $packg")
+            cmd("sudo apt-get install -q=2 $packg")
+            //DEBIAN_FRONTEND=noninteractive
         }
         ProvResult(true) // dummy
     } else {
@@ -82,6 +83,9 @@ fun Prov.checkPackageInstalled(packageName: String): ProvResult = taskWithResult
     cmd("dpkg -s $packageName")
 }
 
+fun Prov.isPackageInstalledCheckCommand(packageName: String): Boolean {
+    return chk("command -v $packageName")
+}
 
 /**
  * Removes a package including its configuration and data file

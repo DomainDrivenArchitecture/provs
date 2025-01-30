@@ -41,7 +41,7 @@ private fun initDefaultTestContainer(startMode: ContainerStartMode): Prov {
 
     containerProv.sh("""
             sudo apt-get update
-            sudo apt-get upgrade -qq
+            sudo apt-get upgrade -q=2
         """.trimIndent())
 
     return containerProv

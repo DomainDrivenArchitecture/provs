@@ -157,6 +157,7 @@ fun Prov.provisionIdeDesktop() {
     installDocker()
     aptInstall(JAVA)
     aptInstall(CLOJURE_TOOLS)
+    installNpmByNvm()
     installShadowCljs()
     installDevOps()
     provisionPython()
