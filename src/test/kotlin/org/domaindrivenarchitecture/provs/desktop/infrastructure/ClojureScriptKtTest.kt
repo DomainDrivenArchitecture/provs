@@ -1,6 +1,5 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -12,14 +11,18 @@ internal class ClojureScriptKtTest {
         // given
         val prov = defaultTestContainer()
 
+        //Todo:
+        // To be discussed, should init container, but not available for prov.installShadowCljs() !!
+        // Howto work in addition prov.a() + prov.b()?
         prov.installNpmByNvm()
 
         // when
-        val res = prov.installShadowCljs()
-        val res2 = prov.installShadowCljs()  // check if it can be run twice successfully
+        // check if it can be run twice successfully
+        val res01 = prov.installShadowCljs()
+        val res02 = prov.installShadowCljs()
 
         // then
-        assertTrue(res.success)
-        assertTrue(res2.success)
+        assertTrue(res01.success)
+        assertTrue(res02.success)
     }
 }
