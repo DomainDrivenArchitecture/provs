@@ -1,7 +1,11 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
+import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 
 internal class ClojureScriptKtTest {
@@ -10,19 +14,30 @@ internal class ClojureScriptKtTest {
     fun installShadowCljs() {
         // given
         val prov = defaultTestContainer()
-
-        //Todo:
-        // To be discussed, should init container, but not available for prov.installShadowCljs() !!
-        // Howto work in addition prov.a() + prov.b()?
-        prov.installNpmByNvm()
+        prov.task {
+            aptInstall("curl")
+            installNpmByNvm()
+        }
 
         // when
-        // check if it can be run twice successfully
-        val res01 = prov.installShadowCljs()
-        val res02 = prov.installShadowCljs()
+        val res = prov.task {
+            installShadowCljs()
+            installShadowCljs()  // check repeatability
+        }
 
         // then
-        assertTrue(res01.success)
-        assertTrue(res02.success)
+        assertTrue(res.success)
+    }
+
+    @ExtensiveContainerTest  // extensive test, as it kills the existing container and creates a new one
+    fun installShadowCljs_fails_if_nvm_missing() {
+        // given
+        val prov = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
+
+        // when
+        val res = prov.installShadowCljs()
+
+        // then
+        assertFalse(res.success)
     }
 }

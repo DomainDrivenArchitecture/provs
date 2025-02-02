@@ -7,16 +7,22 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 internal class NpmByNvmKtTest {
 
- @ContainerTest
-  fun installNVMnpm() {
-     // given
-     val container = defaultTestContainer()
-     container.aptInstall("curl")
-     // when
-     val res01 = container.installNpmByNvm()
-     val res02 = container.installNpmByNvm()
-     // then
-     assertTrue(res01.success)
-     assertTrue(res02.success)
-  }
+    @ContainerTest
+    fun installNVMnpm() {
+        // given
+        val prov = defaultTestContainer()
+        prov.aptInstall("curl")
+
+        // when
+        val res = prov.task {
+            installNpmByNvm()
+            installNpmByNvm()  // check repeatability
+            // check if node and npm are installed and can be called in a shell (with sourcing nvm.sh)
+            cmd(". .nvm/nvm.sh && node -v")
+            cmd(". .nvm/nvm.sh && npm --version")
+        }
+
+        // then
+        assertTrue(res.success)
+    }
 }

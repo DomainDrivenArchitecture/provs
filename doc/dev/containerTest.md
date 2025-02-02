@@ -1,11 +1,15 @@
-Should be added in dev_circumstances for single unit tests to get repeatable results ('fresh container'): 
-ContainerStartMode.CREATE_NEW_KILL_EXISTING
+# Container Tests
 
-like this way:
-+import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
+The method `defaultTestContainer()` provides a prov instance in a container for integration-tests.  
 
-//annotate to ContainerTest
-+@ContainerTest
+Container-tests should be annotated by tag: `@ContainerTest` and if long-lasting (ca. > 10 - 20 sec) with @ExtensiveContainerTest 
 
-//and configured Testcontainer
-+val container = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
+
+For performance reasons the test container is re-used among the tests.
+
+In case you want a fresh container for your test, add the following option: 
+
+`ContainerStartMode.CREATE_NEW_KILL_EXISTING` 
+
+example: `val container = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)`
+

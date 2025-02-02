@@ -16,9 +16,9 @@ private var aptInit = false
 @Suppress("UNUSED_PARAMETER")  // ignoreAlreadyInstalled is added for external usage
 fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): ProvResult = taskWithResult {
     val packageList = packages.split(" ")
-    val allInstalled: Boolean = packageList.map { isPackageInstalled(it) }.fold(true, { a, b -> a && b })
+    val allInstalled: Boolean = packageList.map { checkPackage(it) }.fold(true, { a, b -> a && b })
     if (!allInstalled) {
-        if (!isPackageInstalled(packages)) {
+        if (!checkPackage(packages)) {
             if (!aptInit) {
                 optional {
                     // may fail for some packages, but this should in general not be an issue
@@ -31,8 +31,7 @@ fun Prov.aptInstall(packages: String, ignoreAlreadyInstalled: Boolean = true): P
 
         for (packg in packageList) {
             // see https://superuser.com/questions/164553/automatically-answer-yes-when-using-apt-get-install
-            cmd("sudo apt-get install -q=2 $packg")
-            //DEBIAN_FRONTEND=noninteractive
+            cmd("sudo DEBIAN_FRONTEND=noninteractive apt-get install -q=2 $packg")
         }
         ProvResult(true) // dummy
     } else {
@@ -71,7 +70,15 @@ fun Prov.aptInstallFromPpa(launchPadUser: String, ppaName: String, packageName: 
 /**
  * Returns true if a package is installed else false
  */
+@Deprecated("since 0.39.7", replaceWith = ReplaceWith("checkPackage"))
 fun Prov.isPackageInstalled(packageName: String): Boolean {
+    return chk("dpkg -s $packageName")
+}
+
+/**
+ * Returns true if a package is installed else false
+ */
+fun Prov.checkPackage(packageName: String): Boolean {
     return chk("dpkg -s $packageName")
 }
 
@@ -79,12 +86,20 @@ fun Prov.isPackageInstalled(packageName: String): Boolean {
 /**
  * Returns true if a package is installed else false
  */
+@Deprecated("since 0.39.7", replaceWith = ReplaceWith("checkPackage"))
 fun Prov.checkPackageInstalled(packageName: String): ProvResult = taskWithResult {
     cmd("dpkg -s $packageName")
 }
 
-fun Prov.isPackageInstalledCheckCommand(packageName: String): Boolean {
-    return chk("command -v $packageName")
+/**
+ * Returns true if a command is available else false.
+ * Can be used e.g. to check if software is installed in case it is not installed as debian package.
+ * ATTENTION:
+ * * checks only commands which are available in the shell
+ * * does NOT find commands which are defined in .bashrc when running in a non-interactive shell (which is the case with: `bash -c "command -v mycommand"`),
+ */
+fun Prov.checkCommand(commandName: String): Boolean {
+    return chk("command -v $commandName")
 }
 
 /**

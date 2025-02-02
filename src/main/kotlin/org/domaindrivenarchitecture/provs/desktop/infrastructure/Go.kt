@@ -3,16 +3,16 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalledCheckCommand
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkCommand
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
+//from https://go.dev/dl/
 fun Prov.installGo(
-    //from https://go.dev/dl/
     version: String = "1.23.5",
     enforceVersion: Boolean = false,
     sha256sum: String = "cbcad4a6482107c7c7926df1608106c189417163428200ce357695cc7e01d091"
 ) = taskWithResult {
-    if (isPackageInstalledCheckCommand("go") && !enforceVersion) {
+    if (checkCommand("go") && !enforceVersion) {
         return@taskWithResult ProvResult(true)
     }
 

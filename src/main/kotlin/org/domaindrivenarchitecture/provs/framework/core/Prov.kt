@@ -217,11 +217,12 @@ open class Prov protected constructor(
     fun getSecret(command: String, removeNewlineSuffix: Boolean = false): Secret? {
         val result = cmdNoLog(command)
         return if (result.success && result.out != null) {
-            addResultToEval(ProvResult(true, getCallingMethodName()))
-            val plainSecret = if (removeNewlineSuffix && result.out.takeLast(1) == "\n") result.out.dropLast(1) else result.out
+            addProvResult(true, getCallingMethodName())
+            val plainSecret =
+                if (removeNewlineSuffix && result.out.takeLast(1) == "\n") result.out.dropLast(1) else result.out
             Secret(plainSecret)
         } else {
-            addResultToEval(ProvResult(false, getCallingMethodName(), err = result.err, exception = result.exception))
+            addProvResult(false, getCallingMethodName(), err = result.err, exception = result.exception)
             null
         }
     }
@@ -231,8 +232,24 @@ open class Prov protected constructor(
      * Adds a ProvResult to the overall success evaluation.
      * Intended for use in methods which do not automatically add results.
      */
+    @Deprecated("since 0.39.7", replaceWith = ReplaceWith("addProvResult", ))
     fun addResultToEval(result: ProvResult) = taskWithResult {
         result
+    }
+
+    /**
+     * Adds a ProvResult to the overall success evaluation.
+     * Intended for use in methods which do not automatically add results.
+     */
+    fun addProvResult(
+        success: Boolean,
+        cmd: String? = null,
+        out: String? = null,
+        err: String? = null,
+        exception: Exception? = null,
+        exit: String? = null
+    ) = taskWithResult {
+        ProvResult(success, cmd, out, err, exception, exit)
     }
 
     /**
