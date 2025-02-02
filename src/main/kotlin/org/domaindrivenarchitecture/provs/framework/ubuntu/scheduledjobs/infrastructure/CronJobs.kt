@@ -1,7 +1,6 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.scheduledjobs.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
@@ -24,6 +23,6 @@ fun Prov.createCronJob(cronFilename: String, schedule: String, command: String, 
         createDirs("/etc/cron.d/", sudo = true)
         createFile("/etc/cron.d/$cronFilename", cronLine, "644", sudo = true, overwriteIfExisting = true)
     } else {
-        addResultToEval(ProvResult(false, err = "$command not found."))
+        addResult(false, err = "$command not found.")
     }
 }

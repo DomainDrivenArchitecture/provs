@@ -18,7 +18,7 @@ internal class UbuntuHostDockerKtTest {
         val containerName = "testContainer"
         val result = testLocal().task {
             runContainer(containerName)
-            addResultToEval(ProvResult(containerRuns(containerName)))
+            addResult(containerRuns(containerName))
 
             exitAndRmContainer(containerName)
         }

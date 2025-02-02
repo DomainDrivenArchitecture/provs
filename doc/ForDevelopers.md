@@ -16,13 +16,14 @@ The success or failure is computed automatically in the following way:
 
 ### Recommended way
 
-A task can be declared by 
+A task can be declared by
 
 ```kotlin
 fun Prov.myCustomTask() = task { /* ... code and subtasks come here ... */ }
+
 // e.g.
-fun Prov.myEchoTask() = task { 
-    cmd("echo hello world!") 
+fun Prov.myEchoTask() = task {
+    cmd("echo hello world!")
 }
 ```
 
@@ -56,17 +57,18 @@ fun Prov.myCustomTask() {{ task { /* ... code and subtasks come here ... */ } }}
 
 ### Add custom results
 
-If you want to add a result explicitly, you can use method `addResultToEval`.
-This maxy be used e.g. to add explicitly an error line, like in: 
+If you want to add a result explicitly, you can use method `addResult`.
+This may be used e.g. to add explicitly an error line or with additional info, like in: 
 
 ```kotlin
 fun Prov.myCustomTask() = task {
     /* some other code ... */
-    addResultToEval(ProvResult(false, err = "my error msg"))
+    addResult(false, err = "my error msg")
     /* some other code ... */
+    addResult(true, info = "package was already installed")
 }
 ```
-or alternatively you can use `taskWithResult`.
+or alternatively you can use `taskWithResult` and `return@taskWithResult ProvResult(false, err = "my error msg")`.
 
 #### TaskWithResult
 

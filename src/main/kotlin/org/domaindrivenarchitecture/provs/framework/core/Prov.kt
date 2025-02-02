@@ -217,12 +217,12 @@ open class Prov protected constructor(
     fun getSecret(command: String, removeNewlineSuffix: Boolean = false): Secret? {
         val result = cmdNoLog(command)
         return if (result.success && result.out != null) {
-            addProvResult(true, getCallingMethodName())
+            addResult(true, getCallingMethodName())
             val plainSecret =
                 if (removeNewlineSuffix && result.out.takeLast(1) == "\n") result.out.dropLast(1) else result.out
             Secret(plainSecret)
         } else {
-            addProvResult(false, getCallingMethodName(), err = result.err, exception = result.exception)
+            addResult(false, getCallingMethodName(), err = result.err, exception = result.exception)
             null
         }
     }
@@ -232,7 +232,7 @@ open class Prov protected constructor(
      * Adds a ProvResult to the overall success evaluation.
      * Intended for use in methods which do not automatically add results.
      */
-    @Deprecated("since 0.39.7", replaceWith = ReplaceWith("addProvResult", ))
+    @Deprecated("since 0.39.7", replaceWith = ReplaceWith("addResult", ))
     fun addResultToEval(result: ProvResult) = taskWithResult {
         result
     }
@@ -241,15 +241,16 @@ open class Prov protected constructor(
      * Adds a ProvResult to the overall success evaluation.
      * Intended for use in methods which do not automatically add results.
      */
-    fun addProvResult(
+    fun addResult(
         success: Boolean,
         cmd: String? = null,
         out: String? = null,
         err: String? = null,
         exception: Exception? = null,
-        exit: String? = null
+        exit: String? = null,
+        info: String? = null,
     ) = taskWithResult {
-        ProvResult(success, cmd, out, err, exception, exit)
+        ProvResult(success, cmd, out, err, exception, exit, info)
     }
 
     /**
@@ -272,6 +273,9 @@ open class Prov protected constructor(
         ProvResult(success)
     }
 
+    /**
+     * Adds the given text, which will be printed at the very end, after all tasks were executed.
+     */
     fun addInfoText(text: String) {
         infoTexts.add(text)
     }
@@ -492,14 +496,17 @@ open class Prov protected constructor(
 
 internal data class ResultLine(val level: Int, val method: String?, var provResult: ProvResult?) {
     override fun toString(): String {
-        val provResult = provResult
-        return if (provResult != null) {
-            prefix(level) + (if (provResult.success) "Success -- " else "FAILED  -- ") +
-                    method + " " + (provResult.cmd ?: "") +
-                    (if (!provResult.success && provResult.err != null) " -- Error: " + provResult.err.escapeControlChars() else "")
-        } else
-            prefix(level) + method + " " + "... in progress ... "
+        val result = provResult
+        if (result != null) {
+            val status = if (result.success) "Success -- " else "FAILED  -- "
+            val taskName = method + " " + (result.cmd ?: "")
+            val infoText = if (result.info != null) "-- Info: " + result.info.escapeControlChars() + " " else ""
+            val errorText = if (!result.success && result.err != null) "-- Error: " + result.err.escapeControlChars() else ""
 
+            return prefix(level) + status + taskName + infoText + errorText
+        } else {
+            return prefix(level) + method + " " + "... in progress ... "
+        }
     }
 
     fun inProgress(): String {

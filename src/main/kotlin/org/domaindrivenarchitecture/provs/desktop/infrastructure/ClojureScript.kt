@@ -9,7 +9,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 fun Prov.installShadowCljs(): ProvResult = task {
 
     if (!chk(". .nvm/nvm.sh")) {
-        addProvResult(false, err = "nvm not installed!")
+        addResult(false, err = "nvm not installed!")
     } else {
         if (!chk("npm list -g --depth=0 | grep shadow-cljs")) {
             cmd(". .nvm/nvm.sh && npm install -g shadow-cljs")

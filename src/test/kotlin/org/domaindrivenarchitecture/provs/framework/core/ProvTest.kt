@@ -316,7 +316,7 @@ internal class ProvTest {
             "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
                     ">  \u001B[92mSuccess\u001B[0m -- session \n" +
                     "--->  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_with_mode_requireLast (requireLast) \n" +
-                    "------>  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast)  -- Error: This is a test error.\n" +
+                    "------>  \u001B[93mFAILED\u001B[0m  -- checkPrereq_evaluateToFailure (requireLast) -- Error: This is a test error.\n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- sh \n" +
                     "--------->  \u001B[92mSuccess\u001B[0m -- cmd [echo -Start test-]\n" +
                     "--------->  \u001B[92mSuccess\u001B[0m -- cmd [echo Some output]\n" +
@@ -362,7 +362,7 @@ internal class ProvTest {
                     "--->  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_nested_with_failure \n" +
                     "------>  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
                     "--------->  \u001B[92mSuccess\u001B[0m -- testMethodForOutputTest_nested_with_failure \n" +
-                    "--------->  \u001B[91mFAILED\u001B[0m  -- sub1 (returned result)  -- Error: Iamanerrormessage\n" +
+                    "--------->  \u001B[91mFAILED\u001B[0m  -- sub1 (returned result) -- Error: Iamanerrormessage\n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- cmd [echo -End test-]\n" +
                     "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[91mFAILED\u001B[0m \n" +
@@ -412,6 +412,51 @@ internal class ProvTest {
                     "--------->  \u001B[93mFAILED\u001B[0m  -- taskC \n" +
                     "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[92mSuccess\u001B[0m\n" +
+                    "============================================ SUMMARY END ===========================================\n" +
+                    "\n"
+
+        assertEquals(expectedOutput, outContent.toString().replace("\r", ""))
+    }
+
+    @Test
+    @NonCi
+    fun prov_prints_info_text_correctly() {
+
+        // given
+        setRootLoggingLevel(Level.OFF)
+
+        val outContent = ByteArrayOutputStream()
+        val errContent = ByteArrayOutputStream()
+        val originalOut = System.out
+        val originalErr = System.err
+
+        System.setOut(PrintStream(outContent))
+        System.setErr(PrintStream(errContent))
+
+        // when
+        Prov.newInstance(name = "test instance with no progress info", progressType = ProgressType.NONE).task("taskA") {
+            taskWithResult("taskB") {
+                addResult(true, info = "Package A always was already installed.")
+                addResult(true, info = "Package B always was already installed.")
+            }
+            addResult(false, err = "Package C was missing", info = "Pls install package C.")
+        }
+
+        // then
+        System.setOut(originalOut)
+        System.setErr(originalErr)
+
+        println(outContent.toString())
+
+        val expectedOutput =
+            "============================================== SUMMARY (test instance with no progress info) =============================================\n" +
+                    ">  \u001B[91mFAILED\u001B[0m  -- taskA \n" +
+                    "--->  \u001B[92mSuccess\u001B[0m -- taskB \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- addResult -- Info: Package A always was already installed. \n" +
+                    "------>  \u001B[92mSuccess\u001B[0m -- addResult -- Info: Package B always was already installed. \n" +
+                    "--->  \u001B[91mFAILED\u001B[0m  -- addResult -- Info: Pls install package C. -- Error: Package C was missing\n" +
+                    "----------------------------------------------------------------------------------------------------\n" +
+                    "Overall >  \u001B[91mFAILED\u001B[0m \n" +
                     "============================================ SUMMARY END ===========================================\n" +
                     "\n"
 
@@ -490,7 +535,7 @@ internal class ProvTest {
     fun addResultToEval_success() {
         // given
         fun Prov.inner() {
-            addResultToEval(ProvResult(true))
+            addResult(true)
         }
 
         fun Prov.outer() = task {
@@ -509,7 +554,7 @@ internal class ProvTest {
     fun task_with_subtask_and_failed_result_fails() {
         // given
         fun Prov.inner() {
-            addResultToEval(ProvResult(true))
+            addResult(true)
         }
 
         fun Prov.outer() = taskWithResult {
@@ -547,7 +592,7 @@ internal class ProvTest {
     fun addResultToEval_failure() {
         // given
         fun Prov.inner() {
-            addResultToEval(ProvResult(false))
+            addResult(false)
         }
 
         fun Prov.outer() = taskWithResult {
@@ -665,11 +710,9 @@ internal class ProvTest {
             }
             optional("sub2c-optional") {
                 taskWithResult("sub3a-taskWithResult") {
-                    addResultToEval(
-                        ProvResult(
-                            false,
-                            err = "returned-result - error msg B should be once in output - in addResultToEval"
-                        )
+                    addResult(
+                        false,
+                        err = "returned-result - error msg B should be once in output - in addResult"
                     )
                 }
             }
@@ -679,7 +722,7 @@ internal class ProvTest {
                 }
             }
             task("sub2e-task") {
-                addResultToEval(ProvResult(true))
+                addResult(true)
                 ProvResult(
                     false,
                     err = "error should NOT be in output as results of task (not taskWithResult) are ignored"
@@ -725,16 +768,16 @@ internal class ProvTest {
                     ">  \u001B[91mFAILED\u001B[0m  -- testMethodForOutputTest_with_returned_results \n" +
                     "--->  \u001B[91mFAILED\u001B[0m  -- sub1 \n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- sub2a \n" +
-                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2b  -- Error: error msg A for sub2b should be shown as result of sub2b\n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2b -- Error: error msg A for sub2b should be shown as result of sub2b\n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- sub2c-optional \n" +
                     "--------->  \u001B[93mFAILED\u001B[0m  -- sub3a-taskWithResult \n" +
-                    "------------>  \u001B[93mFAILED\u001B[0m  -- addResultToEval  -- Error: returned-result - error msg B should be once in output - in addResultToEval\n" +
+                    "------------>  \u001B[93mFAILED\u001B[0m  -- addResult -- Error: returned-result - error msg B should be once in output - in addResult\n" +
                     "------>  \u001B[91mFAILED\u001B[0m  -- sub2d-requireLast \n" +
                     "--------->  \u001B[91mFAILED\u001B[0m  -- sub3b-taskWithResult without error message \n" +
                     "------>  \u001B[92mSuccess\u001B[0m -- sub2e-task \n" +
-                    "--------->  \u001B[92mSuccess\u001B[0m -- addResultToEval \n" +
-                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2f-taskWithResult  -- Error: returned-result - error msg C should be once in output - at the end of sub3taskWithResult \n" +
-                    "------>  \u001B[91mFAILED\u001B[0m  -- sub1 (returned result)  -- Error: returned-result - error msg D should be once in output - at the end of sub1 \n" +
+                    "--------->  \u001B[92mSuccess\u001B[0m -- addResult \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub2f-taskWithResult -- Error: returned-result - error msg C should be once in output - at the end of sub3taskWithResult \n" +
+                    "------>  \u001B[91mFAILED\u001B[0m  -- sub1 (returned result) -- Error: returned-result - error msg D should be once in output - at the end of sub1 \n" +
                     "----------------------------------------------------------------------------------------------------\n" +
                     "Overall >  \u001B[91mFAILED\u001B[0m \n" +
                     "============================================ SUMMARY END ===========================================\n" +
