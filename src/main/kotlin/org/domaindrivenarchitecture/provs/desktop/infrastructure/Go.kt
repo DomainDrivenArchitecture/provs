@@ -35,6 +35,8 @@ fun Prov.installGo(
         deleteFile("$target/$filename")
         configureBashForUser()
         createFile("~/.bashrc.d/go.sh", "export PATH=\$PATH:/usr/local/go/bin\n")
+        // check and assert installation
+        addResult(checkGoVersion(version), info = "Go version $version has been installed.")
     } else {
         return@taskWithResult ProvResult(false, err = "Go $version could not be downloaded and installed. " + result.err)
     }

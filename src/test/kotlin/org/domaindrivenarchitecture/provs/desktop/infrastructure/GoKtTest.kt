@@ -15,8 +15,6 @@ class GoKtTest {
         val res = prov.task {
             installGo()
             installGo()  // check repeatability
-            // check if installation was successful
-            cmd("/usr/local/go/bin/go version")
         }
 
         // then

@@ -532,7 +532,7 @@ internal class ProvTest {
     }
 
     @Test
-    fun addResultToEval_success() {
+    fun addResult_success() {
         // given
         fun Prov.inner() {
             addResult(true)
@@ -589,7 +589,7 @@ internal class ProvTest {
     }
 
     @Test
-    fun addResultToEval_failure() {
+    fun addResult_failure() {
         // given
         fun Prov.inner() {
             addResult(false)

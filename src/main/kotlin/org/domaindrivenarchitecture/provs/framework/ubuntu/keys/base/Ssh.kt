@@ -2,7 +2,6 @@ package org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base
 
 import org.domaindrivenarchitecture.provs.desktop.domain.KnownHost
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.SshKeyPair
@@ -53,11 +52,9 @@ fun Prov.addKnownHost(knownHost: KnownHost, verifyKeys: Boolean = false) = task 
                     val formattedHost = formatHostForKnownHostsFile(hostName, port)
                     addTextToFile("\n$formattedHost $key\n", File(knownHostsFile))
                 } else {
-                    addResultToEval(
-                        ProvResult(
-                            false,
-                            err = "The following key of host [$hostName] could not be verified successfully: " + key
-                        )
+                    addResult(
+                        false,
+                        err = "The following key of host [$hostName] could not be verified successfully: " + key
                     )
                 }
             }
