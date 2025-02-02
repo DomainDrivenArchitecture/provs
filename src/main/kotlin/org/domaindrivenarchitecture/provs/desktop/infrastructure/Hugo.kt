@@ -6,15 +6,16 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInsta
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptPurge
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
+// see https://github.com/gohugoio/hugo/releases/
 fun Prov.installHugoByDeb() = task {
-    val sha256sum = "46692ac9b79d5bc01b0f847f6dcf651d8630476de63e598ef61a8da9461d45cd"
-    val requiredHugoVersion = "0.125.5"
-    val filename = "hugo_extended_0.125.5_linux-amd64.deb"
-    val downloadUrl = "-L https://github.com/gohugoio/hugo/releases/download/v$requiredHugoVersion/$filename"
+    val sha256sum = "e72b3c374348240cfb21cf16a395d8722505b5ff3b1742012b9b3d0a53eaa886"
+    val version = "0.143.0"
+    val filename = "hugo_extended_${version}_linux-amd64.deb"
+    val downloadUrl = "-L https://github.com/gohugoio/hugo/releases/download/v$version/$filename"
     val downloadDir = "${userHome()}Downloads"
     val currentHugoVersion = cmdNoEval("hugo version").out ?: ""
 
-    if (needsHugoInstall(currentHugoVersion, requiredHugoVersion)) {
+    if (needsHugoInstall(currentHugoVersion, version)) {
         if (isHugoInstalled(currentHugoVersion)) {
             if (currentHugoVersion.contains("snap")) {
                 cmd("snap remove hugo", sudo = true)
@@ -82,8 +83,8 @@ fun compareVersions(firstVersion : List<Int>, secondVersion: List<Int>) : String
  * a version string like: hugo v0.126.1-3d40ab+extended linux/amd64 BuildDate=2024-05-15T10:42:34Z VendorInfo=snap:0.126.1
  */
 fun getHugoVersionNo(hugoVersion: String) : List<Int> {
-    var words = hugoVersion.split(" ")
-    var result = if (words.size > 1) words[1] else words[0]
-    result = result.split("-")[0].removePrefix("v")
-    return result.split(".").map { it.toInt() }
+    val words = hugoVersion.split(" ")
+    val result = if (words.size > 1) words[1] else words[0]
+    val versionString = result.split("-")[0].removePrefix("v")
+    return versionString.split(".").map { it.toInt() }
 }

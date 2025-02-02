@@ -6,19 +6,21 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-internal class HugoTest {
+internal class HugoKtTest {
     @ExtensiveContainerTest
     fun test_installHugoByDeb() {
         // given
         val prov = defaultTestContainer()
 
         // when
-        val res = prov.installHugoByDeb()
-        val res2 = prov.installHugoByDeb()  // check idem-potency
+        val res = prov.task {
+            installHugoByDeb()
+            installHugoByDeb()   // check repeatability
+            cmd("hugo version")  // check if hugo is available
+        }
 
         // then
         assertTrue(res.success)
-        assertTrue(res2.success)
     }
 
     @Test
