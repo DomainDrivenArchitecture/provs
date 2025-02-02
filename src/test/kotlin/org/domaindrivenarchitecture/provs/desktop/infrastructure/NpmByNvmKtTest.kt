@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 internal class NpmByNvmKtTest {
 
     @ContainerTest
-    fun installNVMnpm() {
+    fun installNpmByNvm() {
         // given
         val prov = defaultTestContainer()
         prov.aptInstall("curl")

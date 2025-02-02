@@ -30,7 +30,7 @@ class ContainerUbuntuHostProcessorTest {
 
 
     @ExtensiveContainerTest
-    fun test_reopeing_ssh_session_succeeds() {
+    fun test_reopening_ssh_session_succeeds() {
 
         // given
         val containerName = "prov-test-ssh-with-container"

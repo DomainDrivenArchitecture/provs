@@ -32,18 +32,15 @@ fun Prov.installGo(
 
     if (result.success) {
         cmd("tar -C /usr/local -xzf $target/go1.23.5.linux-amd64.tar.gz", sudo = true)
+        deleteFile("$target/$filename")
         configureBashForUser()
         createFile("~/.bashrc.d/go.sh", "export PATH=\$PATH:/usr/local/go/bin\n")
-        //cmd(". /usr/local/go/bin/go && go version")
-        // Cross-check if installation was successful
-        deleteFile("$target/$filename")
-        return@taskWithResult ProvResult(checkGoVersion(version))
     } else {
-        return@taskWithResult ProvResult(false, err = "Go $version could not be installed. " + result.err)
+        return@taskWithResult ProvResult(false, err = "Go $version could not be downloaded and installed. " + result.err)
     }
 }
 
-internal fun Prov.checkGoVersion(version: String): Boolean {
+fun Prov.checkGoVersion(version: String): Boolean {
     val installedGoVersion = goVersion()
     return installedGoVersion != null && installedGoVersion.startsWith("go version go" + version)
 }
