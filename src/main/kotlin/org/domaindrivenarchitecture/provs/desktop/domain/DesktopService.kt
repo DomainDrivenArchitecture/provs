@@ -162,6 +162,7 @@ fun Prov.provisionIdeDesktop() {
     installDevOps()
     provisionPython()
     installHugoByDeb()
+    installGo()
 
     // IDEs
     installIntelliJ()
