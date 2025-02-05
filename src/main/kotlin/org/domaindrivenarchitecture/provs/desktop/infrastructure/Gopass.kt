@@ -6,7 +6,6 @@ import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
