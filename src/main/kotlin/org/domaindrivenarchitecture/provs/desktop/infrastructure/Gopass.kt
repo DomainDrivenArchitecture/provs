@@ -5,6 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
 import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
@@ -17,7 +18,7 @@ fun Prov.installGopass(
     sha256sum: String = "409ed5617e64fa2c781d5e2807ba7fcd65bc383a4e110f410f90b590e51aec55"
 ) = taskWithResult {
 
-    if (isPackageInstalled("gopass") && !enforceVersion) {
+    if (checkPackage("gopass") && !enforceVersion) {
         return@taskWithResult ProvResult(true)
     }
     if (checkGopassVersion(version)) {
@@ -37,8 +38,10 @@ fun Prov.installGopass(
     if (result.success) {
         cmd("sudo dpkg -i $path/gopass_${version}_linux_amd64.deb")
         // Cross-check if installation was successful
+        deleteFile("$path/$filename")
         return@taskWithResult ProvResult(checkGopassVersion(version))
     } else {
+        deleteFile("$path/$filename")
         return@taskWithResult ProvResult(false, err = "Gopass could not be installed. " + result.err)
     }
 }

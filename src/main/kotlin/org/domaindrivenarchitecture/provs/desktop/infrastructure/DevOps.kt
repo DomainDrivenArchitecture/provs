@@ -71,6 +71,7 @@ fun Prov.installKubeconform() = task {
             sha256sum = "2b4ebeaa4d5ac4843cf8f7b7e66a8874252b6b71bc7cbfc4ef1cbf85acec7c07"
         )
         cmd("sudo tar -xzf $packedFilename -C $installationPath", tmpDir)
+        deleteFile("$tmpDir/$packedFilename")
     } else {
         ProvResult(true, out = "Kubeconform $version already installed")
     }
@@ -95,6 +96,7 @@ fun Prov.installKubectl() = task {
         sha256sum = "4685bfcf732260f72fce58379e812e091557ef1dfc1bc8084226c7891dd6028f"
     )
     cmd("sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl", dir = tmpDir)
+    deleteFile("$tmpDir/kubectl")
 }
 
 fun Prov.configureKubectlBashCompletion() = task {

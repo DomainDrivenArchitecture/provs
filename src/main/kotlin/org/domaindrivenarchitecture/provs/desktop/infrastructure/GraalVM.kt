@@ -2,6 +2,7 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 const val GRAAL_VM_VERSION = "21.0.2"
@@ -23,6 +24,7 @@ fun Prov.installGraalVM() = task {
         )
         createDirs(installationPath, sudo = true)
         cmd("sudo tar -C $installationPath -xzf $packedFilename", tmpDir)
+        deleteFile("$tmpDir/$packedFilename")
         val graalInstPath = installationPath + (cmd("ls /usr/lib/jvm/|grep -e graalvm-community-openjdk-$GRAAL_VM_VERSION").out?.replace("\n", ""))
         cmd("sudo ln -sf $graalInstPath/lib/svm/bin/native-image /usr/local/bin/native-image")
     }

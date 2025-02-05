@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptPurge
@@ -26,6 +27,7 @@ fun Prov.installHugoByDeb() = task {
         aptInstall("gnupg2")
         downloadFromURL(downloadUrl, filename, downloadDir, sha256sum = sha256sum)
         cmd("dpkg -i $downloadDir/$filename", sudo = true)
+        deleteFile("$downloadDir/$filename")
     }
 }
 
