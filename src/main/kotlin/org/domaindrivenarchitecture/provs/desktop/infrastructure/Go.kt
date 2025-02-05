@@ -34,7 +34,9 @@ fun Prov.installGo(
         cmd("tar -C /usr/local -xzf $target/go1.23.5.linux-amd64.tar.gz", sudo = true)
         deleteFile("$target/$filename")
         configureBashForUser()
-        createFile("~/.bashrc.d/go.sh", "export PATH=\$PATH:/usr/local/go/bin\n")
+        val bashConfigFile = "~/.bashrc.d/go.sh"
+        val content = "export PATH=\$PATH:/usr/local/go/bin\n"
+        createFile(bashConfigFile, content)
         // check and assert installation
         addResult(checkGoVersion(version), info = "Go version $version has been installed.")
     } else {
