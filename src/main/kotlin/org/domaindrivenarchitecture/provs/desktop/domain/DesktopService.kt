@@ -163,6 +163,7 @@ fun Prov.provisionIdeDesktop() {
     provisionPython()
     installHugoByDeb()
     installGo()
+    installBabashka()
 
     // IDEs
     installIntelliJ()
