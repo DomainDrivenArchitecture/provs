@@ -164,6 +164,8 @@ fun Prov.provisionIdeDesktop() {
     installHugoByDeb()
     installGo()
     installBabashka()
+    installTerragrunt()
+    installOpentofu()
 
     // IDEs
     installIntelliJ()
