@@ -58,4 +58,20 @@ internal class DevOpsKtTest {
         assertTrue(res.success)
         assertTrue(prov.checkFile("/usr/local/bin/kubeconform"))
     }
+
+     @ExtensiveContainerTest
+    fun installDirenv() {
+        // given
+        val prov = defaultTestContainer()
+
+        // when
+        val res = prov.task {
+            installDirenv()
+            installDirenv()  // check repeatability
+        }
+
+        // then
+        assertTrue(res.success)
+        //assertTrue(prov.checkFile("/usr/local/bin/kubeconform"))
+    }
 }

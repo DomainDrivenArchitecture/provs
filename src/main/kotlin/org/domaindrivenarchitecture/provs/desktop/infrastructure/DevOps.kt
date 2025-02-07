@@ -4,6 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
@@ -159,4 +160,18 @@ fun Prov.installTerraform() = task {
     cmd("tfenv install", sudo = true)
     cmd("tfenv install latest:^1.4.6", sudo = true)
     cmd("tfenv use latest:^1.4.6", sudo = true)
+}
+
+fun Prov.installDirenv() = taskWithResult {
+    val bashConfigFile = "~/.bashrc.d/direnv.sh"
+    if (!checkFile(bashConfigFile) && !checkPackage("direnv")) {
+        aptInstall("direnv")
+        val content = """
+        eval "$(direnv hook bash)"
+        """ + "\n".trimIndent()
+        createFile(bashConfigFile, content)
+        addResult(checkPackage("direnv"), info = "direnv has been installed.")
+    } else {
+        return@taskWithResult ProvResult(true, out = "direnv or ~/.bashrc.d/direnv.sh already installed")
+    }
 }
