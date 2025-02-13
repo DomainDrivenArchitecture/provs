@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
 import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
 
 
@@ -53,7 +53,7 @@ fun Prov.installGopassJsonApi() = taskWithResult {
         }
     } else {
         if (installedJsonApiVersion.startsWith("gopass-jsonapi version $gopassJsonApiVersion")) {
-            ProvResult(true, out = "Version $gopassJsonApiVersion of gopass-jsonapi is already installed")
+            ProvResult(true, info = "Gopass-jsonapi $gopassJsonApiVersion is already installed")
         } else {
             ProvResult(
                 false,
@@ -85,7 +85,7 @@ fun Prov.configureApparmorForGopassWrapperShForFirefox() = task {
 }
 
 fun Prov.configureGopassJsonApi() = taskWithResult {
-    if (isPackageInstalled("gopass-jsonapi")) {
+    if (checkPackage("gopass-jsonapi")) {
         // configures gopass-jsonapi for firefox and chooses default for each:
         // * "Install for all users? [y/N/q]",
         // * "In which path should gopass_wrapper.sh be installed? [/home/<user>/.config/gopass]"

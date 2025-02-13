@@ -4,17 +4,17 @@ import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue
 
- class BabashkaKtTest {
+class BabashkaKtTest {
 
-@ExtensiveContainerTest
+ @ExtensiveContainerTest
  fun installBabashka() {
   // given
   val prov = defaultTestContainer()
 
   // when
   val res = prov.task {
-   installGo()
-   installGo()  // check repeatability
+   installBabashka()
+   installBabashka()  // check repeatability
   }
 
   // then

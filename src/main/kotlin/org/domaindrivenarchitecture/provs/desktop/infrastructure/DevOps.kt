@@ -158,20 +158,19 @@ fun Prov.installTerraform() = task {
         cmd("ln -s " + dir + "bin/* /usr/local/bin", sudo = true)
     }
     cmd("tfenv install", sudo = true)
-    cmd("tfenv install latest:^1.4.6", sudo = true)
-    cmd("tfenv use latest:^1.4.6", sudo = true)
+    cmd("tfenv install latest:^1.4.7", sudo = true)
+    cmd("tfenv use latest:^1.4.7", sudo = true)
 }
 
 fun Prov.installDirenv() = taskWithResult {
     val bashConfigFile = "~/.bashrc.d/direnv.sh"
     if (!checkFile(bashConfigFile) && !checkPackage("direnv")) {
         aptInstall("direnv")
-        val content = """
-        eval "$(direnv hook bash)"
-        """ + "\n".trimIndent()
+        val content = """eval "$(direnv hook bash)"
+""" + "\n".trimIndent()
         createFile(bashConfigFile, content)
         addResult(checkPackage("direnv"), info = "direnv has been installed.")
     } else {
-        return@taskWithResult ProvResult(true, out = "direnv or ~/.bashrc.d/direnv.sh already installed")
+        return@taskWithResult ProvResult(true, info = "direnv or ~/.bashrc.d/direnv.sh already installed")
     }
 }

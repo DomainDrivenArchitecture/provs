@@ -9,15 +9,15 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 //from https://go.dev/dl/
 fun Prov.installGo(
     version: String = "1.23.5",
-    enforceVersion: Boolean = false,
+    reInstall: Boolean = false,
     sha256sum: String = "cbcad4a6482107c7c7926df1608106c189417163428200ce357695cc7e01d091"
 ) = taskWithResult {
-    if (checkCommand("go") && !enforceVersion) {
+    if (checkCommand("go") && !reInstall) {
         return@taskWithResult ProvResult(true)
     }
 
     if (checkGoVersion(version)) {
-        return@taskWithResult ProvResult(true, out = "Version $version of go is already installed.")
+        return@taskWithResult ProvResult(true, out = "Go $version is already installed.")
     }
 
     val downloadUrl = "https://go.dev/dl/go$version.linux-amd64.tar.gz"
@@ -38,7 +38,7 @@ fun Prov.installGo(
         val content = "export PATH=\$PATH:/usr/local/go/bin\n"
         createFile(bashConfigFile, content)
         // check and assert installation
-        addResult(checkGoVersion(version), info = "Go version $version has been installed.")
+        addResult(checkGoVersion(version), info = "Go $version has been installed.")
     } else {
         return@taskWithResult ProvResult(false, err = "Go $version could not be downloaded and installed. " + result.err)
     }

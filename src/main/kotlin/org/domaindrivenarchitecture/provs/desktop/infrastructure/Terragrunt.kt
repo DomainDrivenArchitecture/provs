@@ -8,15 +8,15 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 fun Prov.installTerragrunt(
     version: String = "0.72.6",
-    enforceVersion: Boolean = false,
+    reInstall: Boolean = false,
     sha256sum: String = "df63a41576b8b4129b498da5b698b5792a5a228ea5012bbecdcbe49d4d662be3"
 ) = taskWithResult {
-    if (checkCommand("terragrunt") && !enforceVersion) {
+    if (checkCommand("terragrunt") && !reInstall) {
         return@taskWithResult ProvResult(true)
     }
 
     if (checkTerragruntVersion(version)) {
-        return@taskWithResult ProvResult(true, out = "Terragrunt is already installed.")
+        return@taskWithResult ProvResult(true, info = "Terragrunt is already installed.")
     }
 
     val downloadUrl = "https://github.com/gruntwork-io/terragrunt/releases/download/v$version/terragrunt_linux_amd64"
@@ -30,12 +30,8 @@ fun Prov.installTerragrunt(
     )
 
     if (result.success) {
-        cmd("sudo cp $target/$filename /usr/local/bin/terragrunt", sudo = true)
+        cmd("sudo mv $target/$filename /usr/local/bin/terragrunt", sudo = true)
         cmd("chmod 755 /usr/local/bin/terragrunt", sudo = true)
-        cmd("chown root /usr/local/bin/terragrunt", sudo = true)
-        cmd("chgrp root /usr/local/bin/terragrunt", sudo = true)
-        deleteFile("$target/$filename")
-        configureBashForUser()
         // check and assert installation
         addResult(checkTerragruntVersion(version), info = "Terragrunt version $version has been installed.")
     } else {

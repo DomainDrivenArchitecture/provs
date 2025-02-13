@@ -1,6 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
@@ -59,7 +60,23 @@ internal class DevOpsKtTest {
         assertTrue(prov.checkFile("/usr/local/bin/kubeconform"))
     }
 
-     @ExtensiveContainerTest
+    @ExtensiveContainerTest
+    fun installTerraform() {
+        // given
+        val prov = defaultTestContainer()
+
+        // when
+        val res = prov.task {
+            aptInstall("git curl unzip")
+            installTerraform()
+            installTerraform()  // check repeatability
+        }
+
+        // then
+        assertTrue(res.success)
+    }
+
+    @ExtensiveContainerTest
     fun installDirenv() {
         // given
         val prov = defaultTestContainer()
@@ -72,6 +89,5 @@ internal class DevOpsKtTest {
 
         // then
         assertTrue(res.success)
-        //assertTrue(prov.checkFile("/usr/local/bin/kubeconform"))
     }
 }

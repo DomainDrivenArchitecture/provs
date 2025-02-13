@@ -8,15 +8,15 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 fun Prov.installBabashka(
     version: String = "1.12.196",
-    enforceVersion: Boolean = false,
-    sha256sum: String = "13c197bf1151cac038abedfa2869a27303f62650474f334867264e13ee9f8cd6"
+    reInstall: Boolean = false,
+    sha256sum: String = "18dbf47c79cc136fe9903642a7b0c9ab75f52282984197855b489b80469b8d8f"
 ) = taskWithResult {
-    if (checkCommand("bb") && !enforceVersion) {
+    if (checkCommand("bb") && !reInstall) {
         return@taskWithResult ProvResult(true)
     }
 
     if (checkBabashkaVersion(version)) {
-        return@taskWithResult ProvResult(true, out = "Version $version of babashka is already installed.")
+        return@taskWithResult ProvResult(true, info = "Babashka $version is already installed.")
     }
 
     val downloadUrl = "https://github.com/babashka/babashka/releases/download/v$version/babashka-$version-linux-amd64.tar.gz"
@@ -30,7 +30,7 @@ fun Prov.installBabashka(
     )
 
     if (result.success) {
-        cmd("tar -C /usr/local/bin/ -xzf $target/go1.23.5.linux-amd64.tar.gz --no-same-owner", sudo = true)
+        cmd("tar -C /usr/local/bin/ -xzf $target/babashka-$version-linux-amd64.tar.gz --no-same-owner", sudo = true)
         deleteFile("$target/$filename")
 
         // check and assert installation
@@ -46,6 +46,6 @@ fun Prov.checkBabashkaVersion(version: String): Boolean {
 }
 
 internal fun Prov.babashkaVersion(): String? {
-    val result = cmdNoEval("/usr/local/bb version")
+    val result = cmdNoEval("/usr/local/bin/bb version")
     return if (!result.success) null else result.out
 }
