@@ -50,13 +50,13 @@ open class ContainerUbuntuHostProcessor(
         localExecution.exec(hostShell, "-c", dockerCmd + "rm $containerName")
     }
 
-    private fun quoteString(s: String): String {
+    private fun escapeAndEncloseByDoubleQuoteForShell(s: String): String {
         return s.escapeAndEncloseByDoubleQuoteForShell()
     }
 
     private fun buildCommand(vararg args: String): String {
-        return if (args.size == 1) quoteString(args[0]) else
-            if (args.size == 3 && SHELL == args[0] && "-c" == args[1]) SHELL + " -c " + quoteString(args[2])
+        return if (args.size == 1) escapeAndEncloseByDoubleQuoteForShell(args[0]) else
+            if (args.size == 3 && SHELL == args[0] && "-c" == args[1]) SHELL + " -c " + escapeAndEncloseByDoubleQuoteForShell(args[2])
             else args.joinToString(separator = " ")
     }
 
