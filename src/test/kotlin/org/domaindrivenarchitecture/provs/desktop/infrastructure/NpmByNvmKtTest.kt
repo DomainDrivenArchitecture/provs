@@ -1,6 +1,5 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
@@ -11,7 +10,7 @@ internal class NpmByNvmKtTest {
     @ContainerTest
     fun installNpmByNvm() {
         // given
-        val prov = defaultTestContainer(ContainerStartMode.CREATE_NEW_KILL_EXISTING)
+        val prov = defaultTestContainer()
         prov.aptInstall("curl")
 
         // when
