@@ -28,7 +28,7 @@ function sourceNewContext() {
 
 function main() {
     local cluster_name="${1}";
-    local domain_name="${2:-meissa-gmbh.de}";
+    local domain_name="${2:-meissa.de}";
 
     ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@${cluster_name}.${domain_name} \
     "cat /etc/rancher/k3s/k3s.yaml" | \
