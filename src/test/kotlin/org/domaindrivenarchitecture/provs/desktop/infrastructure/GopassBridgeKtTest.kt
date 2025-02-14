@@ -72,7 +72,7 @@ internal class GopassBridgeKtTest {
                 trust = true,
                 skipIfExistin = false
             )
-            installGopass("1.11.0", reInstall = true, "1ec9e0dfcfd9bcc241943e1a7d92f31bf3e66bb16f61ae5d079981325c31baa6")
+            installGopass("1.11.0", enforceUpgrade = true, "1ec9e0dfcfd9bcc241943e1a7d92f31bf3e66bb16f61ae5d079981325c31baa6")
             configureGopass(publicGpgKey = Secret(publicGPGSnakeoilKey()))
         }
         assertTrue(preparationResult.success)
@@ -100,7 +100,7 @@ internal class GopassBridgeKtTest {
                 trust = true,
                 skipIfExistin = false
             )
-            installGopass("1.9.0", reInstall = true, "fe13ef810d7fe200495107161e99eac081368aa0ce5e53971b1bd47a64eba4db")
+            installGopass("1.9.0", enforceUpgrade = true, "fe13ef810d7fe200495107161e99eac081368aa0ce5e53971b1bd47a64eba4db")
             configureGopass(publicGpgKey = Secret(publicGPGSnakeoilKey()))
         }
         assertTrue(preparationResult.success)

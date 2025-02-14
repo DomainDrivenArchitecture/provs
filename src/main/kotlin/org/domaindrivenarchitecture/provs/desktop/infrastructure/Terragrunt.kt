@@ -8,10 +8,10 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 fun Prov.installTerragrunt(
     version: String = "0.72.6",
-    reInstall: Boolean = false,
+    enforceUpgrade: Boolean = false,
     sha256sum: String = "df63a41576b8b4129b498da5b698b5792a5a228ea5012bbecdcbe49d4d662be3"
 ) = taskWithResult {
-    if (checkCommand("terragrunt") && !reInstall) {
+    if (checkCommand("terragrunt") && !enforceUpgrade) {
         return@taskWithResult ProvResult(true)
     }
 

@@ -7,20 +7,20 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class OpentofuKtTest {
 
- @ExtensiveContainerTest
- fun installOpentofu() {
-  // given
-  val prov = defaultTestContainer()
+    @ExtensiveContainerTest
+    fun installOpentofu() {
+        // given
+        val prov = defaultTestContainer()
 
-  // when
-  val res = prov.task {
+        // when
+        val res = prov.task {
 
-   aptInstall("gnupg curl")
-   installOpentofu()
-   installOpentofu()  // check repeatability
-  }
+            aptInstall("gnupg curl")
+            installOpentofu()
+            installOpentofu()  // check repeatability
+        }
 
-  // then
-  assertTrue(res.success)
- }
+        // then
+        assertTrue(res.success)
+    }
 }

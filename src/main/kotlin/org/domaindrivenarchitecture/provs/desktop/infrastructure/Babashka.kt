@@ -8,10 +8,10 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 fun Prov.installBabashka(
     version: String = "1.12.196",
-    reInstall: Boolean = false,
+    enforceUpgrade: Boolean = false,
     sha256sum: String = "18dbf47c79cc136fe9903642a7b0c9ab75f52282984197855b489b80469b8d8f"
 ) = taskWithResult {
-    if (checkCommand("bb") && !reInstall) {
+    if (checkCommand("bb") && !enforceUpgrade) {
         return@taskWithResult ProvResult(true)
     }
 

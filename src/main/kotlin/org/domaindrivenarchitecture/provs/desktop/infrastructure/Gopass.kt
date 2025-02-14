@@ -12,12 +12,12 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 fun Prov.installGopass(
     version: String = "1.15.13",  // NOTE: when adjusting, pls also adjust checksum below and version of gopass bridge json api
-    reInstall: Boolean = false,
+    enforceUpgrade: Boolean = false,
     // from https://github.com/gopasspw/gopass/releases/tag/v1.15.13
     sha256sum: String = "409ed5617e64fa2c781d5e2807ba7fcd65bc383a4e110f410f90b590e51aec55"
 ) = taskWithResult {
 
-    if (checkPackage("gopass") && !reInstall) {
+    if (checkPackage("gopass") && !enforceUpgrade) {
         return@taskWithResult ProvResult(true)
     }
     if (checkGopassVersion(version)) {

@@ -166,8 +166,7 @@ fun Prov.installDirenv() = taskWithResult {
     val bashConfigFile = "~/.bashrc.d/direnv.sh"
     if (!checkFile(bashConfigFile) && !checkPackage("direnv")) {
         aptInstall("direnv")
-        val content = """eval "$(direnv hook bash)"
-""" + "\n".trimIndent()
+        val content = """eval "$(direnv hook bash)" """.trim() + "\n"
         createFile(bashConfigFile, content)
         addResult(checkPackage("direnv"), info = "direnv has been installed.")
     } else {

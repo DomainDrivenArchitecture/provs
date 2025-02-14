@@ -6,18 +6,18 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class TerragruntKtTest {
 
- @ExtensiveContainerTest
- fun installTerragrunt() {
-  // given
-  val prov = defaultTestContainer()
+    @ExtensiveContainerTest
+    fun installTerragrunt() {
+        // given
+        val prov = defaultTestContainer()
 
-  // when
-  val res = prov.task {
-   installTerragrunt()
-   installTerragrunt()  // check repeatability
-  }
+        // when
+        val res = prov.task {
+            installTerragrunt()
+            installTerragrunt()  // check repeatability
+        }
 
-  // then
-  assertTrue(res.success)
- }
+        // then
+        assertTrue(res.success)
+    }
 }

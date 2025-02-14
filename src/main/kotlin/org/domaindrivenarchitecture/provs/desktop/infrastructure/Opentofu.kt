@@ -23,16 +23,20 @@ fun Prov.installOpentofu(
         cmd("chmod a+r /etc/apt/keyrings/opentofu.gpg /etc/apt/keyrings/opentofu-repo.gpg", sudo = true)
 
         val tofuListFile = "/etc/apt/sources.list.d/opentofu.list"
-        val content =
-            """deb [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main""" + "\n" +
-                    """deb-src [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main""" + "\n" +
-                    "".trimIndent()
+        val content = """
+            deb [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main
+            deb-src [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main
+            """.trimIndent() + "\n"
         createFile(tofuListFile, content, sudo = true)
 
         cmd("sudo apt-get update -q=2")
         aptInstall("tofu")
-        addResult(checkPackage("tofu"), info = "Opentofu has been installed.")
+        if (!checkPackage("tofu")) {
+            ProvResult(false, err = "tofu not successfully installed")
+        } else {
+            ProvResult(false, info = "Opentofu is installed.")
+        }
     } else {
-        return@taskWithResult ProvResult(false, err = "Opentofu could not be downloaded and installed. ")
+        ProvResult(false, err = "Opentofu could not be downloaded and installed.")
     }
 }

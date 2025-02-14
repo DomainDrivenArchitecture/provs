@@ -6,19 +6,19 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class BabashkaKtTest {
 
- @ExtensiveContainerTest
- fun installBabashka() {
-  // given
-  val prov = defaultTestContainer()
+    @ExtensiveContainerTest
+    fun installBabashka() {
+        // given
+        val prov = defaultTestContainer()
 
-  // when
-  val res = prov.task {
-   installBabashka()
-   installBabashka()  // check repeatability
-  }
+        // when
+        val res = prov.task {
+            installBabashka()
+            installBabashka()  // check repeatability
+        }
 
-  // then
-  assertTrue(res.success)
- }
+        // then
+        assertTrue(res.success)
+    }
 }
 

@@ -9,10 +9,10 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 //from https://go.dev/dl/
 fun Prov.installGo(
     version: String = "1.23.5",
-    reInstall: Boolean = false,
+    enforceUpgrade: Boolean = false,
     sha256sum: String = "cbcad4a6482107c7c7926df1608106c189417163428200ce357695cc7e01d091"
 ) = taskWithResult {
-    if (checkCommand("go") && !reInstall) {
+    if (checkCommand("go") && !enforceUpgrade) {
         return@taskWithResult ProvResult(true)
     }
 

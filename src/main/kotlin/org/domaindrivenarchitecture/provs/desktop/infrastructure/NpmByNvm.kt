@@ -23,9 +23,10 @@ fun Prov.installNpmByNvm(version: String = "0.40.1"): ProvResult = task {
         // configure bash - create file ".bashrc.d/npmbynvm.sh" with settings
         configureBashForUser()
 
-        val content = """export NVM_DIR="${userHome()}.nvm"
-[ -s "${"\$NVM_DIR/nvm.sh"}" ] && \. "${"\$NVM_DIR/nvm.sh"}"
-""" + "\n".trimIndent()
+        val content = """
+            export NVM_DIR="${userHome()}.nvm"
+            [ -s "${"\$NVM_DIR/nvm.sh"}" ] && \. "${"\$NVM_DIR/nvm.sh"}"
+            """.trimIndent() + "\n"
         createFile(bashConfigFile, content)
 
         // install Node.js and NPM
