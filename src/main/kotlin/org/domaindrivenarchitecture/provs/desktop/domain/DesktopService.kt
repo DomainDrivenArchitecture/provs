@@ -104,7 +104,7 @@ fun Prov.provisionBasicDesktop(
     aptInstall(CLIP_TOOLS)
     aptPurge(
         "remove-power-management xfce4-power-manager " +
-                "xfce4-power-manager-plugins xfce4-power-manager-data" +
+                "xfce4-power-manager-plugins xfce4-power-manager-data " +
                 "upower libimobiledevice6 libplist3 libusbmuxd6 usbmuxd bluez-cups"
     )
     aptPurge("abiword gnumeric")
