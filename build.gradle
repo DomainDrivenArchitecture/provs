@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version_no = "1.8.20"
+    ext.kotlin_version_no = "1.8.21"
     ext.CI_PROJECT_ID = System.env.CI_PROJECT_ID
 
     repositories {
@@ -216,12 +216,12 @@ publishing {
                         println "$publishPackageTokenName found - "
                     }
                 } else {
-                    // use project-property (define e.g. in "~/.gradle/gradle.properties") when not running in ci
-                    // you can create a token in gitea "Profile and Settings ... > Settings > Applications", Token Name, Select scopes (write:package) > "Generate Token"
+                    // for publishing from local: you must use project-property "MEISSA_PUBLISH_PACKAGE_TOKEN" with the token (e.g. define it in "~/.gradle/gradle.properties")
+                    // you can create a token e.g. on forgejo server by "Profile and Settings ... > Settings > Applications", Token Name, Select scopes (write:package) > "Generate Token"
                     if (!project.hasProperty(publishPackageTokenName)) {
-                        // if token is missing, provide a dummy in order to avoid error "Could not get unknown property 'MEISSA_PUBLISH_PACKAGE_TOKEN' for Credentials [header: Authorization]" for other gradle tasks
+                        // if token is missing, provide a dummy in order to avoid error "Could not get unknown property ..." for Credentials [header: Authorization]" for other gradle tasks
                         ext.MEISSA_PUBLISH_PACKAGE_TOKEN = "Token $publishPackageTokenName not provided in file \".gradle/gradle.properties\""
-                        println "Error: Token $publishPackageTokenName not found"
+                        println "Info: $publishPackageTokenName is set to a dummy value. In case of publishing to a maven repo, you will get a authorization error."
                     } else {
                         value = "token " + project.property(publishPackageTokenName)
                     }
