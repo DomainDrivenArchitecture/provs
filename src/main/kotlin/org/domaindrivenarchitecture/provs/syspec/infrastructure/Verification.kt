@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
 import org.domaindrivenarchitecture.provs.syspec.domain.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -72,7 +72,7 @@ fun Prov.verify(hostspec: HostSpec) {
 }
 
 fun Prov.verify(pkg: PackageSpec) {
-    val res = isPackageInstalled(pkg.name)
+    val res = checkPackage(pkg.name)
     verify(res == pkg.installed, "Package [${pkg.name}] is ${res.falseToNot()}installed.")
 }
 

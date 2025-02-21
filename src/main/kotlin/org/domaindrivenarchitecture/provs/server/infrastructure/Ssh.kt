@@ -4,7 +4,7 @@ import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFileFromResource
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
 
 val pathSshConfig = "/etc/ssh/ssh_config"
 val pathSshdConfig = "/etc/ssh/sshd_config"
@@ -25,7 +25,7 @@ fun Prov.isSshdHardeningConfigExisting(): Boolean {
 }
 
 fun Prov.configureSsh() = task {
-    if(isSshdConfigExisting() && isSshConfigExisting() && !isSshdHardeningConfigExisting() && isPackageInstalled(packageNameSshServer)) {
+    if(isSshdConfigExisting() && isSshConfigExisting() && !isSshdHardeningConfigExisting() && checkPackage(packageNameSshServer)) {
         createFileFromResource(
             pathSshConfig,
             "ssh_config",

@@ -3,7 +3,7 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
 
 
 fun Prov.installVSCode(vararg options: String) = task {
@@ -34,7 +34,7 @@ private fun Prov.installVSCodePrerequisites() = task {
 @Suppress("unused") // only required for installation of vscode via apt
 private fun Prov.installVSCodeWithApt() = task {
     val packageName = "code"
-    if (!isPackageInstalled(packageName)) {
+    if (!checkPackage(packageName)) {
         // see https://code.visualstudio.com/docs/setup/linux
         // alternatively install with snapd (but this cannot be tested within docker as snapd within docker is not working/supported)
         sh("""
