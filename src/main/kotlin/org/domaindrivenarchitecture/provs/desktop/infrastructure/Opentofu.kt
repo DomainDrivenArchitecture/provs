@@ -31,10 +31,10 @@ fun Prov.installOpentofu(
 
         cmd("sudo apt-get update -q=2")
         aptInstall("tofu")
-        if (!checkPackage("tofu")) {
-            ProvResult(false, err = "tofu not successfully installed")
+        if (checkPackage("tofu")) {
+            ProvResult(true, info = "Opentofu is installed.")
         } else {
-            ProvResult(false, info = "Opentofu is installed.")
+            ProvResult(false, err = "Opentofu not installed successfully.")
         }
     } else {
         ProvResult(false, err = "Opentofu could not be downloaded and installed.")
