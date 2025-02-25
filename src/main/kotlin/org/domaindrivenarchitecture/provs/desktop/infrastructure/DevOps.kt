@@ -164,12 +164,18 @@ fun Prov.installTerraform() = task {
 
 fun Prov.installDirenv() = taskWithResult {
     val bashConfigFile = "~/.bashrc.d/direnv.sh"
+
     if (!checkFile(bashConfigFile) && !checkPackage("direnv")) {
         aptInstall("direnv")
         val content = """eval "$(direnv hook bash)" """.trim() + "\n"
         createFile(bashConfigFile, content)
-        addResult(checkPackage("direnv"), info = "direnv has been installed.")
+
+        if (checkPackage("direnv")) {
+            ProvResult(true, info = "direnv has been installed.")
+        } else {
+            ProvResult(false, info = "direnv has not been installed successfully.")
+        }
     } else {
-        return@taskWithResult ProvResult(true, info = "direnv or ~/.bashrc.d/direnv.sh already installed")
+        ProvResult(true, info = "direnv or ~/.bashrc.d/direnv.sh are already installed")
     }
 }
