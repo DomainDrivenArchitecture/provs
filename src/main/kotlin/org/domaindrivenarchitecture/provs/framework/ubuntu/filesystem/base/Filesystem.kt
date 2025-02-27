@@ -240,7 +240,7 @@ fun Prov.addTextToFile(
             return@taskWithResult ProvResult(true, out = "Text already in file")
         }
         cmd(
-            "printf '%s' " + "${text + "\n"}"
+            "printf '%s' " + text
                 .escapeAndEncloseByDoubleQuoteForShell() + " | ${sudoAsText(sudo)} tee -a ${file.path} > /dev/null"
         )
     }
