@@ -84,7 +84,6 @@ open class Prov protected constructor(
      * Returns success if all sub-tasks finished with success or if no sub-tasks are called at all.
      */
     fun task(name: String? = null, taskLambda: Prov.() -> Unit): ProvResult {
-        printDeprecationWarningIfLevel0("task")
         return evaluate(ResultMode.ALL, name) { taskLambda(); ProvResult(true) }
     }
 
@@ -95,7 +94,6 @@ open class Prov protected constructor(
      * taskWithResult also fails, else success depends on potentially called sub-tasks.
      */
     fun taskWithResult(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
-        printDeprecationWarningIfLevel0("taskWithResult")
         return evaluate(ResultMode.ALL, name) { taskLambda() }
     }
 
@@ -103,7 +101,6 @@ open class Prov protected constructor(
      * defines a task, which returns the returned result from the lambda, the results of sub-tasks are not considered
      */
     fun requireLast(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
-        printDeprecationWarningIfLevel0("requireLast")
         return evaluate(ResultMode.LAST, name) { taskLambda() }
     }
 
@@ -111,7 +108,6 @@ open class Prov protected constructor(
      * Defines a task, which always returns success.
      */
     fun optional(name: String? = null, taskLambda: Prov.() -> ProvResult): ProvResult {
-        printDeprecationWarningIfLevel0("optional")
         return evaluate(ResultMode.OPTIONAL, name) { taskLambda() }
     }
 
@@ -119,7 +115,6 @@ open class Prov protected constructor(
      * Defines a task, which exits the overall execution on failure result of the taskLambda.
      */
     fun exitOnFailure(taskLambda: Prov.() -> ProvResult): ProvResult {
-        printDeprecationWarningIfLevel0("exitOnFailure")
         return evaluate(ResultMode.FAILEXIT) { taskLambda() }
     }
 
@@ -127,7 +122,6 @@ open class Prov protected constructor(
      * Runs the provided task in the specified (running) container
      */
     fun taskInContainer(containerName: String, taskLambda: Prov.() -> ProvResult): ProvResult {
-        printDeprecationWarningIfLevel0("taskInContainer")
         runInContainerWithName = containerName
         val res = evaluate(ResultMode.ALL) { taskLambda() }
         runInContainerWithName = null
@@ -483,12 +477,6 @@ open class Prov protected constructor(
             for (text in infoTexts) {
                 println(text)
             }
-        }
-    }
-
-    fun printDeprecationWarningIfLevel0(methodName: String) {
-        if (level == 0 && progressType != ProgressType.NONE) {
-            println("WARNING: method $methodName should not be used at top-level, use method <session> instead.")
         }
     }
 }
