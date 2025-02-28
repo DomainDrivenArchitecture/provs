@@ -16,7 +16,7 @@ plugins {
 apply plugin: "maven-publish"
 
 
-version = "0.40.3-SNAPSHOT"
+version = "0.40.3"
 group = "org.domaindrivenarchitecture.provs"
 
 
@@ -174,6 +174,17 @@ tasks.register('binariesInstall') {
         exec { commandLine("sh", "-c", "sudo cp build/libs/provs-desktop /usr/local/bin/") }
         exec { commandLine("sh", "-c", "sudo cp build/libs/provs-server /usr/local/bin/") }
         exec { commandLine("sh", "-c", "sudo cp build/libs/provs-syspec /usr/local/bin/") }
+    }
+}
+
+// needs token in env variable: RELEASE_ARTIFACT_TOKEN
+tasks.register('publishRelease') {
+    dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
+    doLast {
+        println "Releasing ..."
+        def token = System.getenv('RELEASE_ARTIFACT_TOKEN')
+        def cmd = "curl -X \"POST\" \"https://repo.prod.meissa.de/api/v1/repos/meissa/provs/releases\"  -H \"accept: application/json\" -H \"Content-Type: application/json\" -d '{ \"body\": \"Provides files for release 0.40.3-SNAPSHOT\", \"tag_name\": \"0.40.3-SNAPSHOT\"}' -H \"Authorization: token $token\""
+        exec { commandLine("sh", "-c", cmd) }
     }
 }
 
