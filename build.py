@@ -12,24 +12,6 @@ version = "0.40.1-dev"
 
 
 @init
-def initialize0(project):
-    """
-    workaround to avoid prompt for gopass if no artifacts need to be uploaded
-    usage: with option "-E ng" , e.g. "pyb -E artifacts patch_local"
-    """
-    os.environ["RELEASE_ARTIFACT_TOKEN"] = "dummy"  # avoids prompt for RELEASE_ARTIFACT_TOKEN
-
-
-@init(environments=["artifacts"])
-def initialize1(project):
-    """
-    prompt for gopass if artifacts need to be uploaded
-    usage: with option "-E artifacts" , e.g. "pyb -E artifacts dev"
-    """
-    del os.environ["RELEASE_ARTIFACT_TOKEN"]
-
-
-@init
 def initialize2(project):
     input = {
         "name": name,
