@@ -6,5 +6,5 @@ import java.io.File
 
 fun Prov.configureNoSwappiness() = task {
     // set swappiness to 0
-    addTextToFile("vm.swappiness=0", File("/etc/sysctl.conf"), sudo = true)
+    addTextToFile("\nvm.swappiness=0\n", File("/etc/sysctl.conf"), sudo = true)
 }
