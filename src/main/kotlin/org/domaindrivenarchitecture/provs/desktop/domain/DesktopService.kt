@@ -166,6 +166,7 @@ fun Prov.provisionIdeDesktop() {
     installBabashka()
     installTerragrunt()
     installOpentofu()
+    installDirenv()
 
     // IDEs
     installIntelliJ()
