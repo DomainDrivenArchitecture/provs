@@ -96,6 +96,8 @@ publish-maven-package-to-meissa:
   <<: *tag_only
   stage: publish
   allow_failure: true
+  before_script:
+    - export MEISSA_PUBLISH_PACKAGE_TOKEN=$MEISSA_REPO_BUERO_RW
   script:
     - ./gradlew -x assemble -x test publishLibraryPublicationToMeissaRepository
 
