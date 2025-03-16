@@ -3,8 +3,7 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackageInstalled
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.isPackageInstalled
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
 import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
@@ -34,7 +33,7 @@ internal class FirefoxKtTest {
         assertTrue(result.success)
         assertEquals("Firefox already installed with ppa", result2.out)
 
-        assertTrue(prov.isPackageInstalled("firefox"))
+        assertTrue(prov.checkPackage("firefox"))
         assertTrue(
             prov.fileContainsText(
                 "/etc/apt/apt.conf.d/51unattended-upgrades-firefox",
@@ -69,7 +68,11 @@ internal class FirefoxKtTest {
         ).session {
             installPpaFirefox()
             firefoxVersion = cmd("apt list firefox --installed").out ?: ""
-            checkPackageInstalled("firefox")
+            if (checkPackage("firefox")) {
+                addResult(true, "Firefox installed")
+            } else {
+                addResult(false, "Firefox not installed")
+            }
         }
 
         // then
