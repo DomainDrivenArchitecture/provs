@@ -8,9 +8,9 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 
 //from https://go.dev/dl/
 fun Prov.installGo(
-    version: String = "1.23.5",
+    version: String = "1.24.2",
     enforceUpgrade: Boolean = false,
-    sha256sum: String = "cbcad4a6482107c7c7926df1608106c189417163428200ce357695cc7e01d091"
+    sha256sum: String = "68097bd680839cbc9d464a0edce4f7c333975e27a90246890e9f1078c7e702ad"
 ) = taskWithResult {
     if (checkCommand("go") && !enforceUpgrade) {
         return@taskWithResult ProvResult(true)
@@ -31,11 +31,11 @@ fun Prov.installGo(
     )
 
     if (result.success) {
-        cmd("tar -C /usr/local -xzf $target/go1.23.5.linux-amd64.tar.gz", sudo = true)
+        cmd("tar -C /usr/local -xzf $target/go1.24.2.linux-amd64.tar.gz", sudo = true)
         deleteFile("$target/$filename")
         configureBashForUser()
         val bashConfigFile = "~/.bashrc.d/go.sh"
-        val content = "export PATH=\$PATH:/usr/local/go/bin\n"
+        val content = "export PATH=\$PATH:/usr/local/go/bin\nexport PATH=\$PATH:\$HOME/go/bin\n"
         createFile(bashConfigFile, content)
         // check and assert installation
         addResult(checkGoVersion(version), info = "Go $version has been installed.")
