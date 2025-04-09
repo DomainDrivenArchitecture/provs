@@ -26,10 +26,25 @@ make test
 require node:
 make test-frontend
 
-require go:
+require go:  
+make lint-backend  
 make test-backend
 
-#nvm - required to build forgejo frontend
+### gofumpt:  
+Installation:  
+go install mvdan.cc/gofumpt@latest  
+
+Usage:  
+gofumpt --help  
+
+eg:  
+gofumpt -l -d .  
+
+further autolinting:  
+make lint-go-fix
+
+
+## nvm - required to build forgejo frontend
 sudo apt remove nodejs
 sudo apt autoremove
 
