@@ -35,7 +35,8 @@ internal fun getCallingMethodName(): String? {
                 inc++
                 method = callingFrame[i + offsetVal + inc].methodName
             }
-            return method + if (suffix.isBlank()) "" else " ($suffix)"
+            // substring before $ - as some methods (e.g. in tests) can have names like "myMethod$lambda$33"
+            return method.substringBefore("$") + if (suffix.isBlank()) "" else " ($suffix)"
         }
     }
     return null
@@ -59,7 +60,7 @@ fun sudoAsText(sudo: Boolean): String = if (sudo) "sudo" else ""
 // --------------  Functions for system related properties    -----------------
 fun fileSeparator(): String = File.separator
 fun fileSeparatorChar(): Char = File.separatorChar
-fun newline(): String = System.getProperty("line.separator")
+fun newline(): String = System.lineSeparator()
 fun hostUserHome(): String = System.getProperty("user.home") + fileSeparator()
 
 
@@ -82,13 +83,6 @@ fun String.escapeForShell(): String {
  */
 internal fun echoCommandForText(text: String): String {
     return "echo -n ${text.escapeAndEncloseByDoubleQuoteForShell()}"
-}
-
-/**
- * Returns an echo command for the given String, which will be escaped for the shell and ADDITIONALLY with newline, tabs, etc replaced by \n, \t, etc
- */
-internal fun echoCommandForTextWithNewlinesReplaced(text: String): String {
-    return "echo -en ${text.escapeAndEncloseByDoubleQuoteForShell()}"
 }
 
 

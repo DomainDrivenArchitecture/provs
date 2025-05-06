@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version_no = "1.8.21"
+    ext.kotlin_version_no = "2.1.20"
     ext.CI_PROJECT_ID = System.env.CI_PROJECT_ID
 
     repositories {
@@ -16,7 +16,7 @@ plugins {
 apply plugin: "maven-publish"
 
 
-version = "0.40.6-SNAPSHOT"
+version = "0.41.1-SNAPSHOT"
 group = "org.domaindrivenarchitecture.provs"
 
 
