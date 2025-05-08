@@ -135,7 +135,8 @@ fun Prov.provisionOfficeDesktop() {
     installDeltaChat()
     aptInstall(OFFICE_SUITE)
     installZimWiki()
-    // installNextcloudClient() might not install - might need fix and working test
+    installZugferdManager()
+
     aptInstall(COMPARE_TOOLS)
 
     // VSCode is also required in office VM (not only in IDE desktop) e.g. as editor

@@ -1,0 +1,51 @@
+package org.domaindrivenarchitecture.provs.desktop.infrastructure
+
+import org.domaindrivenarchitecture.provs.framework.core.Prov
+import org.domaindrivenarchitecture.provs.framework.core.ProvResult
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
+import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
+
+fun Prov.installZugferdManager(
+    version: String = "1.3.2",
+    reInstall: Boolean = false
+) = taskWithResult {
+
+    if (checkPackage("zugferd-manager") && !reInstall) {
+        val versionInst = cmdNoEval("dpkg-query -W zugferd-manager").out?.trim()
+        return@taskWithResult ProvResult(true, info = "$versionInst is already installed.")
+    }
+
+    val downloadUrl =
+        "https://github.com/OpenIndex/ZUGFeRD-Manager/releases/download/v$version/ZUGFeRD-Manager-$version-linux-x64.deb"
+    val filename = "ZUGFeRD-Manager-${version}-linux-x64.deb"
+    val target = "${userHome()}tmp"
+    createDir("tmp")
+
+    val result = downloadFromURL(
+        downloadUrl,
+        filename,
+        target
+    )
+
+    if (result.success) {
+        cmd("apt-get install -fy $target/$filename", sudo = true)
+        addResult(checkZugferdVersion(version), info = "Zugferd-Manager version $version has been installed.")
+    } else {
+        return@taskWithResult ProvResult(
+            false,
+            err = "Zugferd-Manager $version could not be downloaded and installed. " + result.err
+        )
+    }
+}
+
+fun Prov.checkZugferdVersion(version: String): Boolean {
+    val installedZugferdVersion = zugferdVersion()
+    return installedZugferdVersion != null && installedZugferdVersion.startsWith("zugferd-manager " + version)
+}
+
+internal fun Prov.zugferdVersion(): String? {
+    val result = cmdNoEval("dpkg-query -W zugferd-manager")
+    return if (!result.success) null else result.out
+}
