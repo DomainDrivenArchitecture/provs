@@ -31,7 +31,8 @@ internal class GitKtTest {
     @ExtensiveContainerTest
     fun gitClone() {
         // given
-        val repo = "https://gitlab.com/domaindrivenarchitecture/overview.git"
+        val reponame = "provs"
+        val repo = "https://gitlab.com/domaindrivenarchitecture/$reponame.git"
         val prov = defaultTestContainer()
         prov.aptInstall("git")
 
@@ -49,9 +50,9 @@ internal class GitKtTest {
         assertFalse(res1.success)
         assertTrue(res2.success)
         assertTrue(res3.success)
-        assertEquals("Repo [overview] already exists, but might not be up-to-date.", res3.out)
+        assertEquals("Repo [$reponame] already exists, but might not be up-to-date.", res3.out)
         assertTrue(res4.success)
-        assertTrue(prov.checkDir("pathtocreate/overview"))
+        assertTrue(prov.checkDir("pathtocreate/$reponame"))
         assertTrue(res5.success)
         assertTrue(prov.checkDir("pathtocreate/alternativeBasename/.git"))
         assertTrue(res6.success)
