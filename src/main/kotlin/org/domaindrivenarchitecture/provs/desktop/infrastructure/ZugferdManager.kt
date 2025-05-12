@@ -1,7 +1,6 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
 import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
 import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
@@ -10,11 +9,11 @@ import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFrom
 fun Prov.installZugferdManager(
     version: String = "1.3.2",
     reInstall: Boolean = false
-) = taskWithResult {
+) = task {
 
     if (checkPackage("zugferd-manager") && !reInstall) {
         val versionInst = cmdNoEval("dpkg-query -W zugferd-manager").out?.trim()
-        return@taskWithResult ProvResult(true, info = "$versionInst is already installed.")
+        addResult(true, info = "$versionInst is already installed.")
     }
 
     val downloadUrl =
@@ -30,19 +29,14 @@ fun Prov.installZugferdManager(
     )
 
     if (result.success) {
-        cmd("apt-get install -fy $target/$filename", sudo = true)
+        cmd("apt-get install -fqy $target/$filename > tmp/zugferd-manager-install.log", sudo = true)
         addResult(checkZugferdVersion(version), info = "Zugferd-Manager version $version has been installed.")
-    } else {
-        return@taskWithResult ProvResult(
-            false,
-            err = "Zugferd-Manager $version could not be downloaded and installed. " + result.err
-        )
     }
 }
 
 fun Prov.checkZugferdVersion(version: String): Boolean {
     val installedZugferdVersion = zugferdVersion()
-    return installedZugferdVersion != null && installedZugferdVersion.startsWith("zugferd-manager " + version)
+    return installedZugferdVersion != null && installedZugferdVersion.contains(version)
 }
 
 internal fun Prov.zugferdVersion(): String? {

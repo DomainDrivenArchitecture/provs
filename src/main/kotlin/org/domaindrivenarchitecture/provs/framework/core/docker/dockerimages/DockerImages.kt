@@ -12,7 +12,7 @@ interface DockerImage {
 class UbuntuPlusUser(private val userName: String = "testuser") : DockerImage {
 
     override fun imageName(): String {
-        return "ubuntu_plus_user"
+        return "ubuntu_24_plus_user"
     }
 
     override fun imageText(): String {

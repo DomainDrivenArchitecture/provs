@@ -11,7 +11,7 @@ import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbu
 
 val testDockerWithSudo = ("true" != System.getProperty("testdockerwithoutsudo")?.lowercase())
 
-const val defaultTestContainerName = "provs_test"
+const val defaultTestContainerName = "provs_test_24"
 
 private lateinit var prov: Prov
 
