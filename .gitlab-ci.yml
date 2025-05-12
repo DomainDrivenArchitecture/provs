@@ -45,6 +45,7 @@ variables:
 
 
 test:
+  <<: *tag_only
   stage: test
   image: docker:24.0.5
   services:
