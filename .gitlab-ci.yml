@@ -56,8 +56,8 @@ test:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
   script:
     - echo "---------- TEST -------------"
-    - apk update && apk add bash openjdk21 git
-    - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+    - apk update && apk add bash openjdk17 git
+    - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker run --privileged -dit --name provs_test -v /var/run/docker.sock:/var/run/docker.sock $CI_REGISTRY_IMAGE
     - docker inspect -f '{{.State.Running}}' provs_test
