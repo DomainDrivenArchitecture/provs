@@ -12,12 +12,12 @@ interface DockerImage {
 class UbuntuPlusUser(private val userName: String = "testuser") : DockerImage {
 
     override fun imageName(): String {
-        return "ubuntu_plus_user"
+        return "ubuntu_24_plus_user"
     }
 
     override fun imageText(): String {
         return """
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 

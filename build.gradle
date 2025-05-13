@@ -16,7 +16,7 @@ plugins {
 apply plugin: "maven-publish"
 
 
-version = "0.41.1-SNAPSHOT"
+version = "0.42.1-SNAPSHOT"
 group = "org.domaindrivenarchitecture.provs"
 
 
@@ -49,6 +49,11 @@ test {
         def excludedTags = System.getProperty("excludeTags")
         if (System.getProperty("excludeTags") != null) {
             excludeTags(excludedTags.split(","))
+        } else {
+            if (System.getProperty("includeTags") == null || !System.getProperty("includeTags").contains("extensivecontainertest") ) {
+                // Tests with tag extensivecontainertest are per default excluded, but can be included with -DincludeTags=extensivecontainertest
+                excludeTags("extensivecontainertest")
+            }
         }
         if (System.getenv("CI_JOB_TOKEN") != null) {
             excludeTags("containernonci")
@@ -144,19 +149,38 @@ tasks.register('uberjarSyspec', Jar) {
 }
 def projectRoot = rootProject.projectDir
 
+def jarFiles = [
+        "provs-server.jar",
+        "provs-desktop.jar",
+        "provs-syspec.jar"
+]
+
+// allow to inject ExecOperations
+interface ExecOperationsProvider {
+    @javax.inject.Inject
+    ExecOperations getExecOperations()
+}
 
 // copy jar to /usr/local/bin and make it executable
 // Remark: to be able to use it you must have jarwrapper installed (sudo apt install jarwrapper)
 tasks.register('installlocally') {
     dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
     doLast {
-        exec { commandLine("sh", "-c", "sudo apt-get update & sudo apt-get install jarwrapper") }
-        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-server.jar /usr/local/bin/") }
-        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-desktop.jar /usr/local/bin/") }
-        exec { commandLine("sh", "-c", "sudo cp $projectRoot/build/libs/provs-syspec.jar /usr/local/bin/") }
-        exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-server.jar") }
-        exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-desktop.jar") }
-        exec { commandLine("sh", "-c", "sudo chmod 755 /usr/local/bin/provs-syspec.jar") }
+        objects.newInstance(ExecOperationsProvider).execOperations.exec {
+            commandLine("sh", "-c", "sudo apt-get -q=2 update && sudo apt-get -q=2 install jarwrapper")
+        }
+
+        jarFiles.each { jarFile ->
+            def source = file("$projectRoot/build/libs/$jarFile")
+            def destination = "/usr/local/bin/$jarFile"
+            objects.newInstance(ExecOperationsProvider).execOperations.exec {
+                commandLine("sh", "-c", "sudo cp $source $destination")
+            }
+
+            objects.newInstance(ExecOperationsProvider).execOperations.exec {
+                commandLine("sh", "-c", "sudo chmod 755 $destination")
+            }
+        }
     }
 }
 
@@ -168,12 +192,21 @@ tasks.register('binariesInstall') {
     dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
     doLast {
         println "Building binaries ..."
-        exec { commandLine("sh", "-c", "cd build/libs/ && native-image --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel -H:+UnlockExperimentalVMOptions -H:IncludeResources=\".*org/domaindrivenarchitecture/provs/.*(conf|ssh_config|sshd_config|sh|vimrc|xml|yaml)\" -jar provs-desktop.jar") }
-        exec { commandLine("sh", "-c", "cd build/libs/ && native-image --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel -H:+UnlockExperimentalVMOptions -H:IncludeResources=\".*org/domaindrivenarchitecture/provs/.*(conf|ssh_config|sshd_config|sh|vimrc|xml|yaml)\" -jar provs-server.jar") }
-        exec { commandLine("sh", "-c", "cd build/libs/ && native-image --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel -H:+UnlockExperimentalVMOptions -H:IncludeResources=\".*org/domaindrivenarchitecture/provs/.*(conf|ssh_config|sshd_config|sh|vimrc|xml|yaml)\" -jar provs-syspec.jar") }
-        exec { commandLine("sh", "-c", "sudo cp build/libs/provs-desktop /usr/local/bin/") }
-        exec { commandLine("sh", "-c", "sudo cp build/libs/provs-server /usr/local/bin/") }
-        exec { commandLine("sh", "-c", "sudo cp build/libs/provs-syspec /usr/local/bin/") }
+
+        jarFiles.each{ jarFile ->
+            def sourceJar = file("$projectRoot/build/libs/$jarFile")
+            exec { commandLine("sh", "-c", "cd build/libs/ && native-image --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel -H:+UnlockExperimentalVMOptions -H:IncludeResources=\".*org/domaindrivenarchitecture/provs/.*(conf|ssh_config|sshd_config|sh|vimrc|xml|yaml)\" -jar $sourceJar") }
+        }
+
+        def source = [
+                "provs-desktop",
+                "provs-server",
+                "provs-syspec"
+        ]
+        source.each { sourceBin ->
+            def destination = "/usr/local/bin/"
+            exec { commandLine("sh", "-c", "sudo cp build/libs/$sourceBin $destination") }
+        }
     }
 }
 
