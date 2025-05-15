@@ -42,14 +42,20 @@ def initialize2(project):
 @task
 def dev(project):
     """
-    to avoid gopass prompt set RELEASE_ARTIFACT_TOKEN e.g.:
+    Builds the project and executes tests.
+    To avoid gopass prompt set RELEASE_ARTIFACT_TOKEN e.g.:
     RELEASE_ARTIFACT_TOKEN=xxx pyb dev
     """
-    run("./gradlew assemble", shell=True)
+    run("./gradlew build", shell=True)
 
 
 @task
 def build(project):
+    """
+    Only builds the project without tests.
+    To avoid gopass prompt set RELEASE_ARTIFACT_TOKEN e.g.:
+    RELEASE_ARTIFACT_TOKEN=xxx pyb dev
+    """
     run("./gradlew assemble", shell=True)
 
 
@@ -102,8 +108,8 @@ def package(project):
     run("./gradlew assemble -x test uberjarDesktop", shell=True)
     run("./gradlew assemble -x test uberjarServer", shell=True)
     run("./gradlew assemble -x test uberjarSyspec", shell=True)
-    run("cd build/libs/ && find . -type f -exec sha256sum {} \; | sort > sha256sum.lst", shell=True)
-    run("cd build/libs/ && find . -type f -exec sha512sum {} \; | sort > sha512sum.lst", shell=True)
+    run("cd build/libs/ && find . -type f -exec sha256sum {} \\; | sort > sha256sum.lst", shell=True)
+    run("cd build/libs/ && find . -type f -exec sha512sum {} \\; | sort > sha512sum.lst", shell=True)
 
 
 @task
