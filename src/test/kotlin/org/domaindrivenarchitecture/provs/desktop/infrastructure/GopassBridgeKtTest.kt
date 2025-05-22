@@ -34,6 +34,7 @@ internal class GopassBridgeKtTest {
 
     @ExtensiveContainerTest
     @NonCi
+    // test may fail sometimes with: §System has not been booted with systemd as init system (PID 1). Can't operate.\nFailed to connect to bus: Host is down"
     fun test_install_and_configure_GopassBridgeJsonApi() {
         // given
         local().exitAndRmContainer("provs_test")
