@@ -89,6 +89,7 @@ publish-maven-package-to-gitlab:
   stage: publish
   image: openjdk:21-jdk  # tmp until dda image supports jdk21
   script:
+    - microdnf install findutils
     - ./gradlew -x assemble -x test publishLibraryPublicationToGitlabRepository
 
 
@@ -101,6 +102,7 @@ publish-maven-package-to-meissa:
   before_script:
     - export MEISSA_PUBLISH_PACKAGE_TOKEN=$MEISSA_REPO_BUERO_RW
   script:
+    - microdnf install findutils
     - ./gradlew -x assemble -x test publishLibraryPublicationToMeissaRepository
 
 
