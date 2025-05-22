@@ -87,6 +87,7 @@ publish-maven-package-to-gitlab:
   <<: *kotlin
   <<: *tag_only
   stage: publish
+  image: openjdk:21-jdk  # tmp until dda image supports jdk21
   script:
     - ./gradlew -x assemble -x test publishLibraryPublicationToGitlabRepository
 
@@ -95,6 +96,7 @@ publish-maven-package-to-meissa:
   <<: *kotlin
   <<: *tag_only
   stage: publish
+  image: openjdk:21-jdk  # tmp until dda image supports jdk21
   allow_failure: true
   before_script:
     - export MEISSA_PUBLISH_PACKAGE_TOKEN=$MEISSA_REPO_BUERO_RW
