@@ -47,9 +47,9 @@ variables:
 test:
   <<: *tag_only
   stage: test
-  image: docker:24.0.5
+  image: docker:28.1
   services:
-    - docker:24.0.5-dind
+    - docker:28.1-dind
   dependencies:
     - build
   before_script:
