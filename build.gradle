@@ -71,13 +71,13 @@ dependencies {
     api("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version_no")
     api("org.jetbrains.kotlinx:kotlinx-cli:0.3.6")
 
-    api('com.charleskorn.kaml:kaml:0.77.1')
+    api('com.charleskorn.kaml:kaml:0.78.0')
 
     api("org.slf4j:slf4j-api:2.0.17")
     api('ch.qos.logback:logback-classic:1.5.18')
     api('ch.qos.logback:logback-core:1.5.18')
 
-    implementation("com.hierynomus:sshj:0.39.0")
+    implementation("com.hierynomus:sshj:0.40.0")
 
     testFixturesApi('io.mockk:mockk:1.14.2')
 
@@ -195,7 +195,9 @@ tasks.register('binariesInstall') {
 
         jarFiles.each{ jarFile ->
             def sourceJar = file("$projectRoot/build/libs/$jarFile")
-            exec { commandLine("sh", "-c", "cd build/libs/ && native-image --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel -H:+UnlockExperimentalVMOptions -H:IncludeResources=\".*org/domaindrivenarchitecture/provs/.*(conf|ssh_config|sshd_config|sh|vimrc|xml|yaml)\" -jar $sourceJar") }
+            objects.newInstance(ExecOperationsProvider).execOperations.exec {
+                commandLine("sh", "-c", "cd build/libs/ && native-image --no-fallback --initialize-at-build-time=kotlin.DeprecationLevel -H:+UnlockExperimentalVMOptions -H:IncludeResources=\".*org/domaindrivenarchitecture/provs/.*(conf|ssh_config|sshd_config|sh|vimrc|xml|yaml)\" -jar $sourceJar")
+            }
         }
 
         def source = [
@@ -205,7 +207,9 @@ tasks.register('binariesInstall') {
         ]
         source.each { sourceBin ->
             def destination = "/usr/local/bin/"
-            exec { commandLine("sh", "-c", "sudo cp build/libs/$sourceBin $destination") }
+            objects.newInstance(ExecOperationsProvider).execOperations.exec {
+                commandLine("sh", "-c", "sudo cp build/libs/$sourceBin $destination")
+            }
         }
     }
 }
@@ -217,7 +221,9 @@ tasks.register('publishRelease') {
         println "Releasing ..."
         def token = System.getenv('RELEASE_ARTIFACT_TOKEN')
         def cmd = "curl -X \"POST\" \"https://repo.prod.meissa.de/api/v1/repos/meissa/provs/releases\"  -H \"accept: application/json\" -H \"Content-Type: application/json\" -d '{ \"body\": \"Provides files for release 0.40.3-SNAPSHOT\", \"tag_name\": \"0.40.3-SNAPSHOT\"}' -H \"Authorization: token $token\""
-        exec { commandLine("sh", "-c", cmd) }
+        objects.newInstance(ExecOperationsProvider).execOperations.exec {
+            commandLine("sh", "-c", cmd)
+        }
     }
 }
 
