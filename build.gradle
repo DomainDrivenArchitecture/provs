@@ -12,11 +12,12 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_version_no"
     id "java"
     id "java-test-fixtures"
+    id('com.jaredsburrows.license') version '0.9.8'
 }
 apply plugin: "maven-publish"
 
 
-version = "0.42.1-SNAPSHOT"
+version = "0.42.2-SNAPSHOT"
 group = "org.domaindrivenarchitecture.provs"
 
 
