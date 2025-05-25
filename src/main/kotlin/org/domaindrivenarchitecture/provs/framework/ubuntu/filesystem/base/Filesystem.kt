@@ -89,7 +89,7 @@ fun Prov.copyFileFromLocal(
  * Creates a file with the specified data. If text is null, an empty file is created
  */
 fun Prov.createFile(
-    fullyQualifiedFilename: String,
+    fullyQualifiedFilename: String,    // remote filename
     text: String?,
     posixFilePermission: String? = null,
     sudo: Boolean = false,
@@ -388,7 +388,7 @@ internal fun Prov.createParentDirs(file: File, sudo: Boolean = false) {
     // and this check needs neither to be included in the overall result nor being listed in the results report.
     // But if directories need to be created, the creation itself is placed within the task "createParentDirs"
     // in order to be included in the results.
-    val dir = file.parent?.toString()
+    val dir = file.parent
 
     if (dir != null && dir != "" && !checkDir(dir, sudo = sudo)) {
         task("createParentDirs") {

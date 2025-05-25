@@ -1,13 +1,10 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
-import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
-import org.domaindrivenarchitecture.provs.configuration.infrastructure.DefaultConfigFileRepository
-import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFile
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.io.File
 
 internal class DefaultApplicationFileRepositoryKtTest {
 
@@ -22,9 +19,7 @@ internal class DefaultApplicationFileRepositoryKtTest {
             "Should not find the file."
         ) { repo.getFile() }
 
-        assertEquals(
-            "Application file not found. Please check if path is correct.",
-            exception.message)
+        assertTrue(exception.message?.matches(Regex("File \\[.*iDontExist] not found. Please check if path is correct.")) ?: false, "Exception message wrong: $exception.message")
     }
 
     @Test

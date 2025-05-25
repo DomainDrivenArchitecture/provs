@@ -32,8 +32,8 @@ fun Prov.provisionK3sCommand(cli: K3sCliCommand) = task {
         DefaultConfigFileRepository().assertExists(cli.configFileName)
         val k3sConfigReprovision = k3sConfig.copy(reprovision = cli.reprovision || k3sConfig.reprovision)
 
-        val applicationFile = cli.applicationFileName?.let { DefaultApplicationFileRepository(cli.applicationFileName).getFile() }
-        provisionK3s(k3sConfigReprovision, grafanaConfigResolved, hcloudConfigResolved, applicationFile)
+        val applicationFiles = cli.applicationFileNames?.map { DefaultApplicationFileRepository(it).getFile() }
+        provisionK3s(k3sConfigReprovision, grafanaConfigResolved, hcloudConfigResolved, applicationFiles)
     } else {
         cli.onlyModules.forEach { module ->
             when (module.uppercase()) {
@@ -52,7 +52,7 @@ fun Prov.provisionK3s(
     k3sConfig: K3sConfig,
     grafanaConfigResolved: GrafanaAgentConfigResolved? = null,
     hetznerCSIConfigResolved: HetznerCSIConfigResolved? = null,
-    applicationFile: ApplicationFile? = null
+    applicationFiles: List<ApplicationFile>? = null
 ) = task {
 
     if (k3sConfig.reprovision) {
@@ -79,8 +79,10 @@ fun Prov.provisionK3s(
         provisionHetznerCSI(hetznerCSIConfigResolved)
     }
 
-    if (applicationFile != null) {
-        provisionK3sApplication(applicationFile)
+    if (applicationFiles != null) {
+        for (file in applicationFiles) {
+            provisionK3sApplication(file)
+        }
     }
 
     if (!k3sConfig.reprovision) {

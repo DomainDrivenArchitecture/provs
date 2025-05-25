@@ -9,7 +9,7 @@ class K3sCliCommand(
     serverType: ServerType,
     target: TargetCliCommand,
     configFileName: ConfigFileName?,
-    val applicationFileName: ApplicationFileName?,
+    val applicationFileNames: List<ApplicationFileName>?,
     val onlyModules: List<String>? = null,
     val reprovision: Reprovision = false,
 ) :

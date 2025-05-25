@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.server.domain.k3s
 
-data class ApplicationFile(val id: ApplicationFileName, val fileContent: String) {
+data class ApplicationFile(val fileName: ApplicationFileName, val fileContent: String) {
 
     fun validate() : List<String> {
         val output = ArrayList<String>()

@@ -11,7 +11,7 @@ class DefaultApplicationFileRepository(val applicationFileName: ApplicationFileN
 
     private fun assertExists(applicationFileName: String) {
         if (!checkLocalFile(applicationFileName)) {
-            throw RuntimeException("Application file not found. Please check if path is correct.")
+            throw RuntimeException("File [$applicationFileName] not found. Please check if path is correct.")
         }
     }
 

@@ -168,13 +168,14 @@ fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null, w
 }
 
 fun Prov.provisionK3sApplication(applicationFile: ApplicationFile) = task {
-    copyFileFromLocal(
-        fullyQualifiedLocalFilename = applicationFile.id.fullyQualifiedName(),
-        fullyQualifiedFilename = k3sManualManifestsDir + "application.yaml",
+    val remoteFilename = k3sManualManifestsDir + applicationFile.fileName
+    createFile(
+        remoteFilename,
         posixFilePermission = "644",
-        sudo = true
+        sudo = true,
+        text = applicationFile.fileContent
     )
-    cmd("kubectl apply -f ${k3sManualManifestsDir}application.yaml", sudo = true)
+    applyK3sFile(File(remoteFilename))
 }
 
 

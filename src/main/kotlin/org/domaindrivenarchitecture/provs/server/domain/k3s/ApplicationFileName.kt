@@ -6,4 +6,7 @@ class ApplicationFileName(val fileName: String) {
     fun fullyQualifiedName() : String {
         return File(fileName).absoluteFile.absolutePath
     }
+    override fun toString(): String {
+        return fileName
+    }
 }

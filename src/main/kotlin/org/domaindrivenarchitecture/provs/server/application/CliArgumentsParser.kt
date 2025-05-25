@@ -35,7 +35,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
                     passwordInteractive
                 ),
                 module.configFileName,
-                module.applicationFileName,
+                module.applicationFileNames,
                 module.onlyModules,
                 module.reprovision,
             )
@@ -53,7 +53,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
     abstract class ServerSubcommand(name: String, description: String) : Subcommand(name, description) {
         var parsed: Boolean = false
         var configFileName: ConfigFileName? = null
-        var applicationFileName: ApplicationFileName? = null
+        var applicationFileNames: List<ApplicationFileName>? = null
         var onlyModules: List<String>? = null
         var reprovision: Boolean = false
     }
@@ -69,7 +69,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
             ArgType.String,
             "application-file",
             "a",
-            "the filename containing the yaml a application deployment"
+            "one or more filenames (comma-separated) containing application deployment yaml"
         )
         val only by option(
             ArgType.Choice<ServerOnlyModule>(),
@@ -85,7 +85,7 @@ class CliArgumentsParser(name: String) : CliTargetParser(name) {
         )
         override fun execute() {
             super.configFileName = cliConfigFileName?.let { ConfigFileName(it) }
-            super.applicationFileName = cliApplicationFileName?.let { ApplicationFileName(it) }
+            super.applicationFileNames = cliApplicationFileName?.split(",")?.map { ApplicationFileName(it) }
             super.onlyModules = only?.let { listOf(it.name.lowercase()) }
             super.reprovision = cliReprovision == true
             super.parsed = true
