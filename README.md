@@ -76,13 +76,14 @@ provs-desktop.jar ide myuser@myhost.com -o verify # verifies the installation on
 ### Provision a k3s Server
 
 ```bash
-provs-server.jar k3s local # installs a k3s server locally
-provs-server.jar k3s myuser@myhost.com # install remote k3s using ssh-authentication // option -p for password authentication
-provs-server.jar k3s myuser@myhost.com  -c path/to/k3sServerConfig.yaml -a path/to/application.yaml # as above, but define paths to your application and config yamls
+provs-server.jar k3s local   # installs a k3s server locally
+provs-server.jar k3s myuser@myhost.com   # install remote k3s using ssh-authentication // option -p for password authentication
+provs-server.jar k3s myuser@myhost.com -c path/to/k3sServerConfig.yaml -a path/to/application.yaml   # spefifying config and application yaml
+provs-server.jar k3s myuser@myhost.com -a app1.yaml,app2.yaml   # apply multiple (comma-separated) application yamls
 ```
 
 For the remote server please configure a config file (default file name: server-config.yaml).
-It has to be in the same folder where you execute the provs-server.jar command.
+If filename and path is notgi explicitly specified, then it has to be in the same folder where you execute the provs-server.jar command.
 ```yaml
 fqdn: "myhostname.com"
 node:
