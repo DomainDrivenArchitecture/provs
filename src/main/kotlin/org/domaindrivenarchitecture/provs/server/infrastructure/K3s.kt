@@ -168,14 +168,14 @@ fun Prov.provisionK3sEcho(fqdn: String, endpoint: CertmanagerEndpoint? = null, w
 }
 
 fun Prov.provisionK3sApplication(applicationFile: ApplicationFile) = task {
-    val remoteFilename = k3sManualManifestsDir + applicationFile.fileName
+    val remoteFqFilename = k3sManualManifestsDir + applicationFile.fileName.name()
     createFile(
-        remoteFilename,
+        remoteFqFilename,
         posixFilePermission = "644",
         sudo = true,
         text = applicationFile.fileContent
     )
-    applyK3sFile(File(remoteFilename))
+    applyK3sFile(File(remoteFqFilename))
 }
 
 

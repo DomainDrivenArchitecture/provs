@@ -45,7 +45,7 @@ internal class CliArgumentParserTest {
 
         // then
         assertTrue(result.isValidTarget())
-        assertEquals(ApplicationFileName("app.yaml").fullyQualifiedName(), result.applicationFileNames?.get(0)?.fullyQualifiedName())
+        assertEquals(ApplicationFileName("app.yaml").absoluteFileName(), result.applicationFileNames?.get(0)?.absoluteFileName())
         assertEquals(TargetCliCommand("user@host.com"), result.target)
     }
 
@@ -55,11 +55,11 @@ internal class CliArgumentParserTest {
         val parser = CliArgumentsParser("test")
 
         // when
-        val result: K3sCliCommand = parser.parseCommand(args = arrayOf("k3s", "user@host.com", "-a", "app.yaml,app2.yaml")) as K3sCliCommand
+        val result: K3sCliCommand = parser.parseCommand(args = arrayOf("k3s", "user@host.com", "-a", "../target/app1.yaml,../target/app2.yaml")) as K3sCliCommand
 
         // then
         assertTrue(result.isValidTarget())
-        assertEquals(listOf(ApplicationFileName("app.yaml"), ApplicationFileName("app2.yaml")).toString(), result.applicationFileNames.toString())
+        assertEquals(listOf(ApplicationFileName("../target/app1.yaml"), ApplicationFileName("../target/app2.yaml")).toString(), result.applicationFileNames.toString())
         assertEquals(TargetCliCommand("user@host.com"), result.target)
     }
 }

@@ -14,7 +14,7 @@ internal class ApplicationFileKtTest {
         val applicationFileName = ApplicationFileName("src/test/resources/failed-spec.yaml")
 
         // when
-        val file = ApplicationFile(applicationFileName, getLocalFileContent(applicationFileName.fullyQualifiedName()))
+        val file = ApplicationFile(applicationFileName, getLocalFileContent(applicationFileName.absoluteFileName()))
 
         // then
         val result = file.validate()
@@ -28,7 +28,7 @@ internal class ApplicationFileKtTest {
         val applicationFileName = ApplicationFileName("src/test/resources/java-exception.yaml")
 
         // when
-        val file = ApplicationFile(applicationFileName, getLocalFileContent(applicationFileName.fullyQualifiedName()))
+        val file = ApplicationFile(applicationFileName, getLocalFileContent(applicationFileName.absoluteFileName()))
 
         // then
         val result = file.validate()

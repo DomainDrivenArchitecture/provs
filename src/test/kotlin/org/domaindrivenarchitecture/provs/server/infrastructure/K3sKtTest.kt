@@ -1,20 +1,45 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
-import org.domaindrivenarchitecture.provs.framework.core.local
-import org.domaindrivenarchitecture.provs.framework.core.remote
-import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFile
-import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
-import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
-import org.domaindrivenarchitecture.provs.server.domain.k3s.Node
-import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3s
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
+import io.mockk.verify
+import org.domaindrivenarchitecture.provs.framework.core.*
+import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
+import org.domaindrivenarchitecture.provs.server.domain.k3s.*
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.lang.Thread.sleep
 
 
 class K3sKtTest {
+
+    @AfterEach
+    internal fun afterEach() {
+        // cleanup
+        unmockkAll()
+    }
+
+    @Test
+    fun test_provisionK3sApplication() {
+        // given
+        val dummyProv = Prov.newInstance(DummyProcessor())
+        mockkStatic(Prov::createFile)
+        mockkStatic(Prov::applyK3sFile)
+        every { any<Prov>().createFile(any(), any()) } returns ProvResult(true, cmd = "mocked")
+        every { any<Prov>().applyK3sFile(any()) } returns ProvResult(true, cmd = "mocked")
+
+        // when
+        dummyProv.provisionK3sApplication(ApplicationFile(ApplicationFileName("../folder/test.yaml"), "testcontent"))
+
+        // then
+        verify(exactly = 1) { any<Prov>().createFile("/etc/rancher/k3s/manifests/test.yaml", "testcontent", "644", true ) }
+        verify(exactly = 1) { any<Prov>().applyK3sFile(File("/etc/rancher/k3s/manifests/test.yaml")) }
+    }
 
     @Test   // Extensive test, takes several minutes
     @Disabled("1. update remoteIp and user, 2. enable remote ssh connection and 3. enable this test and then 4. run manually")
