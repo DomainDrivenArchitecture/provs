@@ -44,8 +44,11 @@ fun quit(status: Int): Nothing {
 
 
 fun printProvsVersion() {
-    val version = object {}.javaClass.getResource("/version.txt")?.readText()?.trim()
-    println("\nProvs version: $version\n")
+    // see https://stackoverflow.com/questions/33020069/how-to-get-version-attribute-from-a-gradle-build-to-be-included-in-runtime-swing
+    val version = object {}.javaClass.getPackage().getImplementationVersion()
+    if (version != null) {
+        println("\nProvs version: $version\n")
+    }
 }
 
 
