@@ -38,7 +38,7 @@ class K3sKtTest {
 
         // then
         verify(exactly = 1) { any<Prov>().createFile("/etc/rancher/k3s/manifests/test.yaml", "testcontent", "644", true ) }
-        verify(exactly = 1) { any<Prov>().applyK3sFile(File("/etc/rancher/k3s/manifests/test.yaml")) }
+        verify(exactly = 1) { any<Prov>().createK3sFile(File("/etc/rancher/k3s/manifests/test.yaml")) }
     }
 
     @Test   // Extensive test, takes several minutes

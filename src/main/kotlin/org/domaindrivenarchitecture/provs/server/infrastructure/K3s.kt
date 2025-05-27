@@ -175,7 +175,7 @@ fun Prov.provisionK3sApplication(applicationFile: ApplicationFile) = task {
         sudo = true,
         text = applicationFile.fileContent
     )
-    applyK3sFile(File(remoteFqFilename))
+    createK3sFile(File(remoteFqFilename))
 }
 
 
@@ -183,6 +183,10 @@ fun Prov.provisionK3sApplication(applicationFile: ApplicationFile) = task {
 
 fun Prov.applyK3sFile(file: File) = task {
     cmd("kubectl apply -f ${file.path}", sudo = true)
+}
+
+fun Prov.createK3sFile(file: File) = task {
+    cmd("kubectl create -f ${file.path}", sudo = true)
 }
 
 fun Prov.createK3sFileFromResource(
