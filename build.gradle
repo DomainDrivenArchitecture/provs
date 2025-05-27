@@ -167,10 +167,6 @@ interface ExecOperationsProvider {
 tasks.register('installlocally') {
     dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
     doLast {
-        objects.newInstance(ExecOperationsProvider).execOperations.exec {
-            commandLine("sh", "-c", "sudo apt-get -q=2 update && sudo apt-get -q=2 install jarwrapper")
-        }
-
         jarFiles.each { jarFile ->
             def source = file("$projectRoot/build/libs/$jarFile")
             def destination = "/usr/local/bin/$jarFile"
