@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.server.domain.k3s
 
 import java.io.File
 
-class ApplicationFileName(val fqFileName: String) {
+class ApplicationFileName(private val fqFileName: String) {
     fun absolutePath() : String {
         return File(fqFileName).absolutePath
     }
