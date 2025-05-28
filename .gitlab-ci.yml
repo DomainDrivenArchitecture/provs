@@ -6,7 +6,7 @@ stages:
   - release
 
 .kotlin-job: &kotlin
-  image: domaindrivenarchitecture/ddadevops-kotlin:4.10.7
+  image: domaindrivenarchitecture/ddadevops-kotlin:4.15.0
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
