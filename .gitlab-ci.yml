@@ -62,7 +62,7 @@ test:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker run --privileged -dit --name provs_test -v /var/run/docker.sock:/var/run/docker.sock $CI_REGISTRY_IMAGE
     - docker inspect -f '{{.State.Running}}' provs_test
-    - ./gradlew -x build -Dtestdockerwithoutsudo=true -DexcludeTags=extensivecontainertest,nonci
+    - ./gradlew test -Dtestdockerwithoutsudo=true -DexcludeTags=extensivecontainertest,nonci
   artifacts:
     when: on_failure
     paths:
