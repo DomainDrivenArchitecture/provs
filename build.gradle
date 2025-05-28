@@ -17,7 +17,7 @@ plugins {
 apply plugin: "maven-publish"
 
 
-version = "0.44.2-SNAPSHOT"
+version = "0.44.3-SNAPSHOT"
 group = "org.domaindrivenarchitecture.provs"
 
 
@@ -167,10 +167,6 @@ interface ExecOperationsProvider {
 tasks.register('installlocally') {
     dependsOn(uberjarServer, uberjarDesktop, uberjarSyspec)
     doLast {
-        objects.newInstance(ExecOperationsProvider).execOperations.exec {
-            commandLine("sh", "-c", "sudo apt-get -q=2 update && sudo apt-get -q=2 install jarwrapper")
-        }
-
         jarFiles.each { jarFile ->
             def source = file("$projectRoot/build/libs/$jarFile")
             def destination = "/usr/local/bin/$jarFile"
@@ -284,21 +280,4 @@ publishing {
             }
         }
     }
-}
-
-
-// create version file to allow Kotlin code to print own version - see https://stackoverflow.com/questions/33020069/how-to-get-version-attribute-from-a-gradle-build-to-be-included-in-runtime-swing
-tasks.register('createVersion') {
-    dependsOn processResources
-    doLast {
-        def version = project.version.toString()
-        def fileName = "src/main/resources/version.txt"
-        def file = new File(fileName)
-        file.write(version)
-        println "Created file: " + fileName
-    }
-}
-
-classes {
-    dependsOn createVersion
 }
