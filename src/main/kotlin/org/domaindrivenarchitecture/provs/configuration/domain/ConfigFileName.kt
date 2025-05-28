@@ -5,7 +5,7 @@ import java.io.File
 class ConfigFileName(fileName: String)
 {
     val fileName = fileName.trim()
-    fun fullqualified() : String {
-        return File(fileName).absoluteFile.absolutePath
+    fun absolutePath() : String {
+        return File(fileName).absolutePath
     }
 }

@@ -45,7 +45,7 @@ internal class CliArgumentParserTest {
 
         // then
         assertTrue(result.isValidTarget())
-        assertEquals(ApplicationFileName("app.yaml").absoluteFileName(), result.applicationFileNames?.get(0)?.absoluteFileName())
+        assertEquals(ApplicationFileName("app.yaml").absolutePath(), result.applicationFileNames?.get(0)?.absolutePath())
         assertEquals(TargetCliCommand("user@host.com"), result.target)
     }
 

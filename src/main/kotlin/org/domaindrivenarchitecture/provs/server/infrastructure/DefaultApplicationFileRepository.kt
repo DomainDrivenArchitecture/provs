@@ -16,9 +16,9 @@ class DefaultApplicationFileRepository(val applicationFileName: ApplicationFileN
     }
 
     override fun getFile(): ApplicationFile {
-        assertExists(applicationFileName.absoluteFileName())
+        assertExists(applicationFileName.absolutePath())
 
-        val applicationFileContents = getLocalFileContent(applicationFileName.absoluteFileName())
+        val applicationFileContents = getLocalFileContent(applicationFileName.absolutePath())
         val applicationFile = ApplicationFile(applicationFileName, applicationFileContents)
 
         return if (applicationFile.isValid()) {
