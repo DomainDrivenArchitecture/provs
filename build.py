@@ -113,7 +113,7 @@ def package(project):
 
 @task
 def package_native(project):
-    run("./gradlew -x binariesInstall", shell=True)
+    run("./gradlew assemble -x test binariesInstall", shell=True)
     run("cd build/libs/ && find . -type f -name 'provs-*' ! -name '*jar' -exec sha256sum {} \\; | sort >> sha256sum.lst", shell=True)
     run("cd build/libs/ && find . -type f -name 'provs-*' ! -name '*jar' -exec sha512sum {} \\; | sort >> sha512sum.lst", shell=True)
 
