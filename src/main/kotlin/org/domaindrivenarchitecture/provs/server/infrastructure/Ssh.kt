@@ -2,9 +2,9 @@ package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFileFromResource
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFileFromResource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.checkPackage
 
 val pathSshConfig = "/etc/ssh/ssh_config"
 val pathSshdConfig = "/etc/ssh/sshd_config"

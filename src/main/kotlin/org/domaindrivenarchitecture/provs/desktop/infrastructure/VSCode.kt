@@ -2,8 +2,8 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.checkPackage
 
 
 fun Prov.installVSCode(vararg options: String) = task {

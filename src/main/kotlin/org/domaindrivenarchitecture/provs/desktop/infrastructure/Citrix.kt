@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.web.infrastructure.downloadFromURL
 
 /**
  * ATTENTION: Download URL might be only valid for a limited time and thus might not be working.

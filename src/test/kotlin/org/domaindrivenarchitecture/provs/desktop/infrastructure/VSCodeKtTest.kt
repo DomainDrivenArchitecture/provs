@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.remote
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.secretSources.PromptSecretSource
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test

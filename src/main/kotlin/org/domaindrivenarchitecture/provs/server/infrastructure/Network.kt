@@ -2,8 +2,8 @@ package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFileFromResourceTemplate
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFileFromResourceTemplate
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkFile
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
 
 val loopbackFile = "/etc/netplan/99-loopback.yaml"

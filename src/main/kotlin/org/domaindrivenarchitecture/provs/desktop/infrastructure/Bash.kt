@@ -3,10 +3,10 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.getResourceAsText
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.addTextToFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.addTextToFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
 import java.io.File
 
 private val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure/"

@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.addTextToFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.addTextToFile
 import java.io.File
 
 fun Prov.configureNoSwappiness() = task {

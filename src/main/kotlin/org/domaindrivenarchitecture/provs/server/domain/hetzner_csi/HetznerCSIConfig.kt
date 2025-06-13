@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.server.domain.hetzner_csi
 
 import kotlinx.serialization.Serializable
 import org.domaindrivenarchitecture.provs.framework.core.Secret
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSupplier
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.SecretSupplier
 
 @Serializable
 data class HetznerCSIConfig (

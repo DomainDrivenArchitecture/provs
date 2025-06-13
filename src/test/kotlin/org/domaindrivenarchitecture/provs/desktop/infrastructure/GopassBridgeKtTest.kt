@@ -4,8 +4,8 @@ import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.docker.exitAndRmContainer
 import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPair
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.configureGpgKeys
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.domain.KeyPair
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.infrastructure.configureGpgKeys
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.domaindrivenarchitecture.provs.test.tags.NonCi

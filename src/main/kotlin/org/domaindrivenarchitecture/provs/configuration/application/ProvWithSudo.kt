@@ -3,8 +3,8 @@ package org.domaindrivenarchitecture.provs.configuration.application
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.Secret
 import org.domaindrivenarchitecture.provs.framework.core.cli.getPasswordToConfigureSudoWithoutPassword
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudoWithoutPassword
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.makeCurrentUserSudoerWithoutPasswordRequired
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.infrastructure.currentUserCanSudoWithoutPassword
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.infrastructure.makeCurrentUserSudoerWithoutPasswordRequired
 
 
 fun Prov.ensureSudoWithoutPassword(password: Secret?) {

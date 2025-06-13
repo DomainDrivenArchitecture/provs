@@ -1,11 +1,11 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptPurge
-import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.deleteFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.userHome
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptPurge
+import org.domaindrivenarchitecture.provs.framework.ubuntu.web.infrastructure.downloadFromURL
 
 // see https://github.com/gohugoio/hugo/releases/
 fun Prov.installHugoByDeb() = task {

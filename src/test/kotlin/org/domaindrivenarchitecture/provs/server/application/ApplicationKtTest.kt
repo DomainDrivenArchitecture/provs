@@ -7,8 +7,8 @@ import org.domaindrivenarchitecture.provs.framework.core.local
 import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
 import org.domaindrivenarchitecture.provs.framework.core.remote
 import org.domaindrivenarchitecture.provs.framework.ubuntu.scheduledjobs.domain.scheduleMonthlyReboot
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceType
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSupplier
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.SecretSourceType
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.SecretSupplier
 import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.HetznerCSIConfig
 import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.provisionHetznerCSI
 import org.domaindrivenarchitecture.provs.server.domain.k3s.provisionK3s

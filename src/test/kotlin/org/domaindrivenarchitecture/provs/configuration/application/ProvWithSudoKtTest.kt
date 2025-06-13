@@ -8,10 +8,10 @@ import org.domaindrivenarchitecture.provs.framework.core.cli.getPasswordToConfig
 import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.currentUserCanSudoWithoutPassword
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.makeCurrentUserSudoerWithoutPasswordRequired
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.deleteFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.infrastructure.currentUserCanSudoWithoutPassword
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.infrastructure.makeCurrentUserSudoerWithoutPasswordRequired
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

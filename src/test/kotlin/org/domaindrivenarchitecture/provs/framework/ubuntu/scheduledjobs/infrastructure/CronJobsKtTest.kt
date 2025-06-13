@@ -1,10 +1,10 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.scheduledjobs.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContent
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createDirs
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.fileContent
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.infrastructure.whoami
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals

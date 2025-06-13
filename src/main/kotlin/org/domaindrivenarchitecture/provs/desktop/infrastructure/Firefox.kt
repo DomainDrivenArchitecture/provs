@@ -2,9 +2,9 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstallFromPpa
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstallFromPpa
 
 
 /**

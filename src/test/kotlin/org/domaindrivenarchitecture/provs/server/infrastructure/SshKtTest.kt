@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.deleteFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.fileContainsText
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertTrue

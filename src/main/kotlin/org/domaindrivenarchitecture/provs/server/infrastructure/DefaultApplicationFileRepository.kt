@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.getLocalFileContent
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkLocalFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkLocalFile
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFile
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileName
 import org.domaindrivenarchitecture.provs.server.domain.k3s.ApplicationFileRepository

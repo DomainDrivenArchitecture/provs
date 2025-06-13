@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFileFromResource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFileFromResource
 
 private const val resourcePath = "org/domaindrivenarchitecture/provs/desktop/infrastructure"
 

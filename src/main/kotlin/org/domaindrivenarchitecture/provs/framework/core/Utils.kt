@@ -5,7 +5,7 @@ import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerSta
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
 import org.domaindrivenarchitecture.provs.framework.core.processors.RemoteProcessor
 import org.domaindrivenarchitecture.provs.framework.core.tags.Api
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContent
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.fileContent
 import java.io.File
 import java.net.InetAddress
 

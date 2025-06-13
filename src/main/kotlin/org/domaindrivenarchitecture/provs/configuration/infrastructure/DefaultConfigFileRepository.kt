@@ -1,6 +1,6 @@
 package org.domaindrivenarchitecture.provs.configuration.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkLocalFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkLocalFile
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileRepository
 

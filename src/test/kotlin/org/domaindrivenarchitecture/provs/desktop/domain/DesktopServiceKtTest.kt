@@ -10,7 +10,7 @@ import org.domaindrivenarchitecture.provs.framework.core.docker.provideContainer
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerStartMode
 import org.domaindrivenarchitecture.provs.framework.core.processors.ContainerUbuntuHostProcessor
 import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.deleteFile
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions

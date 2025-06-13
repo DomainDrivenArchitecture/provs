@@ -1,10 +1,10 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.remote
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.deleteFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.fileContainsText
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.checkPackage
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.secretSources.PromptSecretSource
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ExtensiveContainerTest
 import org.junit.jupiter.api.Assertions.assertEquals

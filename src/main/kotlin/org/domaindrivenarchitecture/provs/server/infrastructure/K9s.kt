@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
+import org.domaindrivenarchitecture.provs.framework.ubuntu.web.infrastructure.downloadFromURL
 
 
 const val K9S_VERSION = "v0.32.5"

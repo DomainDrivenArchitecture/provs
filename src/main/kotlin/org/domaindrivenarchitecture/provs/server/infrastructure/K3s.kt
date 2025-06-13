@@ -3,7 +3,7 @@ package org.domaindrivenarchitecture.provs.server.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.repeatTaskUntilSuccess
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.*
 import org.domaindrivenarchitecture.provs.server.domain.CertmanagerEndpoint
 import org.domaindrivenarchitecture.provs.server.domain.k3s.*
 import java.io.File

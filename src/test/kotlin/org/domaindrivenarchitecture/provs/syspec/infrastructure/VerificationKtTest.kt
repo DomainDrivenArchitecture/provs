@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.syspec.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createDirs
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFile
 import org.domaindrivenarchitecture.provs.syspec.domain.*
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest

@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
 
 fun Prov.installDocker() = task {
     aptInstall("containerd docker.io")

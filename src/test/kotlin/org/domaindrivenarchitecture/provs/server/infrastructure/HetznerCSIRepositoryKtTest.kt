@@ -1,10 +1,9 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.configuration.domain.ConfigFileName
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSourceType
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSupplier
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.SecretSourceType
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.SecretSupplier
 import org.domaindrivenarchitecture.provs.server.domain.hetzner_csi.HetznerCSIConfig
-import org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent.GrafanaAgentConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

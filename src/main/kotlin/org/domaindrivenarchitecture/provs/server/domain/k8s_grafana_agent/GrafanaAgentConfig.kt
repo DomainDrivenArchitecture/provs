@@ -2,7 +2,7 @@ package org.domaindrivenarchitecture.provs.server.domain.k8s_grafana_agent
 
 import kotlinx.serialization.Serializable
 import org.domaindrivenarchitecture.provs.framework.core.Secret
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.SecretSupplier
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.SecretSupplier
 
 @Serializable
 data class GrafanaAgentConfig(

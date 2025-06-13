@@ -1,10 +1,10 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
-import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.userHome
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.checkPackage
+import org.domaindrivenarchitecture.provs.framework.ubuntu.web.infrastructure.downloadFromURL
 
 fun Prov.installZugferdManager(
     version: String = "1.3.2",

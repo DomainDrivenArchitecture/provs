@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.KeyPairSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.domain.KeyPairSource
 import kotlinx.serialization.Serializable
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.SshKeyPairSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.domain.SshKeyPairSource
 
 
 @Serializable

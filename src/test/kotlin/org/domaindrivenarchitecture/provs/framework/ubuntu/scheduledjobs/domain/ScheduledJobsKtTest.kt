@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.scheduledjobs.domain
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContent
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.fileContent
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.*

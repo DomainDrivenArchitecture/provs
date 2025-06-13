@@ -2,9 +2,9 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkCommand
-import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.*
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.checkCommand
+import org.domaindrivenarchitecture.provs.framework.ubuntu.web.infrastructure.downloadFromURL
 
 fun Prov.installTerragrunt(
     version: String = "0.72.6",

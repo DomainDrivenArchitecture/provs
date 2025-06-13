@@ -1,7 +1,7 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.addKnownHost
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.infrastructure.addKnownHost
 
 
 fun Prov.addKnownHosts(knownHosts: List<KnownHost> = KnownHost.values()) = task {

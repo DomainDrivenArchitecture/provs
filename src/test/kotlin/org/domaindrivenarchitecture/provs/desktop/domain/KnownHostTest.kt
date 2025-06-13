@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.desktop.domain
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.deleteFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.addKnownHost
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.isKnownHost
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.deleteFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.infrastructure.addKnownHost
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.infrastructure.isKnownHost
 import org.domaindrivenarchitecture.provs.test.defaultTestContainer
 import org.domaindrivenarchitecture.provs.test.tags.ContainerTest
 import org.junit.jupiter.api.Assertions.*

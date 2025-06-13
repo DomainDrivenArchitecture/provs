@@ -6,7 +6,7 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import org.domaindrivenarchitecture.provs.framework.core.*
 import org.domaindrivenarchitecture.provs.framework.core.processors.DummyProcessor
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFile
 import org.domaindrivenarchitecture.provs.server.domain.k3s.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue

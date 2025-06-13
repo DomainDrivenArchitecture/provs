@@ -1,9 +1,9 @@
 package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDir
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createDir
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
 
 
 fun Prov.installRedshift() = task {

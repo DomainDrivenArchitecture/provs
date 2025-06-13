@@ -2,8 +2,8 @@ package org.domaindrivenarchitecture.provs.server.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.Secret
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFileFromResource
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFileFromResourceTemplate
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFileFromResource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFileFromResourceTemplate
 import org.domaindrivenarchitecture.provs.server.domain.k3s.FileMode
 import java.io.File
 

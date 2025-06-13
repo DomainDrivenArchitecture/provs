@@ -1,10 +1,10 @@
 package org.domaindrivenarchitecture.provs.framework.ubuntu.scheduledjobs.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.user.base.whoami
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createDirs
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.user.infrastructure.whoami
 
 
 /**

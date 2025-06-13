@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.configuration.domain
 
 import org.domaindrivenarchitecture.provs.framework.core.Secret
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PlainSecretSource
-import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.secretSources.PromptSecretSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.secretSources.PlainSecretSource
+import org.domaindrivenarchitecture.provs.framework.ubuntu.secret.domain.secretSources.PromptSecretSource
 
 
 private const val USER_HOST_DELIMITER = "@"

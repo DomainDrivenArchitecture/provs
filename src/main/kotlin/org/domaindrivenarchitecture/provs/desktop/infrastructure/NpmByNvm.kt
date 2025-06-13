@@ -2,9 +2,9 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.checkFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createFile
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.userHome
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.checkFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createFile
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.userHome
 
 /**
  * Installs Node.js and NPM (Node Package Manager) by using NVM (Node Version Manager), if NVM not already installed
@@ -15,6 +15,8 @@ fun Prov.installNpmByNvm(version: String = "0.40.1"): ProvResult = task {
 
     val bashConfigFile = "~/.bashrc.d/npmbynvm.sh"
     if (!checkFile(".nvm/nvm.sh") && !checkFile(bashConfigFile)) {
+
+        configureBashForUser()  // ensure bashrc.d setup
 
         // install NVM
         cmd("sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v$version/install.sh | bash")

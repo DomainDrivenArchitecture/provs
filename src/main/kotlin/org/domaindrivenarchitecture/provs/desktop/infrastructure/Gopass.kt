@@ -3,11 +3,11 @@ package org.domaindrivenarchitecture.provs.desktop.infrastructure
 import org.domaindrivenarchitecture.provs.framework.core.Prov
 import org.domaindrivenarchitecture.provs.framework.core.ProvResult
 import org.domaindrivenarchitecture.provs.framework.core.Secret
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.*
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.checkPackage
-import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.base.gpgFingerprint
-import org.domaindrivenarchitecture.provs.framework.ubuntu.web.base.downloadFromURL
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.*
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.checkPackage
+import org.domaindrivenarchitecture.provs.framework.ubuntu.keys.infrastructure.gpgFingerprint
+import org.domaindrivenarchitecture.provs.framework.ubuntu.web.infrastructure.downloadFromURL
 
 
 fun Prov.installGopass(

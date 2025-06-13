@@ -1,8 +1,8 @@
 package org.domaindrivenarchitecture.provs.server.infrastructure
 
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.createDirs
-import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.base.fileContainsText
-import org.domaindrivenarchitecture.provs.framework.ubuntu.install.base.aptInstall
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.createDirs
+import org.domaindrivenarchitecture.provs.framework.ubuntu.filesystem.infrastructure.fileContainsText
+import org.domaindrivenarchitecture.provs.framework.ubuntu.install.infrastructure.aptInstall
 import org.domaindrivenarchitecture.provs.server.domain.CertmanagerEndpoint
 import org.domaindrivenarchitecture.provs.server.domain.k3s.Certmanager
 import org.domaindrivenarchitecture.provs.server.domain.k3s.K3sConfig
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 internal class NetworkKtTest {
 
+    @Suppress("unused")
     @ExtensiveContainerTest
     fun test_provisionNetwork() {
         // given
