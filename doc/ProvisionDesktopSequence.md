@@ -16,18 +16,20 @@ participant DesktopCliCommand
 participant ProvWithSudo
 end box
 
-box  #White
-participant CliUtils
-participant "Prov (local or remote...)" as ProvInstance
-end box
-
 box "domain" #LightGreen
-participant "DesktopService"
+participant "DesktopService.\nprovisionDesktopCommand" as provisionDesktopCommand
+participant "DesktopService.\nprovisionDesktop" as provisionDesktop
+participant "KeysService"
 end box
 
 box "infrastructure" #CornSilk
 participant ConfigRepository
 participant "Various\ninfrastructure functions" as Infrastructure_functions
+end box
+
+box "framework" #White
+participant CliUtils
+participant "Prov (local or remote...)" as ProvInstance
 end box
 
 
@@ -38,16 +40,31 @@ Application -> CliUtils : createProvInstance
 ProvInstance <- CliUtils : create
 
 Application -> ProvWithSudo : ensureSudoWithoutPassword
-Application -> DesktopService : provisionDesktopCommand ( provInstance, desktopCliCommand )
+Application -> provisionDesktopCommand : provisionDesktopCommand ( provInstance, desktopCliCommand )
 
-DesktopService -> ConfigRepository : getConfig
+provisionDesktopCommand -> ConfigRepository : getConfig
+provisionDesktopCommand <-- ConfigRepository : config
 
-DesktopService -> DesktopService : provisionDesktop( config )
+provisionDesktopCommand -> provisionDesktop : provisionDesktop\n( config )
 
-DesktopService -> Infrastructure_functions: Various calls like:
-DesktopService -> Infrastructure_functions: install ssh, gpg, git ...
-DesktopService -> Infrastructure_functions: installVirtualBoxGuestAdditions
-DesktopService -> Infrastructure_functions: configureNoSwappiness, ...
+|||
+
+provisionDesktop -> "KeysService" : provisionKeys
+"KeysService" -> Infrastructure_functions : configureGpgKeys
+"KeysService" -> Infrastructure_functions : configureSshKeys
+
+|||
+
+"provisionDesktop" -> Infrastructure_functions : installGopass
+"provisionDesktop" -> Infrastructure_functions : configureGopass ( publicGpgKey )
+
+|||
+|||
+
+provisionDesktop -> Infrastructure_functions: Various calls like:
+provisionDesktop -> Infrastructure_functions: install git, firefox,  ...
+provisionDesktop -> Infrastructure_functions: installVirtualBoxGuestAdditions
+provisionDesktop -> Infrastructure_functions: configureNoSwappiness, ...
 
 @enduml
 ```
