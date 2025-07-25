@@ -17,8 +17,10 @@ end box
 box "domain" #LightGreen
 participant "DesktopService.\nprovisionDesktopCommand" as provisionDesktopCommand
 
-participant KeyPairSource
-participant SecretSourceType
+participant SshKeyPairSource
+participant GpgKeyPairSource
+participant FileSecretSource
+participant GopassSecretSource
 participant "DesktopService.\nprovisionDesktop" as provisionDesktop
 participant "KeysService"
 end box
@@ -50,17 +52,17 @@ Application <-- ConfigRepository : config (incl. gpg & ssh KeySource)
 |||
 
 Application -> provisionDesktopCommand : provisionDesktopCommand\n( config with gpg & ssh KeySource )
-provisionDesktopCommand -> KeyPairSource : keyPair
-KeyPairSource -> SecretSourceType : secret
-KeyPairSource <-- SecretSourceType : gpg keys
-provisionDesktopCommand <-- KeyPairSource : gpg keys
+provisionDesktopCommand -> SshKeyPairSource : keyPair
+SshKeyPairSource -> FileSecretSource : secret
+SshKeyPairSource <-- FileSecretSource : gpg keys
+provisionDesktopCommand <-- SshKeyPairSource : gpg keys
 
 |||
 
-provisionDesktopCommand -> KeyPairSource : keyPair
-KeyPairSource -> SecretSourceType : secret
-KeyPairSource <-- SecretSourceType : ssh keys
-provisionDesktopCommand <-- KeyPairSource : ssh keys
+provisionDesktopCommand -> GpgKeyPairSource : keyPair
+GpgKeyPairSource -> GopassSecretSource : secret
+GpgKeyPairSource <-- GopassSecretSource : ssh keys
+provisionDesktopCommand <-- GpgKeyPairSource : ssh keys
 
 |||
 
