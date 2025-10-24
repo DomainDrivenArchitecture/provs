@@ -75,8 +75,8 @@ dependencies {
     api('com.charleskorn.kaml:kaml:0.78.0')
 
     api("org.slf4j:slf4j-api:2.0.17")
-    api('ch.qos.logback:logback-classic:1.5.19')
-    api('ch.qos.logback:logback-core:1.5.19')
+    api('ch.qos.logback:logback-classic:1.5.20')
+    api('ch.qos.logback:logback-core:1.5.20')
 
     implementation("com.hierynomus:sshj:0.40.0")
 
