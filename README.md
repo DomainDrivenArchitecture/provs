@@ -217,3 +217,7 @@ fun Prov.myTask() = task {
 ```
 
 See also [ForDevelopers.md](doc/ForDevelopers.md)
+
+### KotlinScript
+
+For an example of a KotlinScript see: [DemoScript.kts](src/main/scripts/DemoScript.kts)

@@ -6,7 +6,9 @@
 /.idea/
 /My*
 /my*
+MyScript.kts
 /server-config.yaml
 /desktop-config.yaml
 /syspec-config.yaml
 /.kotlin/
+*.log
