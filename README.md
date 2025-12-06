@@ -6,14 +6,15 @@
 ## Purpose
 
 provs provides cli-based tools for 
-* provisioning desktop software for different desktop types:
+* **provisioning desktop software** for different desktop types:
   * basic
   * office
   * IDE
-* provisioning a k3s server
-* performing system checks
+* **provisioning a k3s** server
+* performing **system checks**
+* **execute shell commands** with error handling and result reporting
 
-Tasks can be run locally or remotely.
+Can be run locally, remotely or in a container.
 
 
 ## Try out
@@ -200,12 +201,17 @@ For more details about our repository model see: https://repo.prod.meissa.de/mei
 
 ## Developer information
 
-For using provs framework, add the required dependency to your project, then you can implement your own tasks e.g. by:
+For using provs framework, add the required dependency to your project:
+```groovy
+dependencies {
+    implementation("org.domaindrivenarchitecture:provs:0.46.2") // use latest version
+}
+```
+
+Then implement your own tasks e.g. by:
 
 ```kotlin
-import org.domaindrivenarchitecture.provs.framework.core.Prov
-
-fun Prov.myCustomTask() = task {
+fun Prov.myTask() = task {
     cmd("echo \"Hello world!\"")
 }
 ```
