@@ -260,9 +260,7 @@ open class Prov protected constructor(
         var success = true
 
         for (cmd in linesNonEmpty) {
-            if (success) {
-                success = cmd(cmd, dir, sudo).success
-            }
+            success = cmd(cmd, dir, sudo).success && success
         }
         ProvResult(success)
     }
